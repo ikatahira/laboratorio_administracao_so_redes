@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratório de Administração de Sistemas Operacionais de Redes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: #f0f2f5;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #003366 0%, #0066cc 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-content img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid white;
+            object-fit: cover;
+        }
+
+        .header-text h1 {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+
+        .header-text p {
+            font-size: 0.9em;
+            opacity: 0.95;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 0 20px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            height: fit-content;
+            position: sticky;
+            top: 120px;
+        }
+
+        .sidebar h2 {
+            color: #003366;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #0066cc;
+        }
+
+        .week-menu {
+            list-style: none;
+        }
+
+        .week-menu li {
+            margin-bottom: 8px;
+        }
+
+        .week-menu a {
+            display: block;
+            padding: 12px 15px;
+            background: #f8f9fa;
+            color: #003366;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+
+        .week-menu a:hover {
+            background: #e3f2fd;
+            border-left-color: #0066cc;
+            transform: translateX(5px);
+        }
+
+        .week-menu a.active {
+            background: #003366;
+            color: white;
+            border-left-color: #0066cc;
+        }
+
+        .week-badge {
+            background: #0066cc;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            margin-right: 8px;
+        }
+
+        .content {
+            flex: 1;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            min-height: 600px;
+        }
+
+        .week-title {
+            color: #003366;
+            font-size: 2em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .week-number {
+            background: linear-gradient(135deg, #003366 0%, #0066cc 100%);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .week-subtitle {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            color: #0066cc;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section h3 {
+            color: #003366;
+            font-size: 1.2em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .icon {
+            font-size: 1.2em;
+        }
+
+        .objectives-list, .topics-list {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #0066cc;
+        }
+
+        .objectives-list li, .topics-list li {
+            margin-bottom: 10px;
+            padding-left: 10px;
+        }
+
+        .video-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .video-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .video-thumbnail {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: linear-gradient(135deg, #003366 0%, #0066cc 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3em;
+            cursor: pointer;
+        }
+
+        .video-info {
+            padding: 15px;
+        }
+
+        .video-info h4 {
+            color: #003366;
+            margin-bottom: 8px;
+        }
+
+        .video-info p {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .video-link {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 15px;
+            background: #0066cc;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.9em;
+            transition: background 0.3s;
+        }
+
+        .video-link:hover {
+            background: #003366;
+        }
+
+        .materials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .material-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .material-card:hover {
+            border-color: #0066cc;
+            box-shadow: 0 5px 15px rgba(0,102,204,0.2);
+        }
+
+        .material-icon {
+            font-size: 2.5em;
+            color: #0066cc;
+            margin-bottom: 10px;
+        }
+
+        .material-card h4 {
+            color: #003366;
+            margin-bottom: 8px;
+        }
+
+        .material-card p {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .material-link {
+            color: #0066cc;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .material-link:hover {
+            text-decoration: underline;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #0066cc;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .success-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .activity-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #0066cc;
+        }
+
+        .activity-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .activity-number {
+            background: #0066cc;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .activity-title {
+            color: #003366;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+
+        .bibliography {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .bibliography-item {
+            padding: 15px;
+            background: white;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border-left: 3px solid #0066cc;
+        }
+
+        .bibliography-item strong {
+            color: #003366;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .nav-button {
+            padding: 12px 25px;
+            background: #0066cc;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-button:hover {
+            background: #003366;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .nav-button.disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        @media (max-width: 968px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                position: static;
+            }
+            
+            .header-text h1 {
+                font-size: 1.2em;
+            }
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .tool-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .tool-card:hover {
+            border-color: #0066cc;
+            transform: scale(1.05);
+        }
+
+        .tool-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .tool-name {
+            color: #003366;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .tool-description {
+            color: #666;
+            font-size: 0.85em;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <img src="foto_professor.png" alt="Professor">
+            <div class="header-text">
+                <h1>Laboratório de Administração de Sistemas Operacionais de Redes</h1>
+                <p>ISO-103 | 3º Semestre | Curso Superior de Tecnologia em Segurança da Informação</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <aside class="sidebar">
+            <h2>📅 Cronograma</h2>
+            <ul class="week-menu">
+                <li><a href="semana01.html" class="active"><span class="week-badge">S1</span>Semana 1</a></li>
+                <li><a href="semana02.html"><span class="week-badge">S2</span>Semana 2</a></li>
+                <li><a href="semana03.html"><span class="week-badge">S3</span>Semana 3</a></li>
+                <li><a href="semana04.html"><span class="week-badge">S4</span>Semana 4</a></li>
+                <li><a href="semana05.html"><span class="week-badge">S5</span>Semana 5</a></li>
+                <li><a href="semana06.html"><span class="week-badge">S6</span>Semana 6</a></li>
+                <li><a href="semana07.html"><span class="week-badge">S7</span>Semana 7</a></li>
+                <li><a href="semana08.html"><span class="week-badge">S8</span>Semana 8</a></li>
+                <li><a href="semana09.html"><span class="week-badge">S9</span>Semana 9</a></li>
+                <li><a href="semana10.html"><span class="week-badge">S10</span>Semana 10</a></li>
+                <li><a href="semana11.html"><span class="week-badge">S11</span>Semana 11</a></li>
+                <li><a href="semana12.html"><span class="week-badge">S12</span>Semana 12</a></li>
+                <li><a href="semana13.html"><span class="week-badge">S13</span>Semana 13</a></li>
+                <li><a href="semana14.html"><span class="week-badge">S14</span>Semana 14</a></li>
+                <li><a href="semana15.html"><span class="week-badge">S15</span>Semana 15</a></li>
+                <li><a href="semana16.html"><span class="week-badge">S16</span>Semana 16</a></li>
+                <li><a href="semana17.html"><span class="week-badge">S17</span>Semana 17</a></li>
+                <li><a href="semana18.html"><span class="week-badge">S18</span>Semana 18</a></li>
+                <li><a href="semana19.html"><span class="week-badge">S19</span>Semana 19</a></li>
+                <li><a href="semana20.html"><span class="week-badge">S20</span>Semana 20</a></li>
+            </ul>
+        </aside>
+
+        <main class="content" id="main-content">
+            <div class="week-title">
+                <div class="week-number">01</div>
+                <div>
+                    <h1>Semana 1</h1>
+                    <p style="color: #666; font-size: 0.5em; margin: 0;">Introdução e Fundamentos de Cabeamento Estruturado</p>
+                </div>
+            </div>
+
+            <p class="week-subtitle">
+                Apresentação da disciplina, normas de segurança em laboratório e introdução aos conceitos fundamentais de cabeamento estruturado e padrões internacionais.
+            </p>
+
+            <div class="info-box">
+                <strong>🎯 Carga Horária:</strong> 2 horas/aula<br>
+                <strong>📍 Local:</strong> Laboratório de Redes<br>
+                <strong>⚠️ Pré-requisito:</strong> Nenhum
+            </div>
+
+            <section class="section">
+                <h2><span class="icon">🎯</span>Objetivos de Aprendizagem</h2>
+                <ul class="objectives-list">
+                    <li>Compreender a estrutura e objetivos da disciplina</li>
+                    <li>Conhecer as normas de segurança no laboratório de redes</li>
+                    <li>Entender os fundamentos de cabeamento estruturado</li>
+                    <li>Identificar as principais normas e padrões internacionais (ANSI/TIA/EIA-568, ISO/IEC 11801)</li>
+                    <li>Diferenciar as categorias de cabos de rede</li>
+                    <li>Reconhecer os componentes básicos de uma infraestrutura de rede</li>
+                </ul>
+            </section>
+
+            <section class="section">
+                <h2><span class="icon">📚</span>Conteúdo Programático</h2>
+                
+                <h3>1. Apresentação da Disciplina</h3>
+                <ul class="topics-list">
+                    <li><strong>Plano de ensino:</strong> objetivos, metodologia, avaliação e cronograma</li>
+                    <li><strong>Importância da disciplina:</strong> aplicações práticas no mercado de trabalho</li>
+                    <li><strong>Infraestrutura do laboratório:</strong> equipamentos disponíveis e organização</li>
+                    <li><strong>Metodologia de trabalho:</strong> práticas individuais e em equipe</li>
+                </ul>
+
+                <h3>2. Normas de Segurança em Laboratório</h3>
+                <ul class="topics-list">
+                    <li>EPI (Equipamentos de Proteção Individual) necessários</li>
+                    <li>Cuidados com equipamentos elétricos</li>
+                    <li>Manuseio correto de ferramentas</li>
+                    <li>Organização e limpeza do ambiente de trabalho</li>
+                    <li>Procedimentos em caso de acidentes</li>
+                    <li>Descarte correto de materiais</li>
+                </ul>
+
+                <h3>3. Fundamentos de Cabeamento Estruturado</h3>
+                <ul class="topics-list">
+                    <li><strong>Conceito:</strong> Sistema de cabeamento organizado e padronizado</li>
+                    <li><strong>Histórico:</strong> Evolução do cabeamento de redes</li>
+                    <li><strong>Vantagens:</strong> Flexibilidade, confiabilidade, facilidade de manutenção</li>
+                    <li><strong>Subsistemas:</strong> Cabeamento horizontal, vertical, área de trabalho</li>
+                    <li><strong>Componentes básicos:</strong> Cabos, conectores, patch panels, racks</li>
+                </ul>
+
+                <h3>4. Normas e Padrões</h3>
+                <ul class="topics-list">
+                    <li><strong>ANSI/TIA/EIA-568:</strong> Padrão americano para cabeamento de telecomunicações</li>
+                    <li><strong>ISO/IEC 11801:</strong> Padrão internacional para cabeamento genérico</li>
+                    <li><strong>ABNT NBR 14565:</strong> Norma brasileira de cabeamento estruturado</li>
+                    <li><strong>Diferenças entre T568A e T568B:</strong> Padrões de pinagem</li>
+                    <li><strong>Certificação de cabeamento:</strong> Importância e procedimentos</li>
+                </ul>
+
+                <h3>5. Categorias de Cabos UTP</h3>
+                <ul class="topics-list">
+                    <li><strong>Cat5e:</strong> 100 MHz, até 1 Gbps, aplicações mais comuns</li>
+                    <li><strong>Cat6:</strong> 250 MHz, até 10 Gbps (55m), melhor desempenho</li>
+                    <li><strong>Cat6a:</strong> 500 MHz, até 10 Gbps (100m), blindagem opcional</li>
+                    <li><strong>Cat7:</strong> 600 MHz, até 10 Gbps, sempre blindado</li>
+                    <li><strong>Comparação de aplicações:</strong> Quando usar cada categoria</li>
+                </ul>
+            </section>
+
+            <section class="section">
+                <h2><span class="icon">🎬</span>Vídeos Recomendados</h2>
+                <div class="video-container">
+                    <div class="video-card">
+                        <div class="video-thumbnail">▶️</div>
+                        <div class="video-info">
+                            <h4>Introdução ao Cabeamento Estruturado</h4>
+                            <p>Visão geral sobre cabeamento estruturado e suas aplicações</p>
+                            <a href="https://www.youtube.com/watch?v=example1" target="_blank" class="video-link">Assistir no YouTube</a>
+                        </div>
+                    </div>
+                    <div class="video-card">
+                        <div class="video-thumbnail">▶️</div>
+                        <div class="video-info">
+                            <h4>Normas ANSI/TIA/EIA-568</h4>
+                            <p>Explicação detalhada sobre os padrões internacionais</p>
+                            <a href="https://www.youtube.com/watch?v=example2" target="_blank" class="video-link">Assistir no YouTube</a>
+                        </div>
+                    </div>
+                    <div class="video-card">
+                        <div class="video-thumbnail">▶️</div>
+                        <div class="video-info">
+                            <h4>Categorias de Cabos de Rede</h4>
+                            <p>Diferenças entre Cat5e, Cat6, Cat6a e suas aplicações</p>
+                            <a href="https://www.youtube.com/watch?v=example3" target="_blank" class="video-link">Assistir no YouTube</a>
+                        </div>
+                    </div>
+                    <div class="video-card">
+                        <div class="video-thumbnail">▶️</div>
+                        <div class="video-info">
+                            <h4>T568A vs T568B</h4>
+                            <p>Entenda as diferenças entre os padrões de pinagem</p>
+                            <a href="https://www.youtube.com/watch?v=example4" target="_blank" class="video-link">Assistir no YouTube</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2><span class="icon">🛠️</span>Ferramentas e Materiais Apresentados</h2>
+                <div class="tools-grid">
+                    <div class="tool-card">
+                        <div class="tool-icon">🔌</div>
+                        <div class="tool-name">Cabo UTP</div>
+                        <div class="tool-description">Cabos Cat5e e Cat6</div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">📦</div>
+                        <div class="tool-name">Patch Panel</div>
+                        <div class="tool-description">24 portas RJ-45</div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">🗄️</div>
+                        <div class="tool-name">Rack</div>
+                        <div class="tool-description">Padrão 19" - 12U</div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">🔗</div>
+                        <div class="tool-name">Conectores RJ-45</div>
+                        <div class="tool-description">Blindados e não blindados</div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">🏷️</div>
+                        <div class="tool-name">Anilhas</div>
+                        <div class="tool-description">Identificação de cabos</div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">🔧</div>
+                        <div class="tool-name">Alicate Crimpagem</div>
+                        <div class="tool-description">RJ-45 e RJ-11</div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">⚙️</div>
+                        <div class="tool-name">Alicate Punch Down</div>
+                        <div class="tool-description">Conexão em patch panel</div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">📊</div>
+                        <div class="tool-name">Testador de Cabo</div>
+                        <div class="tool-description">Verificação de continuidade</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2><span class="icon">✏️</span>Atividades Práticas</h2>
+                
+                <div class="activity-card">
+                    <div class="activity-header">
+                        <div class="activity-number">1</div>
+                        <div class="activity-title">Tour pelo Laboratório</div>
+                    </div>
+                    <p><strong>Objetivo:</strong> Familiarizar-se com o ambiente e equipamentos disponíveis</p>
+                    <p><strong>Procedimento:</strong></p>
+                    <ul>
+                        <li>Identificação de cada equipamento no laboratório</li>
+                        <li>Localização dos armários com ferramentas</li>
+                        <li>Conhecimento das bancadas de trabalho</li>
+                        <li>Identificação dos pontos de energia</li>
+                    </ul>
+                    <p><strong>Duração:</strong> 20 minutos</p>
+                </div>
+
+                <div class="activity-card">
+                    <div class="activity-header">
+                        <div class="activity-number">2</div>
+                        <div class="activity-title">Identificação de Componentes</div>
+                    </div>
+                    <p><strong>Objetivo:</strong> Reconhecer visualmente os diferentes componentes de cabeamento</p>
+                    <p><strong>Procedimento:</strong></p>
+                    <ul>
+                        <li>Análise de diferentes categorias de cabos UTP</li>
+                        <li>Identificação de conectores RJ-45</li>
+                        <li>Exame de patch panels de diferentes modelos</li>
+                        <li>Comparação entre ferramentas de crimpagem e punch down</li>
+                    </ul>
+                    <p><strong>Duração:</strong> 30 minutos</p>
+                </div>
+
+                <div class="activity-card">
+                    <div class="activity-header">
+                        <div class="activity-number">3</div>
+                        <div class="activity-title">Análise de Padrões T568A e T568B</div>
+                    </div>
+                    <p><strong>Objetivo:</strong> Compreender as diferenças entre os padrões de pinagem</p>
+                    <p><strong>Procedimento:</strong></p>
+                    <ul>
+                        <li>Estudo do esquema de cores T568A</li>
+                        <li>Estudo do esquema de cores T568B</li>
+                        <li>Identificação das aplicações de cada padrão</li>
+                        <li>Análise de cabos diretos e crossover</li>
+                    </ul>
+                    <p><strong>Materiais:</strong> Diagramas impressos, cabos de exemplo</p>
+                    <p><strong>Duração:</strong> 30 minutos</p>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2><span class="icon">📖</span>Material de Apoio</h2>
+                <div class="materials-grid">
+                    <div class="material-card">
+                        <div class="material-icon">📄</div>
+                        <h4>Slides da Aula</h4>
+                        <p>Apresentação completa sobre cabeamento estruturado</p>
+                        <a href="#" class="material-link">Download PDF →</a>
+                    </div>
+                    <div class="material-card">
+                        <div class="material-icon">📋</div>
+                        <h4>Norma ANSI/TIA-568</h4>
+                        <p>Resumo dos principais pontos da norma</p>
+                        <a href="#" class="material-link">Download PDF →</a>
+                    </div>
+                    <div class="material-card">
+                        <div class="material-icon">🎨</div>
+                        <h4>Diagrama T568A/B</h4>
+                        <p>Esquema de cores para consulta rápida</p>
+                        <a href="#" class="material-link">Download PDF →</a>
+                    </div>
+                    <div class="material-card">
+                        <div class="material-icon">📊</div>
+                        <h4>Tabela Comparativa</h4>
+                        <p>Categorias de cabos e suas especificações</p>
+                        <a href="#" class="material-link">Download PDF →</a>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2><span class="icon">📚</span>Bibliografia da Semana</h2>
+                <div class="bibliography">
+                    <div class="bibliography-item">
+                        <strong>OLIVIERO, Andrew; WOODWARD, Bill.</strong> Cabling: The Complete Guide to Copper and Fiber-Optic Networking. 4.ed. Sybex, 2010.<br>
+                        <em>Capítulo 1: Introduction to Cabling Standards</em>
+                    </div>
+                    <div class="bibliography-item">
+                        <strong>SHIMONSKI, Robert J.; STEINER, Richard; SHEEDY, Sean M.</strong> Cabeamento de Rede. Rio de Janeiro: LTC, 2010.<br>
+                        <em>Capítulos 1 e 2: Fundamentos e Normas</em>
+                    </div>
+                    <div class="bibliography-item">
+                        <strong>MARIN, Paulo Sergio.</strong> Cabeamento Estruturado – desvendando cada passo do projeto à instalação. São Paulo: Érica, 2004.<br>
+                        <em>Capítulo 1: Introdução ao Cabeamento Estruturado</em>
+                    </div>
+                    <div class="bibliography-item">
+                        <strong>PINHEIRO, Jose Maurício dos S.</strong> Guia Completo de Cabeamento de Redes. Rio de Janeiro: Campus, 2003.<br>
+                        <em>Parte I: Fundamentos de Cabeamento</em>
+                    </div>
+                </div>
+            </section>
+
+            <div class="warning-box">
+                <strong>⚠️ Atenção:</strong> Para a próxima aula, será necessário trazer:<br>
+                • Caderno para anotações<br>
+                • Calculadora<br>
+                • Roupas adequadas para trabalho em laboratório (evitar roupas largas)<br>
+                • Sapatos fechados (obrigatório)
+            </div>
+
+            <div class="success-box">
+                <strong>✅ Tarefa para Casa:</strong><br>
+                1. Ler os capítulos indicados na bibliografia<br>
+                2. Assistir aos vídeos recomendados<br>
+                3. Pesquisar sobre aplicações de cabeamento estruturado em ambientes corporativos<br>
+                4. Preparar 3 perguntas sobre o conteúdo para discussão na próxima aula
+            </div>
+
+            <div class="navigation">
+                <a href="#" class="nav-button disabled">⬅️ Semana Anterior</a>
+                <a href="semana02.html" class="nav-button">Próxima Semana ➡️</a>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

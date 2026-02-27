@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia de Estudo - Semana 01</title>
+    <style>* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .header h1 {
+            color: #6a11cb;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+
+        .header .week-info {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .nav-btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(106, 17, 203, 0.4);
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .section h2 {
+            color: #6a11cb;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #2575fc;
+        }
+
+        .exercise-block {
+            background: #f8f9fa;
+            border-left: 5px solid #6a11cb;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+
+        .exercise-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .exercise-number {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+
+        .exercise-title {
+            flex: 1;
+            color: #6a11cb;
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+
+        .rubric-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .rubric-table th {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .rubric-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .rubric-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .rubric-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .criterion {
+            font-weight: bold;
+            color: #6a11cb;
+        }
+
+        .solution-box {
+            background: linear-gradient(to right, #e8f5e9, #f1f8e9);
+            border-left: 5px solid #4caf50;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .solution-box h3 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .example-box {
+            background: #fff3e0;
+            border-left: 5px solid #ff9800;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .example-box h4 {
+            color: #e65100;
+            margin-bottom: 10px;
+        }
+
+        .tip-box {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .tip-box strong {
+            color: #1976d2;
+        }
+
+        .command-box {
+            background: #263238;
+            color: #4caf50;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+
+        ul, ol {
+            margin-left: 20px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .highlight {
+            background: #fff9c4;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #d32f2f;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .success-box {
+            background: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .step-by-step {
+            counter-reset: step;
+        }
+
+        .step {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            position: relative;
+            padding-left: 60px;
+        }
+
+        .step::before {
+            counter-increment: step;
+            content: counter(step);
+            position: absolute;
+            left: 15px;
+            top: 15px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Guia de Estudo - Semana 01</h1>
+            <p class="week-info">Introdução e Fundamentos de Cabeamento Estruturado</p>
+            <div class="nav-buttons">
+                <a href="index.html" class="nav-btn">⬅️ Voltar ao Índice</a>
+                <a href="semana01.html" class="nav-btn">📄 Ver Conteúdo da Semana</a>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>✏️ Exercício 1: Tour pelo Laboratório</h2>
+            
+            <div class="exercise-block">
+                <div class="exercise-header">
+                    <div class="exercise-number">1</div>
+                    <div class="exercise-title">Tour pelo Laboratório</div>
+                </div>
+
+                <p><strong>📋 Objetivo:</strong> Familiarizar-se com o ambiente e equipamentos</p>
+                <p><strong>⏱️ Duração:</strong> 20 minutos</p>
+                <p><strong>📄 Descrição:</strong> Conhecer o laboratório, identificar equipamentos e entender a organização do espaço</p>
+
+                <h3 style="color: #6a11cb; margin-top: 25px; margin-bottom: 15px;">📊 Rubrica de Avaliação</h3>
+                
+                <table class="rubric-table">
+                    <tr>
+                        <th>Critério</th>
+                        <th>Pontuação</th>
+                        <th>Descrição</th>
+                    </tr>
+                    <tr>
+                        <td class="criterion">Identificação de Equipamentos</td>
+                        <td>30%</td>
+                        <td>Identifica corretamente racks, switches, patch panels e ferramentas</td>
+                    </tr>
+                    <tr>
+                        <td class="criterion">Normas de Segurança</td>
+                        <td>30%</td>
+                        <td>Demonstra conhecimento das normas básicas de segurança</td>
+                    </tr>
+                    <tr>
+                        <td class="criterion">Organização do Laboratório</td>
+                        <td>20%</td>
+                        <td>Compreende a organização física e lógica do laboratório</td>
+                    </tr>
+                    <tr>
+                        <td class="criterion">Participação e Questionamento</td>
+                        <td>20%</td>
+                        <td>Participa ativamente fazendo perguntas relevantes</td>
+                    </tr>
+                </table>
+
+                <div class="solution-box">
+                    <h3>✅ Roteiro do Tour</h3>
+                    
+                    <div class="step-by-step">
+                        <div class="step">
+                            <h4 style="color: #6a11cb; margin-bottom: 10px;">Área de Trabalho</h4>
+                            <p>Observar as bancadas, ferramentas disponíveis e organização do espaço. Identificar onde ficam guardados os equipamentos e materiais.</p>
+                        </div>
+
+                        <div class="step">
+                            <h4 style="color: #6a11cb; margin-bottom: 10px;">Racks de Rede</h4>
+                            <p>Examinar a estrutura dos racks 19", observar como os equipamentos são montados, identificar patch panels, switches e organizadores de cabos.</p>
+                        </div>
+
+                        <div class="step">
+                            <h4 style="color: #6a11cb; margin-bottom: 10px;">Ferramentas</h4>
+                            <p>Conhecer o alicate de crimpagem, testador de cabos, alicate punch down, decapador e outras ferramentas essenciais.</p>
+                        </div>
+
+                        <div class="step">
+                            <h4 style="color: #6a11cb; margin-bottom: 10px;">Materiais Disponíveis</h4>
+                            <p>Localizar onde ficam os cabos UTP, conectores RJ-45, anilhas de identificação, patch cords e demais materiais.</p>
+                        </div>
+
+                        <div class="step">
+                            <h4 style="color: #6a11cb; margin-bottom: 10px;">Normas de Segurança</h4>
+                            <p>Revisar as normas de segurança do laboratório, localização de extintores, saídas de emergência e procedimentos em caso de acidentes.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <strong>💡 Dica:</strong> Anote a localização de cada tipo de equipamento e ferramenta. Isso economizará tempo nas próximas aulas!
+                </div>
+
+                <div class="warning-box">
+                    <strong>⚠️ Atenção:</strong>
+                    <ul>
+                        <li>Use sempre sapatos fechados no laboratório</li>
+                        <li>Desligue equipamentos da tomada antes de manipular</li>
+                        <li>Nunca force conectores ou cabos</li>
+                        <li>Mantenha a área de trabalho organizada</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>✏️ Exercício 2: Identificação de Componentes</h2>
+            
+            <div class="exercise-block">
+                <div class="exercise-header">
+                    <div class="exercise-number">2</div>
+                    <div class="exercise-title">Identificação de Componentes</div>
+                </div>
+
+                <p><strong>📋 Objetivo:</strong> Reconhecer visualmente diferentes categorias de cabos e componentes</p>
+                <p><strong>⏱️ Duração:</strong> 30 minutos</p>
+                <p><strong>📄 Descrição:</strong> Identificar e diferenciar cabos Cat5e, Cat6, Cat6a, conectores, patch panels e ferramentas</p>
+
+                <h3 style="color: #6a11cb; margin-top: 25px; margin-bottom: 15px;">📊 Rubrica de Avaliação</h3>
+                
+                <table class="rubric-table">
+                    <tr>
+                        <th>Critério</th>
+                        <th>Pontuação</th>
+                        <th>Descrição</th>
+                    </tr>
+                    <tr>
+                        <td class="criterion">Identificação de Cabos</td>
+                        <td>35%</td>
+                        <td>Identifica corretamente Cat5e, Cat6, Cat6a e Cat7</td>
+                    </tr>
+                    <tr>
+                        <td class="criterion">Componentes de Rede</td>
+                        <td>30%</td>
+                        <td>Reconhece patch panels, conectores RJ-45, keystones</td>
+                    </tr>
+                    <tr>
+                        <td class="criterion">Ferramentas</td>
+                        <td>25%</td>
+                        <td>Identifica função de cada ferramenta corretamente</td>
+                    </tr>
+                    <tr>
+                        <td class="criterion">Especificações Técnicas</td>
+                        <td>10%</td>
+                        <td>Sabe as especificações básicas de cada categoria</td>
+                    </tr>
+                </table>
+
+                <div class="solution-box">
+                    <h3>✅ Guia de Identificação</h3>
+                    
+                    <h4 style="color: #2e7d32; margin-top: 20px;">🔌 Categorias de Cabos UTP</h4>
+                    
+                    <div class="example-box">
+                        <h4>Cat5e (Category 5 enhanced)</h4>
+                        <ul>
+                            <li><strong>Frequência:</strong> 100 MHz</li>
+                            <li><strong>Velocidade:</strong> até 1 Gbps</li>
+                            <li><strong>Distância máxima:</strong> 100 metros</li>
+                            <li><strong>Uso:</strong> Redes residenciais e pequenos escritórios</li>
+                            <li><strong>Identificação:</strong> Geralmente marcado como "Cat5e" ou "Cat 5E" na capa</li>
+                        </ul>
+                    </div>
+
+                    <div class="example-box">
+                        <h4>Cat6 (Category 6)</h4>
+                        <ul>
+                            <li><strong>Frequência:</strong> 250 MHz</li>
+                            <li><strong>Velocidade:</strong> até 10 Gbps (até 55m)</li>
+                            <li><strong>Distância máxima:</strong> 100 metros (1 Gbps)</li>
+                            <li><strong>Uso:</strong> Redes corporativas, data centers</li>
+                            <li><strong>Identificação:</strong> Cabo mais grosso que Cat5e, marcado "Cat6"</li>
+                        </ul>
+                    </div>
+
+                    <div class="example-box">
+                        <h4>Cat6a (Category 6 augmented)</h4>
+                        <ul>
+                            <li><strong>Frequência:</strong> 500 MHz</li>
+                            <li><strong>Velocidade:</strong> 10 Gbps</li>
+                            <li><strong>Distância máxima:</strong> 100 metros (full 10Gbps)</li>
+                            <li><strong>Uso:</strong> Data centers, infraestrutura crítica</li>
+                            <li><strong>Identificação:</strong> Cabo mais espesso, às vezes blindado</li>
+                        </ul>
+                    </div>
+
+                    <div class="example-box">
+                        <h4>Cat7 (Category 7)</h4>
+                        <ul>
+                            <li><strong>Frequência:</strong> 600 MHz</li>
+                            <li><strong>Velocidade:</strong> 10 Gbps</li>
+                            <li><strong>Blindagem:</strong> Totalmente blindado (S/FTP)</li>
+                            <li><strong>Uso:</strong> Ambientes com alta interferência eletromagnética</li>
+                            <li><strong>Identificação:</strong> Cabo rígido, blindagem visível</li>
+                        </ul>
+                    </div>
+
+                    <h4 style="color: #2e7d32; margin-top: 30px;">🔧 Ferramentas Principais</h4>
+                    
+                    <div class="tip-box">
+                        <strong>Alicate de Crimpagem:</strong> Usado para prensar conectores RJ-45 nos cabos UTP. Possui lâmina para cortar e descascar o cabo.
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>Alicate Punch Down:</strong> Ferramenta para conectar cabos em patch panels e blocos 110. Insere e corta o fio simultaneamente.
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>Testador de Cabos:</strong> Verifica continuidade, mapeamento correto dos pinos e detecta curtos-circuitos ou cabos abertos.
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>Decapador de Cabos:</strong> Remove a capa externa do cabo sem danificar os condutores internos.
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <strong>⚠️ Cuidados:</strong>
+                    <ul>
+                        <li>Nunca force cabos ou conectores</li>
+                        <li>Verifique sempre a categoria do cabo antes de usar</li>
+                        <li>Cabos Cat6a e Cat7 são mais rígidos e requerem maior raio de curvatura</li>
+                        <li>Mantenha os cabos organizados por categoria</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>✏️ Exercício 3: Análise de Padrões T568A e T568B</h2>
+            
+            <div class="exercise-block">
+                <div class="exercise-header">
+                    <div class="exercise-number">3</div>
+                    <div class="exercise-title">Análise de Padrões T568A/B</div>
+                </div>
+
+                <p><strong>📋 Objetivo:</strong> Compreender e memorizar os padrões de pinagem</p>
+                <p><strong>⏱️ Duração:</strong> 30 minutos</p>
+                <p><strong>📄 Descrição:</strong> Estudar esquemas de cores, aplicações e diferenças entre cabos diretos e crossover</p>
+
+                <h3 style="color: #6a11cb; margin-top: 25px; margin-bottom: 15px;">📊 Rubrica de Avaliação</h3>
+                
+                <table class="rubric-table">
+                    <tr>
+                        <th>Critério</th>
+                        <th>Pontuação</th>
+                        <th>Descrição</th>
+                    </tr>
+                    <tr>
+                        <td class="criterion">Memorização T568A</td>
+                        <td>25%</td>
+                        <td>Recita corretamente a ordem das cores T568A</td>
+                    </tr>
+                    <tr>
+                        <td class="criterion">Memorização T568B</td>
+                        <td>25%</td>
+                        <td>Recita corretamente a ordem das cores T568B</td>
+                    </tr>
+                    <tr>
+                        <td class="criterion">Aplicações</td>
+                        <td>30%</td>
+                        <td>Identifica quando usar cada padrão</td>
+                    </tr>
+                    <tr>
+                        <td class="criterion">Cabo Crossover</td>
+                        <td>20%</td>
+                        <td>Explica a função e aplicação do cabo crossover</td>
+                    </tr>
+                </table>
+
+                <div class="solution-box">
+                    <h3>✅ Padrões de Pinagem</h3>
+                    
+                    <h4 style="color: #2e7d32; margin-top: 20px;">🔵 Padrão T568A</h4>
+                    
+                    <div class="command-box">
+Pino 1: Branco-Verde
+Pino 2: Verde
+Pino 3: Branco-Laranja
+Pino 4: Azul
+Pino 5: Branco-Azul
+Pino 6: Laranja
+Pino 7: Branco-Marrom
+Pino 8: Marrom
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>💡 Macete para memorizar T568A:</strong> "Branco-Verde primeiro, Verde segundo, depois Branco-Laranja... os azuis no meio, Laranja (sem branco) no 6, e os marrons no final"
+                    </div>
+
+                    <h4 style="color: #2e7d32; margin-top: 30px;">🟠 Padrão T568B</h4>
+                    
+                    <div class="command-box">
+Pino 1: Branco-Laranja
+Pino 2: Laranja
+Pino 3: Branco-Verde
+Pino 4: Azul
+Pino 5: Branco-Azul
+Pino 6: Verde
+Pino 7: Branco-Marrom
+Pino 8: Marrom
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>💡 Macete para memorizar T568B:</strong> "Branco-Laranja primeiro, Laranja segundo, depois Branco-Verde... os azuis no meio, Verde (sem branco) no 6, e os marrons no final"
+                    </div>
+
+                    <h4 style="color: #2e7d32; margin-top: 30px;">🔄 Diferença Principal</h4>
+                    
+                    <div class="example-box">
+                        <p>A diferença entre T568A e T568B está apenas nos pares <strong>Verde/Branco-Verde</strong> e <strong>Laranja/Branco-Laranja</strong>, que são invertidos:</p>
+                        <ul>
+                            <li><strong>T568A:</strong> Pares 1-2 são Verde, pares 3-6 são Laranja</li>
+                            <li><strong>T568B:</strong> Pares 1-2 são Laranja, pares 3-6 são Verde</li>
+                            <li>Os pares Azul (4-5) e Marrom (7-8) são iguais nos dois padrões</li>
+                        </ul>
+                    </div>
+
+                    <h4 style="color: #2e7d32; margin-top: 30px;">📊 Tipos de Cabos</h4>
+                    
+                    <table class="rubric-table" style="margin-top: 20px;">
+                        <tr>
+                            <th>Tipo de Cabo</th>
+                            <th>Ponta A</th>
+                            <th>Ponta B</th>
+                            <th>Aplicação</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Cabo Direto</strong></td>
+                            <td>T568A</td>
+                            <td>T568A</td>
+                            <td>Computador ↔ Switch/Hub</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cabo Direto</strong></td>
+                            <td>T568B</td>
+                            <td>T568B</td>
+                            <td>Computador ↔ Switch/Hub (mais comum)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cabo Crossover</strong></td>
+                            <td>T568A</td>
+                            <td>T568B</td>
+                            <td>Computador ↔ Computador / Switch ↔ Switch</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cabo Crossover</strong></td>
+                            <td>T568B</td>
+                            <td>T568A</td>
+                            <td>Computador ↔ Computador / Switch ↔ Switch</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="success-box">
+                    <h4 style="color: #2e7d32; margin-bottom: 10px;">✅ Quando usar cada padrão?</h4>
+                    <ul>
+                        <li><strong>T568B:</strong> É o padrão mais comum no Brasil e nos EUA. Use quando não houver especificação contrária</li>
+                        <li><strong>T568A:</strong> Padrão governamental nos EUA, usado em instalações residenciais em alguns países</li>
+                        <li><strong>Importante:</strong> O mais importante é manter consistência! Se começou com T568B, continue com T568B em toda a instalação</li>
+                        <li><strong>Cabo Crossover:</strong> Praticamente obsoleto devido ao Auto-MDI-X, mas ainda útil para aprendizado</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <strong>⚠️ Atenção:</strong>
+                    <ul>
+                        <li>Nunca misture T568A e T568B na mesma instalação (exceto para cabos crossover)</li>
+                        <li>Equipamentos modernos geralmente têm Auto-MDI-X e aceitam ambos os padrões</li>
+                        <li>Sempre documente qual padrão foi usado na instalação</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📝 Checklist da Semana 1</h2>
+            
+            <div class="success-box">
+                <h3>✅ Você deve ser capaz de:</h3>
+                <ul>
+                    <li>✓ Localizar equipamentos e ferramentas no laboratório</li>
+                    <li>✓ Identificar visualmente cabos Cat5e, Cat6, Cat6a e Cat7</li>
+                    <li>✓ Conhecer as especificações básicas de cada categoria</li>
+                    <li>✓ Recitar de memória a ordem de cores T568A e T568B</li>
+                    <li>✓ Explicar a diferença entre cabo direto e crossover</li>
+                    <li>✓ Conhecer as normas básicas de segurança do laboratório</li>
+                    <li>✓ Identificar conectores RJ-45, patch panels e ferramentas</li>
+                    <li>✓ Entender o conceito de cabeamento estruturado</li>
+                </ul>
+            </div>
+
+            <div class="tip-box">
+                <strong>💡 Para a próxima aula:</strong>
+                <ul>
+                    <li>Traga caderno para anotações</li>
+                    <li>Use sapatos fechados (obrigatório)</li>
+                    <li>Revise os padrões T568A e T568B</li>
+                    <li>Assista aos vídeos recomendados</li>
+                    <li>Prepare 3 perguntas sobre cabeamento</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="header" style="margin-top: 30px;">
+            <h2 style="color: #6a11cb; margin-bottom: 15px;">🎯 Recursos Adicionais</h2>
+            <ul style="margin-left: 20px;">
+                <li><a href="https://www.youtube.com/watch?v=_NX99ad2FUA" target="_blank" style="color: #2575fc;">Vídeo: Introdução ao Cabeamento Estruturado</a></li>
+                <li><a href="https://www.youtube.com/watch?v=kJLb9dHSLkQ" target="_blank" style="color: #2575fc;">Vídeo: Normas ANSI/TIA/EIA-568</a></li>
+                <li><a href="https://www.youtube.com/watch?v=8X8uE_VqL7s" target="_blank" style="color: #2575fc;">Vídeo: Categorias de Cabos UTP</a></li>
+                <li><a href="https://www.youtube.com/watch?v=gI-ra6g8Uuc" target="_blank" style="color: #2575fc;">Vídeo: Diferença T568A vs T568B</a></li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

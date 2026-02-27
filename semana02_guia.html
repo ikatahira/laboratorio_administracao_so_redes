@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia de Estudo - Semana 02</title>
+    <style>* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .header h1 {
+            color: #6a11cb;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+
+        .header .week-info {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .nav-btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(106, 17, 203, 0.4);
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .section h2 {
+            color: #6a11cb;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #2575fc;
+        }
+
+        .exercise-block {
+            background: #f8f9fa;
+            border-left: 5px solid #6a11cb;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+
+        .exercise-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .exercise-number {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+
+        .exercise-title {
+            flex: 1;
+            color: #6a11cb;
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+
+        .rubric-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .rubric-table th {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .rubric-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .rubric-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .rubric-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .criterion {
+            font-weight: bold;
+            color: #6a11cb;
+        }
+
+        .solution-box {
+            background: linear-gradient(to right, #e8f5e9, #f1f8e9);
+            border-left: 5px solid #4caf50;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .solution-box h3 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .example-box {
+            background: #fff3e0;
+            border-left: 5px solid #ff9800;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .example-box h4 {
+            color: #e65100;
+            margin-bottom: 10px;
+        }
+
+        .tip-box {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .tip-box strong {
+            color: #1976d2;
+        }
+
+        .command-box {
+            background: #263238;
+            color: #4caf50;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+
+        ul, ol {
+            margin-left: 20px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .highlight {
+            background: #fff9c4;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #d32f2f;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .danger-box {
+            background: #f8d7da;
+            border-left: 5px solid #dc3545;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .success-box {
+            background: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .step-by-step {
+            counter-reset: step;
+        }
+
+        .step {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            position: relative;
+            padding-left: 60px;
+        }
+
+        .step::before {
+            counter-increment: step;
+            content: counter(step);
+            position: absolute;
+            left: 15px;
+            top: 15px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .quality-checklist {
+            background: #e8f5e9;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .quality-checklist h4 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+        }
+
+        .quality-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .quality-item::before {
+            content: "✓";
+            background: #4caf50;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Guia de Estudo - Semana 02</h1>
+            <p class="week-info">Crimpagem de Cabos de Rede</p>
+            <div class="nav-buttons">
+                <a href="index.html" class="nav-btn">⬅️ Voltar ao Índice</a>
+                <a href="semana02.html" class="nav-btn">📄 Ver Conteúdo da Semana</a>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎯 Visão Geral da Semana</h2>
+            <p>Nesta semana, você aprenderá a técnica fundamental de crimpagem de cabos de rede UTP com conectores RJ-45. Esta é uma habilidade essencial para qualquer profissional de redes, permitindo criar cabos personalizados de acordo com as necessidades específicas de cada instalação.</p>
+            
+            <div class="tip-box">
+                <strong>💡 Meta da Semana:</strong> Ao final desta aula, você deve ser capaz de crimpar cabos diretos (T568B) e crossover com qualidade profissional, passando no teste de continuidade.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>✏️ Atividade 1: Demonstração do Professor</h2>
+            
+            <div class="exercise-block">
+                <div class="exercise-header">
+                    <div class="exercise-number">1</div>
+                    <div class="exercise-title">Demonstração e Observação</div>
+                </div>
+
+                <p><strong>📋 Objetivo:</strong> Observar a técnica correta de crimpagem</p>
+                <p><strong>⏱️ Duração:</strong> 15 minutos</p>
+                <p><strong>📄 Descrição:</strong> Acompanhar demonstração prática do professor, fazer anotações e tirar dúvidas</p>
+
+                <h3 style="color: #6a11cb; margin-top: 25px; margin-bottom: 15px;">📊 Pontos de Atenção</h3>
+                
+                <div class="quality-checklist">
+                    <h4>🔍 O que observar durante a demonstração:</h4>
+                    <div class="quality-item">Postura correta ao segurar o alicate</div>
+                    <div class="quality-item">Força aplicada ao crimpar</div>
+                    <div class="quality-item">Técnica de alinhamento dos fios</div>
+                    <div class="quality-item">Verificação visual antes de crimpar</div>
+                    <div class="quality-item">Uso do testador de cabos</div>
+                </div>
+
+                <div class="tip-box">
+                    <strong>💡 Dica:</strong> Faça anotações sobre os erros mais comuns mencionados pelo professor. Isso ajudará você a evitá-los na sua prática!
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>✏️ Atividade 2: Primeira Crimpagem (T568B)</h2>
+            
+            <div class="exercise-block">
+                <div class="exercise-header">
+                    <div class="exercise-number">2</div>
+                    <div class="exercise-title">Cabo Direto T568B</div>
+                </div>
+
+                <p><strong>📋 Objetivo:</strong> Crimpar primeiro cabo direto com padrão T568B</p>
+                <p><strong>⏱️ Duração:</strong> 30 minutos</p>
+                <p><strong>📄 Especificações:</strong> Cabo UTP Cat5e de 1,5m, ambas as pontas T568B</p>
+
+                <h3 style="color: #6a11cb; margin-top: 25px; margin-bottom: 15px;">📊 Rubrica de Avaliação</h3>
+                
+                <table class="rubric-table">
+                    <tr>
+                        <th>Critério</th>
+                        <th>Pontuação</th>
+                        <th>Descrição</th>
+                    </tr>
+                    <tr>
+                        <td class="criterion">Ordem dos Fios</td>
+                        <td>30%</td>
+                        <td>Fios organizados corretamente no padrão T568B</td>
+                    </tr>
+                    <tr>
+                        <td class="criterion">Qualidade da Crimpagem</td>
+                        <td>30%</td>
+                        <td>Conector bem prensado, sem folgas</td>
+                    </tr>
+                    <tr>
+                        <td class="criterion">Teste de Continuidade</td>
+                        <td>30%</td>
+                        <td>Cabo passa no teste sem erros</td>
+                    </tr>
+                    <tr>
+                        <td class="criterion">Acabamento</td>
+                        <td>10%</td>
+                        <td>Capa externa dentro do conector, fios nivelados</td>
+                    </tr>
+                </table>
+
+                <div class="solution-box">
+                    <h3>✅ Passo a Passo Detalhado</h3>
+                    
+                    <div class="step-by-step">
+                        <div class="step">
+                            <h4 style="color: #2e7d32; margin-bottom: 10px;">Corte do Cabo</h4>
+                            <p>Corte o cabo UTP deixando 10-15cm de margem para trabalhar. Use a parte cortante do alicate de crimpagem.</p>
+                            <div class="tip-box" style="margin-top: 10px;">
+                                <strong>💡 Dica:</strong> Sempre deixe margem! É melhor sobrar do que faltar cabo.
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <h4 style="color: #2e7d32; margin-bottom: 10px;">Remoção da Capa Externa</h4>
+                            <p>Remova aproximadamente 2,5cm da capa externa. Use o decapador ou a lâmina do alicate. <strong>Cuidado para não danificar os fios internos!</strong></p>
+                            <div class="warning-box" style="margin-top: 10px;">
+                                <strong>⚠️ Atenção:</strong> Não force a lâmina. Se cortar muito fundo, pode danificar os fios e terá que refazer.
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <h4 style="color: #2e7d32; margin-bottom: 10px;">Destrançamento dos Pares</h4>
+                            <p>Destrance os pares apenas o suficiente para organizar. <strong>Máximo de 1,3cm!</strong> Destrançar demais compromete a qualidade do sinal.</p>
+                            <div class="example-box" style="margin-top: 10px;">
+                                <h4>📏 Medida Ideal</h4>
+                                <p>Aproximadamente a largura do seu dedão é a medida certa para destrançar (cerca de 1,2cm).</p>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <h4 style="color: #2e7d32; margin-bottom: 10px;">Organização no Padrão T568B</h4>
+                            <p>Organize os fios na seguinte ordem (da esquerda para direita):</p>
+                            <div class="command-box" style="margin-top: 10px;">
+1. Branco-Laranja
+2. Laranja
+3. Branco-Verde
+4. Azul
+5. Branco-Azul
+6. Verde
+7. Branco-Marrom
+8. Marrom
+                            </div>
+                            <div class="tip-box" style="margin-top: 10px;">
+                                <strong>💡 Macete:</strong> "Branco-Laranja começa, os verdes no meio trocados, azuis juntos, marrons no final"
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <h4 style="color: #2e7d32; margin-bottom: 10px;">Nivelamento dos Fios</h4>
+                            <p>Com os fios alinhados e paralelos, corte-os retos a 1,2-1,5cm da borda da capa externa. Use a lâmina do alicate mantendo o corte perpendicular.</p>
+                            <div class="warning-box" style="margin-top: 10px;">
+                                <strong>⚠️ Crítico:</strong> Se os fios ficarem tortos ou em comprimentos diferentes, o cabo não funcionará!
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <h4 style="color: #2e7d32; margin-bottom: 10px;">Inserção no Conector RJ-45</h4>
+                            <p>Segure o conector com o clip voltado para baixo e os pinos dourados para frente. Insira os fios firmemente até que todos cheguem ao fundo do conector e a capa externa entre no conector.</p>
+                            <div class="quality-checklist" style="margin-top: 10px;">
+                                <h4>✓ Checklist Pré-Crimpagem</h4>
+                                <div class="quality-item">Todos os 8 fios chegaram ao final</div>
+                                <div class="quality-item">Fios estão na ordem correta</div>
+                                <div class="quality-item">Capa externa entrou no conector</div>
+                                <div class="quality-item">Não há fios cruzados</div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <h4 style="color: #2e7d32; margin-bottom: 10px;">Verificação Visual</h4>
+                            <p>Olhe pela parte transparente do conector para confirmar:</p>
+                            <ul>
+                                <li>Todos os fios chegaram até o fim</li>
+                                <li>A ordem das cores está correta</li>
+                                <li>A capa externa está dentro do conector</li>
+                                <li>Não há fios torcidos ou cruzados</li>
+                            </ul>
+                        </div>
+
+                        <div class="step">
+                            <h4 style="color: #2e7d32; margin-bottom: 10px;">Crimpagem</h4>
+                            <p>Insira o conector no alicate de crimpagem. Pressione firmemente até ouvir um "click" audível. A força deve ser firme mas não excessiva.</p>
+                            <div class="danger-box" style="margin-top: 10px;">
+                                <strong>🚨 Erro Comum:</strong> Pressão insuficiente resulta em mau contato. Pressão excessiva pode quebrar o conector. O "click" é o sinal de que está correto!
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <h4 style="color: #2e7d32; margin-bottom: 10px;">Teste de Continuidade</h4>
+                            <p>Use o testador de cabos. Os LEDs devem acender em sequência de 1 a 8 em ambas as pontas. Se algum LED não acender ou acender fora de ordem, há problema.</p>
+                            <div class="example-box" style="margin-top: 10px;">
+                                <h4>🔍 Interpretando o Teste</h4>
+                                <ul>
+                                    <li><strong>Todos os LEDs acendem em ordem:</strong> ✅ Cabo perfeito!</li>
+                                    <li><strong>LED não acende:</strong> ❌ Fio não fez contato</li>
+                                    <li><strong>LEDs fora de ordem:</strong> ❌ Fios trocados</li>
+                                    <li><strong>Múltiplos LEDs acendem juntos:</strong> ❌ Curto-circuito</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="danger-box">
+                    <h4 style="margin-bottom: 10px;">🚨 Erros Mais Comuns (e como evitar)</h4>
+                    <ol>
+                        <li><strong>Destrançar demais:</strong> Mantenha máximo de 1,3cm destrançado</li>
+                        <li><strong>Fios não chegam ao final:</strong> Corte mais curto e alinhe bem</li>
+                        <li><strong>Capa externa não entra:</strong> Corte menos capa (máximo 2,5cm)</li>
+                        <li><strong>Ordem errada das cores:</strong> Sempre confira antes de crimpar</li>
+                        <li><strong>Pressão insuficiente:</strong> Pressione até o "click"</li>
+                        <li><strong>Danificar fios ao decapar:</strong> Use menos pressão na lâmina</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>✏️ Atividade 3: Segunda Crimpagem (T568A)</h2>
+            
+            <div class="exercise-block">
+                <div class="exercise-header">
+                    <div class="exercise-number">3</div>
+                    <div class="exercise-title">Cabo Direto T568A</div>
+                </div>
+
+                <p><strong>📋 Objetivo:</strong> Dominar também o padrão T568A</p>
+                <p><strong>⏱️ Duração:</strong> 25 minutos</p>
+                <p><strong>📄 Especificações:</strong> Cabo UTP Cat5e de 2m, ambas as pontas T568A, etiquetar como "T568A"</p>
+
+                <div class="solution-box">
+                    <h3>✅ Padrão T568A</h3>
+                    <p>Siga os mesmos passos da atividade anterior, mas com a ordem de cores T568A:</p>
+                    
+                    <div class="command-box">
+1. Branco-Verde
+2. Verde
+3. Branco-Laranja
+4. Azul
+5. Branco-Azul
+6. Laranja
+7. Branco-Marrom
+8. Marrom
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>💡 Diferença Principal:</strong> Nos pinos 1-2 e 3-6, as cores Verde e Laranja são invertidas em relação ao T568B. Os pares Azul (4-5) e Marrom (7-8) permanecem iguais.
+                    </div>
+                </div>
+
+                <div class="example-box">
+                    <h4>📝 Etiquetagem</h4>
+                    <p>Após passar no teste, cole uma etiqueta ou anilha próxima ao conector com a inscrição "T568A". Isso é importante para identificação futura do padrão usado.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>✏️ Atividade 4: Cabo Crossover</h2>
+            
+            <div class="exercise-block">
+                <div class="exercise-header">
+                    <div class="exercise-number">4</div>
+                    <div class="exercise-title">Cabo Crossover</div>
+                </div>
+
+                <p><strong>📋 Objetivo:</strong> Criar cabo crossover funcional</p>
+                <p><strong>⏱️ Duração:</strong> 30 minutos</p>
+                <p><strong>📄 Especificações:</strong> Cabo 1m, uma ponta T568B, outra ponta T568A, etiquetar "CROSSOVER"</p>
+
+                <div class="solution-box">
+                    <h3>✅ Como Fazer Cabo Crossover</h3>
+                    
+                    <h4 style="color: #2e7d32; margin-top: 20px;">🔀 Conceito</h4>
+                    <p>Um cabo crossover "cruza" os pares de transmissão (TX) e recepção (RX), permitindo conectar diretamente dois dispositivos do mesmo tipo sem um switch intermediário.</p>
+
+                    <h4 style="color: #2e7d32; margin-top: 20px;">🔧 Montagem</h4>
+                    <div class="step-by-step">
+                        <div class="step">
+                            <h4 style="color: #2e7d32; margin-bottom: 10px;">Ponta A: T568B</h4>
+                            <div class="command-box">
+Branco-Laranja, Laranja, Branco-Verde, Azul, 
+Branco-Azul, Verde, Branco-Marrom, Marrom
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <h4 style="color: #2e7d32; margin-bottom: 10px;">Ponta B: T568A</h4>
+                            <div class="command-box">
+Branco-Verde, Verde, Branco-Laranja, Azul,
+Branco-Azul, Laranja, Branco-Marrom, Marrom
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="example-box">
+                        <h4>📊 Aplicações do Cabo Crossover</h4>
+                        <ul>
+                            <li><strong>Computador ↔ Computador:</strong> Conectar dois PCs diretamente</li>
+                            <li><strong>Switch ↔ Switch:</strong> Conectar dois switches (uplink)</li>
+                            <li><strong>Roteador ↔ Roteador:</strong> Conectar dois roteadores</li>
+                            <li><strong>Hub ↔ Hub:</strong> Cascata de hubs</li>
+                        </ul>
+                    </div>
+
+                    <div class="warning-box">
+                        <strong>⚠️ Nota Importante:</strong> Equipamentos modernos com Auto-MDI/MDI-X detectam automaticamente o tipo de cabo e ajustam os pinos, tornando o cabo crossover menos necessário. Porém, ainda é útil em equipamentos antigos e para fins educacionais.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>✏️ Atividade 5: Desafio de Velocidade</h2>
+            
+            <div class="exercise-block">
+                <div class="exercise-header">
+                    <div class="exercise-number">5</div>
+                    <div class="exercise-title">Desafio de Velocidade</div>
+                </div>
+
+                <p><strong>📋 Objetivo:</strong> Desenvolver agilidade na crimpagem</p>
+                <p><strong>⏱️ Duração:</strong> 20 minutos</p>
+                <p><strong>📄 Desafio:</strong> Crimpar cabo direto de 1m no menor tempo possível, mantendo qualidade</p>
+
+                <div class="solution-box">
+                    <h3>🏆 Metas de Tempo</h3>
+                    
+                    <table class="rubric-table">
+                        <tr>
+                            <th>Nível</th>
+                            <th>Tempo</th>
+                            <th>Classificação</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Iniciante</strong></td>
+                            <td>10-15 minutos</td>
+                            <td>Normal para primeira vez</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Intermediário</strong></td>
+                            <td>5-10 minutos</td>
+                            <td>Boa performance</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Avançado</strong></td>
+                            <td>3-5 minutos</td>
+                            <td>Excelente!</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Profissional</strong></td>
+                            <td>&lt; 3 minutos</td>
+                            <td>Nível profissional! 🌟</td>
+                        </tr>
+                    </table>
+
+                    <div class="tip-box">
+                        <strong>💡 Dicas para Ganhar Velocidade:</strong>
+                        <ul>
+                            <li>Organize seu espaço de trabalho antes de começar</li>
+                            <li>Tenha todas as ferramentas à mão</li>
+                            <li>Pratique a memorização das cores</li>
+                            <li>Desenvolva um fluxo de trabalho consistente</li>
+                            <li>Não sacrifique qualidade por velocidade!</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="success-box">
+                    <h4>✅ Requisitos Mínimos</h4>
+                    <p>Independente do tempo, o cabo DEVE:</p>
+                    <ul>
+                        <li>✓ Passar no teste de continuidade</li>
+                        <li>✓ Ter ordem correta das cores</li>
+                        <li>✓ Ter acabamento profissional</li>
+                        <li>✓ Capa externa dentro do conector</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📝 Registro de Desempenho</h2>
+            
+            <div class="example-box">
+                <h4>📊 Tabela de Registro Individual</h4>
+                <p>Anote seus resultados para acompanhar sua evolução:</p>
+                
+                <table class="rubric-table" style="margin-top: 15px;">
+                    <tr>
+                        <th>Cabo #</th>
+                        <th>Tipo</th>
+                        <th>Padrão</th>
+                        <th>Comprimento</th>
+                        <th>Teste</th>
+                        <th>Tempo</th>
+                        <th>Obs</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>Direto</td>
+                        <td>T568B</td>
+                        <td>1,5m</td>
+                        <td>✓ / ✗</td>
+                        <td>___min</td>
+                        <td>_______</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Direto</td>
+                        <td>T568A</td>
+                        <td>2,0m</td>
+                        <td>✓ / ✗</td>
+                        <td>___min</td>
+                        <td>_______</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Crossover</td>
+                        <td>T568B-T568A</td>
+                        <td>1,0m</td>
+                        <td>✓ / ✗</td>
+                        <td>___min</td>
+                        <td>_______</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>Desafio</td>
+                        <td>Livre</td>
+                        <td>1,0m</td>
+                        <td>✓ / ✗</td>
+                        <td>___min</td>
+                        <td>_______</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📝 Checklist da Semana 2</h2>
+            
+            <div class="success-box">
+                <h3>✅ Você deve ser capaz de:</h3>
+                <ul>
+                    <li>✓ Crimpar cabo direto padrão T568B corretamente</li>
+                    <li>✓ Crimpar cabo direto padrão T568A corretamente</li>
+                    <li>✓ Criar cabo crossover funcional</li>
+                    <li>✓ Testar cabos com testador de continuidade</li>
+                    <li>✓ Identificar erros comuns e corrigi-los</li>
+                    <li>✓ Explicar a diferença entre T568A e T568B</li>
+                    <li>✓ Usar corretamente o alicate de crimpagem</li>
+                    <li>✓ Crimpar um cabo em menos de 10 minutos</li>
+                </ul>
+            </div>
+
+            <div class="tip-box">
+                <strong>💡 Para a próxima aula:</strong>
+                <ul>
+                    <li>Traga os 3 cabos que você confeccionou</li>
+                    <li>Estude sobre patch panels e blocos 110</li>
+                    <li>Assista aos vídeos sobre alicate punch down</li>
+                    <li>Revise conceitos de organização de racks</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="header" style="margin-top: 30px;">
+            <h2 style="color: #6a11cb; margin-bottom: 15px;">🎯 Recursos Adicionais</h2>
+            <ul style="margin-left: 20px;">
+                <li><a href="https://www.youtube.com/watch?v=eRkpGMPHZ4s" target="_blank" style="color: #2575fc;">Vídeo: Como Crimpar Cabo de Rede Passo a Passo</a></li>
+                <li><a href="https://www.youtube.com/watch?v=gI-ra6g8Uuc" target="_blank" style="color: #2575fc;">Vídeo: Diferenças entre T568A e T568B</a></li>
+                <li><a href="https://www.youtube.com/watch?v=v1nYKJh-TLU" target="_blank" style="color: #2575fc;">Vídeo: Cabo Direto vs Crossover</a></li>
+                <li><a href="https://www.youtube.com/watch?v=5qDvPMGoYWY" target="_blank" style="color: #2575fc;">Vídeo: Testando Cabos de Rede</a></li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
