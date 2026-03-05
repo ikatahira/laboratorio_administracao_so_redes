@@ -1,0 +1,1908 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📶 Access Points — Semana 4 | ISO-103</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #050d1a;
+  --bg2: #091424;
+  --card: #0d1f35;
+  --card2: #0f2540;
+  --cyan: #00d4ff;
+  --cyan2: #00a8cc;
+  --purple: #b44aff;
+  --purple2: #8b2fe0;
+  --green: #00ff88;
+  --green2: #00cc6a;
+  --yellow: #ffcc00;
+  --red: #ff4466;
+  --text: #e0f0ff;
+  --muted: #5a7a99;
+  --border: rgba(0,212,255,0.15);
+  --glow-cyan: 0 0 20px rgba(0,212,255,0.4);
+  --glow-purple: 0 0 20px rgba(180,74,255,0.4);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Exo 2', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ANIMATED BACKGROUND */
+body::before {
+  content: '';
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(0,212,255,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(180,74,255,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(0,255,136,0.03) 0%, transparent 60%);
+  pointer-events: none; z-index: 0;
+}
+
+/* WIFI RINGS ANIMATION */
+.wifi-bg {
+  position: fixed; top: 60px; right: -80px;
+  width: 400px; height: 400px;
+  pointer-events: none; z-index: 0; opacity: 0.12;
+}
+.wifi-ring {
+  position: absolute; border-radius: 50%;
+  border: 2px solid var(--cyan);
+  animation: wifiPulse 3s ease-out infinite;
+}
+.wifi-ring:nth-child(1) { width: 100px; height: 100px; top: 150px; left: 150px; animation-delay: 0s; }
+.wifi-ring:nth-child(2) { width: 200px; height: 200px; top: 100px; left: 100px; animation-delay: 0.5s; }
+.wifi-ring:nth-child(3) { width: 300px; height: 300px; top: 50px; left: 50px; animation-delay: 1s; }
+.wifi-ring:nth-child(4) { width: 400px; height: 400px; top: 0; left: 0; animation-delay: 1.5s; }
+@keyframes wifiPulse {
+  0% { opacity: 1; transform: scale(0.8); }
+  100% { opacity: 0; transform: scale(1.1); }
+}
+
+/* HEADER */
+.header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(5,13,26,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 0;
+}
+.header::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--cyan), var(--purple), transparent);
+}
+.header-inner {
+  max-width: 1300px; margin: 0 auto; padding: 0 24px;
+  display: flex; align-items: center; gap: 16px;
+}
+.header-logo {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.75em; font-weight: 700;
+  color: var(--cyan);
+  letter-spacing: 2px;
+  text-shadow: var(--glow-cyan);
+}
+.header-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 1em; font-weight: 900;
+  color: var(--text);
+}
+.header-title span { color: var(--cyan); }
+.back-btn {
+  background: rgba(0,212,255,0.1);
+  border: 1px solid var(--border);
+  color: var(--cyan); padding: 6px 14px; border-radius: 6px;
+  font-family: 'Exo 2', sans-serif; font-size: 0.8em; font-weight: 700;
+  cursor: pointer; text-decoration: none;
+  transition: all 0.2s;
+  display: flex; align-items: center; gap: 6px;
+}
+.back-btn:hover { background: rgba(0,212,255,0.2); box-shadow: var(--glow-cyan); }
+
+/* HUD */
+.hud {
+  margin-left: auto;
+  display: flex; align-items: center; gap: 10px;
+}
+.hud-pill {
+  background: rgba(0,212,255,0.08);
+  border: 1px solid rgba(0,212,255,0.2);
+  border-radius: 8px; padding: 6px 14px;
+  text-align: center;
+}
+.hud-pill .v {
+  font-family: 'Orbitron', monospace;
+  font-size: 1.2em; font-weight: 700;
+  color: var(--cyan); display: block; line-height: 1;
+}
+.hud-pill .l {
+  font-size: 0.58em; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 1px;
+  display: block; margin-top: 2px;
+}
+.hud-xp-wrap {
+  background: rgba(0,212,255,0.08);
+  border: 1px solid rgba(0,212,255,0.2);
+  border-radius: 8px; padding: 7px 14px; min-width: 150px;
+}
+.hud-xp-label {
+  display: flex; justify-content: space-between;
+  font-size: 0.6em; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 1px;
+  margin-bottom: 5px;
+}
+.hud-bar-bg {
+  background: rgba(0,0,0,0.4); border-radius: 100px; height: 6px; overflow: hidden;
+}
+.hud-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--cyan), var(--purple));
+  border-radius: 100px;
+  transition: width 0.8s ease;
+  box-shadow: 0 0 10px rgba(0,212,255,0.5);
+}
+
+/* LAYOUT */
+.layout {
+  max-width: 1300px; margin: 0 auto; padding: 28px 24px;
+  display: grid; grid-template-columns: 260px 1fr; gap: 24px;
+  position: relative; z-index: 1;
+}
+
+/* SIDEBAR */
+.sidebar { display: flex; flex-direction: column; gap: 16px; }
+.scard {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px; padding: 18px;
+}
+.scard-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.72em; font-weight: 700;
+  color: var(--cyan); letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 14px; padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 6px;
+}
+
+/* NAV */
+.nav-link {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; border-radius: 8px;
+  text-decoration: none; color: var(--muted);
+  font-size: 0.85em; font-weight: 600;
+  transition: all 0.2s; margin-bottom: 4px;
+  border: 1px solid transparent;
+}
+.nav-link:hover { color: var(--cyan); background: rgba(0,212,255,0.06); border-color: var(--border); }
+.nav-link.active {
+  color: var(--cyan); background: rgba(0,212,255,0.12);
+  border-color: rgba(0,212,255,0.3);
+  box-shadow: inset 3px 0 0 var(--cyan);
+}
+.nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.nav-dot.cyan { background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
+.nav-dot.purple { background: var(--purple); }
+.nav-dot.green { background: var(--green); }
+
+/* PROGRESS */
+.prog-block { margin-bottom: 12px; }
+.prog-label {
+  display: flex; justify-content: space-between;
+  font-size: 0.75em; color: var(--muted); font-weight: 600;
+  margin-bottom: 5px;
+}
+.prog-label span:last-child { color: var(--cyan); font-family: 'Orbitron', monospace; }
+.prog-bg {
+  background: rgba(255,255,255,0.06); border-radius: 100px; height: 6px; overflow: hidden;
+}
+.prog-fill {
+  height: 100%; border-radius: 100px; transition: width 0.8s ease;
+}
+.prog-fill.c { background: linear-gradient(90deg, var(--cyan2), var(--cyan)); box-shadow: 0 0 8px rgba(0,212,255,0.4); }
+.prog-fill.p { background: linear-gradient(90deg, var(--purple2), var(--purple)); box-shadow: 0 0 8px rgba(180,74,255,0.4); }
+.prog-fill.g { background: linear-gradient(90deg, var(--green2), var(--green)); box-shadow: 0 0 8px rgba(0,255,136,0.4); }
+.prog-fill.y { background: linear-gradient(90deg, #cc9900, var(--yellow)); }
+
+/* BADGES */
+.badge-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
+.badge-item {
+  aspect-ratio: 1; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2em;
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+  filter: grayscale(1) opacity(0.3); transition: all 0.4s;
+  cursor: default; position: relative;
+}
+.badge-item.unlocked {
+  filter: none;
+  background: rgba(0,212,255,0.1); border-color: rgba(0,212,255,0.4);
+  box-shadow: 0 0 16px rgba(0,212,255,0.3);
+  animation: badgePop 0.5s ease;
+}
+@keyframes badgePop {
+  0% { transform: scale(0.5); opacity: 0; }
+  70% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.badge-item[title]:hover::after {
+  content: attr(title);
+  position: absolute; bottom: calc(100% + 6px); left: 50%;
+  transform: translateX(-50%);
+  background: var(--card2); color: var(--cyan);
+  border: 1px solid var(--border);
+  font-family: 'Exo 2', sans-serif; font-size: 0.6em;
+  padding: 4px 8px; border-radius: 5px; white-space: nowrap;
+  z-index: 100;
+}
+
+/* MAIN */
+.main { display: flex; flex-direction: column; gap: 22px; }
+
+/* HERO */
+.hero {
+  background: var(--card);
+  border: 1px solid rgba(0,212,255,0.2);
+  border-radius: 16px; padding: 36px 40px;
+  position: relative; overflow: hidden;
+  box-shadow: 0 0 40px rgba(0,212,255,0.08);
+}
+.hero::before {
+  content: '📶';
+  position: absolute; right: 30px; top: 50%; transform: translateY(-50%);
+  font-size: 8em; opacity: 0.05;
+}
+.hero-tag {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.65em; letter-spacing: 3px; font-weight: 700;
+  color: var(--cyan); text-transform: uppercase;
+  margin-bottom: 10px; opacity: 0.8;
+}
+.hero h1 {
+  font-family: 'Orbitron', monospace;
+  font-size: 2em; font-weight: 900;
+  color: var(--text); line-height: 1.2; margin-bottom: 8px;
+}
+.hero h1 span { color: var(--cyan); text-shadow: var(--glow-cyan); }
+.hero-sub { color: var(--muted); font-size: 1em; margin-bottom: 20px; }
+.hero-chips { display: flex; gap: 10px; flex-wrap: wrap; }
+.chip {
+  background: rgba(0,212,255,0.08);
+  border: 1px solid rgba(0,212,255,0.2);
+  border-radius: 100px; padding: 5px 14px;
+  font-size: 0.78em; font-weight: 700; color: var(--cyan);
+  display: flex; align-items: center; gap: 5px;
+}
+.chip.purple { background: rgba(180,74,255,0.08); border-color: rgba(180,74,255,0.2); color: var(--purple); }
+.chip.green { background: rgba(0,255,136,0.08); border-color: rgba(0,255,136,0.2); color: var(--green); }
+
+/* CARD */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px; overflow: hidden;
+}
+.card-head {
+  padding: 16px 22px; display: flex; align-items: center; gap: 12px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(0,212,255,0.03);
+}
+.card-icon {
+  width: 36px; height: 36px; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1em; flex-shrink: 0;
+}
+.ci-c { background: rgba(0,212,255,0.15); border: 1px solid rgba(0,212,255,0.3); }
+.ci-p { background: rgba(180,74,255,0.15); border: 1px solid rgba(180,74,255,0.3); }
+.ci-g { background: rgba(0,255,136,0.15); border: 1px solid rgba(0,255,136,0.3); }
+.ci-y { background: rgba(255,204,0,0.15); border: 1px solid rgba(255,204,0,0.3); }
+.card-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.85em; font-weight: 700; color: var(--text);
+  letter-spacing: 1px;
+}
+.xp-tag {
+  margin-left: auto;
+  background: rgba(0,212,255,0.1);
+  border: 1px solid rgba(0,212,255,0.3);
+  color: var(--cyan); padding: 3px 12px; border-radius: 100px;
+  font-size: 0.72em; font-weight: 700;
+  font-family: 'Orbitron', monospace;
+}
+.xp-tag.purple { background: rgba(180,74,255,0.1); border-color: rgba(180,74,255,0.3); color: var(--purple); }
+.card-body { padding: 22px; }
+
+/* OBJECTIVES */
+.obj-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.obj-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px; border-radius: 9px;
+  background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);
+  cursor: pointer; transition: all 0.2s; font-size: 0.9em; font-weight: 600;
+}
+.obj-item:hover { background: rgba(0,212,255,0.06); border-color: rgba(0,212,255,0.2); }
+.obj-item.checked {
+  background: rgba(0,255,136,0.06); border-color: rgba(0,255,136,0.2);
+  color: var(--muted); text-decoration: line-through;
+}
+.obj-circle {
+  width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
+  border: 2px solid rgba(255,255,255,0.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8em; transition: all 0.3s;
+}
+.obj-item.checked .obj-circle {
+  background: var(--green); border-color: var(--green); color: #000;
+  box-shadow: 0 0 12px rgba(0,255,136,0.5);
+}
+
+/* CONCEPT GRID */
+.concept-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px;
+  margin-bottom: 20px;
+}
+.concept-card {
+  background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px; padding: 16px;
+  border-top: 3px solid var(--cyan);
+  transition: all 0.2s;
+}
+.concept-card:hover { background: rgba(0,212,255,0.04); border-color: rgba(0,212,255,0.15); }
+.concept-card.purple { border-top-color: var(--purple); }
+.concept-card.purple:hover { background: rgba(180,74,255,0.04); }
+.concept-card.green { border-top-color: var(--green); }
+.concept-title {
+  font-size: 0.82em; font-weight: 800; color: var(--cyan);
+  margin-bottom: 8px;
+}
+.concept-card.purple .concept-title { color: var(--purple); }
+.concept-card.green .concept-title { color: var(--green); }
+.tag {
+  display: inline-flex;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 4px; padding: 2px 8px;
+  font-size: 0.72em; font-weight: 600; color: var(--muted);
+  margin: 2px; transition: all 0.15s;
+}
+.tag:hover { color: var(--cyan); border-color: rgba(0,212,255,0.2); }
+
+/* GLOSSARY */
+.gloss-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px;
+}
+.gloss-item {
+  background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 9px; padding: 12px 14px;
+  transition: all 0.2s;
+}
+.gloss-item:hover { border-color: rgba(0,212,255,0.2); background: rgba(0,212,255,0.03); }
+.gloss-term {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8em; font-weight: 600; color: var(--cyan);
+  margin-bottom: 4px;
+}
+.gloss-def { font-size: 0.78em; color: var(--muted); line-height: 1.4; }
+
+/* VIDEO */
+.video-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px;
+}
+.video-card {
+  background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px; overflow: hidden; transition: all 0.2s;
+}
+.video-card:hover { border-color: rgba(180,74,255,0.3); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+.video-thumb {
+  height: 100px; background: linear-gradient(135deg, #0d1f35, #1a0d35);
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.play-btn {
+  width: 48px; height: 48px; border-radius: 50%;
+  background: rgba(180,74,255,0.3); border: 2px solid var(--purple);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--purple); font-size: 1.2em;
+  transition: all 0.2s; cursor: pointer;
+}
+.play-btn:hover { background: rgba(180,74,255,0.5); box-shadow: 0 0 20px rgba(180,74,255,0.4); transform: scale(1.1); }
+.video-info { padding: 12px 14px; }
+.video-info h4 { font-size: 0.82em; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.video-info p { font-size: 0.72em; color: var(--muted); margin-bottom: 8px; }
+.video-link {
+  font-size: 0.72em; font-weight: 700;
+  color: var(--purple); text-decoration: none;
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 4px 10px; border: 1px solid rgba(180,74,255,0.3);
+  border-radius: 4px; transition: all 0.2s;
+}
+.video-link:hover { background: rgba(180,74,255,0.1); }
+
+/* MISSIONS */
+.mission {
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px; overflow: hidden; transition: all 0.2s;
+  margin-bottom: 12px;
+}
+.mission:hover { border-color: rgba(0,212,255,0.2); }
+.mission.done { border-color: rgba(0,255,136,0.3); }
+.mission-head {
+  padding: 14px 18px; display: flex; align-items: center; gap: 14px;
+  cursor: pointer; background: rgba(255,255,255,0.02);
+  user-select: none; transition: background 0.2s;
+}
+.mission.done .mission-head { background: rgba(0,255,136,0.04); }
+.mission-head:hover { background: rgba(0,212,255,0.05); }
+.mission-num {
+  width: 38px; height: 38px; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Orbitron', monospace; font-size: 0.9em; font-weight: 700;
+  flex-shrink: 0; color: var(--bg);
+  background: linear-gradient(135deg, var(--cyan2), var(--cyan));
+}
+.mission.done .mission-num { background: linear-gradient(135deg, var(--green2), var(--green)); color: #000; }
+.mission-info { flex: 1; }
+.mission-title { font-weight: 800; font-size: 0.92em; color: var(--text); }
+.mission.done .mission-title { color: var(--green); }
+.mission-meta { font-size: 0.73em; color: var(--muted); font-weight: 600; margin-top: 2px; }
+.mission-xp {
+  background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.2);
+  color: var(--cyan); padding: 3px 11px; border-radius: 100px;
+  font-size: 0.72em; font-weight: 700;
+  font-family: 'Orbitron', monospace;
+}
+.mission.done .mission-xp { background: rgba(0,255,136,0.1); border-color: rgba(0,255,136,0.2); color: var(--green); }
+.mission-toggle { color: var(--muted); font-size: 0.8em; transition: transform 0.3s; }
+.mission.open .mission-toggle { transform: rotate(180deg); }
+.mission-body {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.3s;
+  padding: 0 18px;
+}
+.mission.open .mission-body { max-height: 800px; padding: 4px 18px 18px; }
+.mission-desc {
+  font-size: 0.85em; color: var(--muted); font-weight: 600; margin-bottom: 14px;
+  padding: 10px 14px; background: rgba(0,212,255,0.03); border-radius: 8px;
+  border-left: 3px solid var(--cyan);
+}
+.step { display: flex; gap: 12px; margin-bottom: 10px; align-items: flex-start; }
+.step-num {
+  width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+  background: rgba(0,212,255,0.15); border: 1px solid rgba(0,212,255,0.3);
+  color: var(--cyan); display: flex; align-items: center; justify-content: center;
+  font-size: 0.72em; font-weight: 700; font-family: 'Orbitron', monospace;
+  margin-top: 2px;
+}
+.step p { font-size: 0.86em; line-height: 1.5; color: var(--text); }
+.step code {
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(0,212,255,0.1); color: var(--cyan);
+  padding: 1px 6px; border-radius: 4px; font-size: 0.9em;
+}
+
+/* CMD BLOCK */
+.cmd-block {
+  background: #020a14; border: 1px solid rgba(0,212,255,0.15);
+  border-radius: 9px; padding: 14px 16px;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.78em;
+  line-height: 1.7; margin: 10px 0;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.3);
+  overflow-x: auto;
+}
+.cmd-block .prompt { color: var(--cyan); }
+.cmd-block .cmd { color: #e0e0e0; }
+.cmd-block .comment { color: #445566; }
+.cmd-block .output { color: var(--purple); }
+.cmd-block .value { color: var(--green); }
+
+/* COMPLETE BTN */
+.complete-btn {
+  width: 100%; margin-top: 14px;
+  padding: 13px; border: none; border-radius: 9px; cursor: pointer;
+  font-family: 'Exo 2', sans-serif; font-size: 0.9em; font-weight: 800;
+  background: linear-gradient(135deg, rgba(0,212,255,0.15), rgba(0,212,255,0.08));
+  border: 1px solid rgba(0,212,255,0.3);
+  color: var(--cyan); transition: all 0.3s;
+  letter-spacing: 1px;
+}
+.complete-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(0,212,255,0.25), rgba(0,212,255,0.15));
+  box-shadow: 0 0 20px rgba(0,212,255,0.3); transform: translateY(-1px);
+}
+.complete-btn:disabled {
+  background: rgba(0,255,136,0.1); border-color: rgba(0,255,136,0.3);
+  color: var(--green); cursor: default; transform: none;
+}
+
+/* QUIZ */
+.quiz-prog-wrap { margin-bottom: 16px; }
+.quiz-prog-label { font-size: 0.75em; color: var(--muted); margin-bottom: 5px; display: flex; justify-content: space-between; }
+.quiz-prog-bg { background: rgba(255,255,255,0.06); border-radius: 100px; height: 5px; overflow: hidden; }
+.quiz-prog-fill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, var(--cyan), var(--purple));
+  border-radius: 100px; transition: width 0.5s ease;
+  box-shadow: 0 0 8px rgba(0,212,255,0.4);
+}
+.qcard { display: none; }
+.qcard.active { display: block; }
+.qcard h4 { font-size: 0.95em; font-weight: 700; color: var(--text); margin-bottom: 14px; line-height: 1.4; }
+.qopts { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+.qopt {
+  padding: 11px 16px; border-radius: 8px; cursor: pointer;
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+  color: var(--text); font-family: 'Exo 2', sans-serif; font-size: 0.86em;
+  font-weight: 600; text-align: left; transition: all 0.2s;
+}
+.qopt:hover:not(:disabled) { background: rgba(0,212,255,0.08); border-color: rgba(0,212,255,0.25); color: var(--cyan); }
+.qopt.correct { background: rgba(0,255,136,0.12); border-color: rgba(0,255,136,0.4); color: var(--green); }
+.qopt.wrong { background: rgba(255,68,102,0.12); border-color: rgba(255,68,102,0.4); color: var(--red); }
+.qopt:disabled { cursor: default; }
+.qfb {
+  display: none; padding: 10px 14px; border-radius: 8px;
+  font-size: 0.82em; line-height: 1.4; margin: 8px 0;
+}
+.qfb.show { display: block; }
+.qfb.ok { background: rgba(0,255,136,0.08); border: 1px solid rgba(0,255,136,0.2); color: var(--green); }
+.qfb.fail { background: rgba(255,68,102,0.08); border: 1px solid rgba(255,68,102,0.2); color: var(--red); }
+.qnx { display: none; }
+.qnx.show { display: flex; justify-content: flex-end; }
+.qnx-btn {
+  padding: 8px 18px; border: 1px solid rgba(0,212,255,0.3);
+  background: rgba(0,212,255,0.1); color: var(--cyan);
+  border-radius: 6px; cursor: pointer; font-size: 0.82em; font-weight: 700;
+  font-family: 'Exo 2', sans-serif;
+  transition: all 0.2s;
+}
+.qnx-btn:hover { background: rgba(0,212,255,0.2); }
+.q-result { display: none; text-align: center; padding: 28px 0; }
+.q-result.show { display: block; }
+.q-score {
+  font-family: 'Orbitron', monospace;
+  font-size: 3em; font-weight: 900; color: var(--cyan);
+  text-shadow: var(--glow-cyan); display: block; margin-bottom: 8px;
+}
+.q-msg { color: var(--muted); margin-bottom: 16px; font-size: 0.9em; }
+.q-xp { color: var(--green); font-weight: 700; font-size: 0.85em; margin-bottom: 16px; }
+.restart-btn {
+  padding: 10px 24px; border: 1px solid rgba(0,212,255,0.3);
+  background: rgba(0,212,255,0.1); color: var(--cyan);
+  border-radius: 8px; cursor: pointer; font-size: 0.85em; font-weight: 700;
+  font-family: 'Exo 2', sans-serif; transition: all 0.2s;
+}
+.restart-btn:hover { background: rgba(0,212,255,0.2); box-shadow: var(--glow-cyan); }
+
+/* ACHIEVEMENTS */
+.ach-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.ach-card {
+  background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px; padding: 14px 12px; text-align: center;
+  filter: grayscale(1) opacity(0.3); transition: all 0.4s;
+}
+.ach-card.unlocked {
+  filter: none;
+  background: rgba(0,212,255,0.06); border-color: rgba(0,212,255,0.3);
+  box-shadow: 0 0 20px rgba(0,212,255,0.15);
+}
+.ach-icon { font-size: 1.8em; display: block; margin-bottom: 6px; }
+.ach-name { font-size: 0.68em; font-weight: 700; color: var(--muted); line-height: 1.2; }
+.ach-card.unlocked .ach-name { color: var(--cyan); }
+
+/* SIGNAL STRENGTH INTERACTIVE */
+.signal-demo {
+  background: #020a14; border: 1px solid var(--border);
+  border-radius: 12px; padding: 24px;
+  display: flex; flex-direction: column; align-items: center; gap: 20px;
+}
+.signal-demo h3 {
+  font-family: 'Orbitron', monospace; font-size: 0.8em; color: var(--cyan);
+  letter-spacing: 2px; text-transform: uppercase;
+}
+.signal-bars {
+  display: flex; align-items: flex-end; gap: 5px; height: 60px;
+}
+.sig-bar {
+  width: 14px; border-radius: 3px 3px 0 0;
+  background: rgba(0,212,255,0.15); border: 1px solid rgba(0,212,255,0.2);
+  transition: all 0.3s;
+}
+.sig-bar.active { background: var(--cyan); box-shadow: 0 0 10px rgba(0,212,255,0.5); }
+.sig-bar:nth-child(1) { height: 15px; }
+.sig-bar:nth-child(2) { height: 25px; }
+.sig-bar:nth-child(3) { height: 35px; }
+.sig-bar:nth-child(4) { height: 45px; }
+.sig-bar:nth-child(5) { height: 60px; }
+.signal-info { text-align: center; }
+.signal-value {
+  font-family: 'Orbitron', monospace; font-size: 2em; font-weight: 900;
+  color: var(--cyan); display: block;
+}
+.signal-label { font-size: 0.72em; color: var(--muted); }
+.signal-slider {
+  width: 100%; -webkit-appearance: none; appearance: none;
+  height: 4px; border-radius: 100px;
+  background: rgba(255,255,255,0.1); outline: none; cursor: pointer;
+}
+.signal-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 18px; height: 18px;
+  border-radius: 50%; background: var(--cyan);
+  box-shadow: 0 0 12px rgba(0,212,255,0.6); cursor: pointer;
+}
+
+/* SECURITY METER */
+.security-meter {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px;
+}
+.sec-item {
+  background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 9px; padding: 14px;
+  cursor: pointer; transition: all 0.2s; user-select: none;
+}
+.sec-item:hover { border-color: rgba(0,212,255,0.2); }
+.sec-item.sel-good { background: rgba(0,255,136,0.08); border-color: rgba(0,255,136,0.3); }
+.sec-item.sel-bad { background: rgba(255,68,102,0.08); border-color: rgba(255,68,102,0.3); }
+.sec-item.sel-ok { background: rgba(255,204,0,0.08); border-color: rgba(255,204,0,0.3); }
+.sec-name { font-weight: 800; font-size: 0.85em; color: var(--text); margin-bottom: 4px; }
+.sec-badge { font-size: 0.68em; font-weight: 700; padding: 2px 8px; border-radius: 4px; display: inline-block; }
+.sec-badge.good { background: rgba(0,255,136,0.15); color: var(--green); }
+.sec-badge.bad { background: rgba(255,68,102,0.15); color: var(--red); }
+.sec-badge.ok { background: rgba(255,204,0,0.15); color: var(--yellow); }
+
+/* TOAST */
+.toast {
+  position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+  background: var(--card2); border: 1px solid rgba(0,212,255,0.3);
+  border-radius: 12px; padding: 14px 18px;
+  display: flex; align-items: center; gap: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.5), var(--glow-cyan);
+  transform: translateY(100px) scale(0.9); opacity: 0;
+  transition: all 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
+  max-width: 300px;
+}
+.toast.show { transform: translateY(0) scale(1); opacity: 1; }
+.toast-icon { font-size: 1.5em; }
+.toast-title { font-weight: 800; font-size: 0.88em; color: var(--cyan); font-family: 'Orbitron', monospace; }
+.toast-msg { font-size: 0.75em; color: var(--muted); margin-top: 2px; }
+
+/* SECTION DIVIDER */
+.section-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.65em; letter-spacing: 3px; font-weight: 700;
+  color: var(--muted); text-transform: uppercase; margin-bottom: 14px;
+  display: flex; align-items: center; gap: 10px;
+}
+.section-title::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(90deg, var(--border), transparent);
+}
+
+/* WG302 ACCORDION */
+.wg-step {
+  border: 1px solid rgba(0,212,255,0.1); border-radius: 10px;
+  overflow: hidden; transition: all 0.2s;
+}
+.wg-step:hover { border-color: rgba(0,212,255,0.25); }
+.wg-head {
+  padding: 12px 16px; display: flex; align-items: center; gap: 12px;
+  cursor: pointer; background: rgba(255,255,255,0.02); user-select: none;
+  transition: background 0.2s;
+}
+.wg-head:hover { background: rgba(0,212,255,0.05); }
+.wg-num {
+  width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--cyan2), var(--cyan));
+  color: #000; display: flex; align-items: center; justify-content: center;
+  font-family: 'Orbitron', monospace; font-size: 0.85em; font-weight: 900;
+}
+.wg-info { flex: 1; }
+.wg-title { font-weight: 800; font-size: 0.9em; color: var(--text); }
+.wg-meta { font-size: 0.71em; color: var(--muted); font-weight: 600; margin-top: 2px; }
+.wg-toggle { color: var(--muted); font-size: 0.8em; transition: transform 0.3s; flex-shrink:0; }
+.wg-step.open .wg-toggle { transform: rotate(180deg); }
+.wg-body {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.3s;
+  padding: 0 16px;
+}
+.wg-step.open .wg-body { max-height: 700px; padding: 4px 16px 16px; }
+
+/* WINDOWS XP STEPS */
+.wxp-step {
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 14px 16px; background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(180,74,255,0.1); border-radius: 10px;
+  transition: all 0.2s;
+}
+.wxp-step:hover { border-color: rgba(180,74,255,0.25); background: rgba(180,74,255,0.04); }
+.wxp-num {
+  width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+  background: rgba(180,74,255,0.15); border: 1px solid rgba(180,74,255,0.3);
+  color: var(--purple); display: flex; align-items: center; justify-content: center;
+  font-family: 'Orbitron', monospace; font-size: 0.75em; font-weight: 700;
+}
+.wxp-content { flex: 1; }
+.wxp-title { font-weight: 800; font-size: 0.88em; color: var(--text); margin-bottom: 4px; }
+.wxp-desc { font-size: 0.81em; color: var(--text2); line-height: 1.5; }
+.wxp-path {
+  font-size: 0.79em; color: var(--muted); background: rgba(0,0,0,0.2);
+  border: 1px solid rgba(255,255,255,0.06); border-radius: 5px;
+  padding: 5px 10px; display: flex; align-items: center; gap: 6px;
+}
+.wxp-tip {
+  font-size: 0.79em; color: var(--yellow);
+  background: rgba(255,204,0,0.06); border: 1px solid rgba(255,204,0,0.2);
+  border-radius: 6px; padding: 8px 12px; margin-top: 6px; line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; }
+  .hud { display: none; }
+  .hero h1 { font-size: 1.4em; }
+}
+</style>
+</head>
+<body>
+
+<div class="wifi-bg">
+  <div class="wifi-ring"></div>
+  <div class="wifi-ring"></div>
+  <div class="wifi-ring"></div>
+  <div class="wifi-ring"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-icon" id="toast-icon">📶</div>
+  <div>
+    <div class="toast-title" id="toast-title">+XP</div>
+    <div class="toast-msg" id="toast-msg"></div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <div>
+      <div class="header-logo">ISO-103 · FATEC OURINHOS</div>
+      <div class="header-title">SEMANA 04 — <span>ACCESS POINTS</span></div>
+    </div>
+    <a href="semana04.html" class="back-btn">← Voltar</a>
+    <div class="hud">
+      <div class="hud-pill"><span class="v" id="hud-xp">0</span><span class="l">XP</span></div>
+      <div class="hud-pill"><span class="v" id="hud-streak">0</span><span class="l">Streak</span></div>
+      <div class="hud-pill"><span class="v" id="hud-badges">0</span><span class="l">Badges</span></div>
+      <div class="hud-xp-wrap">
+        <div class="hud-xp-label">
+          <span id="hud-level">Iniciante</span>
+          <span id="hud-pct">0%</span>
+        </div>
+        <div class="hud-bar-bg"><div class="hud-bar" id="hud-bar" style="width:0%"></div></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="scard">
+      <div class="scard-title">📡 Módulos S4</div>
+      <a href="semana04-ap.html" class="nav-link active">
+        <div class="nav-dot cyan"></div>Access Points
+      </a>
+      <a href="semana04-router.html" class="nav-link">
+        <div class="nav-dot purple"></div>Roteadores
+      </a>
+      <a href="semana04-vlan.html" class="nav-link">
+        <div class="nav-dot green"></div>VLANs
+      </a>
+    </div>
+
+    <div class="scard">
+      <div class="scard-title">📊 Progresso</div>
+      <div class="prog-block">
+        <div class="prog-label"><span>Objetivos</span><span id="obj-pct">0%</span></div>
+        <div class="prog-bg"><div class="prog-fill c" id="obj-bar" style="width:0%"></div></div>
+      </div>
+      <div class="prog-block">
+        <div class="prog-label"><span>Missões</span><span id="mis-pct">0%</span></div>
+        <div class="prog-bg"><div class="prog-fill g" id="mis-bar" style="width:0%"></div></div>
+      </div>
+      <div class="prog-block">
+        <div class="prog-label"><span>Quiz</span><span id="quiz-pct">0%</span></div>
+        <div class="prog-bg"><div class="prog-fill p" id="quiz-bar" style="width:0%"></div></div>
+      </div>
+      <div class="prog-block">
+        <div class="prog-label"><span>Conquistas</span><span id="ach-pct">0/8</span></div>
+        <div class="prog-bg"><div class="prog-fill y" id="ach-bar" style="width:0%"></div></div>
+      </div>
+    </div>
+
+    <div class="scard">
+      <div class="scard-title">🏆 Conquistas</div>
+      <div class="badge-grid">
+        <div class="badge-item" id="bm-start" title="Iniciou o módulo">🚀</div>
+        <div class="badge-item" id="bm-obj" title="Todos objetivos">🎯</div>
+        <div class="badge-item" id="bm-wifi" title="Missão AP concluída">📶</div>
+        <div class="badge-item" id="bm-wpa3" title="WPA3 configurado">🔒</div>
+        <div class="badge-item" id="bm-wg302" title="WG302 configurado">📦</div>
+        <div class="badge-item" id="bm-xp" title="Conectou no Windows XP">🖥️</div>
+        <div class="badge-item" id="bm-quiz" title="4+ no quiz">🎓</div>
+        <div class="badge-item" id="bm-perfect" title="Quiz perfeito!">💎</div>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-tag">📶 Módulo · Access Points & Wi-Fi</div>
+      <h1>Redes Sem Fio<br><span>Seguras e Profissionais</span></h1>
+      <p class="hero-sub">IEEE 802.11 · WPA2/WPA3 · SSIDs · RADIUS · Gestão de Canais · Roaming</p>
+      <div class="hero-chips">
+        <div class="chip">⏱️ 45 min</div>
+        <div class="chip">📶 Wi-Fi Lab</div>
+        <div class="chip purple">⚡ 260 XP</div>
+        <div class="chip green">🏆 8 conquistas</div>
+      </div>
+    </div>
+
+    <!-- OBJETIVOS -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon ci-c">🎯</div>
+        <div class="card-title">OBJETIVOS DO MÓDULO</div>
+        <div class="xp-tag">+25 XP ao completar</div>
+      </div>
+      <div class="card-body">
+        <ul class="obj-list">
+          <li class="obj-item" onclick="toggleObj(this,0)">
+            <div class="obj-circle"></div>
+            <span>Compreender os padrões IEEE 802.11 (a/b/g/n/ac/ax)</span>
+          </li>
+          <li class="obj-item" onclick="toggleObj(this,1)">
+            <div class="obj-circle"></div>
+            <span>Configurar SSIDs com segurança WPA2/WPA3</span>
+          </li>
+          <li class="obj-item" onclick="toggleObj(this,2)">
+            <div class="obj-circle"></div>
+            <span>Gerenciar canais e bandas de frequência</span>
+          </li>
+          <li class="obj-item" onclick="toggleObj(this,3)">
+            <div class="obj-circle"></div>
+            <span>Integrar autenticação RADIUS empresarial</span>
+          </li>
+          <li class="obj-item" onclick="toggleObj(this,4)">
+            <div class="obj-circle"></div>
+            <span>Desativar WPS e proteger o access point</span>
+          </li>
+          <li class="obj-item" onclick="toggleObj(this,5)">
+            <div class="obj-circle"></div>
+            <span>Configurar o Netgear ProSafe WG302 (IP, SSID, WPA-PSK)</span>
+          </li>
+          <li class="obj-item" onclick="toggleObj(this,6)">
+            <div class="obj-circle"></div>
+            <span>Conectar um cliente Windows XP ao AP via WZC</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- CONCEITOS -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon ci-c">📖</div>
+        <div class="card-title">CONTEÚDO TÉCNICO</div>
+      </div>
+      <div class="card-body">
+        <div class="section-title">Padrões & Protocolos</div>
+        <div class="concept-grid">
+          <div class="concept-card">
+            <div class="concept-title">📡 IEEE 802.11</div>
+            <span class="tag">802.11a — 5GHz</span>
+            <span class="tag">802.11b — 2.4GHz</span>
+            <span class="tag">802.11g — 54Mbps</span>
+            <span class="tag">802.11n — MIMO</span>
+            <span class="tag">802.11ac — Wi-Fi 5</span>
+            <span class="tag">802.11ax — Wi-Fi 6</span>
+          </div>
+          <div class="concept-card purple">
+            <div class="concept-title">🔒 Segurança</div>
+            <span class="tag">WEP (obsoleto)</span>
+            <span class="tag">WPA2-PSK</span>
+            <span class="tag">WPA3-SAE</span>
+            <span class="tag">802.1X/RADIUS</span>
+            <span class="tag">PMKID</span>
+            <span class="tag">OWE</span>
+          </div>
+          <div class="concept-card green">
+            <div class="concept-title">📶 Canais & RF</div>
+            <span class="tag">Canais 2.4GHz: 1,6,11</span>
+            <span class="tag">Canais 5GHz: 36-165</span>
+            <span class="tag">Channel Bonding</span>
+            <span class="tag">DFS</span>
+            <span class="tag">OFDMA</span>
+            <span class="tag">MU-MIMO</span>
+          </div>
+        </div>
+
+        <div class="section-title" style="margin-top:20px">Glossário de Access Points</div>
+        <div class="gloss-grid">
+          <div class="gloss-item">
+            <div class="gloss-term">SSID</div>
+            <div class="gloss-def">Service Set Identifier — nome da rede Wi-Fi. Pode ser broadcast ou oculto.</div>
+          </div>
+          <div class="gloss-item">
+            <div class="gloss-term">WPA3-SAE</div>
+            <div class="gloss-def">Simultaneous Authentication of Equals — substitui PSK, resistente a ataques de dicionário.</div>
+          </div>
+          <div class="gloss-item">
+            <div class="gloss-term">RADIUS</div>
+            <div class="gloss-def">Remote Authentication Dial-In User Service — autenticação centralizada para redes corporativas.</div>
+          </div>
+          <div class="gloss-item">
+            <div class="gloss-term">Roaming</div>
+            <div class="gloss-def">Transição de cliente entre APs sem perda de conexão. 802.11r acelera o processo.</div>
+          </div>
+          <div class="gloss-item">
+            <div class="gloss-term">WPS</div>
+            <div class="gloss-def">Wi-Fi Protected Setup — protocolo com vulnerabilidade grave (PIN brute-force). SEMPRE desativar.</div>
+          </div>
+          <div class="gloss-item">
+            <div class="gloss-term">OFDMA</div>
+            <div class="gloss-def">Orthogonal Frequency Division Multiple Access — permite múltiplos clientes simultâneos no Wi-Fi 6.</div>
+          </div>
+        </div>
+
+        <!-- INTERACTIVE SIGNAL DEMO -->
+        <div class="section-title" style="margin-top:20px">Simulador de Sinal</div>
+        <div class="signal-demo">
+          <div class="signal-bars">
+            <div class="sig-bar" id="sb1"></div>
+            <div class="sig-bar" id="sb2"></div>
+            <div class="sig-bar" id="sb3"></div>
+            <div class="sig-bar" id="sb4"></div>
+            <div class="sig-bar" id="sb5"></div>
+          </div>
+          <div class="signal-info">
+            <span class="signal-value" id="sig-val">-65 dBm</span>
+            <span class="signal-label" id="sig-label">Sinal Bom</span>
+          </div>
+          <input type="range" class="signal-slider" id="sigSlider" min="-90" max="-30" value="-65" oninput="updateSignal(this.value)">
+          <div style="font-size:0.7em; color:var(--muted); text-align:center">Arraste para simular intensidade de sinal RSSI</div>
+        </div>
+
+        <!-- SECURITY CHOOSER -->
+        <div class="section-title" style="margin-top:20px">Avaliador de Segurança Wi-Fi</div>
+        <p style="font-size:0.8em;color:var(--muted);margin-bottom:12px">Clique para ver a classificação de segurança de cada protocolo:</p>
+        <div class="security-meter">
+          <div class="sec-item" onclick="rateSec(this,'bad')">
+            <div class="sec-name">WEP</div>
+            <span class="sec-badge bad">💀 Obsoleto</span>
+            <div style="font-size:0.72em;color:var(--muted);margin-top:4px">Quebrado em segundos</div>
+          </div>
+          <div class="sec-item" onclick="rateSec(this,'ok')">
+            <div class="sec-name">WPA2-PSK</div>
+            <span class="sec-badge ok">⚠️ Aceitável</span>
+            <div style="font-size:0.72em;color:var(--muted);margin-top:4px">Vulnerável a dict. attacks</div>
+          </div>
+          <div class="sec-item" onclick="rateSec(this,'good')">
+            <div class="sec-name">WPA3-SAE</div>
+            <span class="sec-badge good">✅ Recomendado</span>
+            <div style="font-size:0.72em;color:var(--muted);margin-top:4px">Proteção forward secrecy</div>
+          </div>
+          <div class="sec-item" onclick="rateSec(this,'good')">
+            <div class="sec-name">802.1X/RADIUS</div>
+            <span class="sec-badge good">🏆 Empresarial</span>
+            <div style="font-size:0.72em;color:var(--muted);margin-top:4px">Auth por usuário</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VÍDEOS -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon ci-p">🎬</div>
+        <div class="card-title">VÍDEOS RECOMENDADOS</div>
+        <div class="xp-tag purple">+10 XP por vídeo</div>
+      </div>
+      <div class="card-body">
+        <div class="video-grid">
+          <div class="video-card">
+            <div class="video-thumb"><div class="play-btn" onclick="watchVideo(this)">▶</div></div>
+            <div class="video-info">
+              <h4>Access Point Empresarial</h4>
+              <p>Setup profissional · WPA3 + RADIUS</p>
+              <a href="https://www.youtube.com/watch?v=example3" target="_blank" class="video-link" onclick="watchVideo(this)">▶ Assistir</a>
+            </div>
+          </div>
+          <div class="video-card">
+            <div class="video-thumb"><div class="play-btn" onclick="watchVideo(this)">▶</div></div>
+            <div class="video-info">
+              <h4>Wi-Fi 6 — O que muda?</h4>
+              <p>OFDMA, MU-MIMO, 802.11ax</p>
+              <a href="https://www.youtube.com/watch?v=example5" target="_blank" class="video-link" onclick="watchVideo(this)">▶ Assistir</a>
+            </div>
+          </div>
+          <div class="video-card">
+            <div class="video-thumb"><div class="play-btn" onclick="watchVideo(this)">▶</div></div>
+            <div class="video-info">
+              <h4>Segurança WPA3 na prática</h4>
+              <p>SAE · PMF · OWE · enterprise</p>
+              <a href="https://www.youtube.com/watch?v=example6" target="_blank" class="video-link" onclick="watchVideo(this)">▶ Assistir</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NETGEAR WG302 -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon ci-c">📦</div>
+        <div class="card-title">NETGEAR PROSAFE WG302 — 802.11g</div>
+        <div class="xp-tag">Hardware Real</div>
+      </div>
+      <div class="card-body">
+
+        <!-- FICHA TÉCNICA -->
+        <div class="section-title">Ficha Técnica</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-bottom:20px">
+          <div style="background:rgba(0,212,255,0.04);border:1px solid rgba(0,212,255,0.12);border-radius:10px;padding:14px">
+            <div style="font-family:'Orbitron',monospace;font-size:0.62em;color:var(--cyan);letter-spacing:2px;margin-bottom:10px;text-transform:uppercase">📡 Wireless</div>
+            <div style="font-size:0.8em;line-height:1.9;color:var(--text2)">
+              <b style="color:var(--text)">Padrão:</b> IEEE 802.11b/g<br>
+              <b style="color:var(--text)">Frequência:</b> 2.4 GHz (ISM)<br>
+              <b style="color:var(--text)">Velocidade máx.:</b> 54 Mbps (802.11g)<br>
+              <b style="color:var(--text)">Alcance interno:</b> ~50 m<br>
+              <b style="color:var(--text)">Alcance externo:</b> ~100 m<br>
+              <b style="color:var(--text)">Antenas:</b> 2× removíveis (RP-SMA)<br>
+              <b style="color:var(--text)">Ganho de antena:</b> 2 dBi
+            </div>
+          </div>
+          <div style="background:rgba(180,74,255,0.04);border:1px solid rgba(180,74,255,0.12);border-radius:10px;padding:14px">
+            <div style="font-family:'Orbitron',monospace;font-size:0.62em;color:var(--purple);letter-spacing:2px;margin-bottom:10px;text-transform:uppercase">🔒 Segurança</div>
+            <div style="font-size:0.8em;line-height:1.9;color:var(--text2)">
+              <b style="color:var(--text)">Criptografia:</b> WEP 64/128-bit<br>
+              <b style="color:var(--text)">Autenticação:</b> WPA-PSK (TKIP)<br>
+              <b style="color:var(--text)">Enterprise:</b> WPA 802.1X / RADIUS<br>
+              <b style="color:var(--text)">Filtro MAC:</b> Sim (lista de acesso)<br>
+              <b style="color:var(--text)">SSID oculto:</b> Sim (broadcast off)<br>
+              <b style="color:var(--text)">VPN pass-through:</b> Sim
+            </div>
+          </div>
+          <div style="background:rgba(0,255,136,0.04);border:1px solid rgba(0,255,136,0.12);border-radius:10px;padding:14px">
+            <div style="font-family:'Orbitron',monospace;font-size:0.62em;color:var(--green);letter-spacing:2px;margin-bottom:10px;text-transform:uppercase">🔌 Física</div>
+            <div style="font-size:0.8em;line-height:1.9;color:var(--text2)">
+              <b style="color:var(--text)">Interface LAN:</b> 1× 10/100 Base-TX (RJ-45)<br>
+              <b style="color:var(--text)">Alimentação:</b> PoE 802.3af (12 V DC)<br>
+              <b style="color:var(--text)">Consumo:</b> 9 W (max)<br>
+              <b style="color:var(--text)">Montagem:</b> Teto/parede (kit incluso)<br>
+              <b style="color:var(--text)">Dimensões:</b> 218 × 138 × 37 mm<br>
+              <b style="color:var(--text)">Peso:</b> 340 g
+            </div>
+          </div>
+          <div style="background:rgba(255,204,0,0.04);border:1px solid rgba(255,204,0,0.12);border-radius:10px;padding:14px">
+            <div style="font-family:'Orbitron',monospace;font-size:0.62em;color:var(--yellow);letter-spacing:2px;margin-bottom:10px;text-transform:uppercase">⚙️ Gerência</div>
+            <div style="font-size:0.8em;line-height:1.9;color:var(--text2)">
+              <b style="color:var(--text)">Interface web:</b> HTTP / HTTPS<br>
+              <b style="color:var(--text)">IP padrão:</b> 192.168.0.230<br>
+              <b style="color:var(--text)">Login padrão:</b> admin / password<br>
+              <b style="color:var(--text)">SNMP:</b> v1, v2c<br>
+              <b style="color:var(--text)">Syslog:</b> Suportado<br>
+              <b style="color:var(--text)">Firmware:</b> Atualizável via web
+            </div>
+          </div>
+        </div>
+
+        <!-- CONFIGURAÇÃO PASSO A PASSO -->
+        <div class="section-title">Configuração do WG302 — Passo a Passo</div>
+
+        <!-- ACCORDION STEPS -->
+        <div style="display:flex;flex-direction:column;gap:10px">
+
+          <!-- PASSO 1 -->
+          <div class="wg-step" id="wgs1" onclick="toggleWG('wgs1')">
+            <div class="wg-head">
+              <div class="wg-num">1</div>
+              <div class="wg-info">
+                <div class="wg-title">Conexão Física e Acesso à Interface Web</div>
+                <div class="wg-meta">🔌 Cabo + Navegador · 5 min</div>
+              </div>
+              <span class="wg-toggle">▼</span>
+            </div>
+            <div class="wg-body">
+              <div style="font-size:0.84em;color:var(--muted);margin-bottom:12px;padding:8px 12px;background:rgba(0,212,255,0.03);border-left:3px solid var(--cyan);border-radius:0 6px 6px 0">
+                Conecte o WG302 ao switch com cabo Cat5e. Use PoE ou fonte externa 12V DC.
+              </div>
+              <div class="step"><div class="step-num">a</div><p>Conecte o cabo Ethernet da porta LAN do WG302 ao switch (ou use injetor PoE para alimentação simultânea).</p></div>
+              <div class="step"><div class="step-num">b</div><p>Configure seu PC com IP fixo na mesma sub-rede: <code>192.168.0.X</code> / máscara <code>255.255.255.0</code>.</p></div>
+              <div class="step"><div class="step-num">c</div><p>Abra o navegador e acesse <code>http://192.168.0.230</code> — login padrão: <code>admin</code> / <code>password</code>.</p></div>
+              <div class="cmd-block">
+<span class="comment">── Configuração IP do PC para acessar o WG302 ──</span><br>
+<span class="output">IP do PC      :</span> <span class="value">192.168.0.10</span><br>
+<span class="output">Máscara       :</span> <span class="value">255.255.255.0</span><br>
+<span class="output">Gateway       :</span> <span class="value">192.168.0.230</span><br>
+<span class="output">URL de acesso :</span> <span class="value">http://192.168.0.230</span><br>
+<span class="output">Usuário       :</span> <span class="value">admin</span><br>
+<span class="output">Senha         :</span> <span class="value">password</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- PASSO 2 -->
+          <div class="wg-step" id="wgs2" onclick="toggleWG('wgs2')">
+            <div class="wg-head">
+              <div class="wg-num">2</div>
+              <div class="wg-info">
+                <div class="wg-title">Configuração de IP e Modo de Operação</div>
+                <div class="wg-meta">🌐 Network Settings · 5 min</div>
+              </div>
+              <span class="wg-toggle">▼</span>
+            </div>
+            <div class="wg-body">
+              <div class="step"><div class="step-num">a</div><p>No menu lateral, clique em <b style="color:var(--cyan)">Setup → Basic Settings</b>.</p></div>
+              <div class="step"><div class="step-num">b</div><p>Defina o <b>IP Address</b> fixo para o AP na sua sub-rede. Exemplo: <code>192.168.10.250</code>.</p></div>
+              <div class="step"><div class="step-num">c</div><p>Em <b>Operating Mode</b>, selecione <b style="color:var(--green)">Access Point</b> (padrão). Outras opções: Repeater, Bridge Point-to-Point, Bridge Point-to-Multipoint.</p></div>
+              <div class="cmd-block">
+<span class="output">IP Address    :</span> <span class="value">192.168.10.250</span><br>
+<span class="output">Subnet Mask   :</span> <span class="value">255.255.255.0</span><br>
+<span class="output">Gateway       :</span> <span class="value">192.168.10.1</span><br>
+<span class="output">Operating Mode:</span> <span class="value">Access Point</span><br>
+<span class="output">DNS Server    :</span> <span class="value">8.8.8.8</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- PASSO 3 -->
+          <div class="wg-step" id="wgs3" onclick="toggleWG('wgs3')">
+            <div class="wg-head">
+              <div class="wg-num">3</div>
+              <div class="wg-info">
+                <div class="wg-title">Configuração do SSID e Canal de Rádio</div>
+                <div class="wg-meta">📶 Wireless Settings · 5 min</div>
+              </div>
+              <span class="wg-toggle">▼</span>
+            </div>
+            <div class="wg-body">
+              <div class="step"><div class="step-num">a</div><p>Vá em <b style="color:var(--cyan)">Wireless → Basic Wireless Settings</b>.</p></div>
+              <div class="step"><div class="step-num">b</div><p>Configure o <b>SSID</b> (nome da rede) e o <b>Canal</b>. Use canais <b style="color:var(--yellow)">1, 6 ou 11</b> para evitar interferência.</p></div>
+              <div class="step"><div class="step-num">c</div><p>Selecione o <b>Wireless Mode</b>: <code>802.11g Only</code> para máxima velocidade, ou <code>802.11b/g</code> para compatibilidade com devices antigos.</p></div>
+              <div class="cmd-block">
+<span class="output">SSID          :</span> <span class="value">FATEC-LAB-S4</span><br>
+<span class="output">Wireless Mode :</span> <span class="value">802.11g</span>  <span class="comment">(54 Mbps máx)</span><br>
+<span class="output">Channel       :</span> <span class="value">6</span>  <span class="comment">(não sobrepõe c/ 1 e 11)</span><br>
+<span class="output">Broadcast SSID:</span> <span class="value">Enable</span>  <span class="comment">(desative para ocultar)</span><br>
+<span class="output">Tx Power      :</span> <span class="value">Full</span>  <span class="comment">(100% = máx alcance)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- PASSO 4 -->
+          <div class="wg-step" id="wgs4" onclick="toggleWG('wgs4')">
+            <div class="wg-head">
+              <div class="wg-num">4</div>
+              <div class="wg-info">
+                <div class="wg-title">Configuração de Segurança WPA / WEP</div>
+                <div class="wg-meta">🔒 Security Settings · 8 min</div>
+              </div>
+              <span class="wg-toggle">▼</span>
+            </div>
+            <div class="wg-body">
+              <div class="step"><div class="step-num">a</div><p>Vá em <b style="color:var(--cyan)">Wireless → Security</b>.</p></div>
+              <div class="step"><div class="step-num">b</div><p>Selecione <b style="color:var(--green)">WPA-PSK (TKIP)</b> — o mais seguro suportado pelo WG302. Evite WEP (vulnerável!).</p></div>
+              <div class="step"><div class="step-num">c</div><p>Para ambiente corporativo com RADIUS, selecione <b>WPA with RADIUS</b> e configure o servidor (IP, porta 1812, shared secret).</p></div>
+              <div class="cmd-block">
+<span class="comment">── Segurança WPA-PSK (recomendado para o WG302) ──</span><br>
+<span class="output">Security Mode :</span> <span class="value">WPA-PSK</span><br>
+<span class="output">Encryption    :</span> <span class="value">TKIP</span><br>
+<span class="output">WPA Passphrase:</span> <span class="value">FatecLab@2025!</span>  <span class="comment">(mín 8 chars)</span><br>
+<br>
+<span class="comment">── Para RADIUS (empresarial) ────────────────────</span><br>
+<span class="output">Security Mode :</span> <span class="value">WPA with RADIUS</span><br>
+<span class="output">RADIUS Server :</span> <span class="value">192.168.10.100</span><br>
+<span class="output">RADIUS Port   :</span> <span class="value">1812</span><br>
+<span class="output">Shared Secret :</span> <span class="value">RadiusSecret123</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- PASSO 5 -->
+          <div class="wg-step" id="wgs5" onclick="toggleWG('wgs5')">
+            <div class="wg-head">
+              <div class="wg-num">5</div>
+              <div class="wg-info">
+                <div class="wg-title">Filtro de MAC e Access Control</div>
+                <div class="wg-meta">🛡 MAC Filtering · 5 min</div>
+              </div>
+              <span class="wg-toggle">▼</span>
+            </div>
+            <div class="wg-body">
+              <div class="step"><div class="step-num">a</div><p>Acesse <b style="color:var(--cyan)">Wireless → Access Control</b>.</p></div>
+              <div class="step"><div class="step-num">b</div><p>Selecione <b>Turn Access Control On</b> e escolha o modo: <b>Allow</b> (whitelist) ou <b>Deny</b> (blacklist).</p></div>
+              <div class="step"><div class="step-num">c</div><p>Adicione os endereços MAC autorizados clicando em <b>Add</b>. Obtenha o MAC com <code>ipconfig /all</code> no Windows ou <code>ifconfig</code> no Linux.</p></div>
+              <div class="cmd-block">
+<span class="comment">── Obter MAC Address do dispositivo ─────────────</span><br>
+<span class="prompt">C:\&gt;</span> <span class="cmd">ipconfig /all</span><br>
+<span class="output">Physical Address  :</span> <span class="value">00-1A-2B-3C-4D-5E</span><br>
+<br>
+<span class="comment">── No painel do WG302 ───────────────────────────</span><br>
+<span class="output">Access Control    :</span> <span class="value">Turned ON</span><br>
+<span class="output">Mode              :</span> <span class="value">Allow Listed Stations Only</span><br>
+<span class="output">MAC cadastrado    :</span> <span class="value">00:1A:2B:3C:4D:5E</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- PASSO 6 -->
+          <div class="wg-step" id="wgs6" onclick="toggleWG('wgs6')">
+            <div class="wg-head">
+              <div class="wg-num">6</div>
+              <div class="wg-info">
+                <div class="wg-title">Salvar, Aplicar e Verificar</div>
+                <div class="wg-meta">✅ Apply & Test · 3 min</div>
+              </div>
+              <span class="wg-toggle">▼</span>
+            </div>
+            <div class="wg-body">
+              <div class="step"><div class="step-num">a</div><p>Clique em <b style="color:var(--green)">Apply</b> em cada tela alterada. O AP reiniciará — aguarde ~30 segundos.</p></div>
+              <div class="step"><div class="step-num">b</div><p>Reconecte ao SSID configurado e confirme que recebeu IP pela sub-rede correta.</p></div>
+              <div class="step"><div class="step-num">c</div><p>Verifique os clientes conectados em <b style="color:var(--cyan)">Maintenance → Attached Devices</b>.</p></div>
+              <div class="step"><div class="step-num">d</div><p>Após configurar, <b style="color:var(--yellow)">altere a senha admin</b> em <b>Maintenance → Set Password</b>. Nunca deixe <code>password</code> padrão!</p></div>
+              <div class="cmd-block">
+<span class="comment">── Verificação final ─────────────────────────────</span><br>
+<span class="prompt">C:\&gt;</span> <span class="cmd">ipconfig</span>  <span class="comment">(confirmar IP na sub-rede correta)</span><br>
+<span class="prompt">C:\&gt;</span> <span class="cmd">ping 192.168.10.250</span>  <span class="comment">(ping no AP)</span><br>
+<span class="prompt">C:\&gt;</span> <span class="cmd">ping 192.168.10.1</span>  <span class="comment">(ping no gateway/roteador)</span><br>
+<span class="prompt">C:\&gt;</span> <span class="cmd">ping 8.8.8.8</span>  <span class="comment">(teste de conectividade internet)</span>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /accordion -->
+
+        <!-- MODOS DE OPERAÇÃO -->
+        <div class="section-title" style="margin-top:22px">Modos de Operação do WG302</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px">
+          <div class="gloss-item" style="border-top:3px solid var(--cyan)">
+            <div class="gloss-term">Access Point</div>
+            <div class="gloss-def">Modo padrão. Conecta clientes Wi-Fi à rede cabeada (infra-estrutura).</div>
+          </div>
+          <div class="gloss-item" style="border-top:3px solid var(--purple)">
+            <div class="gloss-term">Repeater</div>
+            <div class="gloss-def">Repete o sinal de outro AP, estendendo o alcance sem cabo adicional.</div>
+          </div>
+          <div class="gloss-item" style="border-top:3px solid var(--green)">
+            <div class="gloss-term">Bridge P2P</div>
+            <div class="gloss-def">Liga dois segmentos de rede cabeada via link wireless ponto a ponto.</div>
+          </div>
+          <div class="gloss-item" style="border-top:3px solid var(--yellow)">
+            <div class="gloss-term">Bridge P2MP</div>
+            <div class="gloss-def">Um AP central conecta múltiplos APs remotos (hub-and-spoke wireless).</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- WINDOWS XP Wi-Fi -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon ci-p">🖥️</div>
+        <div class="card-title">CONECTAR AO AP NO WINDOWS XP</div>
+        <div class="xp-tag purple">Guia Detalhado</div>
+      </div>
+      <div class="card-body">
+
+        <div style="background:rgba(180,74,255,0.05);border:1px solid rgba(180,74,255,0.2);border-radius:10px;padding:14px 18px;margin-bottom:20px;font-size:0.84em;color:var(--text2);line-height:1.6">
+          💡 <b style="color:var(--purple)">Contexto:</b> O Windows XP usa o <b>Wireless Zero Configuration (WZC)</b> — serviço nativo de gerência Wi-Fi. Ele suporta WEP, WPA-PSK (TKIP) e 802.1X, mas <b>não suporta WPA2 ou WPA3</b> sem patch. Certifique-se de que o adaptador wireless e seus drivers estão instalados antes de começar.
+        </div>
+
+        <div class="section-title">Método 1 — Conexão pelo Wireless Zero Configuration (WZC)</div>
+
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px">
+
+          <div class="wxp-step">
+            <div class="wxp-num">1</div>
+            <div class="wxp-content">
+              <div class="wxp-title">Verificar o serviço WZC ativo</div>
+              <div class="wxp-desc">Antes de tudo, confirme que o serviço Wireless Zero Configuration está rodando.</div>
+              <div class="cmd-block" style="margin-top:8px">
+<span class="comment">── Verificar via Serviços ────────────────────────</span><br>
+<span class="prompt">Iniciar</span> → <span class="cmd">Executar</span> → digitar: <span class="value">services.msc</span><br>
+<span class="comment">Localize: "Wireless Zero Configuration" → Status: Iniciado</span><br>
+<span class="comment">Se parado: botão direito → Iniciar</span><br>
+<br>
+<span class="comment">── Ou via Prompt de Comando ──────────────────────</span><br>
+<span class="prompt">C:\&gt;</span> <span class="cmd">net start "Wireless Zero Configuration"</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="wxp-step">
+            <div class="wxp-num">2</div>
+            <div class="wxp-content">
+              <div class="wxp-title">Acessar Conexões de Rede</div>
+              <div class="wxp-desc">Abra o gerenciador de conexões de rede do Windows XP.</div>
+              <div style="margin-top:8px;display:flex;flex-direction:column;gap:5px">
+                <div class="wxp-path">📂 Iniciar → Painel de Controle → Conexões de Rede</div>
+                <div class="wxp-path">📂 OU: clique com botão direito em "Meu Local de Rede" → Propriedades</div>
+                <div class="wxp-path">📂 OU: Iniciar → Executar → digitar <code>ncpa.cpl</code> → Enter</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="wxp-step">
+            <div class="wxp-num">3</div>
+            <div class="wxp-content">
+              <div class="wxp-title">Abrir Propriedades do Adaptador Sem Fio</div>
+              <div class="wxp-desc">Na janela "Conexões de Rede", localize o ícone da placa Wi-Fi (geralmente chamado "Conexão de Rede Sem Fio" ou "Wireless Network Connection").</div>
+              <div style="margin-top:8px">
+                <div class="wxp-tip">⚠️ Se o ícone não aparecer, o driver do adaptador Wi-Fi não está instalado. Instale o driver correto para sua placa (ex: Intel PRO/Wireless, Broadcom, Atheros).</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="wxp-step">
+            <div class="wxp-num">4</div>
+            <div class="wxp-content">
+              <div class="wxp-title">Visualizar Redes Sem Fio Disponíveis</div>
+              <div class="wxp-desc">Clique com botão direito no ícone do adaptador Wi-Fi → <b style="color:var(--cyan)">"Exibir redes sem fio disponíveis"</b>.</div>
+              <div style="margin-top:10px;background:rgba(0,0,0,0.3);border:1px solid rgba(0,212,255,0.15);border-radius:8px;padding:14px">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:0.72em;color:var(--muted);margin-bottom:8px">[ Redes sem fio — janela WZC ]</div>
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.25);border-radius:6px;cursor:pointer">
+                    <span style="font-size:1.3em">📶</span>
+                    <div>
+                      <div style="font-size:0.82em;font-weight:700;color:var(--cyan)">FATEC-LAB-S4</div>
+                      <div style="font-size:0.68em;color:var(--muted)">Segurança: WPA-PSK · Sinal: ████░ Bom</div>
+                    </div>
+                    <span style="margin-left:auto;font-size:0.7em;background:rgba(0,255,136,0.15);color:var(--green);padding:2px 8px;border-radius:3px;font-weight:700">CONECTAR</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:6px">
+                    <span style="font-size:1.3em">📶</span>
+                    <div>
+                      <div style="font-size:0.82em;font-weight:700;color:var(--text2)">outra_rede</div>
+                      <div style="font-size:0.68em;color:var(--muted)">Segurança: WEP · Sinal: ██░░░ Fraco</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="wxp-step">
+            <div class="wxp-num">5</div>
+            <div class="wxp-content">
+              <div class="wxp-title">Conectar à Rede — Inserir Senha (WPA-PSK)</div>
+              <div class="wxp-desc">Clique na rede desejada → <b style="color:var(--cyan)">"Conectar"</b>. Uma caixa de diálogo pedirá a chave de rede.</div>
+              <div class="cmd-block" style="margin-top:8px">
+<span class="comment">── Diálogo "Conexão de Rede Sem Fio" ────────────</span><br>
+<span class="output">Chave de rede :</span> <span class="value">FatecLab@2025!</span><br>
+<span class="output">Confirmar chave:</span> <span class="value">FatecLab@2025!</span><br>
+<span class="comment">→ Clique em "Conectar"</span><br>
+<br>
+<span class="comment">── Para WEP (se for necessário) ─────────────────</span><br>
+<span class="output">Tipo de chave :</span> <span class="value">Chave de rede (WEP)</span><br>
+<span class="output">Índice de chave:</span> <span class="value">1</span><br>
+<span class="output">Chave (hex)   :</span> <span class="value">41424344454647484950515253</span>  <span class="comment">(13 bytes = WEP-104)</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="wxp-step">
+            <div class="wxp-num">6</div>
+            <div class="wxp-content">
+              <div class="wxp-title">Configurar IP — DHCP ou Estático</div>
+              <div class="wxp-desc">Após conectar, verifique se o IP foi atribuído automaticamente. Se o AP não tiver DHCP, configure manualmente.</div>
+              <div class="cmd-block" style="margin-top:8px">
+<span class="comment">── Verificar IP obtido ───────────────────────────</span><br>
+<span class="prompt">C:\&gt;</span> <span class="cmd">ipconfig</span><br>
+<span class="output">IP Address    :</span> <span class="value">192.168.10.15</span>  <span class="comment">(atribuído por DHCP)</span><br>
+<span class="output">Subnet Mask   :</span> <span class="value">255.255.255.0</span><br>
+<span class="output">Default Gateway:</span> <span class="value">192.168.10.1</span><br>
+<br>
+<span class="comment">── Configurar IP estático (se não houver DHCP) ──</span><br>
+<span class="comment">Painel de Controle → Conexões de Rede →</span><br>
+<span class="comment">Adaptador Wi-Fi → Propriedades → TCP/IP → Usar:</span><br>
+<span class="output">IP fixo       :</span> <span class="value">192.168.10.20</span><br>
+<span class="output">Máscara       :</span> <span class="value">255.255.255.0</span><br>
+<span class="output">Gateway       :</span> <span class="value">192.168.10.1</span><br>
+<span class="output">DNS           :</span> <span class="value">8.8.8.8</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="wxp-step">
+            <div class="wxp-num">7</div>
+            <div class="wxp-content">
+              <div class="wxp-title">Testar a Conexão</div>
+              <div class="wxp-desc">Confirme conectividade com o AP e com a internet.</div>
+              <div class="cmd-block" style="margin-top:8px">
+<span class="prompt">C:\&gt;</span> <span class="cmd">ping 192.168.10.250</span>  <span class="comment">(IP do WG302)</span><br>
+<span class="output">Resposta de 192.168.10.250: bytes=32 tempo=2ms TTL=64</span><br>
+<br>
+<span class="prompt">C:\&gt;</span> <span class="cmd">ping 192.168.10.1</span>  <span class="comment">(gateway)</span><br>
+<span class="prompt">C:\&gt;</span> <span class="cmd">ping 8.8.8.8</span>  <span class="comment">(internet)</span><br>
+<span class="prompt">C:\&gt;</span> <span class="cmd">ping www.google.com</span>  <span class="comment">(DNS + internet)</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- MÉTODO 2 -->
+        <div class="section-title" style="margin-top:4px">Método 2 — Adicionar Rede Manualmente (SSID Oculto)</div>
+        <div style="font-size:0.83em;color:var(--muted);margin-bottom:14px">Use este método quando o SSID não está sendo broadcast (hidden SSID) ou para pré-configurar a conexão.</div>
+
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px">
+          <div class="wxp-step">
+            <div class="wxp-num">1</div>
+            <div class="wxp-content">
+              <div class="wxp-title">Abrir Propriedades da Conexão Sem Fio</div>
+              <div class="wxp-desc">Botão direito no adaptador Wi-Fi → <b style="color:var(--cyan)">"Propriedades"</b> → aba <b>"Redes sem fio"</b>.</div>
+            </div>
+          </div>
+          <div class="wxp-step">
+            <div class="wxp-num">2</div>
+            <div class="wxp-content">
+              <div class="wxp-title">Adicionar Rede Preferida</div>
+              <div class="wxp-desc">Clique em <b style="color:var(--cyan)">"Adicionar"</b> na seção "Redes preferenciais".</div>
+              <div class="cmd-block" style="margin-top:8px">
+<span class="output">Nome da rede (SSID) :</span> <span class="value">FATEC-LAB-S4</span><br>
+<span class="output">Autenticação de rede:</span> <span class="value">WPA-PSK</span><br>
+<span class="output">Criptografia de dados:</span> <span class="value">TKIP</span><br>
+<span class="output">Chave de rede       :</span> <span class="value">FatecLab@2025!</span><br>
+<span class="output">Confirmar chave     :</span> <span class="value">FatecLab@2025!</span><br>
+<span class="comment">☑ Conectar mesmo sem transmissão da rede  ← marcar se SSID oculto</span>
+              </div>
+            </div>
+          </div>
+          <div class="wxp-step">
+            <div class="wxp-num">3</div>
+            <div class="wxp-content">
+              <div class="wxp-title">Confirmar e Conectar</div>
+              <div class="wxp-desc">Clique <b>OK</b> → <b>OK</b>. O Windows XP tentará conectar automaticamente. O ícone na bandeja do sistema mostrará o sinal quando conectado.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SP3 / WPA2 NOTE -->
+        <div class="section-title">Patch WPA2 para Windows XP (SP3)</div>
+        <div style="background:rgba(255,204,0,0.05);border:1px solid rgba(255,204,0,0.25);border-radius:10px;padding:16px;font-size:0.83em;line-height:1.7">
+          <div style="font-weight:800;color:var(--yellow);margin-bottom:8px">⚠️ Windows XP e WPA2</div>
+          <div style="color:var(--text2)">O Windows XP <b>não suporta WPA2 nativamente</b>. Para usar WPA2-AES é necessário:</div>
+          <div style="margin-top:10px;display:flex;flex-direction:column;gap:6px">
+            <div style="display:flex;align-items:flex-start;gap:8px;color:var(--text2)"><span style="color:var(--yellow);flex-shrink:0">①</span> Instalar o <b style="color:var(--yellow)">Windows XP Service Pack 3 (SP3)</b></div>
+            <div style="display:flex;align-items:flex-start;gap:8px;color:var(--text2)"><span style="color:var(--yellow);flex-shrink:0">②</span> Instalar o <b style="color:var(--yellow)">KB893357</b> (Wireless Client Update para WPA2)</div>
+            <div style="display:flex;align-items:flex-start;gap:8px;color:var(--text2)"><span style="color:var(--yellow);flex-shrink:0">③</span> Usar driver atualizado do adaptador Wi-Fi com suporte a WPA2</div>
+            <div style="display:flex;align-items:flex-start;gap:8px;color:var(--text2)"><span style="color:var(--yellow);flex-shrink:0">④</span> No WG302, configurar <b>WPA-PSK/TKIP</b> pois é o máximo suportado sem patches</div>
+          </div>
+        </div>
+
+        <!-- TROUBLESHOOTING -->
+        <div class="section-title" style="margin-top:20px">Resolução de Problemas</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px">
+          <div class="gloss-item" style="border-left:3px solid var(--red)">
+            <div class="gloss-term" style="color:var(--red)">❌ Não vejo a rede Wi-Fi</div>
+            <div class="gloss-def">Verifique se o serviço WZC está iniciado. Cheque se o adaptador está habilitado em Gerenciador de Dispositivos. Reinstale o driver.</div>
+          </div>
+          <div class="gloss-item" style="border-left:3px solid var(--yellow)">
+            <div class="gloss-term" style="color:var(--yellow)">⚠️ Senha incorreta / falha na autenticação</div>
+            <div class="gloss-def">Confirme o tipo de segurança (WPA vs WEP). Verifique se o SSID cadastrado manualmente está exatamente igual — diferencia maiúsculas.</div>
+          </div>
+          <div class="gloss-item" style="border-left:3px solid var(--yellow)">
+            <div class="gloss-term" style="color:var(--yellow)">⚠️ Conectado mas sem internet</div>
+            <div class="gloss-def">Confirme IP correto com <code>ipconfig</code>. Tente <code>ping 8.8.8.8</code>. Verifique se o gateway e DNS estão configurados. Libere/renove IP com <code>ipconfig /release</code> e <code>ipconfig /renew</code>.</div>
+          </div>
+          <div class="gloss-item" style="border-left:3px solid var(--cyan)">
+            <div class="gloss-term" style="color:var(--cyan)">🔧 Sinal fraco ou instável</div>
+            <div class="gloss-def">Reduza obstáculos entre o dispositivo e o WG302. Troque o canal do AP (use 1, 6 ou 11). Ajuste a posição das antenas para posição vertical.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- MISSÃO -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon ci-g">⚔️</div>
+        <div class="card-title">MISSÃO PRÁTICA</div>
+        <div class="xp-tag">+50 XP</div>
+      </div>
+      <div class="card-body">
+        <div class="mission" id="m-ap" onclick="toggleMission('m-ap')">
+          <div class="mission-head">
+            <div class="mission-num">M1</div>
+            <div class="mission-info">
+              <div class="mission-title">Configuração de Wi-Fi Seguro (WPA3)</div>
+              <div class="mission-meta">📶 Access Point · ⏱ 25 min · Dificuldade: Fácil</div>
+            </div>
+            <span class="mission-xp">+50 XP</span>
+            <span class="mission-toggle">▼</span>
+          </div>
+          <div class="mission-body">
+            <div class="mission-desc">Configurar SSID, senha forte, canal adequado e segurança WPA3 no access point.</div>
+            <div class="step">
+              <div class="step-num">1</div>
+              <p>Acesse a interface web do AP (tipicamente <code>192.168.1.1</code> ou <code>192.168.0.1</code>) com admin/admin.</p>
+            </div>
+            <div class="step">
+              <div class="step-num">2</div>
+              <p>Configure as redes SSIDs — uma para cada VLAN/departamento:</p>
+            </div>
+            <div class="cmd-block">
+<span class="comment">── SSID Corporativo ──────────────────────────────</span><br>
+<span class="output">Nome (SSID)  :</span> <span class="value">REDES-CORP-S4</span><br>
+<span class="output">Segurança    :</span> <span class="value">WPA3-SAE</span>  <span class="comment">(ou WPA2/WPA3 Mixed)</span><br>
+<span class="output">Senha        :</span> <span class="value">Ft3ch@2025!Seguro</span>  <span class="comment">(mín 12 chars)</span><br>
+<span class="output">Banda        :</span> <span class="value">5GHz</span>  <span class="comment">(menos interferência)</span><br>
+<span class="output">Canal        :</span> <span class="value">Auto / 36</span>  <span class="comment">(canais não sobrepostos)</span><br>
+<span class="output">VLAN tag     :</span> <span class="value">10</span>  <span class="comment">(VLAN Administração)</span><br>
+<br>
+<span class="comment">── SSID Visitantes ───────────────────────────────</span><br>
+<span class="output">Nome (SSID)  :</span> <span class="value">REDES-GUEST-S4</span><br>
+<span class="output">Segurança    :</span> <span class="value">WPA2-PSK</span><br>
+<span class="output">Isolamento   :</span> <span class="value">Habilitado</span>  <span class="comment">(impede acesso entre clientes)</span><br>
+<span class="output">VLAN tag     :</span> <span class="value">99</span>  <span class="comment">(VLAN isolada)</span>
+            </div>
+            <div class="step">
+              <div class="step-num">3</div>
+              <p>Desative o WPS (vulnerável a ataques de força bruta) e oculte o SSID de visitantes se necessário.</p>
+            </div>
+            <div class="step">
+              <div class="step-num">4</div>
+              <p>Teste a conexão a partir de um dispositivo e confirme que o IP atribuído pertence à sub-rede correta.</p>
+            </div>
+            <button class="complete-btn" id="btn-map" onclick="completeMission(event)">
+              ✅ MARCAR COMO CONCLUÍDA
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUIZ -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon ci-y">🧠</div>
+        <div class="card-title">QUIZ — ACCESS POINTS</div>
+        <div class="xp-tag">até +60 XP</div>
+      </div>
+      <div class="card-body">
+        <div class="quiz-prog-wrap">
+          <div class="quiz-prog-label"><span>Questão atual</span><span id="q-cnt">0/5</span></div>
+          <div class="quiz-prog-bg"><div class="quiz-prog-fill" id="q-prog"></div></div>
+        </div>
+
+        <!-- Q0 -->
+        <div class="qcard active" id="qc0">
+          <h4>Qual padrão Wi-Fi introduziu OFDMA e é conhecido como Wi-Fi 6?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(0,0,2)">A) 802.11ac</button>
+            <button class="qopt" onclick="ansQ(0,1,2)">B) 802.11n</button>
+            <button class="qopt" onclick="ansQ(0,2,2)">C) 802.11ax</button>
+            <button class="qopt" onclick="ansQ(0,3,2)">D) 802.11g</button>
+          </div>
+          <div class="qfb" id="qfb0"></div>
+          <div class="qnx" id="qnx0"><button class="qnx-btn" onclick="nextQ(1)">Próxima →</button></div>
+        </div>
+        <!-- Q1 -->
+        <div class="qcard" id="qc1">
+          <h4>Por que o WPS deve sempre ser desabilitado em access points?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(1,0,1)">A) Consome muita largura de banda</button>
+            <button class="qopt" onclick="ansQ(1,1,1)">B) O PIN de 8 dígitos pode ser descoberto por força bruta em horas</button>
+            <button class="qopt" onclick="ansQ(1,2,1)">C) Não suporta dispositivos modernos</button>
+            <button class="qopt" onclick="ansQ(1,3,1)">D) Aumenta a latência da rede</button>
+          </div>
+          <div class="qfb" id="qfb1"></div>
+          <div class="qnx" id="qnx1"><button class="qnx-btn" onclick="nextQ(2)">Próxima →</button></div>
+        </div>
+        <!-- Q2 -->
+        <div class="qcard" id="qc2">
+          <h4>Quais canais de 2.4GHz não se sobrepõem e devem ser usados para evitar interferência?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(2,0,1)">A) 1, 4 e 9</button>
+            <button class="qopt" onclick="ansQ(2,1,1)">B) 1, 6 e 11</button>
+            <button class="qopt" onclick="ansQ(2,2,1)">C) 2, 7 e 12</button>
+            <button class="qopt" onclick="ansQ(2,3,1)">D) 3, 6 e 9</button>
+          </div>
+          <div class="qfb" id="qfb2"></div>
+          <div class="qnx" id="qnx2"><button class="qnx-btn" onclick="nextQ(3)">Próxima →</button></div>
+        </div>
+        <!-- Q3 -->
+        <div class="qcard" id="qc3">
+          <h4>Qual é a principal vantagem do WPA3-SAE sobre o WPA2-PSK?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(3,0,0)">A) Proteção contra ataques de dicionário com forward secrecy</button>
+            <button class="qopt" onclick="ansQ(3,1,0)">B) Velocidade de conexão muito maior</button>
+            <button class="qopt" onclick="ansQ(3,2,0)">C) Compatível com todos os dispositivos antigos</button>
+            <button class="qopt" onclick="ansQ(3,3,0)">D) Usa menos bateria no dispositivo</button>
+          </div>
+          <div class="qfb" id="qfb3"></div>
+          <div class="qnx" id="qnx3"><button class="qnx-btn" onclick="nextQ(4)">Próxima →</button></div>
+        </div>
+        <!-- Q4 -->
+        <div class="qcard" id="qc4">
+          <h4>Em uma rede corporativa, qual protocolo é usado para autenticação individual por usuário em redes Wi-Fi?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(4,0,2)">A) DHCP</button>
+            <button class="qopt" onclick="ansQ(4,1,2)">B) WPS</button>
+            <button class="qopt" onclick="ansQ(4,2,2)">C) RADIUS (802.1X)</button>
+            <button class="qopt" onclick="ansQ(4,3,2)">D) NAT</button>
+          </div>
+          <div class="qfb" id="qfb4"></div>
+          <div class="qnx" id="qnx4"><button class="qnx-btn" onclick="showResult()">Ver Resultado ✨</button></div>
+        </div>
+
+        <!-- RESULT -->
+        <div class="q-result" id="q-result">
+          <span class="q-score" id="q-score">0/5</span>
+          <div class="q-msg" id="q-msg">—</div>
+          <div class="q-xp" id="q-xp-earned"></div>
+          <button class="restart-btn" onclick="restartQuiz()">↺ Tentar Novamente</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONQUISTAS -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon ci-y">🏆</div>
+        <div class="card-title">CONQUISTAS — ACCESS POINTS</div>
+      </div>
+      <div class="card-body">
+        <div class="ach-grid">
+          <div class="ach-card" id="a-start">
+            <span class="ach-icon">🚀</span>
+            <div class="ach-name">Primeiro Sinal</div>
+          </div>
+          <div class="ach-card" id="a-obj">
+            <span class="ach-icon">🎯</span>
+            <div class="ach-name">Foco Total</div>
+          </div>
+          <div class="ach-card" id="a-wifi">
+            <span class="ach-icon">📶</span>
+            <div class="ach-name">AP Online</div>
+          </div>
+          <div class="ach-card" id="a-wpa3">
+            <span class="ach-icon">🔒</span>
+            <div class="ach-name">WPA3 Master</div>
+          </div>
+          <div class="ach-card" id="a-wg302">
+            <span class="ach-icon">📦</span>
+            <div class="ach-name">WG302 Ativo</div>
+          </div>
+          <div class="ach-card" id="a-xp">
+            <span class="ach-icon">🖥️</span>
+            <div class="ach-name">XP Conectado</div>
+          </div>
+          <div class="ach-card" id="a-quiz">
+            <span class="ach-icon">🎓</span>
+            <div class="ach-name">Sinal Forte</div>
+          </div>
+          <div class="ach-card" id="a-perfect">
+            <span class="ach-icon">💎</span>
+            <div class="ach-name">Frequência Perfeita</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// STATE
+let xp = 0, streak = 0, badges = 0;
+const TOTAL_XP = 200;
+const objChecked = [false,false,false,false,false,false,false];
+let missionDone = false;
+let videosWatched = 0;
+let qCorrect = 0;
+const qAnswers = {};
+
+// Start badge
+setTimeout(() => unlock('a-start','bm-start','Módulo de Access Points iniciado!'), 800);
+
+function updateHUD() {
+  document.getElementById('hud-xp').textContent = xp;
+  document.getElementById('hud-streak').textContent = streak;
+  document.getElementById('hud-badges').textContent = badges;
+  const pct = Math.min(Math.round(xp / TOTAL_XP * 100), 100);
+  document.getElementById('hud-bar').style.width = pct + '%';
+  document.getElementById('hud-pct').textContent = pct + '%';
+  const lvls = [[0,'Iniciante'],[50,'Operador'],[100,'Técnico Wi-Fi'],[160,'Especialista AP'],[200,'Mestre RF']];
+  let lv = lvls[0][1];
+  for (const [t,n] of lvls) { if (xp >= t) lv = n; }
+  document.getElementById('hud-level').textContent = lv;
+  // progress bars
+  const od = objChecked.filter(Boolean).length;
+  setBar('obj-bar','obj-pct', od/7*100, Math.round(od/7*100)+'%');
+  setBar('mis-bar','mis-pct', missionDone?100:0, missionDone?'100%':'0%');
+  setBar('quiz-bar','quiz-pct', Math.min(qCorrect/5*100,100), Math.round(qCorrect/5*100)+'%');
+  setBar('ach-bar','ach-pct', badges/8*100, badges+'/8');
+}
+function setBar(bid, lid, pct, txt) {
+  document.getElementById(bid).style.width = Math.min(pct,100)+'%';
+  document.getElementById(lid).textContent = txt;
+}
+function addXP(amount, msg, icon) {
+  xp += amount; updateHUD();
+  toast(icon||'⚡', '+'+amount+' XP', msg);
+}
+function toast(icon, title, msg) {
+  document.getElementById('toast-icon').textContent = icon;
+  document.getElementById('toast-title').textContent = title;
+  document.getElementById('toast-msg').textContent = msg;
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+function unlock(achId, badgeId, msg) {
+  const a = document.getElementById(achId);
+  const b = document.getElementById(badgeId);
+  if (a && !a.classList.contains('unlocked')) {
+    a.classList.add('unlocked');
+    if (b) b.classList.add('unlocked');
+    badges++; updateHUD();
+    toast('🏆','Badge desbloqueado!', msg);
+  }
+}
+
+// OBJECTIVES
+function toggleObj(el, idx) {
+  el.classList.toggle('checked');
+  objChecked[idx] = el.classList.contains('checked');
+  if (objChecked[idx]) { addXP(5,'Objetivo marcado!','✅'); streak++; }
+  else streak = Math.max(0, streak-1);
+  const done = objChecked.filter(Boolean).length;
+  if (done === 7) { addXP(25,'Todos objetivos!','🎯'); unlock('a-obj','bm-obj','Foco Total alcançado!'); }
+  // Unlock específicos por objetivo
+  if (idx === 5 && objChecked[5]) unlock('a-wg302','bm-wg302','WG302 Ativo — configuração concluída!');
+  if (idx === 6 && objChecked[6]) unlock('a-xp','bm-xp','XP Conectado — Windows XP no ar!');
+  updateHUD();
+}
+
+// WG302 ACCORDION
+function toggleWG(id) {
+  const el = document.getElementById(id);
+  const wasOpen = el.classList.contains('open');
+  document.querySelectorAll('.wg-step').forEach(s => s.classList.remove('open'));
+  if (!wasOpen) el.classList.add('open');
+}
+
+// MISSION
+function toggleMission(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('open');
+}
+function completeMission(e) {
+  e.stopPropagation();
+  if (missionDone) return;
+  missionDone = true;
+  const btn = document.getElementById('btn-map');
+  btn.disabled = true; btn.textContent = '✅ Missão Concluída!';
+  document.getElementById('m-ap').classList.add('done');
+  addXP(50,'Wi-Fi seguro configurado!','⚔️');
+  unlock('a-wifi','bm-wifi','AP Online — missão concluída!');
+  unlock('a-wpa3','bm-wpa3','WPA3 configurado com sucesso!');
+  streak++; updateHUD();
+}
+
+// VIDEO
+function watchVideo(el) {
+  if (!el.dataset.counted) {
+    el.dataset.counted = '1';
+    videosWatched++;
+    addXP(10,'Vídeo assistido!','🎬');
+  }
+}
+
+// SIGNAL DEMO
+function updateSignal(val) {
+  const v = parseInt(val);
+  document.getElementById('sig-val').textContent = v + ' dBm';
+  let label, active;
+  if (v >= -50) { label = '🟢 Excelente'; active = 5; }
+  else if (v >= -60) { label = '🟢 Muito Bom'; active = 4; }
+  else if (v >= -70) { label = '🟡 Bom'; active = 3; }
+  else if (v >= -80) { label = '🟠 Fraco'; active = 2; }
+  else { label = '🔴 Muito Fraco'; active = 1; }
+  document.getElementById('sig-label').textContent = label;
+  for (let i=1; i<=5; i++) {
+    document.getElementById('sb'+i).classList.toggle('active', i <= active);
+  }
+}
+updateSignal(-65);
+
+// SECURITY SELECTOR
+function rateSec(el, type) {
+  el.classList.remove('sel-good','sel-bad','sel-ok');
+  el.classList.add('sel-'+type);
+  const msgs = { good:'Boa escolha! Protocolo seguro.', bad:'Perigo! Nunca use WEP em produção.', ok:'Aceitável mas atualize para WPA3.' };
+  toast(type==='good'?'✅':type==='bad'?'❌':'⚠️', 'Segurança avaliada', msgs[type]);
+}
+
+// QUIZ
+const QFB = [
+  { ok:'✅ Correto! Wi-Fi 6 (802.11ax) traz OFDMA e MU-MIMO aprimorado, ideal para ambientes densos.' },
+  { ok:'✅ Exato! O PIN de 8 dígitos do WPS é fracionado em duas partes, tornando fácil o brute-force.' },
+  { ok:'✅ Certo! Os canais 1, 6 e 11 na faixa 2.4GHz não se sobrepõem — sempre use esses em ambientes com múltiplos APs.' },
+  { ok:'✅ Perfeito! O SAE (Dragonfly) garante forward secrecy — mesmo que a senha seja descoberta, sessões passadas permanecem protegidas.' },
+  { ok:'✅ Correto! O RADIUS com 802.1X autentica cada usuário individualmente, ideal para redes corporativas.' },
+];
+const QXPS = [10,10,10,15,15];
+
+function ansQ(qi, chosen, correct) {
+  const card = document.getElementById('qc'+qi);
+  const opts = card.querySelectorAll('.qopt');
+  opts.forEach(o => o.disabled = true);
+  opts[chosen].classList.add(chosen === correct ? 'correct' : 'wrong');
+  if (chosen !== correct) opts[correct].classList.add('correct');
+  const fb = document.getElementById('qfb'+qi);
+  const nx = document.getElementById('qnx'+qi);
+  const ok = chosen === correct;
+  fb.innerHTML = ok ? QFB[qi].ok : '❌ Errado. ' + QFB[qi].ok;
+  fb.className = 'qfb show ' + (ok?'ok':'fail');
+  nx.classList.add('show');
+  if (ok) { qCorrect++; addXP(QXPS[qi],'Resposta correta!','🎯'); streak++; }
+  else streak = 0;
+  qAnswers[qi] = ok;
+  document.getElementById('q-prog').style.width = ((qi+1)/5*100)+'%';
+  document.getElementById('q-cnt').textContent = (qi+1)+'/5';
+  updateHUD();
+}
+function nextQ(n) {
+  document.getElementById('qc'+(n-1)).classList.remove('active');
+  document.getElementById('qc'+n).classList.add('active');
+}
+function showResult() {
+  document.getElementById('qc4').classList.remove('active');
+  const r = document.getElementById('q-result');
+  r.classList.add('show');
+  document.getElementById('q-score').textContent = qCorrect+'/5';
+  const msgs = ['Estude mais e tente novamente!','Progredindo, continue!','Bom trabalho!','Ótimo domínio de Wi-Fi!','💎 Especialista em Access Points!'];
+  document.getElementById('q-msg').textContent = msgs[Math.min(qCorrect, 4)];
+  const earned = Object.keys(qAnswers).filter(k=>qAnswers[k]).reduce((a,k)=>a+QXPS[+k],0);
+  document.getElementById('q-xp-earned').textContent = '+'+earned+' XP conquistados no quiz';
+  document.getElementById('q-prog').style.width = '100%';
+  document.getElementById('q-cnt').textContent = '5/5';
+  if (qCorrect >= 4) unlock('a-quiz','bm-quiz','Sinal Forte — 4+ acertos!');
+  if (qCorrect === 5) unlock('a-perfect','bm-perfect','Frequência Perfeita! 💎 5/5!');
+  updateHUD();
+}
+function restartQuiz() {
+  qCorrect = 0;
+  document.getElementById('q-result').classList.remove('show');
+  document.getElementById('q-prog').style.width = '0%';
+  document.getElementById('q-cnt').textContent = '0/5';
+  for (let i=0; i<5; i++) {
+    const c = document.getElementById('qc'+i);
+    c.classList.toggle('active', i===0);
+    c.querySelectorAll('.qopt').forEach(o => { o.disabled=false; o.classList.remove('correct','wrong'); });
+    const fb = c.querySelector('.qfb'); if (fb) { fb.className='qfb'; fb.innerHTML=''; }
+    const nx = c.querySelector('.qnx'); if (nx) nx.classList.remove('show');
+  }
+  updateHUD();
+}
+</script>
+</body>
+</html>
