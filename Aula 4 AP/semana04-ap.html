@@ -743,6 +743,98 @@ body::before {
   border-radius: 6px; padding: 8px 12px; margin-top: 6px; line-height: 1.5;
 }
 
+/* OS TABS */
+.os-tabs {
+  display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;
+}
+.os-tab {
+  padding: 9px 18px; border-radius: 8px; cursor: pointer;
+  font-family: 'Exo 2', sans-serif; font-size: 0.82em; font-weight: 800;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.03); color: var(--muted);
+  transition: all 0.2s; letter-spacing: 0.5px;
+  display: flex; align-items: center; gap: 6px;
+}
+.os-tab:hover { border-color: rgba(0,212,255,0.3); color: var(--cyan); }
+.os-tab.active-tab {
+  background: rgba(0,212,255,0.12); border-color: rgba(0,212,255,0.4);
+  color: var(--cyan); box-shadow: 0 0 12px rgba(0,212,255,0.15);
+}
+.os-tab.tab-xp.active-tab  { background:rgba(180,74,255,0.12); border-color:rgba(180,74,255,0.4); color:var(--purple); }
+.os-tab.tab-w10.active-tab { background:rgba(0,120,215,0.15);  border-color:rgba(0,120,215,0.4);  color:#3b9eff; }
+.os-tab.tab-w11.active-tab { background:rgba(0,180,180,0.12);  border-color:rgba(0,200,200,0.4);  color:#00d4c8; }
+
+.os-panel { display: none; }
+.os-panel.active-panel { display: block; }
+
+/* VirtualBox banner */
+.vbox-banner {
+  background: linear-gradient(135deg, rgba(0,255,136,0.07), rgba(0,212,255,0.05));
+  border: 1px solid rgba(0,255,136,0.3);
+  border-radius: 12px; padding: 18px 20px; margin-bottom: 22px;
+}
+.vbox-banner-title {
+  font-family: 'Orbitron', monospace; font-size: 0.72em; font-weight: 700;
+  color: var(--green); letter-spacing: 2px; text-transform: uppercase;
+  margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+}
+.vbox-banner p { font-size: 0.83em; color: var(--text2); line-height: 1.65; margin-bottom: 10px; }
+.vbox-banner p:last-child { margin-bottom: 0; }
+.vbox-steps { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.vbox-row {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 10px 14px; border-radius: 9px;
+  background: rgba(255,255,255,0.02); border: 1px solid rgba(0,255,136,0.12);
+  transition: border-color 0.2s;
+}
+.vbox-row:hover { border-color: rgba(0,255,136,0.28); }
+.vbox-row-num {
+  min-width: 28px; height: 28px; border-radius: 7px; flex-shrink: 0;
+  background: rgba(0,255,136,0.14); border: 1px solid rgba(0,255,136,0.3);
+  color: var(--green); display: flex; align-items: center; justify-content: center;
+  font-family: 'Orbitron', monospace; font-size: 0.72em; font-weight: 900;
+}
+.vbox-row-body { flex: 1; font-size: 0.82em; color: var(--text2); line-height: 1.55; }
+.vbox-row-body b { color: var(--text); }
+.vbox-row-body code { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; padding: 1px 7px; color: var(--green); font-family: 'JetBrains Mono', monospace; font-size: 0.92em; }
+
+/* Win10 / Win11 steps */
+.wos-step {
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 14px 16px; background: rgba(255,255,255,0.02);
+  border-radius: 10px; transition: all 0.2s;
+}
+.win10 .wos-step { border: 1px solid rgba(0,120,215,0.12); }
+.win10 .wos-step:hover { border-color: rgba(0,120,215,0.3); background: rgba(0,120,215,0.05); }
+.win11 .wos-step { border: 1px solid rgba(0,200,200,0.12); }
+.win11 .wos-step:hover { border-color: rgba(0,200,200,0.3); background: rgba(0,200,200,0.05); }
+.wos-num {
+  width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Orbitron', monospace; font-size: 0.75em; font-weight: 700;
+}
+.win10 .wos-num { background: rgba(0,120,215,0.18); border: 1px solid rgba(0,120,215,0.35); color: #3b9eff; }
+.win11 .wos-num { background: rgba(0,200,200,0.15); border: 1px solid rgba(0,200,200,0.35); color: #00d4c8; }
+.wos-content { flex: 1; }
+.wos-title { font-weight: 800; font-size: 0.88em; color: var(--text); margin-bottom: 4px; }
+.wos-desc { font-size: 0.81em; color: var(--text2); line-height: 1.55; }
+.wos-path {
+  font-size: 0.79em; color: var(--muted); background: rgba(0,0,0,0.2);
+  border: 1px solid rgba(255,255,255,0.06); border-radius: 5px;
+  padding: 5px 10px; margin-top: 5px; display: flex; align-items: center; gap: 6px;
+}
+.win10 .wos-tip { font-size:0.79em; color:#3b9eff; background:rgba(0,120,215,0.06); border:1px solid rgba(0,120,215,0.22); border-radius:6px; padding:8px 12px; margin-top:6px; line-height:1.5; }
+.win11 .wos-tip { font-size:0.79em; color:#00d4c8; background:rgba(0,200,200,0.06); border:1px solid rgba(0,200,200,0.22); border-radius:6px; padding:8px 12px; margin-top:6px; line-height:1.5; }
+
+.os-section-title {
+  font-family: 'Orbitron', monospace; font-size: 0.62em; letter-spacing: 3px;
+  font-weight: 700; text-transform: uppercase; margin: 20px 0 12px;
+  display: flex; align-items: center; gap: 10px;
+}
+.os-section-title::after { content:''; flex:1; height:1px; background:linear-gradient(90deg,var(--border),transparent); }
+.win10 .os-section-title { color: #3b9eff; }
+.win11 .os-section-title { color: #00d4c8; }
+
 @media (max-width: 900px) {
   .layout { grid-template-columns: 1fr; }
   .hud { display: none; }
@@ -838,6 +930,9 @@ body::before {
         <div class="badge-item" id="bm-wpa3" title="WPA3 configurado">🔒</div>
         <div class="badge-item" id="bm-wg302" title="WG302 configurado">📦</div>
         <div class="badge-item" id="bm-xp" title="Conectou no Windows XP">🖥️</div>
+        <div class="badge-item" id="bm-w10" title="Conectou no Windows 10">🪟</div>
+        <div class="badge-item" id="bm-w11" title="Conectou no Windows 11">💻</div>
+        <div class="badge-item" id="bm-vbox" title="Bridge VirtualBox confirmado">📦</div>
         <div class="badge-item" id="bm-quiz" title="4+ no quiz">🎓</div>
         <div class="badge-item" id="bm-perfect" title="Quiz perfeito!">💎</div>
       </div>
@@ -1026,17 +1121,17 @@ body::before {
           <div class="video-card">
             <div class="video-thumb"><div class="play-btn" onclick="watchVideo(this)">▶</div></div>
             <div class="video-info">
-              <h4>Access Point Empresarial</h4>
-              <p>Setup profissional · WPA3 + RADIUS</p>
-              <a href="https://www.youtube.com/watch?v=example3" target="_blank" class="video-link" onclick="watchVideo(this)">▶ Assistir</a>
+              <h4>Como configurar o AP 310 e 360 como access point - i5144</h4>
+              <p>Setup </p>
+              <a href="https://youtu.be/3vQumcAuJIo?list=PLY9z7BIOkT57K04kJToZR2xA9nXbfNDc4" target="_blank" class="video-link" onclick="watchVideo(this)">▶ Assistir</a>
             </div>
           </div>
           <div class="video-card">
             <div class="video-thumb"><div class="play-btn" onclick="watchVideo(this)">▶</div></div>
             <div class="video-info">
-              <h4>Wi-Fi 6 — O que muda?</h4>
+              <h4>Conexão Simultânea — O que muda?</h4>
               <p>OFDMA, MU-MIMO, 802.11ax</p>
-              <a href="https://www.youtube.com/watch?v=example5" target="_blank" class="video-link" onclick="watchVideo(this)">▶ Assistir</a>
+              <a href="https://youtu.be/Mi_iWccIS3M" target="_blank" class="video-link" onclick="watchVideo(this)">▶ Assistir</a>
             </div>
           </div>
           <div class="video-card">
@@ -1101,7 +1196,7 @@ body::before {
             <div style="font-family:'Orbitron',monospace;font-size:0.62em;color:var(--yellow);letter-spacing:2px;margin-bottom:10px;text-transform:uppercase">⚙️ Gerência</div>
             <div style="font-size:0.8em;line-height:1.9;color:var(--text2)">
               <b style="color:var(--text)">Interface web:</b> HTTP / HTTPS<br>
-              <b style="color:var(--text)">IP padrão:</b> 192.168.0.230<br>
+              <b style="color:var(--text)">IP padrão:</b> 192.168.0.228<br>
               <b style="color:var(--text)">Login padrão:</b> admin / password<br>
               <b style="color:var(--text)">SNMP:</b> v1, v2c<br>
               <b style="color:var(--text)">Syslog:</b> Suportado<br>
@@ -1132,13 +1227,13 @@ body::before {
               </div>
               <div class="step"><div class="step-num">a</div><p>Conecte o cabo Ethernet da porta LAN do WG302 ao switch (ou use injetor PoE para alimentação simultânea).</p></div>
               <div class="step"><div class="step-num">b</div><p>Configure seu PC com IP fixo na mesma sub-rede: <code>192.168.0.X</code> / máscara <code>255.255.255.0</code>.</p></div>
-              <div class="step"><div class="step-num">c</div><p>Abra o navegador e acesse <code>http://192.168.0.230</code> — login padrão: <code>admin</code> / <code>password</code>.</p></div>
+              <div class="step"><div class="step-num">c</div><p>Abra o navegador e acesse <code>http://192.168.0.228</code> — login padrão: <code>admin</code> / <code>password</code>.</p></div>
               <div class="cmd-block">
 <span class="comment">── Configuração IP do PC para acessar o WG302 ──</span><br>
 <span class="output">IP do PC      :</span> <span class="value">192.168.0.10</span><br>
 <span class="output">Máscara       :</span> <span class="value">255.255.255.0</span><br>
-<span class="output">Gateway       :</span> <span class="value">192.168.0.230</span><br>
-<span class="output">URL de acesso :</span> <span class="value">http://192.168.0.230</span><br>
+<span class="output">Gateway       :</span> <span class="value">192.168.0.228</span><br>
+<span class="output">URL de acesso :</span> <span class="value">http://192.168.0.228</span><br>
 <span class="output">Usuário       :</span> <span class="value">admin</span><br>
 <span class="output">Senha         :</span> <span class="value">password</span>
               </div>
@@ -1211,7 +1306,7 @@ body::before {
 <span class="comment">── Segurança WPA-PSK (recomendado para o WG302) ──</span><br>
 <span class="output">Security Mode :</span> <span class="value">WPA-PSK</span><br>
 <span class="output">Encryption    :</span> <span class="value">TKIP</span><br>
-<span class="output">WPA Passphrase:</span> <span class="value">FatecLab@2025!</span>  <span class="comment">(mín 8 chars)</span><br>
+<span class="output">WPA Passphrase:</span> <span class="value">FatecLab@2026!</span>  <span class="comment">(mín 8 chars)</span><br>
 <br>
 <span class="comment">── Para RADIUS (empresarial) ────────────────────</span><br>
 <span class="output">Security Mode :</span> <span class="value">WPA with RADIUS</span><br>
@@ -1300,36 +1395,84 @@ body::before {
       </div>
     </div>
 
-    <!-- WINDOWS XP Wi-Fi -->
+    <!-- CONECTAR AO AP — WINDOWS (XP / 10 / 11) -->
     <div class="card">
       <div class="card-head">
         <div class="card-icon ci-p">🖥️</div>
-        <div class="card-title">CONECTAR AO AP NO WINDOWS XP</div>
-        <div class="xp-tag purple">Guia Detalhado</div>
+        <div class="card-title">CONECTAR AO AP — WINDOWS XP · 10 · 11</div>
+        <div class="xp-tag purple">Guia Detalhado · VMs VirtualBox</div>
       </div>
       <div class="card-body">
 
-        <div style="background:rgba(180,74,255,0.05);border:1px solid rgba(180,74,255,0.2);border-radius:10px;padding:14px 18px;margin-bottom:20px;font-size:0.84em;color:var(--text2);line-height:1.6">
-          💡 <b style="color:var(--purple)">Contexto:</b> O Windows XP usa o <b>Wireless Zero Configuration (WZC)</b> — serviço nativo de gerência Wi-Fi. Ele suporta WEP, WPA-PSK (TKIP) e 802.1X, mas <b>não suporta WPA2 ou WPA3</b> sem patch. Certifique-se de que o adaptador wireless e seus drivers estão instalados antes de começar.
+        <!-- ══ VIRTUALBOX BANNER ══ -->
+        <div class="vbox-banner">
+          <div class="vbox-banner-title">📦 Atenção — Todos os SOs estão em Máquinas Virtuais (VirtualBox)</div>
+          <p>As configurações de rede a seguir são realizadas <b style="color:var(--green)">dentro das VMs</b> no VirtualBox. Neste laboratório, os computadores de mesa se conectam ao WG302 por <b style="color:var(--green)">cabo Ethernet (RJ-45)</b> — não por Wi-Fi. O Wi-Fi do AP é a rede que os <em>clientes externos</em> (celulares, notebooks) vão usar; o seu PC de mesa é o administrador, conectado com fio.</p>
+          <p>Para que a VM enxergue o AP através da placa Ethernet do PC host, o adaptador de rede da VM <b>deve estar em modo Bridge (Modo Ponte)</b> — caso contrário a VM ficará isolada na rede virtual do VirtualBox e não verá o AP nem a rede física do laboratório.</p>
+          <div class="os-section-title" style="color:var(--green);margin-top:14px">Como verificar e configurar o modo Bridge no VirtualBox</div>
+          <div class="vbox-steps">
+            <div class="vbox-row">
+              <div class="vbox-row-num">1</div>
+              <div class="vbox-row-body"><b>Antes de ligar a VM</b>, confirme que o cabo Ethernet do PC de mesa está conectado à porta LAN do WG302 (ou ao switch que o WG302 está ligado).</div>
+            </div>
+            <div class="vbox-row">
+              <div class="vbox-row-num">2</div>
+              <div class="vbox-row-body"><b>Com a VM desligada</b>, clique nela com botão direito no VirtualBox → <b>Configurações</b> (Settings).</div>
+            </div>
+            <div class="vbox-row">
+              <div class="vbox-row-num">3</div>
+              <div class="vbox-row-body">No menu lateral clique em <b>Rede</b> (Network). Na aba <b>Adaptador 1</b>, certifique-se de que <b>Habilitar Adaptador de Rede</b> está marcado.</div>
+            </div>
+            <div class="vbox-row">
+              <div class="vbox-row-num">4</div>
+              <div class="vbox-row-body">Em <b>"Conectado a:"</b> selecione <code>Placa em modo Bridge</code> (Bridged Adapter). Em <b>"Nome:"</b> escolha a <b>placa Ethernet (cabeada)</b> do PC host — geralmente listada como "Realtek", "Intel Ethernet" ou similar. <b>Não selecione Wi-Fi</b>, pois o PC usa cabo.</div>
+            </div>
+            <div class="vbox-row">
+              <div class="vbox-row-num">5</div>
+              <div class="vbox-row-body">Clique em <b>OK</b> e inicie a VM. A VM agora enxerga a rede física do AP como se fosse um computador independente ligado por cabo naquela rede.</div>
+            </div>
+            <div class="vbox-row">
+              <div class="vbox-row-num">6</div>
+              <div class="vbox-row-body"><b>Para confirmar</b> que o Bridge está funcionando: dentro da VM, abra o Prompt de Comando e execute <code>ipconfig</code>. O IP exibido deve estar na mesma sub-rede do AP (ex: <code>192.168.0.X</code> ou <code>192.168.10.X</code>). Se aparecer <code>192.168.56.X</code>, a rede ainda está em modo Host-Only — revise o passo 4.</div>
+            </div>
+          </div>
+          <div style="margin-top:12px;padding:10px 14px;background:rgba(255,204,0,0.06);border:1px solid rgba(255,204,0,0.25);border-radius:8px;font-size:0.8em;color:#fde68a;line-height:1.6">
+            ⚠️ <b>Resumo da topologia do lab:</b> PC de mesa → cabo Ethernet RJ-45 → porta LAN do WG302. Dentro do PC roda a VM (VirtualBox, modo Bridge na placa Ethernet). A VM acessa a interface web do AP pelo IP <code>192.168.0.228</code>. O Wi-Fi (SSID FATEC-LAB-S4) é a rede transmitida pelo AP para dispositivos sem fio externos — não é usada pelo PC de mesa.
+          </div>
         </div>
 
-        <div class="section-title">Método 1 — Conexão pelo Wireless Zero Configuration (WZC)</div>
+        <!-- ══ OS TABS ══ -->
+        <div class="os-tabs">
+          <button class="os-tab tab-xp active-tab" onclick="switchOS('xp',this)">🖥️ Windows XP</button>
+          <button class="os-tab tab-w10" onclick="switchOS('w10',this)">🪟 Windows 10</button>
+          <button class="os-tab tab-w11" onclick="switchOS('w11',this)">🪟 Windows 11</button>
+        </div>
+
+        <!-- ══════════════════════════════════════
+             PANEL WINDOWS XP
+        ══════════════════════════════════════ -->
+        <div class="os-panel active-panel" id="panel-xp">
+          <div style="background:rgba(180,74,255,0.05);border:1px solid rgba(180,74,255,0.2);border-radius:10px;padding:14px 18px;margin-bottom:20px;font-size:0.84em;color:var(--text2);line-height:1.6">
+            💡 <b style="color:var(--purple)">Contexto:</b> Neste lab, o PC de mesa está conectado ao WG302 por <b>cabo Ethernet</b>. Dentro do PC, a VM (VirtualBox em modo Bridge) acessa o AP pela placa Ethernet do host. A configuração de IP é feita pelo adaptador <b>com fio (LAN)</b> da VM — não há placa Wi-Fi envolvida do lado do administrador. O Windows XP gerencia conexões com fio pelo adaptador de rede padrão; verifique se o driver de rede está instalado.
+          </div>
+
+        <div class="section-title">Método 1 — Configurar IP fixo pela Conexão de Rede Local (LAN)</div>
 
         <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px">
 
           <div class="wxp-step">
             <div class="wxp-num">1</div>
             <div class="wxp-content">
-              <div class="wxp-title">Verificar o serviço WZC ativo</div>
-              <div class="wxp-desc">Antes de tudo, confirme que o serviço Wireless Zero Configuration está rodando.</div>
+              <div class="wxp-title">Verificar a conexão com fio ativa</div>
+              <div class="wxp-desc">Confirme que o cabo Ethernet está conectado e que o adaptador de rede (LAN) está reconhecido pelo Windows XP.</div>
               <div class="cmd-block" style="margin-top:8px">
-<span class="comment">── Verificar via Serviços ────────────────────────</span><br>
-<span class="prompt">Iniciar</span> → <span class="cmd">Executar</span> → digitar: <span class="value">services.msc</span><br>
-<span class="comment">Localize: "Wireless Zero Configuration" → Status: Iniciado</span><br>
-<span class="comment">Se parado: botão direito → Iniciar</span><br>
+<span class="comment">── Verificar adaptador via Gerenciador de Dispositivos ──</span><br>
+<span class="prompt">Iniciar</span> → <span class="cmd">Painel de Controle</span> → <span class="value">Sistema</span> → aba <span class="value">Hardware</span> → <span class="value">Gerenciador de Dispositivos</span><br>
+<span class="comment">Localize: "Adaptadores de rede" → deve aparecer a placa Ethernet sem ícone de erro (✗ ou !)</span><br>
 <br>
-<span class="comment">── Ou via Prompt de Comando ──────────────────────</span><br>
-<span class="prompt">C:\&gt;</span> <span class="cmd">net start "Wireless Zero Configuration"</span>
+<span class="comment">── Verificar via Prompt de Comando ──────────────</span><br>
+<span class="prompt">C:\&gt;</span> <span class="cmd">ipconfig /all</span><br>
+<span class="comment">Deve aparecer "Adaptador Ethernet" com endereço físico (MAC)</span>
               </div>
             </div>
           </div>
@@ -1338,9 +1481,9 @@ body::before {
             <div class="wxp-num">2</div>
             <div class="wxp-content">
               <div class="wxp-title">Acessar Conexões de Rede</div>
-              <div class="wxp-desc">Abra o gerenciador de conexões de rede do Windows XP.</div>
+              <div class="wxp-desc">Abra o gerenciador de conexões de rede do Windows XP para localizar o adaptador LAN (com fio).</div>
               <div style="margin-top:8px;display:flex;flex-direction:column;gap:5px">
-                <div class="wxp-path">📂 Iniciar → Painel de Controle → Conexões de Rede</div>
+                <div class="wxp-path">📂 Iniciar → Painel de Controle → Conexões de Rede e Internet → Conexões de Rede</div>
                 <div class="wxp-path">📂 OU: clique com botão direito em "Meu Local de Rede" → Propriedades</div>
                 <div class="wxp-path">📂 OU: Iniciar → Executar → digitar <code>ncpa.cpl</code> → Enter</div>
               </div>
@@ -1350,10 +1493,10 @@ body::before {
           <div class="wxp-step">
             <div class="wxp-num">3</div>
             <div class="wxp-content">
-              <div class="wxp-title">Abrir Propriedades do Adaptador Sem Fio</div>
-              <div class="wxp-desc">Na janela "Conexões de Rede", localize o ícone da placa Wi-Fi (geralmente chamado "Conexão de Rede Sem Fio" ou "Wireless Network Connection").</div>
+              <div class="wxp-title">Localizar o Adaptador de Rede Local (LAN)</div>
+              <div class="wxp-desc">Na janela "Conexões de Rede", localize o ícone da placa de rede com fio — geralmente chamado <b>"Conexão de Área Local"</b> ou <b>"Local Area Connection"</b>.</div>
               <div style="margin-top:8px">
-                <div class="wxp-tip">⚠️ Se o ícone não aparecer, o driver do adaptador Wi-Fi não está instalado. Instale o driver correto para sua placa (ex: Intel PRO/Wireless, Broadcom, Atheros).</div>
+                <div class="wxp-tip">⚠️ Se o ícone não aparecer ou mostrar X vermelho, o driver da placa de rede não está instalado ou o cabo não está conectado. Verifique o cabo RJ-45 e instale o driver correto (ex: Realtek, Intel, VirtualBox Ethernet Adapter).</div>
               </div>
             </div>
           </div>
@@ -1361,27 +1504,16 @@ body::before {
           <div class="wxp-step">
             <div class="wxp-num">4</div>
             <div class="wxp-content">
-              <div class="wxp-title">Visualizar Redes Sem Fio Disponíveis</div>
-              <div class="wxp-desc">Clique com botão direito no ícone do adaptador Wi-Fi → <b style="color:var(--cyan)">"Exibir redes sem fio disponíveis"</b>.</div>
-              <div style="margin-top:10px;background:rgba(0,0,0,0.3);border:1px solid rgba(0,212,255,0.15);border-radius:8px;padding:14px">
-                <div style="font-family:'JetBrains Mono',monospace;font-size:0.72em;color:var(--muted);margin-bottom:8px">[ Redes sem fio — janela WZC ]</div>
-                <div style="display:flex;flex-direction:column;gap:6px">
-                  <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.25);border-radius:6px;cursor:pointer">
-                    <span style="font-size:1.3em">📶</span>
-                    <div>
-                      <div style="font-size:0.82em;font-weight:700;color:var(--cyan)">FATEC-LAB-S4</div>
-                      <div style="font-size:0.68em;color:var(--muted)">Segurança: WPA-PSK · Sinal: ████░ Bom</div>
-                    </div>
-                    <span style="margin-left:auto;font-size:0.7em;background:rgba(0,255,136,0.15);color:var(--green);padding:2px 8px;border-radius:3px;font-weight:700">CONECTAR</span>
-                  </div>
-                  <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:6px">
-                    <span style="font-size:1.3em">📶</span>
-                    <div>
-                      <div style="font-size:0.82em;font-weight:700;color:var(--text2)">outra_rede</div>
-                      <div style="font-size:0.68em;color:var(--muted)">Segurança: WEP · Sinal: ██░░░ Fraco</div>
-                    </div>
-                  </div>
-                </div>
+              <div class="wxp-title">Abrir Propriedades da Conexão de Área Local</div>
+              <div class="wxp-desc">Clique com botão <b>direito</b> em <b>"Conexão de Área Local"</b> → <b>"Propriedades"</b>. Na lista de itens, dê duplo clique em <b style="color:var(--cyan)">"Protocolo Internet (TCP/IP)"</b>.</div>
+              <div class="cmd-block" style="margin-top:8px">
+<span class="comment">── Definir IP fixo na sub-rede do WG302 ─────────</span><br>
+<span class="comment">○ Usar o seguinte endereço IP:</span><br>
+<span class="output">Endereço IP   :</span> <span class="value">192.168.0.10</span><br>
+<span class="output">Máscara       :</span> <span class="value">255.255.255.0</span><br>
+<span class="output">Gateway padrão:</span> <span class="value">192.168.0.228</span>  <span class="comment">(IP padrão do WG302)</span><br>
+<span class="output">DNS preferido :</span> <span class="value">8.8.8.8</span><br>
+<span class="comment">→ Clique OK → OK para aplicar</span>
               </div>
             </div>
           </div>
@@ -1389,18 +1521,16 @@ body::before {
           <div class="wxp-step">
             <div class="wxp-num">5</div>
             <div class="wxp-content">
-              <div class="wxp-title">Conectar à Rede — Inserir Senha (WPA-PSK)</div>
-              <div class="wxp-desc">Clique na rede desejada → <b style="color:var(--cyan)">"Conectar"</b>. Uma caixa de diálogo pedirá a chave de rede.</div>
+              <div class="wxp-title">Testar acesso à interface web do WG302</div>
+              <div class="wxp-desc">Com o IP fixo configurado, abra o Prompt de Comando e confirme a conectividade. Depois acesse a interface de administração do AP pelo navegador.</div>
               <div class="cmd-block" style="margin-top:8px">
-<span class="comment">── Diálogo "Conexão de Rede Sem Fio" ────────────</span><br>
-<span class="output">Chave de rede :</span> <span class="value">FatecLab@2025!</span><br>
-<span class="output">Confirmar chave:</span> <span class="value">FatecLab@2025!</span><br>
-<span class="comment">→ Clique em "Conectar"</span><br>
+<span class="prompt">C:\&gt;</span> <span class="cmd">ping 192.168.0.228</span>  <span class="comment">(IP padrão do WG302)</span><br>
+<span class="output">Resposta de 192.168.0.228: bytes=32 tempo=1ms TTL=64</span><br>
 <br>
-<span class="comment">── Para WEP (se for necessário) ─────────────────</span><br>
-<span class="output">Tipo de chave :</span> <span class="value">Chave de rede (WEP)</span><br>
-<span class="output">Índice de chave:</span> <span class="value">1</span><br>
-<span class="output">Chave (hex)   :</span> <span class="value">41424344454647484950515253</span>  <span class="comment">(13 bytes = WEP-104)</span>
+<span class="comment">── Abrir navegador (Internet Explorer / Firefox) ─</span><br>
+<span class="output">URL     :</span> <span class="value">http://192.168.0.228</span><br>
+<span class="output">Usuário :</span> <span class="value">admin</span><br>
+<span class="output">Senha   :</span> <span class="value">password</span>
               </div>
             </div>
           </div>
@@ -1408,22 +1538,20 @@ body::before {
           <div class="wxp-step">
             <div class="wxp-num">6</div>
             <div class="wxp-content">
-              <div class="wxp-title">Configurar IP — DHCP ou Estático</div>
-              <div class="wxp-desc">Após conectar, verifique se o IP foi atribuído automaticamente. Se o AP não tiver DHCP, configure manualmente.</div>
+              <div class="wxp-title">Confirmar IP e Testar Conectividade</div>
+              <div class="wxp-desc">Verifique se o IP está correto e teste o caminho completo até o gateway.</div>
               <div class="cmd-block" style="margin-top:8px">
-<span class="comment">── Verificar IP obtido ───────────────────────────</span><br>
+<span class="comment">── Confirmar IP configurado ──────────────────────</span><br>
 <span class="prompt">C:\&gt;</span> <span class="cmd">ipconfig</span><br>
-<span class="output">IP Address    :</span> <span class="value">192.168.10.15</span>  <span class="comment">(atribuído por DHCP)</span><br>
-<span class="output">Subnet Mask   :</span> <span class="value">255.255.255.0</span><br>
-<span class="output">Default Gateway:</span> <span class="value">192.168.10.1</span><br>
+<span class="output">Conexão de Área Local:</span><br>
+<span class="output">   Endereço IP   :</span> <span class="value">192.168.0.10</span><br>
+<span class="output">   Máscara       :</span> <span class="value">255.255.255.0</span><br>
+<span class="output">   Gateway padrão:</span> <span class="value">192.168.0.228</span><br>
 <br>
-<span class="comment">── Configurar IP estático (se não houver DHCP) ──</span><br>
-<span class="comment">Painel de Controle → Conexões de Rede →</span><br>
-<span class="comment">Adaptador Wi-Fi → Propriedades → TCP/IP → Usar:</span><br>
-<span class="output">IP fixo       :</span> <span class="value">192.168.10.20</span><br>
-<span class="output">Máscara       :</span> <span class="value">255.255.255.0</span><br>
-<span class="output">Gateway       :</span> <span class="value">192.168.10.1</span><br>
-<span class="output">DNS           :</span> <span class="value">8.8.8.8</span>
+<span class="comment">── Testes de conectividade ───────────────────────</span><br>
+<span class="prompt">C:\&gt;</span> <span class="cmd">ping 192.168.0.228</span>  <span class="comment">(AP WG302)</span><br>
+<span class="prompt">C:\&gt;</span> <span class="cmd">ping 8.8.8.8</span>  <span class="comment">(internet — se AP tiver rota)</span><br>
+<span class="prompt">C:\&gt;</span> <span class="cmd">ping www.google.com</span>  <span class="comment">(DNS + internet)</span>
               </div>
             </div>
           </div>
@@ -1431,15 +1559,18 @@ body::before {
           <div class="wxp-step">
             <div class="wxp-num">7</div>
             <div class="wxp-content">
-              <div class="wxp-title">Testar a Conexão</div>
-              <div class="wxp-desc">Confirme conectividade com o AP e com a internet.</div>
+              <div class="wxp-title">Acessar o painel de administração do WG302</div>
+              <div class="wxp-desc">Com a conectividade confirmada, acesse a interface web do AP para realizar as configurações de SSID, segurança e canal.</div>
               <div class="cmd-block" style="margin-top:8px">
-<span class="prompt">C:\&gt;</span> <span class="cmd">ping 192.168.10.250</span>  <span class="comment">(IP do WG302)</span><br>
-<span class="output">Resposta de 192.168.10.250: bytes=32 tempo=2ms TTL=64</span><br>
+<span class="comment">── Interface de administração web ────────────────</span><br>
+<span class="prompt">C:\&gt;</span> <span class="cmd">ping 192.168.0.228</span>  <span class="comment">(confirmar que o AP responde)</span><br>
+<span class="output">Resposta de 192.168.0.228: bytes=32 tempo=2ms TTL=64</span><br>
 <br>
-<span class="prompt">C:\&gt;</span> <span class="cmd">ping 192.168.10.1</span>  <span class="comment">(gateway)</span><br>
-<span class="prompt">C:\&gt;</span> <span class="cmd">ping 8.8.8.8</span>  <span class="comment">(internet)</span><br>
-<span class="prompt">C:\&gt;</span> <span class="cmd">ping www.google.com</span>  <span class="comment">(DNS + internet)</span>
+<span class="comment">── Abrir no Internet Explorer (ou Firefox) ──────</span><br>
+<span class="output">URL     :</span> <span class="value">http://192.168.0.228</span><br>
+<span class="output">Usuário :</span> <span class="value">admin</span><br>
+<span class="output">Senha   :</span> <span class="value">password</span><br>
+<span class="comment">→ Agora configure SSID, canal e segurança WPA conforme os passos do WG302 acima</span>
               </div>
             </div>
           </div>
@@ -1447,51 +1578,50 @@ body::before {
         </div>
 
         <!-- MÉTODO 2 -->
-        <div class="section-title" style="margin-top:4px">Método 2 — Adicionar Rede Manualmente (SSID Oculto)</div>
-        <div style="font-size:0.83em;color:var(--muted);margin-bottom:14px">Use este método quando o SSID não está sendo broadcast (hidden SSID) ou para pré-configurar a conexão.</div>
+        <div class="section-title" style="margin-top:4px">Método 2 — Obter IP Automático via DHCP (se o AP fornecer)</div>
+        <div style="font-size:0.83em;color:var(--muted);margin-bottom:14px">Se o WG302 estiver configurado com servidor DHCP ativo, a VM pode obter IP automaticamente sem configuração manual.</div>
 
         <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px">
           <div class="wxp-step">
             <div class="wxp-num">1</div>
             <div class="wxp-content">
-              <div class="wxp-title">Abrir Propriedades da Conexão Sem Fio</div>
-              <div class="wxp-desc">Botão direito no adaptador Wi-Fi → <b style="color:var(--cyan)">"Propriedades"</b> → aba <b>"Redes sem fio"</b>.</div>
+              <div class="wxp-title">Abrir Propriedades TCP/IP da Conexão de Área Local</div>
+              <div class="wxp-desc">Vá até <b>"Conexão de Área Local"</b> → botão direito → <b>"Propriedades"</b> → duplo clique em <b>"Protocolo Internet (TCP/IP)"</b>.</div>
             </div>
           </div>
           <div class="wxp-step">
             <div class="wxp-num">2</div>
             <div class="wxp-content">
-              <div class="wxp-title">Adicionar Rede Preferida</div>
-              <div class="wxp-desc">Clique em <b style="color:var(--cyan)">"Adicionar"</b> na seção "Redes preferenciais".</div>
+              <div class="wxp-title">Habilitar obtenção automática de IP</div>
+              <div class="wxp-desc">Selecione <b style="color:var(--cyan)">"Obter um endereço IP automaticamente"</b> e <b>"Obter o endereço dos servidores DNS automaticamente"</b>. Clique OK → OK.</div>
               <div class="cmd-block" style="margin-top:8px">
-<span class="output">Nome da rede (SSID) :</span> <span class="value">FATEC-LAB-S4</span><br>
-<span class="output">Autenticação de rede:</span> <span class="value">WPA-PSK</span><br>
-<span class="output">Criptografia de dados:</span> <span class="value">TKIP</span><br>
-<span class="output">Chave de rede       :</span> <span class="value">FatecLab@2025!</span><br>
-<span class="output">Confirmar chave     :</span> <span class="value">FatecLab@2025!</span><br>
-<span class="comment">☑ Conectar mesmo sem transmissão da rede  ← marcar se SSID oculto</span>
+<span class="comment">── Verificar se o IP foi obtido via DHCP ─────────</span><br>
+<span class="prompt">C:\&gt;</span> <span class="cmd">ipconfig /release</span>  <span class="comment">(libera IP atual)</span><br>
+<span class="prompt">C:\&gt;</span> <span class="cmd">ipconfig /renew</span>   <span class="comment">(solicita novo IP ao DHCP)</span><br>
+<span class="prompt">C:\&gt;</span> <span class="cmd">ipconfig</span>          <span class="comment">(confirma IP obtido)</span><br>
+<span class="comment">Se retornar 169.254.x.x → DHCP não respondeu → use IP fixo (Método 1)</span>
               </div>
             </div>
           </div>
           <div class="wxp-step">
             <div class="wxp-num">3</div>
             <div class="wxp-content">
-              <div class="wxp-title">Confirmar e Conectar</div>
-              <div class="wxp-desc">Clique <b>OK</b> → <b>OK</b>. O Windows XP tentará conectar automaticamente. O ícone na bandeja do sistema mostrará o sinal quando conectado.</div>
+              <div class="wxp-title">Confirmar e acessar o AP</div>
+              <div class="wxp-desc">Com IP obtido na sub-rede correta, acesse <b style="color:var(--cyan)">http://192.168.0.228</b> no navegador com usuário <b>admin</b> / senha <b>password</b>.</div>
             </div>
           </div>
         </div>
 
-        <!-- SP3 / WPA2 NOTE -->
-        <div class="section-title">Patch WPA2 para Windows XP (SP3)</div>
-        <div style="background:rgba(255,204,0,0.05);border:1px solid rgba(255,204,0,0.25);border-radius:10px;padding:16px;font-size:0.83em;line-height:1.7">
-          <div style="font-weight:800;color:var(--yellow);margin-bottom:8px">⚠️ Windows XP e WPA2</div>
-          <div style="color:var(--text2)">O Windows XP <b>não suporta WPA2 nativamente</b>. Para usar WPA2-AES é necessário:</div>
+        <!-- NOTA SOBRE CONEXÃO CABEADA -->
+        <div class="section-title">Nota: Conexão com fio vs Wi-Fi neste laboratório</div>
+        <div style="background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.25);border-radius:10px;padding:16px;font-size:0.83em;line-height:1.7">
+          <div style="font-weight:800;color:var(--cyan);margin-bottom:8px">ℹ️ Papel do PC de mesa: Administrador com fio</div>
+          <div style="color:var(--text2)">O PC de mesa com Windows XP (VM VirtualBox) conecta-se ao WG302 por <b style="color:var(--cyan)">cabo Ethernet RJ-45</b>. Sua função é <b>configurar o AP</b> pela interface web (http://192.168.0.228), não consumir o Wi-Fi. O SSID <b>FATEC-LAB-S4</b> que você configura será usado por dispositivos cliente externos (celulares, outros notebooks) que se conectam pelo ar. Isso é exatamente o modelo real de um técnico de redes em campo.</div>
           <div style="margin-top:10px;display:flex;flex-direction:column;gap:6px">
-            <div style="display:flex;align-items:flex-start;gap:8px;color:var(--text2)"><span style="color:var(--yellow);flex-shrink:0">①</span> Instalar o <b style="color:var(--yellow)">Windows XP Service Pack 3 (SP3)</b></div>
-            <div style="display:flex;align-items:flex-start;gap:8px;color:var(--text2)"><span style="color:var(--yellow);flex-shrink:0">②</span> Instalar o <b style="color:var(--yellow)">KB893357</b> (Wireless Client Update para WPA2)</div>
-            <div style="display:flex;align-items:flex-start;gap:8px;color:var(--text2)"><span style="color:var(--yellow);flex-shrink:0">③</span> Usar driver atualizado do adaptador Wi-Fi com suporte a WPA2</div>
-            <div style="display:flex;align-items:flex-start;gap:8px;color:var(--text2)"><span style="color:var(--yellow);flex-shrink:0">④</span> No WG302, configurar <b>WPA-PSK/TKIP</b> pois é o máximo suportado sem patches</div>
+            <div style="display:flex;align-items:flex-start;gap:8px;color:var(--text2)"><span style="color:var(--cyan);flex-shrink:0">①</span> PC de mesa (VM XP) — conectado <b style="color:var(--cyan)">via cabo</b> → porta LAN do WG302</div>
+            <div style="display:flex;align-items:flex-start;gap:8px;color:var(--text2)"><span style="color:var(--cyan);flex-shrink:0">②</span> Acessa http://192.168.0.228 para <b>configurar</b> o AP</div>
+            <div style="display:flex;align-items:flex-start;gap:8px;color:var(--text2)"><span style="color:var(--cyan);flex-shrink:0">③</span> Celulares e notebooks dos colegas se conectam ao <b>SSID Wi-Fi</b> que você criou</div>
+            <div style="display:flex;align-items:flex-start;gap:8px;color:var(--text2)"><span style="color:var(--cyan);flex-shrink:0">④</span> Após configurar, <b style="color:var(--yellow)">altere a senha admin</b> em Maintenance → Set Password</div>
           </div>
         </div>
 
@@ -1499,8 +1629,8 @@ body::before {
         <div class="section-title" style="margin-top:20px">Resolução de Problemas</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px">
           <div class="gloss-item" style="border-left:3px solid var(--red)">
-            <div class="gloss-term" style="color:var(--red)">❌ Não vejo a rede Wi-Fi</div>
-            <div class="gloss-def">Verifique se o serviço WZC está iniciado. Cheque se o adaptador está habilitado em Gerenciador de Dispositivos. Reinstale o driver.</div>
+            <div class="gloss-term" style="color:var(--red)">❌ Não consigo acessar 192.168.0.228</div>
+            <div class="gloss-def">Verifique o cabo RJ-45 (LEDs no AP e na placa de rede devem piscar). Confirme que o IP do PC está em 192.168.0.X. Verifique o modo Bridge no VirtualBox. Desative o firewall do Windows XP temporariamente.</div>
           </div>
           <div class="gloss-item" style="border-left:3px solid var(--yellow)">
             <div class="gloss-term" style="color:var(--yellow)">⚠️ Senha incorreta / falha na autenticação</div>
@@ -1514,12 +1644,315 @@ body::before {
             <div class="gloss-term" style="color:var(--cyan)">🔧 Sinal fraco ou instável</div>
             <div class="gloss-def">Reduza obstáculos entre o dispositivo e o WG302. Troque o canal do AP (use 1, 6 ou 11). Ajuste a posição das antenas para posição vertical.</div>
           </div>
+        </div><!-- /troubleshooting grid -->
+
+      </div><!-- /os-panel xp -->
+
+      <!-- ══════════════════════════════════════
+           PANEL WINDOWS 10
+      ══════════════════════════════════════ -->
+      <div class="os-panel win10" id="panel-w10">
+
+        <div style="background:rgba(0,120,215,0.07);border:1px solid rgba(0,120,215,0.25);border-radius:10px;padding:14px 18px;margin-bottom:20px;font-size:0.84em;color:var(--text2);line-height:1.6">
+          💡 <b style="color:#3b9eff">Contexto Windows 10:</b> Neste lab, o PC de mesa conecta-se ao WG302 por <b>cabo Ethernet</b>. Dentro do PC, a VM (VirtualBox, modo Bridge na placa Ethernet) acessa o AP pela rede cabeada. O adaptador aparece como <b>"Ethernet"</b> (conexão com fio) nas configurações de rede — não como Wi-Fi. Configure o IP fixo pelas Propriedades do Adaptador Ethernet para alcançar a interface web do AP em <b>192.168.0.228</b>.
         </div>
 
-      </div>
-    </div>
+        <div class="os-section-title">Método 1 — Configurar IP fixo via ncpa.cpl (Ethernet)</div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px">
 
-    <!-- MISSÃO -->
+          <div class="wos-step">
+            <div class="wos-num">1</div>
+            <div class="wos-content">
+              <div class="wos-title">Abrir Conexões de Rede</div>
+              <div class="wos-desc">Acesse o gerenciador de adaptadores de rede para localizar o adaptador Ethernet da VM.</div>
+              <div class="cmd-block" style="margin-top:8px">
+<span class="prompt">Win+R</span> → digitar <span class="value">ncpa.cpl</span> → <span class="cmd">Enter</span>  <span class="comment">(abre Conexões de Rede diretamente)</span><br>
+<span class="comment">OU: Win → Configurações → Rede e Internet → Ethernet → Alterar opções do adaptador</span><br>
+<span class="comment">OU: clique direito no ícone de rede 🖧 na bandeja → "Abrir Configurações de Rede e Internet"</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="wos-step">
+            <div class="wos-num">2</div>
+            <div class="wos-content">
+              <div class="wos-title">Localizar o Adaptador Ethernet</div>
+              <div class="wos-desc">Na janela Conexões de Rede, localize o adaptador <b>"Ethernet"</b> (não Wi-Fi). Em VM Bridge ele aparece como <b>"VirtualBox Host-Only" ou "Intel/Realtek Ethernet"</b> dependendo da configuração.</div>
+              <div style="margin-top:10px;background:rgba(0,0,0,0.3);border:1px solid rgba(0,120,215,0.2);border-radius:8px;padding:14px">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:0.72em;color:var(--muted);margin-bottom:8px">[ Conexões de Rede — ncpa.cpl ]</div>
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:rgba(0,120,215,0.1);border:1px solid rgba(0,120,215,0.3);border-radius:6px">
+                    <span style="font-size:1.3em">🖧</span>
+                    <div>
+                      <div style="font-size:0.82em;font-weight:700;color:#3b9eff">Ethernet</div>
+                      <div style="font-size:0.68em;color:var(--muted)">Conectada · VirtualBox / Realtek / Intel · ← use este</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="wos-step">
+            <div class="wos-num">3</div>
+            <div class="wos-content">
+              <div class="wos-title">Configurar TCP/IPv4 com IP fixo</div>
+              <div class="wos-desc">Clique com botão <b>direito</b> no adaptador Ethernet → <b>"Propriedades"</b> → duplo clique em <b>"Protocolo TCP/IP Versão 4 (TCP/IPv4)"</b> → selecione <b>"Usar o seguinte endereço IP"</b>.</div>
+              <div class="cmd-block" style="margin-top:8px">
+<span class="comment">── IP fixo na sub-rede do WG302 ─────────────────</span><br>
+<span class="output">Endereço IP   :</span> <span class="value">192.168.0.10</span><br>
+<span class="output">Máscara       :</span> <span class="value">255.255.255.0</span><br>
+<span class="output">Gateway padrão:</span> <span class="value">192.168.0.228</span>  <span class="comment">(IP padrão do WG302)</span><br>
+<span class="output">DNS preferido :</span> <span class="value">8.8.8.8</span><br>
+<span class="comment">→ Clique OK → OK para salvar</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="wos-step">
+            <div class="wos-num">4</div>
+            <div class="wos-content">
+              <div class="wos-title">Testar e acessar a interface web do AP</div>
+              <div class="wos-desc">Abra o Prompt de Comando e confirme a conectividade. Depois acesse o painel do WG302 no navegador.</div>
+              <div class="cmd-block" style="margin-top:8px">
+<span class="prompt">C:\&gt;</span> <span class="cmd">ipconfig</span>  <span class="comment">(confirmar IP 192.168.0.10)</span><br>
+<span class="prompt">C:\&gt;</span> <span class="cmd">ping 192.168.0.228</span>  <span class="comment">(AP WG302 deve responder)</span><br>
+<span class="output">Resposta de 192.168.0.228: bytes=32 tempo=1ms TTL=64</span><br>
+<br>
+<span class="comment">── Abrir no Edge ou Chrome ───────────────────────</span><br>
+<span class="output">URL     :</span> <span class="value">http://192.168.0.228</span><br>
+<span class="output">Usuário :</span> <span class="value">admin</span> &nbsp;/&nbsp; <span class="output">Senha :</span> <span class="value">password</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="os-section-title">Método 2 — Obter IP automático via DHCP (se o AP fornecer)</div>
+        <div style="font-size:0.83em;color:var(--muted);margin-bottom:14px">Use quando o WG302 estiver com DHCP ativo — a VM obtém IP automaticamente.</div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px">
+
+          <div class="wos-step">
+            <div class="wos-num">1</div>
+            <div class="wos-content">
+              <div class="wos-title">Abrir propriedades do adaptador Ethernet</div>
+              <div class="wos-path">📂 Win+R → <code>ncpa.cpl</code> → botão direito no adaptador Ethernet → Propriedades</div>
+              <div class="wos-tip">💡 Na VM em modo Bridge o adaptador é listado como Ethernet — não como Wi-Fi. Use sempre o adaptador Ethernet para configuração cabeada.</div>
+            </div>
+          </div>
+
+          <div class="wos-step">
+            <div class="wos-num">2</div>
+            <div class="wos-content">
+              <div class="wos-title">Habilitar DHCP no TCP/IPv4</div>
+              <div class="wos-desc">Dê duplo clique em <b>"Protocolo TCP/IP Versão 4 (TCP/IPv4)"</b> → selecione <b>"Obter um endereço IP automaticamente"</b> → OK → OK.</div>
+              <div class="cmd-block" style="margin-top:8px">
+<span class="comment">── Renovar IP via DHCP pelo Prompt ──────────────</span><br>
+<span class="prompt">C:\&gt;</span> <span class="cmd">ipconfig /release</span><br>
+<span class="prompt">C:\&gt;</span> <span class="cmd">ipconfig /renew</span><br>
+<span class="prompt">C:\&gt;</span> <span class="cmd">ipconfig</span>  <span class="comment">(confirmar IP na sub-rede 192.168.0.X)</span><br>
+<span class="comment">Se retornar 169.254.x.x → use IP fixo (Método 1)</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="os-section-title">Nota: O SSID Wi-Fi que você configurou no AP</div>
+        <div style="background:rgba(0,120,215,0.05);border:1px solid rgba(0,120,215,0.2);border-radius:10px;padding:14px 18px;margin-bottom:20px;font-size:0.83em;color:var(--text2);line-height:1.7">
+          <b style="color:#3b9eff">ℹ️ Testar o SSID como cliente:</b> Após configurar o WG302 pela interface web (via cabo), você pode testar o SSID <b>FATEC-LAB-S4</b> conectando um <b>celular ou outro notebook</b> ao Wi-Fi. O PC de mesa (VM) continua na rede cabeada para administração. Este é o fluxo correto: administrador com fio → clientes sem fio.
+          <div class="cmd-block" style="margin-top:10px">
+<span class="comment">── Verificar clientes conectados ao AP ───────────</span><br>
+<span class="comment">No navegador, acesse: http://192.168.0.228</span><br>
+<span class="comment">Menu: Maintenance → Attached Devices</span><br>
+<span class="comment">Lista os MACs e IPs dos clientes Wi-Fi conectados</span>
+          </div>
+        </div>
+
+        <div class="os-section-title">Resolução de Problemas — Windows 10</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px">
+          <div class="gloss-item" style="border-left:3px solid var(--red)">
+            <div class="gloss-term" style="color:var(--red)">❌ Não acessa 192.168.0.228</div>
+            <div class="gloss-def">Verifique o cabo RJ-45 (LEDs da placa e do AP). Confirme IP fixo 192.168.0.X no adaptador Ethernet. Verifique o modo Bridge no VirtualBox. Desative o Windows Defender Firewall temporariamente.</div>
+          </div>
+          <div class="gloss-item" style="border-left:3px solid var(--yellow)">
+            <div class="gloss-term" style="color:var(--yellow)">⚠️ IP 169.254.x.x obtido</div>
+            <div class="gloss-def">Endereço APIPA — nenhum DHCP respondeu. Configure IP fixo: 192.168.0.10 / máscara 255.255.255.0 / gateway 192.168.0.228 no adaptador Ethernet via ncpa.cpl.</div>
+          </div>
+          <div class="gloss-item" style="border-left:3px solid var(--yellow)">
+            <div class="gloss-term" style="color:var(--yellow)">⚠️ Adaptador Ethernet desconectado</div>
+            <div class="gloss-def">Verifique o cabo. No VirtualBox confirme que o Adaptador 1 está em modo Bridge apontando para a placa Ethernet física do host (não Wi-Fi). Reinicie a VM após trocar o modo de rede.</div>
+          </div>
+          <div class="gloss-item" style="border-left:3px solid var(--cyan)">
+            <div class="gloss-term" style="color:var(--cyan)">🔧 Reset de rede</div>
+            <div class="gloss-def">Win → Configurações → Rede e Internet → Status → Redefinição de Rede. Ou via cmd (admin): <code>netsh winsock reset</code> + <code>netsh int ip reset</code> + reiniciar a VM.</div>
+          </div>
+        </div>
+
+      </div><!-- /os-panel w10 -->
+
+      <!-- ══════════════════════════════════════
+           PANEL WINDOWS 11
+      ══════════════════════════════════════ -->
+      <div class="os-panel win11" id="panel-w11">
+
+        <div style="background:rgba(0,200,200,0.06);border:1px solid rgba(0,200,200,0.22);border-radius:10px;padding:14px 18px;margin-bottom:20px;font-size:0.84em;color:var(--text2);line-height:1.6">
+          💡 <b style="color:#00d4c8">Contexto Windows 11:</b> Neste lab, o PC de mesa conecta-se ao WG302 por <b>cabo Ethernet</b>. A VM (VirtualBox, modo Bridge na placa Ethernet do host) acessa o AP pela rede cabeada. O adaptador aparece como <b>"Ethernet"</b> nas configurações de rede — não como Wi-Fi. O caminho correto para configurar IP é via <b>ncpa.cpl</b> (adaptador Ethernet) ou Win+I → Rede e Internet → <b>Ethernet</b>. Use o IP fixo <b>192.168.0.10</b> para alcançar a interface web do AP em <b>192.168.0.228</b>.
+        </div>
+
+        <div class="os-section-title">Método 1 — Configurar IP fixo via ncpa.cpl (Ethernet)</div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px">
+
+          <div class="wos-step">
+            <div class="wos-num">1</div>
+            <div class="wos-content">
+              <div class="wos-title">Abrir Conexões de Rede</div>
+              <div class="wos-desc">O atalho <b>ncpa.cpl</b> funciona em todas as versões do Windows e é a forma mais direta de acessar os adaptadores de rede.</div>
+              <div class="cmd-block" style="margin-top:8px">
+<span class="prompt">Win+R</span> → digitar <span class="value">ncpa.cpl</span> → <span class="cmd">Enter</span><br>
+<span class="comment">OU: Win+I → Rede e Internet → Ethernet → Alterar opções do adaptador</span><br>
+<span class="comment">OU: Win+X → Conexões de rede</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="wos-step">
+            <div class="wos-num">2</div>
+            <div class="wos-content">
+              <div class="wos-title">Localizar o Adaptador Ethernet</div>
+              <div class="wos-desc">Na janela Conexões de Rede, localize o adaptador chamado <b>"Ethernet"</b>. Em VM Bridge aparece como <b>"VirtualBox" ou "Intel/Realtek Ethernet"</b>. Clique com botão <b>direito</b> → <b>"Propriedades"</b>.</div>
+              <div style="margin-top:10px;background:rgba(0,0,0,0.3);border:1px solid rgba(0,200,200,0.2);border-radius:8px;padding:14px">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:0.72em;color:var(--muted);margin-bottom:8px">[ ncpa.cpl — Conexões de Rede ]</div>
+                <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:rgba(0,200,200,0.08);border:1px solid rgba(0,200,200,0.3);border-radius:6px">
+                  <span style="font-size:1.3em">🖧</span>
+                  <div>
+                    <div style="font-size:0.82em;font-weight:700;color:#00d4c8">Ethernet</div>
+                    <div style="font-size:0.68em;color:var(--muted)">Conectada · VirtualBox / Realtek / Intel · ← use este</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="wos-step">
+            <div class="wos-num">3</div>
+            <div class="wos-content">
+              <div class="wos-title">Configurar TCP/IPv4 com IP fixo</div>
+              <div class="wos-desc">Na janela Propriedades, dê duplo clique em <b>"Protocolo TCP/IP Versão 4 (TCP/IPv4)"</b> → selecione <b>"Usar o seguinte endereço IP"</b>.</div>
+              <div class="cmd-block" style="margin-top:8px">
+<span class="comment">── IP fixo na sub-rede do WG302 ─────────────────</span><br>
+<span class="output">Endereço IP   :</span> <span class="value">192.168.0.10</span><br>
+<span class="output">Máscara       :</span> <span class="value">255.255.255.0</span><br>
+<span class="output">Gateway padrão:</span> <span class="value">192.168.0.228</span>  <span class="comment">(IP padrão do WG302)</span><br>
+<span class="output">DNS preferido :</span> <span class="value">8.8.8.8</span><br>
+<span class="comment">→ OK → OK para salvar</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="wos-step">
+            <div class="wos-num">4</div>
+            <div class="wos-content">
+              <div class="wos-title">Testar e acessar a interface web do AP</div>
+              <div class="wos-desc">Abra o Terminal (Win+X → Terminal) ou Prompt de Comando e confirme a conectividade.</div>
+              <div class="cmd-block" style="margin-top:8px">
+<span class="prompt">C:\&gt;</span> <span class="cmd">ipconfig</span>  <span class="comment">(confirmar Ethernet com IP 192.168.0.10)</span><br>
+<span class="prompt">C:\&gt;</span> <span class="cmd">ping 192.168.0.228</span>  <span class="comment">(AP deve responder)</span><br>
+<span class="output">Resposta de 192.168.0.228: bytes=32 tempo=1ms TTL=64</span><br>
+<br>
+<span class="comment">── Abrir no Edge ou Chrome ───────────────────────</span><br>
+<span class="output">URL     :</span> <span class="value">http://192.168.0.228</span><br>
+<span class="output">Usuário :</span> <span class="value">admin</span> &nbsp;/&nbsp; <span class="output">Senha :</span> <span class="value">password</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="os-section-title">Método 2 — IP via nova interface Configurações (Win 11)</div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px">
+
+          <div class="wos-step">
+            <div class="wos-num">1</div>
+            <div class="wos-content">
+              <div class="wos-title">Acessar propriedades do adaptador Ethernet</div>
+              <div class="wos-path">📂 Win+I → Rede e Internet → Ethernet → clicar em "Editar" ao lado de "Atribuição de IP"</div>
+              <div class="wos-tip">💡 No Windows 11, a nova interface de Configurações permite editar o IP diretamente sem precisar abrir ncpa.cpl. Ambas as formas funcionam.</div>
+            </div>
+          </div>
+
+          <div class="wos-step">
+            <div class="wos-num">2</div>
+            <div class="wos-content">
+              <div class="wos-title">Alterar para Manual e configurar IPv4</div>
+              <div class="wos-desc">No menu Editar, mude de <b>"Automático (DHCP)"</b> para <b>"Manual"</b> → ative o toggle <b>IPv4</b> → preencha os campos.</div>
+              <div class="cmd-block" style="margin-top:8px">
+<span class="output">Endereço IP   :</span> <span class="value">192.168.0.10</span><br>
+<span class="output">Comprimento do prefixo de sub-rede :</span> <span class="value">24</span>  <span class="comment">(= 255.255.255.0)</span><br>
+<span class="output">Gateway       :</span> <span class="value">192.168.0.228</span>  <span class="comment">(IP do WG302)</span><br>
+<span class="output">DNS preferido :</span> <span class="value">8.8.8.8</span><br>
+<span class="comment">→ Clique em "Salvar"</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="wos-step">
+            <div class="wos-num">3</div>
+            <div class="wos-content">
+              <div class="wos-title">Confirmar e acessar o AP</div>
+              <div class="cmd-block" style="margin-top:8px">
+<span class="prompt">C:\&gt;</span> <span class="cmd">ping 192.168.0.228</span><br>
+<span class="output">Resposta de 192.168.0.228: bytes=32 tempo=1ms TTL=64</span><br>
+<span class="output">URL :</span> <span class="value">http://192.168.0.228</span>  <span class="comment">→ admin / password</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="os-section-title">Comandos úteis — Terminal Windows 11</div>
+        <div class="cmd-block" style="margin-bottom:20px">
+<span class="comment">── Verificar adaptador Ethernet e IP ────────────</span><br>
+<span class="prompt">PS&gt;</span> <span class="cmd">ipconfig /all</span>  <span class="comment">(detalhes de todos os adaptadores)</span><br>
+<br>
+<span class="comment">── Renovar IP via DHCP ───────────────────────────</span><br>
+<span class="prompt">PS&gt;</span> <span class="cmd">ipconfig /release</span><br>
+<span class="prompt">PS&gt;</span> <span class="cmd">ipconfig /renew</span><br>
+<br>
+<span class="comment">── Testar conectividade com o AP ─────────────────</span><br>
+<span class="prompt">PS&gt;</span> <span class="cmd">ping 192.168.0.228</span>  <span class="comment">(deve responder se cabo e IP estiverem corretos)</span><br>
+<span class="prompt">PS&gt;</span> <span class="cmd">tracert 192.168.0.228</span>  <span class="comment">(ver saltos até o AP)</span><br>
+<br>
+<span class="comment">── Reset completo de rede (executar como admin) ──</span><br>
+<span class="prompt">PS&gt;</span> <span class="cmd">netsh winsock reset</span><br>
+<span class="prompt">PS&gt;</span> <span class="cmd">netsh int ip reset</span><br>
+<span class="comment">→ Reiniciar a VM após o reset</span>
+        </div>
+
+        <div class="os-section-title">Resolução de Problemas — Windows 11</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px">
+          <div class="gloss-item" style="border-left:3px solid var(--red)">
+            <div class="gloss-term" style="color:var(--red)">❌ Não acessa 192.168.0.228</div>
+            <div class="gloss-def">Verifique o cabo RJ-45 (LEDs no AP e na placa de rede). Confirme IP 192.168.0.X no adaptador Ethernet via ncpa.cpl. Verifique modo Bridge no VirtualBox (placa Ethernet, não Wi-Fi do host).</div>
+          </div>
+          <div class="gloss-item" style="border-left:3px solid var(--yellow)">
+            <div class="gloss-term" style="color:var(--yellow)">⚠️ IP 169.254.x.x</div>
+            <div class="gloss-def">Sem resposta DHCP — configure IP fixo: 192.168.0.10 / 255.255.255.0 / gateway 192.168.0.228. Verifique modo Bridge no VirtualBox — certifique-se que "Nome:" aponta para a placa Ethernet física do host.</div>
+          </div>
+          <div class="gloss-item" style="border-left:3px solid var(--yellow)">
+            <div class="gloss-term" style="color:var(--yellow)">⚠️ Adaptador Ethernet sem link</div>
+            <div class="gloss-def">No VirtualBox confirme Adaptador 1 → Bridge → Nome = placa Ethernet do host. Reinicie a VM após trocar o modo. Verifique se o cabo está bem encaixado nos dois lados.</div>
+          </div>
+          <div class="gloss-item" style="border-left:3px solid var(--cyan)">
+            <div class="gloss-term" style="color:var(--cyan)">🔧 Diagnóstico automático</div>
+            <div class="gloss-def">Win+I → Sistema → Solucionar problemas → Outros solucionadores de problemas → Adaptador de Rede → Executar. O Win 11 identifica e corrige problemas comuns automaticamente.</div>
+          </div>
+        </div>
+
+      </div><!-- /os-panel w11 -->
+
+      </div><!-- /card-body -->
+    </div><!-- /card windows -->
     <div class="card">
       <div class="card-head">
         <div class="card-icon ci-g">⚔️</div>
@@ -1531,36 +1964,35 @@ body::before {
           <div class="mission-head">
             <div class="mission-num">M1</div>
             <div class="mission-info">
-              <div class="mission-title">Configuração de Wi-Fi Seguro (WPA3)</div>
-              <div class="mission-meta">📶 Access Point · ⏱ 25 min · Dificuldade: Fácil</div>
+              <div class="mission-title">Configurar o WG302 via Cabo (IP fixo + SSID seguro)</div>
+              <div class="mission-meta">🖧 Cabo Ethernet → AP · ⏱ 25 min · Dificuldade: Fácil</div>
             </div>
             <span class="mission-xp">+50 XP</span>
             <span class="mission-toggle">▼</span>
           </div>
           <div class="mission-body">
-            <div class="mission-desc">Configurar SSID, senha forte, canal adequado e segurança WPA3 no access point.</div>
+            <div class="mission-desc">Conectar o PC de mesa ao WG302 via cabo Ethernet, configurar IP fixo na VM, acessar a interface web do AP e definir SSID, canal e segurança WPA.</div>
             <div class="step">
               <div class="step-num">1</div>
-              <p>Acesse a interface web do AP (tipicamente <code>192.168.1.1</code> ou <code>192.168.0.1</code>) com admin/admin.</p>
+              <p>Conecte o cabo Ethernet do PC de mesa à porta LAN do WG302. No VirtualBox, confirme que a VM está em modo Bridge apontando para a placa Ethernet do host. Configure IP fixo: <code>192.168.0.10</code> / máscara <code>255.255.255.0</code> / gateway <code>192.168.0.228</code>.</p>
             </div>
             <div class="step">
               <div class="step-num">2</div>
-              <p>Configure as redes SSIDs — uma para cada VLAN/departamento:</p>
+              <p>Abra o navegador e acesse <code>http://192.168.0.228</code> → login <b>admin / password</b>. Configure os SSIDs pelo menu Wireless:</p>
             </div>
             <div class="cmd-block">
-<span class="comment">── SSID Corporativo ──────────────────────────────</span><br>
-<span class="output">Nome (SSID)  :</span> <span class="value">REDES-CORP-S4</span><br>
-<span class="output">Segurança    :</span> <span class="value">WPA3-SAE</span>  <span class="comment">(ou WPA2/WPA3 Mixed)</span><br>
-<span class="output">Senha        :</span> <span class="value">Ft3ch@2025!Seguro</span>  <span class="comment">(mín 12 chars)</span><br>
-<span class="output">Banda        :</span> <span class="value">5GHz</span>  <span class="comment">(menos interferência)</span><br>
-<span class="output">Canal        :</span> <span class="value">Auto / 36</span>  <span class="comment">(canais não sobrepostos)</span><br>
-<span class="output">VLAN tag     :</span> <span class="value">10</span>  <span class="comment">(VLAN Administração)</span><br>
+<span class="comment">── SSID Principal ────────────────────────────────</span><br>
+<span class="output">Nome (SSID)  :</span> <span class="value">FATEC-LAB-S4</span><br>
+<span class="output">Segurança    :</span> <span class="value">WPA-PSK (TKIP)</span>  <span class="comment">(máximo suportado pelo WG302)</span><br>
+<span class="output">Senha        :</span> <span class="value">FatecLab@2026!</span>  <span class="comment">(mín 8 chars)</span><br>
+<span class="output">Banda        :</span> <span class="value">2.4 GHz</span>  <span class="comment">(único suportado — 802.11b/g)</span><br>
+<span class="output">Canal        :</span> <span class="value">6</span>  <span class="comment">(usar 1, 6 ou 11 — não sobrepostos)</span><br>
+<span class="output">Broadcast    :</span> <span class="value">Enable</span>  <span class="comment">(SSID visível para clientes)</span><br>
 <br>
-<span class="comment">── SSID Visitantes ───────────────────────────────</span><br>
-<span class="output">Nome (SSID)  :</span> <span class="value">REDES-GUEST-S4</span><br>
-<span class="output">Segurança    :</span> <span class="value">WPA2-PSK</span><br>
-<span class="output">Isolamento   :</span> <span class="value">Habilitado</span>  <span class="comment">(impede acesso entre clientes)</span><br>
-<span class="output">VLAN tag     :</span> <span class="value">99</span>  <span class="comment">(VLAN isolada)</span>
+<span class="comment">── SSID Visitantes (opcional) ────────────────────</span><br>
+<span class="output">Nome (SSID)  :</span> <span class="value">FATEC-GUEST</span><br>
+<span class="output">Segurança    :</span> <span class="value">WPA-PSK (TKIP)</span><br>
+<span class="output">Broadcast    :</span> <span class="value">Disable</span>  <span class="comment">(SSID oculto para visitantes)</span>
             </div>
             <div class="step">
               <div class="step-num">3</div>
@@ -1568,7 +2000,7 @@ body::before {
             </div>
             <div class="step">
               <div class="step-num">4</div>
-              <p>Teste a conexão a partir de um dispositivo e confirme que o IP atribuído pertence à sub-rede correta.</p>
+              <p>Teste o SSID conectando um <b>celular ou notebook Wi-Fi</b> à rede <b>FATEC-LAB-S4</b> com a senha configurada. Verifique os clientes conectados em <b>Maintenance → Attached Devices</b> na interface web do AP.</p>
             </div>
             <button class="complete-btn" id="btn-map" onclick="completeMission(event)">
               ✅ MARCAR COMO CONCLUÍDA
@@ -1694,6 +2126,18 @@ body::before {
             <span class="ach-icon">🖥️</span>
             <div class="ach-name">XP Conectado</div>
           </div>
+          <div class="ach-card" id="a-w10">
+            <span class="ach-icon">🪟</span>
+            <div class="ach-name">Win10 Online</div>
+          </div>
+          <div class="ach-card" id="a-w11">
+            <span class="ach-icon">💻</span>
+            <div class="ach-name">Win11 Online</div>
+          </div>
+          <div class="ach-card" id="a-vbox">
+            <span class="ach-icon">📦</span>
+            <div class="ach-name">VM Bridge OK</div>
+          </div>
           <div class="ach-card" id="a-quiz">
             <span class="ach-icon">🎓</span>
             <div class="ach-name">Sinal Forte</div>
@@ -1710,9 +2154,20 @@ body::before {
 </div>
 
 <script>
+// OS TABS
+function switchOS(os, btn) {
+  document.querySelectorAll('.os-panel').forEach(p => p.classList.remove('active-panel'));
+  document.querySelectorAll('.os-tab').forEach(t => t.classList.remove('active-tab'));
+  document.getElementById('panel-' + os).classList.add('active-panel');
+  btn.classList.add('active-tab');
+  if (os === 'xp')  { addXP(5,'Windows XP visitado!','🖥️'); unlock('a-xp','bm-xp','XP Conectado!'); }
+  if (os === 'w10') { addXP(5,'Windows 10 visitado!','🪟'); unlock('a-w10','bm-w10','Win10 Online!'); }
+  if (os === 'w11') { addXP(5,'Windows 11 visitado!','💻'); unlock('a-w11','bm-w11','Win11 Online!'); unlock('a-vbox','bm-vbox','Bridge VirtualBox confirmado!'); }
+}
+
 // STATE
 let xp = 0, streak = 0, badges = 0;
-const TOTAL_XP = 200;
+const TOTAL_XP = 215;
 const objChecked = [false,false,false,false,false,false,false];
 let missionDone = false;
 let videosWatched = 0;
@@ -1738,7 +2193,7 @@ function updateHUD() {
   setBar('obj-bar','obj-pct', od/7*100, Math.round(od/7*100)+'%');
   setBar('mis-bar','mis-pct', missionDone?100:0, missionDone?'100%':'0%');
   setBar('quiz-bar','quiz-pct', Math.min(qCorrect/5*100,100), Math.round(qCorrect/5*100)+'%');
-  setBar('ach-bar','ach-pct', badges/8*100, badges+'/8');
+  setBar('ach-bar','ach-pct', badges/11*100, badges+'/11');
 }
 function setBar(bid, lid, pct, txt) {
   document.getElementById(bid).style.width = Math.min(pct,100)+'%';
