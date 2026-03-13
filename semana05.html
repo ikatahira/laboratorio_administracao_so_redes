@@ -1,0 +1,1797 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐧 Linux Install Lab — Semana 5 | ISO-103</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #050d1a;
+  --bg2: #091424;
+  --card: #0d1f35;
+  --card2: #0f2540;
+  --cyan: #00d4ff;
+  --cyan2: #00a8cc;
+  --purple: #b44aff;
+  --purple2: #8b2fe0;
+  --green: #00ff88;
+  --green2: #00cc6a;
+  --yellow: #ffcc00;
+  --orange: #ff8c00;
+  --red: #ff4466;
+  --text: #e0f0ff;
+  --muted: #5a7a99;
+  --border: rgba(0,212,255,0.15);
+  --glow-cyan: 0 0 20px rgba(0,212,255,0.4);
+  --glow-purple: 0 0 20px rgba(180,74,255,0.4);
+  --glow-green: 0 0 20px rgba(0,255,136,0.4);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Exo 2', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(ellipse at 15% 15%, rgba(0,255,136,0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 75%, rgba(180,74,255,0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(0,212,255,0.03) 0%, transparent 60%);
+  pointer-events: none; z-index: 0;
+}
+
+/* TUX BG */
+.tux-bg {
+  position: fixed; top: 40px; right: -40px;
+  font-size: 18em; opacity: 0.04;
+  pointer-events: none; z-index: 0;
+  animation: tuxFloat 6s ease-in-out infinite;
+}
+@keyframes tuxFloat {
+  0%, 100% { transform: translateY(0px) rotate(-5deg); }
+  50% { transform: translateY(-20px) rotate(5deg); }
+}
+
+/* HEADER */
+.header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(5,13,26,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 0;
+}
+.header::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--green), var(--cyan), var(--purple), transparent);
+}
+.header-inner {
+  max-width: 1300px; margin: 0 auto; padding: 0 24px;
+  display: flex; align-items: center; gap: 16px;
+}
+.header-logo {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.75em; font-weight: 700;
+  color: var(--green);
+  letter-spacing: 2px;
+  text-shadow: var(--glow-green);
+}
+.header-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 1em; font-weight: 900;
+  color: var(--text);
+}
+.header-title span { color: var(--green); }
+.back-btn {
+  background: rgba(0,255,136,0.1);
+  border: 1px solid rgba(0,255,136,0.2);
+  color: var(--green); padding: 6px 14px; border-radius: 6px;
+  font-family: 'Exo 2', sans-serif; font-size: 0.8em; font-weight: 700;
+  cursor: pointer; text-decoration: none;
+  transition: all 0.2s;
+  display: flex; align-items: center; gap: 6px;
+}
+.back-btn:hover { background: rgba(0,255,136,0.2); box-shadow: var(--glow-green); }
+
+.hud {
+  margin-left: auto;
+  display: flex; align-items: center; gap: 10px;
+}
+.hud-pill {
+  background: rgba(0,255,136,0.08);
+  border: 1px solid rgba(0,255,136,0.2);
+  border-radius: 8px; padding: 6px 14px;
+  text-align: center;
+}
+.hud-pill .v {
+  font-family: 'Orbitron', monospace;
+  font-size: 1.2em; font-weight: 700;
+  color: var(--green); display: block; line-height: 1;
+}
+.hud-pill .l {
+  font-size: 0.58em; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 1px;
+  display: block; margin-top: 2px;
+}
+.hud-xp-wrap {
+  background: rgba(0,255,136,0.08);
+  border: 1px solid rgba(0,255,136,0.2);
+  border-radius: 8px; padding: 7px 14px; min-width: 150px;
+}
+.hud-xp-label {
+  display: flex; justify-content: space-between;
+  font-size: 0.6em; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 1px;
+  margin-bottom: 5px;
+}
+.hud-bar-bg {
+  background: rgba(0,0,0,0.4); border-radius: 100px; height: 6px; overflow: hidden;
+}
+.hud-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--green), var(--cyan));
+  border-radius: 100px;
+  transition: width 0.8s ease;
+  box-shadow: 0 0 10px rgba(0,255,136,0.5);
+  width: 0%;
+}
+
+/* LAYOUT */
+.layout {
+  max-width: 1300px; margin: 0 auto; padding: 28px 24px;
+  display: grid; grid-template-columns: 260px 1fr; gap: 24px;
+  position: relative; z-index: 1;
+}
+.sidebar { display: flex; flex-direction: column; gap: 16px; }
+.scard {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px; padding: 18px;
+}
+.scard-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.72em; font-weight: 700;
+  color: var(--green); letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 14px; padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 6px;
+}
+.nav-link {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; border-radius: 8px;
+  text-decoration: none; color: var(--muted);
+  font-size: 0.85em; font-weight: 600;
+  transition: all 0.2s; margin-bottom: 4px;
+  border: 1px solid transparent;
+}
+.nav-link:hover { color: var(--green); background: rgba(0,255,136,0.06); border-color: rgba(0,255,136,0.15); }
+.nav-link.active {
+  color: var(--green); background: rgba(0,255,136,0.12);
+  border-color: rgba(0,255,136,0.3);
+  box-shadow: inset 3px 0 0 var(--green);
+}
+.nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.nav-dot.green { background: var(--green); box-shadow: 0 0 8px var(--green); }
+.nav-dot.cyan { background: var(--cyan); }
+.nav-dot.purple { background: var(--purple); }
+.nav-dot.orange { background: var(--orange); }
+
+.prog-block { margin-bottom: 12px; }
+.prog-label {
+  display: flex; justify-content: space-between;
+  font-size: 0.75em; color: var(--muted); font-weight: 600;
+  margin-bottom: 5px;
+}
+.prog-label span:last-child { color: var(--green); font-family: 'Orbitron', monospace; }
+.prog-bg {
+  background: rgba(255,255,255,0.06); border-radius: 100px; height: 6px; overflow: hidden;
+}
+.prog-fill {
+  height: 100%; border-radius: 100px; transition: width 0.8s ease;
+}
+.prog-fill.g { background: linear-gradient(90deg, var(--green2), var(--green)); box-shadow: 0 0 8px rgba(0,255,136,0.4); }
+.prog-fill.c { background: linear-gradient(90deg, var(--cyan2), var(--cyan)); box-shadow: 0 0 8px rgba(0,212,255,0.4); }
+.prog-fill.p { background: linear-gradient(90deg, var(--purple2), var(--purple)); box-shadow: 0 0 8px rgba(180,74,255,0.4); }
+.prog-fill.o { background: linear-gradient(90deg, #cc5500, var(--orange)); }
+
+.badge-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
+.badge-item {
+  aspect-ratio: 1; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2em;
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+  filter: grayscale(1) opacity(0.3); transition: all 0.4s;
+  cursor: default; position: relative;
+}
+.badge-item.unlocked {
+  filter: none;
+  background: rgba(0,255,136,0.1); border-color: rgba(0,255,136,0.4);
+  box-shadow: 0 0 16px rgba(0,255,136,0.3);
+  animation: badgePop 0.5s ease;
+}
+@keyframes badgePop {
+  0% { transform: scale(0.5); opacity: 0; }
+  70% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.badge-item[title]:hover::after {
+  content: attr(title);
+  position: absolute; bottom: calc(100% + 6px); left: 50%;
+  transform: translateX(-50%);
+  background: var(--card2); color: var(--green);
+  border: 1px solid var(--border);
+  font-family: 'Exo 2', sans-serif; font-size: 0.6em;
+  padding: 4px 8px; border-radius: 5px; white-space: nowrap;
+  z-index: 100;
+}
+
+/* MAIN */
+.main { display: flex; flex-direction: column; gap: 22px; }
+
+/* HERO */
+.hero {
+  background: var(--card);
+  border: 1px solid rgba(0,255,136,0.2);
+  border-radius: 16px; padding: 36px 40px;
+  position: relative; overflow: hidden;
+  box-shadow: 0 0 40px rgba(0,255,136,0.06);
+}
+.hero::before {
+  content: '🐧';
+  position: absolute; right: 30px; top: 50%; transform: translateY(-50%);
+  font-size: 8em; opacity: 0.07;
+}
+.hero-tag {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.65em; letter-spacing: 3px; font-weight: 700;
+  color: var(--green); text-transform: uppercase;
+  margin-bottom: 10px; opacity: 0.8;
+}
+.hero h1 {
+  font-family: 'Orbitron', monospace;
+  font-size: 2em; font-weight: 900;
+  color: var(--text); line-height: 1.2; margin-bottom: 8px;
+}
+.hero h1 span { color: var(--green); text-shadow: var(--glow-green); }
+.hero-sub { color: var(--muted); font-size: 1em; margin-bottom: 20px; }
+.hero-chips { display: flex; gap: 10px; flex-wrap: wrap; }
+.chip {
+  background: rgba(0,255,136,0.08);
+  border: 1px solid rgba(0,255,136,0.2);
+  border-radius: 100px; padding: 5px 14px;
+  font-size: 0.78em; font-weight: 700; color: var(--green);
+  display: flex; align-items: center; gap: 5px;
+}
+.chip.cyan { background: rgba(0,212,255,0.08); border-color: rgba(0,212,255,0.2); color: var(--cyan); }
+.chip.purple { background: rgba(180,74,255,0.08); border-color: rgba(180,74,255,0.2); color: var(--purple); }
+.chip.orange { background: rgba(255,140,0,0.08); border-color: rgba(255,140,0,0.2); color: var(--orange); }
+
+/* CARD */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px; overflow: hidden;
+}
+.card-head {
+  padding: 16px 22px; display: flex; align-items: center; gap: 12px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(0,255,136,0.02);
+}
+.card-icon {
+  width: 36px; height: 36px; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1em; flex-shrink: 0;
+}
+.ci-g { background: rgba(0,255,136,0.15); border: 1px solid rgba(0,255,136,0.3); }
+.ci-c { background: rgba(0,212,255,0.15); border: 1px solid rgba(0,212,255,0.3); }
+.ci-p { background: rgba(180,74,255,0.15); border: 1px solid rgba(180,74,255,0.3); }
+.ci-o { background: rgba(255,140,0,0.15); border: 1px solid rgba(255,140,0,0.3); }
+.card-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.85em; font-weight: 700; color: var(--text);
+  letter-spacing: 1px;
+}
+.xp-tag {
+  margin-left: auto;
+  background: rgba(0,255,136,0.1);
+  border: 1px solid rgba(0,255,136,0.3);
+  color: var(--green); padding: 3px 12px; border-radius: 100px;
+  font-size: 0.72em; font-weight: 700;
+  font-family: 'Orbitron', monospace;
+}
+.xp-tag.cyan { background: rgba(0,212,255,0.1); border-color: rgba(0,212,255,0.3); color: var(--cyan); }
+.xp-tag.purple { background: rgba(180,74,255,0.1); border-color: rgba(180,74,255,0.3); color: var(--purple); }
+.card-body { padding: 22px; }
+
+/* OBJECTIVES */
+.obj-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.obj-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px; border-radius: 9px;
+  background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);
+  cursor: pointer; transition: all 0.2s; font-size: 0.9em; font-weight: 600;
+}
+.obj-item:hover { background: rgba(0,255,136,0.06); border-color: rgba(0,255,136,0.2); }
+.obj-item.checked {
+  background: rgba(0,255,136,0.06); border-color: rgba(0,255,136,0.2);
+  color: var(--muted); text-decoration: line-through;
+}
+.obj-circle {
+  width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
+  border: 2px solid rgba(255,255,255,0.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8em; transition: all 0.3s;
+}
+.obj-item.checked .obj-circle {
+  background: var(--green); border-color: var(--green); color: #000;
+  box-shadow: 0 0 12px rgba(0,255,136,0.5);
+}
+
+/* OS TABS */
+.os-tabs {
+  display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;
+}
+.os-tab {
+  padding: 9px 18px; border-radius: 8px; cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.02);
+  color: var(--muted); font-family: 'Exo 2', sans-serif;
+  font-size: 0.84em; font-weight: 700; transition: all 0.2s;
+  display: flex; align-items: center; gap: 7px;
+}
+.os-tab:hover { border-color: rgba(0,255,136,0.2); color: var(--green); }
+.os-tab.active-tab {
+  background: rgba(0,255,136,0.12); border-color: rgba(0,255,136,0.4);
+  color: var(--green); box-shadow: 0 0 12px rgba(0,255,136,0.2);
+}
+.os-tab.active-tab.tab-cyan {
+  background: rgba(0,212,255,0.12); border-color: rgba(0,212,255,0.4);
+  color: var(--cyan); box-shadow: 0 0 12px rgba(0,212,255,0.2);
+}
+.os-tab.active-tab.tab-orange {
+  background: rgba(255,140,0,0.12); border-color: rgba(255,140,0,0.4);
+  color: var(--orange); box-shadow: 0 0 12px rgba(255,140,0,0.2);
+}
+.os-panel { display: none; }
+.os-panel.active-panel { display: block; }
+
+/* CONCEPT GRID */
+.concept-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px;
+  margin-bottom: 20px;
+}
+.concept-card {
+  background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px; padding: 16px;
+  border-top: 3px solid var(--green);
+  transition: all 0.2s;
+}
+.concept-card:hover { background: rgba(0,255,136,0.04); border-color: rgba(0,255,136,0.15); }
+.concept-card.cyan { border-top-color: var(--cyan); }
+.concept-card.cyan:hover { background: rgba(0,212,255,0.04); }
+.concept-card.purple { border-top-color: var(--purple); }
+.concept-card.purple:hover { background: rgba(180,74,255,0.04); }
+.concept-card.orange { border-top-color: var(--orange); }
+.concept-card.orange:hover { background: rgba(255,140,0,0.04); }
+.concept-title {
+  font-size: 0.82em; font-weight: 800; color: var(--green);
+  margin-bottom: 8px;
+}
+.concept-card.cyan .concept-title { color: var(--cyan); }
+.concept-card.purple .concept-title { color: var(--purple); }
+.concept-card.orange .concept-title { color: var(--orange); }
+.tag {
+  display: inline-flex;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 4px; padding: 2px 8px;
+  font-size: 0.72em; font-weight: 600; color: var(--muted);
+  margin: 2px; transition: all 0.15s;
+}
+.tag:hover { color: var(--green); border-color: rgba(0,255,136,0.2); }
+
+/* GLOSS */
+.gloss-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px;
+}
+.gloss-item {
+  background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 9px; padding: 12px 14px; transition: all 0.2s;
+}
+.gloss-item:hover { border-color: rgba(0,255,136,0.2); background: rgba(0,255,136,0.03); }
+.gloss-term {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8em; font-weight: 600; color: var(--green);
+  margin-bottom: 4px;
+}
+.gloss-def { font-size: 0.78em; color: var(--muted); line-height: 1.4; }
+
+/* VIDEO */
+.video-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px;
+}
+.video-card {
+  background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px; overflow: hidden; transition: all 0.2s;
+}
+.video-card:hover { border-color: rgba(180,74,255,0.3); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+.video-thumb {
+  height: 100px; display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.video-thumb.green { background: linear-gradient(135deg, #0d2a1f, #0d3520); }
+.video-thumb.cyan { background: linear-gradient(135deg, #0d1f35, #0d2535); }
+.video-thumb.purple { background: linear-gradient(135deg, #1a0d35, #250d40); }
+.video-thumb.orange { background: linear-gradient(135deg, #2a1a0d, #351a0d); }
+.play-btn {
+  width: 48px; height: 48px; border-radius: 50%;
+  background: rgba(180,74,255,0.3); border: 2px solid var(--purple);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--purple); font-size: 1.2em;
+  transition: all 0.2s; cursor: pointer;
+}
+.play-btn:hover { background: rgba(180,74,255,0.5); box-shadow: var(--glow-purple); transform: scale(1.1); }
+.video-info { padding: 12px 14px; }
+.video-info h4 { font-size: 0.82em; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.video-info p { font-size: 0.72em; color: var(--muted); margin-bottom: 8px; }
+.video-link {
+  font-size: 0.72em; font-weight: 700;
+  color: var(--purple); text-decoration: none;
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 4px 10px; border: 1px solid rgba(180,74,255,0.3);
+  border-radius: 4px; transition: all 0.2s;
+}
+.video-link:hover { background: rgba(180,74,255,0.1); }
+
+/* MISSIONS */
+.mission {
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px; overflow: hidden; transition: all 0.2s;
+  margin-bottom: 12px;
+}
+.mission:hover { border-color: rgba(0,255,136,0.2); }
+.mission.done { border-color: rgba(0,255,136,0.3); }
+.mission-head {
+  padding: 14px 18px; display: flex; align-items: center; gap: 14px;
+  cursor: pointer; background: rgba(255,255,255,0.02);
+  user-select: none; transition: background 0.2s;
+}
+.mission.done .mission-head { background: rgba(0,255,136,0.04); }
+.mission-head:hover { background: rgba(0,255,136,0.05); }
+.mission-num {
+  width: 38px; height: 38px; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Orbitron', monospace; font-size: 0.9em; font-weight: 700;
+  flex-shrink: 0; color: #000;
+  background: linear-gradient(135deg, var(--green2), var(--green));
+}
+.mission.done .mission-num { background: linear-gradient(135deg, #00aa55, var(--green)); }
+.mission-num.cyan-num { background: linear-gradient(135deg, var(--cyan2), var(--cyan)); }
+.mission-num.orange-num { background: linear-gradient(135deg, #cc5500, var(--orange)); }
+.mission-info { flex: 1; }
+.mission-title { font-weight: 800; font-size: 0.92em; color: var(--text); }
+.mission.done .mission-title { color: var(--green); }
+.mission-meta { font-size: 0.73em; color: var(--muted); font-weight: 600; margin-top: 2px; }
+.mission-xp {
+  background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.2);
+  color: var(--green); padding: 3px 11px; border-radius: 100px;
+  font-size: 0.72em; font-weight: 700;
+  font-family: 'Orbitron', monospace;
+}
+.mission.done .mission-xp { background: rgba(0,255,136,0.15); border-color: rgba(0,255,136,0.4); }
+.mission-toggle { color: var(--muted); font-size: 0.8em; transition: transform 0.3s; }
+.mission.open .mission-toggle { transform: rotate(180deg); }
+.mission-body {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.3s;
+  padding: 0 18px;
+}
+.mission.open .mission-body { max-height: 1000px; padding: 4px 18px 18px; }
+.mission-desc {
+  font-size: 0.85em; color: var(--muted); font-weight: 600; margin-bottom: 14px;
+  padding: 10px 14px; background: rgba(0,255,136,0.03); border-radius: 8px;
+  border-left: 3px solid var(--green);
+}
+.step { display: flex; gap: 12px; margin-bottom: 10px; align-items: flex-start; }
+.step-num {
+  width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+  background: rgba(0,255,136,0.15); border: 1px solid rgba(0,255,136,0.3);
+  color: var(--green); display: flex; align-items: center; justify-content: center;
+  font-size: 0.72em; font-weight: 700; font-family: 'Orbitron', monospace;
+  margin-top: 2px;
+}
+.step p { font-size: 0.86em; line-height: 1.5; color: var(--text); }
+.step code {
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(0,255,136,0.1); color: var(--green);
+  padding: 1px 6px; border-radius: 4px; font-size: 0.9em;
+}
+
+/* CMD BLOCK */
+.cmd-block {
+  background: #020a14; border: 1px solid rgba(0,255,136,0.15);
+  border-radius: 9px; padding: 14px 16px;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.78em;
+  line-height: 1.7; margin: 10px 0;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.3);
+  overflow-x: auto;
+}
+.cmd-block .prompt { color: var(--green); }
+.cmd-block .cmd { color: #e0e0e0; }
+.cmd-block .comment { color: #445566; }
+.cmd-block .output { color: var(--cyan); }
+.cmd-block .value { color: var(--yellow); }
+.cmd-block .warn { color: var(--orange); }
+
+.complete-btn {
+  width: 100%; margin-top: 14px;
+  padding: 13px; border: none; border-radius: 9px; cursor: pointer;
+  font-family: 'Exo 2', sans-serif; font-size: 0.9em; font-weight: 800;
+  background: linear-gradient(135deg, rgba(0,255,136,0.15), rgba(0,255,136,0.08));
+  border: 1px solid rgba(0,255,136,0.3);
+  color: var(--green); transition: all 0.3s;
+  letter-spacing: 1px;
+}
+.complete-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(0,255,136,0.25), rgba(0,255,136,0.15));
+  box-shadow: 0 0 20px rgba(0,255,136,0.3); transform: translateY(-1px);
+}
+.complete-btn:disabled {
+  background: rgba(0,255,136,0.1); border-color: rgba(0,255,136,0.3);
+  color: var(--green); cursor: default; transform: none;
+  opacity: 0.7;
+}
+
+/* INFO / WARNING / SUCCESS BOXES */
+.info-box {
+  background: rgba(0,212,255,0.05); border: 1px solid rgba(0,212,255,0.2);
+  border-left: 4px solid var(--cyan);
+  border-radius: 9px; padding: 14px 16px;
+  font-size: 0.86em; color: var(--muted); margin: 10px 0;
+  line-height: 1.5;
+}
+.warn-box {
+  background: rgba(255,140,0,0.05); border: 1px solid rgba(255,140,0,0.2);
+  border-left: 4px solid var(--orange);
+  border-radius: 9px; padding: 14px 16px;
+  font-size: 0.86em; color: var(--muted); margin: 10px 0;
+  line-height: 1.5;
+}
+.success-box {
+  background: rgba(0,255,136,0.05); border: 1px solid rgba(0,255,136,0.2);
+  border-left: 4px solid var(--green);
+  border-radius: 9px; padding: 14px 16px;
+  font-size: 0.86em; color: var(--muted); margin: 10px 0;
+  line-height: 1.5;
+}
+
+/* QUIZ */
+.quiz-prog-wrap { margin-bottom: 16px; }
+.quiz-prog-label { font-size: 0.75em; color: var(--muted); margin-bottom: 5px; display: flex; justify-content: space-between; }
+.quiz-prog-bg { background: rgba(255,255,255,0.06); border-radius: 100px; height: 5px; overflow: hidden; }
+.quiz-prog-fill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, var(--green), var(--cyan));
+  border-radius: 100px; transition: width 0.5s ease;
+  box-shadow: 0 0 8px rgba(0,255,136,0.4);
+}
+.qcard { display: none; }
+.qcard.active { display: block; }
+.qcard h4 { font-size: 0.95em; font-weight: 700; color: var(--text); margin-bottom: 14px; line-height: 1.4; }
+.qopts { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+.qopt {
+  padding: 11px 16px; border-radius: 8px; cursor: pointer;
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+  color: var(--text); font-family: 'Exo 2', sans-serif; font-size: 0.86em;
+  font-weight: 600; text-align: left; transition: all 0.2s;
+}
+.qopt:hover:not(:disabled) { background: rgba(0,255,136,0.08); border-color: rgba(0,255,136,0.25); color: var(--green); }
+.qopt.correct { background: rgba(0,255,136,0.12); border-color: rgba(0,255,136,0.4); color: var(--green); }
+.qopt.wrong { background: rgba(255,68,102,0.12); border-color: rgba(255,68,102,0.4); color: var(--red); }
+.qopt:disabled { cursor: default; }
+.qfb {
+  display: none; padding: 10px 14px; border-radius: 8px;
+  font-size: 0.82em; line-height: 1.4; margin: 8px 0;
+}
+.qfb.show { display: block; }
+.qfb.ok { background: rgba(0,255,136,0.08); border: 1px solid rgba(0,255,136,0.2); color: var(--green); }
+.qfb.fail { background: rgba(255,68,102,0.08); border: 1px solid rgba(255,68,102,0.2); color: var(--red); }
+.qnx { display: none; }
+.qnx.show { display: flex; justify-content: flex-end; }
+.qnx-btn {
+  padding: 8px 18px; border: 1px solid rgba(0,255,136,0.3);
+  background: rgba(0,255,136,0.1); color: var(--green);
+  border-radius: 6px; cursor: pointer; font-size: 0.82em; font-weight: 700;
+  font-family: 'Exo 2', sans-serif; transition: all 0.2s;
+}
+.qnx-btn:hover { background: rgba(0,255,136,0.2); }
+.q-result { display: none; text-align: center; padding: 28px 0; }
+.q-result.show { display: block; }
+.q-score {
+  font-family: 'Orbitron', monospace;
+  font-size: 3em; font-weight: 900; color: var(--green);
+  text-shadow: var(--glow-green); display: block; margin-bottom: 8px;
+}
+.q-msg { color: var(--muted); margin-bottom: 16px; font-size: 0.9em; }
+.q-xp { color: var(--green); font-weight: 700; font-size: 0.85em; margin-bottom: 16px; }
+.restart-btn {
+  padding: 10px 24px; border: 1px solid rgba(0,255,136,0.3);
+  background: rgba(0,255,136,0.1); color: var(--green);
+  border-radius: 8px; cursor: pointer; font-size: 0.85em; font-weight: 700;
+  font-family: 'Exo 2', sans-serif; transition: all 0.2s;
+}
+.restart-btn:hover { background: rgba(0,255,136,0.2); box-shadow: var(--glow-green); }
+
+/* ACHIEVEMENTS */
+.ach-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.ach-card {
+  background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px; padding: 14px 12px; text-align: center;
+  filter: grayscale(1) opacity(0.3); transition: all 0.4s;
+}
+.ach-card.unlocked {
+  filter: none;
+  background: rgba(0,255,136,0.06); border-color: rgba(0,255,136,0.3);
+  box-shadow: 0 0 20px rgba(0,255,136,0.15);
+}
+.ach-icon { font-size: 1.8em; display: block; margin-bottom: 6px; }
+.ach-name { font-size: 0.68em; font-weight: 700; color: var(--muted); line-height: 1.2; }
+.ach-card.unlocked .ach-name { color: var(--green); }
+
+/* FIREWALL SIMULATOR */
+.fw-rule-row {
+  display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 8px; align-items: center;
+  margin-bottom: 8px;
+}
+.fw-input {
+  background: rgba(0,0,0,0.3); border: 1px solid rgba(0,255,136,0.2);
+  border-radius: 6px; padding: 8px 12px;
+  color: var(--text); font-family: 'JetBrains Mono', monospace; font-size: 0.82em;
+  width: 100%;
+}
+.fw-input:focus { outline: none; border-color: rgba(0,255,136,0.5); box-shadow: 0 0 10px rgba(0,255,136,0.1); }
+.fw-select {
+  background: rgba(0,0,0,0.3); border: 1px solid rgba(0,255,136,0.2);
+  border-radius: 6px; padding: 8px 12px;
+  color: var(--text); font-family: 'Exo 2', sans-serif; font-size: 0.82em;
+  width: 100%;
+}
+.fw-btn {
+  padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: 700;
+  font-family: 'Exo 2', sans-serif; font-size: 0.8em; transition: all 0.2s;
+  border: 1px solid rgba(255,68,102,0.3);
+  background: rgba(255,68,102,0.1); color: var(--red);
+}
+.fw-btn:hover { background: rgba(255,68,102,0.2); }
+.fw-rules-display {
+  background: #020a14; border: 1px solid rgba(0,255,136,0.15);
+  border-radius: 9px; padding: 14px; min-height: 120px;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.78em;
+  line-height: 1.7; margin: 12px 0;
+}
+.fw-rule-line { color: var(--muted); padding: 2px 0; }
+.fw-rule-line.allow { color: var(--green); }
+.fw-rule-line.deny { color: var(--red); }
+.fw-rule-line.header { color: var(--cyan); border-bottom: 1px solid rgba(0,212,255,0.2); margin-bottom: 4px; padding-bottom: 4px; }
+.add-rule-btn {
+  padding: 9px 20px; border: 1px solid rgba(0,255,136,0.3);
+  background: rgba(0,255,136,0.1); color: var(--green);
+  border-radius: 7px; cursor: pointer; font-size: 0.84em; font-weight: 700;
+  font-family: 'Exo 2', sans-serif; transition: all 0.2s;
+}
+.add-rule-btn:hover { background: rgba(0,255,136,0.2); box-shadow: var(--glow-green); }
+
+/* TOAST */
+.toast {
+  position: fixed; bottom: 28px; right: 28px; z-index: 9999;
+  background: var(--card2); border: 1px solid rgba(0,255,136,0.3);
+  border-radius: 12px; padding: 14px 18px;
+  display: flex; align-items: center; gap: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 20px rgba(0,255,136,0.15);
+  transform: translateX(120%); transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  min-width: 280px; max-width: 360px;
+}
+.toast.show { transform: translateX(0); }
+.toast-icon { font-size: 1.6em; flex-shrink: 0; }
+.toast-title { font-family: 'Orbitron', monospace; font-size: 0.8em; font-weight: 700; color: var(--green); }
+.toast-msg { font-size: 0.78em; color: var(--muted); margin-top: 2px; }
+
+/* BIBILOGRAFIA */
+.bib-item {
+  background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);
+  border-left: 3px solid var(--cyan); border-radius: 8px; padding: 12px 16px;
+  font-size: 0.82em; color: var(--muted); margin-bottom: 8px; line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { order: 2; }
+  .main { order: 1; }
+  .ach-grid { grid-template-columns: repeat(3, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<div class="tux-bg">🐧</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-icon" id="toast-icon">🐧</div>
+  <div>
+    <div class="toast-title" id="toast-title">+XP</div>
+    <div class="toast-msg" id="toast-msg"></div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <div class="header-logo">ISO-103</div>
+    <div class="header-title">SEMANA <span>05</span></div>
+    <a href="index.html" class="back-btn">← Início</a>
+    <div class="hud">
+      <div class="hud-pill">
+        <span class="v" id="hud-xp">0</span>
+        <span class="l">XP</span>
+      </div>
+      <div class="hud-pill">
+        <span class="v" id="hud-streak">0</span>
+        <span class="l">Streak</span>
+      </div>
+      <div class="hud-pill">
+        <span class="v" id="hud-badges">0</span>
+        <span class="l">Badges</span>
+      </div>
+      <div class="hud-xp-wrap">
+        <div class="hud-xp-label">
+          <span id="hud-level">Iniciante</span>
+          <span id="hud-pct">0%</span>
+        </div>
+        <div class="hud-bar-bg">
+          <div class="hud-bar" id="hud-bar"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <!-- NAV -->
+    <div class="scard">
+      <div class="scard-title">📅 Navegação</div>
+      <a href="semana04.html" class="nav-link"><div class="nav-dot cyan"></div>Semana 4 — Access Points</a>
+      <a href="semana05.html" class="nav-link active"><div class="nav-dot green"></div>Semana 5 — Linux Install</a>
+      <a href="#section-topologia" class="nav-link" style="padding-left:28px;font-size:0.78em;"><div class="nav-dot cyan"></div>↳ Topologia de Rede</a>
+      <a href="semana06.html" class="nav-link"><div class="nav-dot purple"></div>Semana 6</a>
+    </div>
+
+    <!-- PROGRESS -->
+    <div class="scard">
+      <div class="scard-title">📊 Progresso</div>
+      <div class="prog-block">
+        <div class="prog-label"><span>Objetivos</span><span id="obj-pct">0%</span></div>
+        <div class="prog-bg"><div class="prog-fill g" id="obj-bar" style="width:0%"></div></div>
+      </div>
+      <div class="prog-block">
+        <div class="prog-label"><span>Missões</span><span id="mis-pct">0%</span></div>
+        <div class="prog-bg"><div class="prog-fill c" id="mis-bar" style="width:0%"></div></div>
+      </div>
+      <div class="prog-block">
+        <div class="prog-label"><span>Quiz</span><span id="quiz-pct">0%</span></div>
+        <div class="prog-bg"><div class="prog-fill p" id="quiz-bar" style="width:0%"></div></div>
+      </div>
+      <div class="prog-block">
+        <div class="prog-label"><span>Conquistas</span><span id="ach-pct">0/12</span></div>
+        <div class="prog-bg"><div class="prog-fill o" id="ach-bar" style="width:0%"></div></div>
+      </div>
+    </div>
+
+    <!-- BADGES -->
+    <div class="scard">
+      <div class="scard-title">🏅 Badges</div>
+      <div class="badge-grid">
+        <div class="badge-item" id="bm-start" title="Módulo iniciado">🚀</div>
+        <div class="badge-item" id="bm-obj" title="Todos objetivos">🎯</div>
+        <div class="badge-item" id="bm-desktop" title="Ubuntu Desktop">🖥️</div>
+        <div class="badge-item" id="bm-server" title="Ubuntu Server">🖧</div>
+        <div class="badge-item" id="bm-fw" title="Firewall UFW">🔥</div>
+        <div class="badge-item" id="bm-vbox" title="VirtualBox Master">📦</div>
+        <div class="badge-item" id="bm-lvm" title="LVM Configurado">💾</div>
+        <div class="badge-item" id="bm-quiz" title="4+ no quiz">⚡</div>
+        <div class="badge-item" id="bm-perfect" title="Quiz perfeito">💎</div>
+        <div class="badge-item" id="bm-ssh" title="SSH Habilitado">🔑</div>
+        <div class="badge-item" id="bm-rule" title="Regra UFW criada">🛡️</div>
+        <div class="badge-item" id="bm-all" title="Tudo concluído">🏆</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-tag">ISO-103 · 3º Semestre · Semana 05</div>
+      <h1>🐧 <span>Linux</span> Install Lab</h1>
+      <p class="hero-sub">Instalação e configuração de Ubuntu Desktop, Ubuntu Server e Firewall UFW no VirtualBox</p>
+      <div class="hero-chips">
+        <div class="chip">📦 VirtualBox</div>
+        <div class="chip">🖥️ Ubuntu 22.04 Desktop</div>
+        <div class="chip cyan">🖧 Ubuntu 22.04 Server</div>
+        <div class="chip purple">🔥 Firewall UFW</div>
+        <div class="chip orange">⏱️ 2h/aula</div>
+      </div>
+    </div>
+
+    <!-- TOPOLOGIA DE REDE -->
+    <div class="card" id="section-topologia">
+      <div class="card-head">
+        <div class="card-icon ci-c">🌐</div>
+        <div class="card-title">TOPOLOGIA DA REDE — LAB VIRTUAL</div>
+        <div class="xp-tag cyan">Referência</div>
+      </div>
+      <div class="card-body">
+        <p style="font-size:0.85em;color:var(--muted);margin-bottom:16px;line-height:1.6;">
+          As três VMs são criadas dentro do VirtualBox e se comunicam por meio de uma <strong style="color:var(--cyan)">rede interna (Host-Only / Rede Interna)</strong>.
+          O Firewall UFW roda no Ubuntu Server que atua como <strong style="color:var(--orange)">gateway</strong> da rede interna, filtrando o tráfego entre as máquinas.
+          Todas as VMs também possuem um <strong style="color:var(--green)">Adaptador NAT</strong> para acessar a internet via o host físico.
+        </p>
+
+        <!-- TOPOLOGIA SVG -->
+        <div style="background:#020a14; border:1px solid rgba(0,212,255,0.12); border-radius:12px; padding:16px; overflow-x:auto;">
+          <svg width="100%" viewBox="0 0 680 500" style="min-width:480px;">
+            <defs>
+              <marker id="topo-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </marker>
+            </defs>
+
+            <!-- HOST MACHINE outer box -->
+            <rect x="14" y="14" width="652" height="472" rx="16" fill="rgba(13,31,53,0.6)" stroke="rgba(0,212,255,0.2)" stroke-width="1" stroke-dasharray="6 4"/>
+            <text font-family="'Orbitron',monospace" font-size="11" font-weight="700" fill="#5a7a99" letter-spacing="2" x="340" y="36" text-anchor="middle">MÁQUINA HOST — VIRTUALBOX</text>
+
+            <!-- INTERNET cloud -->
+            <rect x="272" y="46" width="136" height="38" rx="19" fill="rgba(0,255,136,0.06)" stroke="rgba(0,255,136,0.3)" stroke-width="1"/>
+            <text font-family="'Exo 2',sans-serif" font-size="13" font-weight="700" fill="#00ff88" x="340" y="70" text-anchor="middle">🌐 Internet / NAT</text>
+
+            <!-- NAT arrows down to VMs -->
+            <line x1="230" y1="84" x2="139" y2="192" stroke="rgba(0,255,136,0.35)" stroke-width="1" stroke-dasharray="5 3" fill="none" marker-end="url(#topo-arrow)"/>
+            <line x1="340" y1="84" x2="340" y2="192" stroke="rgba(0,255,136,0.35)" stroke-width="1" stroke-dasharray="5 3" fill="none" marker-end="url(#topo-arrow)"/>
+            <line x1="450" y1="84" x2="541" y2="192" stroke="rgba(0,255,136,0.35)" stroke-width="1" stroke-dasharray="5 3" fill="none" marker-end="url(#topo-arrow)"/>
+            <text font-family="'JetBrains Mono',monospace" font-size="9" fill="rgba(0,255,136,0.5)" x="170" y="145" text-anchor="middle">Adaptador 1 (NAT)</text>
+
+            <!-- VIRTUAL SWITCH -->
+            <rect x="236" y="310" width="208" height="44" rx="10" fill="rgba(0,212,255,0.1)" stroke="rgba(0,212,255,0.4)" stroke-width="1"/>
+            <text font-family="'Orbitron',monospace" font-size="11" font-weight="700" fill="#00d4ff" x="340" y="329" text-anchor="middle">SWITCH VIRTUAL</text>
+            <text font-family="'JetBrains Mono',monospace" font-size="9" fill="#5a7a99" x="340" y="345" text-anchor="middle">Rede interna — 192.168.56.0/24</text>
+
+            <!-- Switch lines to VMs -->
+            <line x1="285" y1="310" x2="139" y2="292" stroke="rgba(0,212,255,0.4)" stroke-width="1.2" fill="none" marker-end="url(#topo-arrow)"/>
+            <line x1="340" y1="310" x2="340" y2="292" stroke="rgba(0,212,255,0.4)" stroke-width="1.2" fill="none" marker-end="url(#topo-arrow)"/>
+            <line x1="395" y1="310" x2="541" y2="292" stroke="rgba(255,140,0,0.5)" stroke-width="1.5" fill="none" marker-end="url(#topo-arrow)"/>
+
+            <!-- VM 1: Ubuntu Desktop -->
+            <rect x="42" y="192" width="194" height="100" rx="12" fill="rgba(13,31,53,0.9)" stroke="rgba(0,255,136,0.4)" stroke-width="1.5"/>
+            <rect x="42" y="192" width="194" height="22" rx="12" fill="rgba(0,255,136,0.15)"/>
+            <rect x="42" y="205" width="194" height="9" rx="0" fill="rgba(0,255,136,0.15)"/>
+            <text font-family="'Orbitron',monospace" font-size="11" font-weight="700" fill="#00ff88" x="139" y="208" text-anchor="middle">🖥️ Ubuntu Desktop</text>
+            <text font-family="'Exo 2',sans-serif" font-size="10" fill="#e0f0ff" x="139" y="226" text-anchor="middle">22.04 LTS</text>
+            <text font-family="'JetBrains Mono',monospace" font-size="10" fill="#00d4ff" x="139" y="243" text-anchor="middle">192.168.56.10</text>
+            <text font-family="'JetBrains Mono',monospace" font-size="9" fill="#5a7a99" x="139" y="259" text-anchor="middle">RAM: 4 GB · Disco: 25 GB</text>
+            <text font-family="'JetBrains Mono',monospace" font-size="9" fill="#5a7a99" x="139" y="274" text-anchor="middle">Interface: GNOME</text>
+            <!-- disk indicator -->
+            <rect x="58" y="280" width="158" height="6" rx="3" fill="rgba(255,255,255,0.05)"/>
+            <rect x="58" y="280" width="60" height="6" rx="3" fill="rgba(0,255,136,0.4)"/>
+            <text font-family="'JetBrains Mono',monospace" font-size="8" fill="#5a7a99" x="58" y="296">Disco: 25 GB VDI</text>
+
+            <!-- VM 2: Ubuntu Server -->
+            <rect x="243" y="192" width="194" height="100" rx="12" fill="rgba(13,31,53,0.9)" stroke="rgba(0,212,255,0.4)" stroke-width="1.5"/>
+            <rect x="243" y="192" width="194" height="22" rx="12" fill="rgba(0,212,255,0.15)"/>
+            <rect x="243" y="205" width="194" height="9" rx="0" fill="rgba(0,212,255,0.15)"/>
+            <text font-family="'Orbitron',monospace" font-size="11" font-weight="700" fill="#00d4ff" x="340" y="208" text-anchor="middle">🖧 Ubuntu Server</text>
+            <text font-family="'Exo 2',sans-serif" font-size="10" fill="#e0f0ff" x="340" y="226" text-anchor="middle">22.04 LTS · CLI apenas</text>
+            <text font-family="'JetBrains Mono',monospace" font-size="10" fill="#00d4ff" x="340" y="243" text-anchor="middle">192.168.56.20</text>
+            <text font-family="'JetBrains Mono',monospace" font-size="9" fill="#5a7a99" x="340" y="259" text-anchor="middle">RAM: 1 GB · Disco: 20 GB</text>
+            <text font-family="'JetBrains Mono',monospace" font-size="9" fill="#5a7a99" x="340" y="274" text-anchor="middle">LVM + OpenSSH ativo</text>
+            <rect x="259" y="280" width="162" height="6" rx="3" fill="rgba(255,255,255,0.05)"/>
+            <rect x="259" y="280" width="48" height="6" rx="3" fill="rgba(0,212,255,0.4)"/>
+            <text font-family="'JetBrains Mono',monospace" font-size="8" fill="#5a7a99" x="259" y="296">Disco: 20 GB LVM</text>
+
+            <!-- VM 3: Firewall UFW -->
+            <rect x="444" y="192" width="194" height="100" rx="12" fill="rgba(13,31,53,0.9)" stroke="rgba(255,140,0,0.5)" stroke-width="1.5"/>
+            <rect x="444" y="192" width="194" height="22" rx="12" fill="rgba(255,140,0,0.15)"/>
+            <rect x="444" y="205" width="194" height="9" rx="0" fill="rgba(255,140,0,0.15)"/>
+            <text font-family="'Orbitron',monospace" font-size="11" font-weight="700" fill="#ff8c00" x="541" y="208" text-anchor="middle">🔥 Firewall UFW</text>
+            <text font-family="'Exo 2',sans-serif" font-size="10" fill="#e0f0ff" x="541" y="226" text-anchor="middle">Ubuntu Server 22.04</text>
+            <text font-family="'JetBrains Mono',monospace" font-size="10" fill="#ff8c00" x="541" y="243" text-anchor="middle">192.168.56.1 (Gateway)</text>
+            <text font-family="'JetBrains Mono',monospace" font-size="9" fill="#5a7a99" x="541" y="259" text-anchor="middle">RAM: 1 GB · Disco: 15 GB</text>
+            <text font-family="'JetBrains Mono',monospace" font-size="9" fill="#5a7a99" x="541" y="274" text-anchor="middle">UFW: deny all + regras</text>
+            <rect x="460" y="280" width="162" height="6" rx="3" fill="rgba(255,255,255,0.05)"/>
+            <rect x="460" y="280" width="35" height="6" rx="3" fill="rgba(255,140,0,0.4)"/>
+            <text font-family="'JetBrains Mono',monospace" font-size="8" fill="#5a7a99" x="460" y="296">Disco: 15 GB VDI</text>
+
+            <!-- SSH dashed arrow Desktop → Server -->
+            <path d="M236 250 Q240 305 243 250" fill="none" stroke="rgba(180,74,255,0.6)" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#topo-arrow)"/>
+            <text font-family="'JetBrains Mono',monospace" font-size="9" fill="#b44aff" x="239" y="305" text-anchor="middle">SSH</text>
+
+            <!-- UFW RULES BOX -->
+            <rect x="444" y="378" width="194" height="78" rx="8" fill="rgba(255,140,0,0.05)" stroke="rgba(255,140,0,0.25)" stroke-width="1" stroke-dasharray="4 3"/>
+            <text font-family="'Orbitron',monospace" font-size="9" font-weight="700" fill="#ff8c00" x="541" y="394" text-anchor="middle">REGRAS UFW ATIVAS</text>
+            <text font-family="'JetBrains Mono',monospace" font-size="9" fill="rgba(0,255,136,0.9)" x="454" y="410">22/tcp  ALLOW  ← SSH</text>
+            <text font-family="'JetBrains Mono',monospace" font-size="9" fill="rgba(0,255,136,0.9)" x="454" y="424">80/tcp  ALLOW  ← HTTP</text>
+            <text font-family="'JetBrains Mono',monospace" font-size="9" fill="rgba(0,255,136,0.9)" x="454" y="438">443/tcp ALLOW  ← HTTPS</text>
+            <text font-family="'JetBrains Mono',monospace" font-size="9" fill="rgba(255,68,102,0.9)" x="454" y="452">23/tcp  DENY   ← Telnet</text>
+
+            <!-- LEGEND bottom left -->
+            <rect x="42" y="378" width="370" height="78" rx="8" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
+            <text font-family="'Orbitron',monospace" font-size="9" font-weight="700" fill="#5a7a99" letter-spacing="1" x="54" y="394">LEGENDA</text>
+            <line x1="54" y1="408" x2="80" y2="408" stroke="rgba(0,255,136,0.4)" stroke-width="1.5" stroke-dasharray="5 3"/>
+            <text font-family="'JetBrains Mono',monospace" font-size="9" fill="#5a7a99" x="86" y="412">Adaptador NAT (internet)</text>
+            <line x1="54" y1="426" x2="80" y2="426" stroke="rgba(0,212,255,0.6)" stroke-width="1.5"/>
+            <text font-family="'JetBrains Mono',monospace" font-size="9" fill="#5a7a99" x="86" y="430">Rede interna (LAN virtual)</text>
+            <line x1="54" y1="444" x2="80" y2="444" stroke="rgba(180,74,255,0.6)" stroke-width="1.2" stroke-dasharray="5 3"/>
+            <text font-family="'JetBrains Mono',monospace" font-size="9" fill="#5a7a99" x="86" y="448">Conexão SSH</text>
+            <rect x="220" y="400" width="10" height="10" rx="2" fill="rgba(255,140,0,0.4)"/>
+            <text font-family="'JetBrains Mono',monospace" font-size="9" fill="#5a7a99" x="236" y="410">Firewall (gateway)</text>
+          </svg>
+        </div>
+
+        <div class="info-box" style="margin-top:14px;">
+          💡 <strong style="color:var(--cyan)">Como configurar no VirtualBox:</strong> cada VM precisa de <strong>dois adaptadores de rede</strong>.
+          Adaptador 1 = <code>NAT</code> (acesso à internet). Adaptador 2 = <code>Rede Interna</code> ou <code>Host-Only</code> (comunicação entre VMs).
+          O Firewall deve ter o Adaptador 2 configurado com IP fixo <code>192.168.56.1</code> para servir como gateway.
+        </div>
+      </div>
+    </div>
+
+    <!-- OBJETIVOS -->
+    <div class="card" id="section-obj">
+      <div class="card-head">
+        <div class="card-icon ci-g">🎯</div>
+        <div class="card-title">OBJETIVOS DE APRENDIZAGEM</div>
+        <div class="xp-tag">+5 XP cada</div>
+      </div>
+      <div class="card-body">
+        <ul class="obj-list">
+          <li class="obj-item" onclick="toggleObj(this,0)">
+            <div class="obj-circle">✓</div>
+            Criar e configurar máquinas virtuais no VirtualBox
+          </li>
+          <li class="obj-item" onclick="toggleObj(this,1)">
+            <div class="obj-circle">✓</div>
+            Instalar e configurar o Ubuntu Desktop 22.04 LTS
+          </li>
+          <li class="obj-item" onclick="toggleObj(this,2)">
+            <div class="obj-circle">✓</div>
+            Instalar e configurar o Ubuntu Server 22.04 LTS
+          </li>
+          <li class="obj-item" onclick="toggleObj(this,3)">
+            <div class="obj-circle">✓</div>
+            Realizar particionamento manual e configuração LVM
+          </li>
+          <li class="obj-item" onclick="toggleObj(this,4)">
+            <div class="obj-circle">✓</div>
+            Configurar e aplicar regras de Firewall com UFW
+          </li>
+          <li class="obj-item" onclick="toggleObj(this,5)">
+            <div class="obj-circle">✓</div>
+            Executar configuração pós-instalação (SSH, atualizações)
+          </li>
+          <li class="obj-item" onclick="toggleObj(this,6)">
+            <div class="obj-circle">✓</div>
+            Gerenciar pacotes com apt e repositórios
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- CONCEITOS -->
+    <div class="card" id="section-conteudo">
+      <div class="card-head">
+        <div class="card-icon ci-c">📚</div>
+        <div class="card-title">CONTEÚDO PROGRAMÁTICO</div>
+        <div class="xp-tag cyan">Referência</div>
+      </div>
+      <div class="card-body">
+        <div class="concept-grid">
+          <div class="concept-card">
+            <div class="concept-title">📦 VIRTUALBOX</div>
+            <span class="tag">Criação de VM</span>
+            <span class="tag">Disco Virtual</span>
+            <span class="tag">Rede NAT</span>
+            <span class="tag">Snapshots</span>
+            <span class="tag">Modo Bridge</span>
+          </div>
+          <div class="concept-card cyan">
+            <div class="concept-title">🖥️ UBUNTU DESKTOP</div>
+            <span class="tag">GNOME</span>
+            <span class="tag">Idioma PT-BR</span>
+            <span class="tag">Live USB</span>
+            <span class="tag">Particionamento</span>
+            <span class="tag">Drivers</span>
+          </div>
+          <div class="concept-card purple">
+            <div class="concept-title">🖧 UBUNTU SERVER</div>
+            <span class="tag">CLI apenas</span>
+            <span class="tag">OpenSSH</span>
+            <span class="tag">LVM</span>
+            <span class="tag">Usuário sudo</span>
+            <span class="tag">Rede estática</span>
+          </div>
+          <div class="concept-card orange">
+            <div class="concept-title">🔥 FIREWALL UFW</div>
+            <span class="tag">allow/deny</span>
+            <span class="tag">status verbose</span>
+            <span class="tag">Portas TCP/UDP</span>
+            <span class="tag">Regras por app</span>
+            <span class="tag">Default policy</span>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 10px;">
+          <div style="font-family:'Orbitron',monospace; font-size:0.75em; color:var(--green); font-weight:700; margin-bottom:10px; letter-spacing:2px;">📖 GLOSSÁRIO TÉCNICO</div>
+          <div class="gloss-grid">
+            <div class="gloss-item"><div class="gloss-term">VirtualBox</div><div class="gloss-def">Hypervisor tipo 2 da Oracle. Virtualiza hardware permitindo rodar múltiplos SOs num único computador.</div></div>
+            <div class="gloss-item"><div class="gloss-term">ISO Image</div><div class="gloss-def">Arquivo de imagem de disco que replica um CD/DVD de instalação. Usado para bootar VMs.</div></div>
+            <div class="gloss-item"><div class="gloss-term">LVM</div><div class="gloss-def">Logical Volume Manager — abstrai o armazenamento físico permitindo redimensionar partições em tempo de execução.</div></div>
+            <div class="gloss-item"><div class="gloss-term">UFW</div><div class="gloss-def">Uncomplicated Firewall — interface simplificada para gerenciar o iptables no Ubuntu.</div></div>
+            <div class="gloss-item"><div class="gloss-term">SSH</div><div class="gloss-def">Secure Shell — protocolo para acesso remoto seguro a servidores via linha de comando (porta 22).</div></div>
+            <div class="gloss-item"><div class="gloss-term">NAT / Bridge</div><div class="gloss-def">Modos de rede do VirtualBox. NAT: VM acessa internet via host. Bridge: VM recebe IP da rede física.</div></div>
+            <div class="gloss-item"><div class="gloss-term">apt</div><div class="gloss-def">Advanced Package Tool — gerenciador de pacotes do Ubuntu. Instala, atualiza e remove software.</div></div>
+            <div class="gloss-item"><div class="gloss-term">PV / VG / LV</div><div class="gloss-def">Physical Volume → Volume Group → Logical Volume. Hierarquia do LVM para organizar o armazenamento.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VÍDEOS -->
+    <div class="card" id="section-videos">
+      <div class="card-head">
+        <div class="card-icon ci-p">🎬</div>
+        <div class="card-title">VÍDEOS RECOMENDADOS</div>
+        <div class="xp-tag purple">+10 XP cada</div>
+      </div>
+      <div class="card-body">
+        <div class="video-grid">
+          <div class="video-card">
+            <div class="video-thumb green">
+              <div class="play-btn" onclick="watchVideo(this)">▶</div>
+            </div>
+            <div class="video-info">
+              <h4>Ubuntu Desktop 22.04 no VirtualBox</h4>
+              <p>Instalação passo a passo completa</p>
+              <a href="https://www.youtube.com/results?search_query=ubuntu+desktop+22.04+virtualbox+instalacao" target="_blank" class="video-link">▶ YouTube</a>
+            </div>
+          </div>
+          <div class="video-card">
+            <div class="video-thumb cyan">
+              <div class="play-btn" onclick="watchVideo(this)">▶</div>
+            </div>
+            <div class="video-info">
+              <h4>Ubuntu Server 22.04 — Setup Completo</h4>
+              <p>Instalação + pós-instalação + SSH</p>
+              <a href="https://www.youtube.com/results?search_query=ubuntu+server+22.04+instalacao+virtualbox" target="_blank" class="video-link">▶ YouTube</a>
+            </div>
+          </div>
+          <div class="video-card">
+            <div class="video-thumb purple">
+              <div class="play-btn" onclick="watchVideo(this)">▶</div>
+            </div>
+            <div class="video-info">
+              <h4>LVM no Linux — Teoria e Prática</h4>
+              <p>PV, VG, LV e redimensionamento</p>
+              <a href="https://www.youtube.com/results?search_query=lvm+ubuntu+linux+pratica" target="_blank" class="video-link">▶ YouTube</a>
+            </div>
+          </div>
+          <div class="video-card">
+            <div class="video-thumb orange">
+              <div class="play-btn" onclick="watchVideo(this)">▶</div>
+            </div>
+            <div class="video-info">
+              <h4>UFW Firewall Ubuntu — Guia Completo</h4>
+              <p>Regras, portas, políticas padrão</p>
+              <a href="https://www.youtube.com/results?search_query=ufw+firewall+ubuntu+configurar" target="_blank" class="video-link">▶ YouTube</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MISSÕES -->
+    <div class="card" id="section-missoes">
+      <div class="card-head">
+        <div class="card-icon ci-g">⚔️</div>
+        <div class="card-title">MISSÕES PRÁTICAS</div>
+        <div class="xp-tag">+50 XP cada</div>
+      </div>
+      <div class="card-body">
+
+        <!-- MISSÃO 1 — Ubuntu Desktop -->
+        <div class="mission" id="m1" onclick="toggleMission('m1')">
+          <div class="mission-head">
+            <div class="mission-num">01</div>
+            <div class="mission-info">
+              <div class="mission-title">🖥️ Instalar Ubuntu Desktop 22.04 no VirtualBox</div>
+              <div class="mission-meta">⏱️ 45 min · Dificuldade: ⭐⭐ · VirtualBox + ISO Ubuntu Desktop</div>
+            </div>
+            <div class="mission-xp">+50 XP</div>
+            <div class="mission-toggle">▼</div>
+          </div>
+          <div class="mission-body">
+            <div class="mission-desc">🎯 Criar uma VM no VirtualBox e instalar o Ubuntu Desktop 22.04 LTS com idioma pt-BR e usuário padrão configurado.</div>
+
+            <div class="os-tabs">
+              <button class="os-tab active-tab" onclick="switchOSM1('vbox',this)">📦 VirtualBox</button>
+              <button class="os-tab tab-cyan" onclick="switchOSM1('install',this)">💿 Instalação</button>
+              <button class="os-tab tab-orange" onclick="switchOSM1('pos',this)">⚙️ Pós-Install</button>
+            </div>
+
+            <div id="m1-panel-vbox" class="os-panel active-panel">
+              <div class="info-box">💡 Baixe o Ubuntu Desktop 22.04.3 LTS em <strong>ubuntu.com/download/desktop</strong></div>
+              <div class="step"><div class="step-num">1</div><p>Abra o VirtualBox → clique em <strong>Novo</strong> → Nome: <code>Ubuntu-Desktop-22</code> → Tipo: Linux → Versão: Ubuntu (64-bit)</p></div>
+              <div class="step"><div class="step-num">2</div><p>Memória RAM: mínimo <code>2048 MB</code> (recomendado <code>4096 MB</code>)</p></div>
+              <div class="step"><div class="step-num">3</div><p>Disco Virtual: <strong>Criar novo disco VDI</strong> → alocação dinâmica → <code>25 GB</code></p></div>
+              <div class="step"><div class="step-num">4</div><p>Em Configurações → Armazenamento → Controlador IDE → selecione a ISO do Ubuntu Desktop</p></div>
+              <div class="step"><div class="step-num">5</div><p>Em Configurações → Rede → Adaptador 1 → <code>NAT</code> (para aulas) ou <code>Bridge</code> (para rede local)</p></div>
+            </div>
+
+            <div id="m1-panel-install" class="os-panel">
+              <div class="step"><div class="step-num">1</div><p>Inicie a VM → selecione <strong>Try or Install Ubuntu</strong> na tela de boot GRUB</p></div>
+              <div class="step"><div class="step-num">2</div><p>Idioma: <strong>Português do Brasil</strong> → Layout do teclado: <strong>Português (Brasil)</strong></p></div>
+              <div class="step"><div class="step-num">3</div><p>Instalação: <strong>Instalação Normal</strong> → marque as opções de atualizações e software de terceiros</p></div>
+              <div class="step"><div class="step-num">4</div><p>Particionamento: selecione <strong>Apagar disco e instalar Ubuntu</strong> para automático, ou <strong>Outro</strong> para manual</p></div>
+              <div class="step"><div class="step-num">5</div><p>Fuso horário: <strong>São Paulo</strong> → crie usuário: nome, nome da máquina (ex: <code>lab-desktop</code>), senha forte</p></div>
+              <div class="step"><div class="step-num">6</div><p>Aguarde instalação (~15 min) → clique <strong>Reiniciar agora</strong> → remova a ISO quando solicitado</p></div>
+            </div>
+
+            <div id="m1-panel-pos" class="os-panel">
+              <div class="cmd-block">
+<span class="comment"># Atualizar o sistema após instalação</span>
+<span class="prompt">$</span> <span class="cmd">sudo apt update && sudo apt upgrade -y</span>
+
+<span class="comment"># Instalar Guest Additions (melhora resolução e integração)</span>
+<span class="prompt">$</span> <span class="cmd">sudo apt install virtualbox-guest-additions-iso</span>
+
+<span class="comment"># Verificar versão instalada</span>
+<span class="prompt">$</span> <span class="cmd">lsb_release -a</span>
+<span class="output">Description: Ubuntu 22.04.3 LTS</span>
+
+<span class="comment"># Instalar utilitários básicos</span>
+<span class="prompt">$</span> <span class="cmd">sudo apt install net-tools curl wget htop -y</span>
+              </div>
+              <div class="success-box">✅ Após o update, tire um <strong>Snapshot</strong> no VirtualBox (Máquina → Tirar Snapshot) para salvar o estado limpo!</div>
+              <button class="complete-btn" id="btn-m1" onclick="completeM('m1','btn-m1','a-desktop','bm-desktop','Ubuntu Desktop instalado! 🖥️','desktop')">✅ MISSÃO CONCLUÍDA — Ubuntu Desktop Instalado!</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- MISSÃO 2 — Ubuntu Server -->
+        <div class="mission" id="m2" onclick="toggleMission('m2')">
+          <div class="mission-head">
+            <div class="mission-num cyan-num">02</div>
+            <div class="mission-info">
+              <div class="mission-title">🖧 Instalar Ubuntu Server 22.04 no VirtualBox</div>
+              <div class="mission-meta">⏱️ 40 min · Dificuldade: ⭐⭐⭐ · CLI apenas · SSH + LVM</div>
+            </div>
+            <div class="mission-xp">+50 XP</div>
+            <div class="mission-toggle">▼</div>
+          </div>
+          <div class="mission-body">
+            <div class="mission-desc">🎯 Criar uma VM separada e instalar o Ubuntu Server 22.04 LTS com LVM, usuário administrador e OpenSSH configurado.</div>
+
+            <div class="os-tabs">
+              <button class="os-tab active-tab" onclick="switchOSM2('vbox',this)">📦 VirtualBox</button>
+              <button class="os-tab tab-cyan" onclick="switchOSM2('install',this)">💿 Instalação</button>
+              <button class="os-tab tab-orange" onclick="switchOSM2('lvm',this)">💾 LVM</button>
+            </div>
+
+            <div id="m2-panel-vbox" class="os-panel active-panel">
+              <div class="info-box">💡 Baixe a ISO em <strong>ubuntu.com/download/server</strong> — Ubuntu Server 22.04.3 LTS</div>
+              <div class="step"><div class="step-num">1</div><p>VirtualBox → Novo → Nome: <code>Ubuntu-Server-22</code> → Tipo: Linux → Versão: Ubuntu (64-bit)</p></div>
+              <div class="step"><div class="step-num">2</div><p>RAM: <code>1024 MB</code> (servidor não precisa de GUI) · Disco: <code>20 GB</code> VDI dinâmico</p></div>
+              <div class="step"><div class="step-num">3</div><p>Rede: Adaptador 1 → <code>NAT</code> + Adaptador 2 → <code>Rede Interna</code> (para comunicação entre VMs)</p></div>
+            </div>
+
+            <div id="m2-panel-install" class="os-panel">
+              <div class="step"><div class="step-num">1</div><p>Boot da ISO → selecione <strong>Install Ubuntu Server</strong></p></div>
+              <div class="step"><div class="step-num">2</div><p>Idioma: <strong>Português</strong> · Layout: <strong>Portuguese (Brazil)</strong></p></div>
+              <div class="step"><div class="step-num">3</div><p>Configuração de rede: aceite o DHCP por padrão ou configure IP estático depois</p></div>
+              <div class="step"><div class="step-num">4</div><p>Particionamento: escolha <strong>Use an entire disk and set up this disk as an LVM group</strong> para LVM automático</p></div>
+              <div class="step"><div class="step-num">5</div><p>Perfil: nome completo, nome da máquina (<code>lab-server</code>), usuário (<code>admin</code>), senha forte</p></div>
+              <div class="step"><div class="step-num">6</div><p>Marque obrigatoriamente: <strong>Install OpenSSH server</strong> → Instalar</p></div>
+              <div class="step"><div class="step-num">7</div><p>Aguarde instalação → <strong>Reboot Now</strong> → remova ISO → login com usuário criado</p></div>
+            </div>
+
+            <div id="m2-panel-lvm" class="os-panel">
+              <div class="cmd-block">
+<span class="comment"># Verificar volumes LVM criados</span>
+<span class="prompt">admin@lab-server:~$</span> <span class="cmd">sudo pvs</span>
+<span class="output">  PV         VG        Fmt  Attr PSize  PFree</span>
+<span class="output">  /dev/sda3  ubuntu-vg lvm2 a--  18.50g    0 </span>
+
+<span class="prompt">admin@lab-server:~$</span> <span class="cmd">sudo vgs</span>
+<span class="output">  VG        #PV #LV  SSize  SFree</span>
+<span class="output">  ubuntu-vg   1   1  18.50g    0 </span>
+
+<span class="prompt">admin@lab-server:~$</span> <span class="cmd">sudo lvs</span>
+<span class="output">  LV        VG        Attr       LSize  </span>
+<span class="output">  ubuntu-lv ubuntu-vg -wi-ao---- 18.50g </span>
+
+<span class="comment"># Expandir LV para usar todo o VG (se necessário)</span>
+<span class="prompt">admin@lab-server:~$</span> <span class="cmd">sudo lvextend -l +100%FREE /dev/ubuntu-vg/ubuntu-lv</span>
+<span class="prompt">admin@lab-server:~$</span> <span class="cmd">sudo resize2fs /dev/ubuntu-vg/ubuntu-lv</span>
+              </div>
+              <div class="warn-box">⚠️ Dica para acessar o servidor por SSH da máquina real: configure a rede do VirtualBox como <strong>Bridge</strong> e use <code>ssh admin@IP_DA_VM</code></div>
+              <button class="complete-btn" id="btn-m2" onclick="completeM('m2','btn-m2','a-server','bm-server','Ubuntu Server instalado! 🖧','server')">✅ MISSÃO CONCLUÍDA — Ubuntu Server Instalado!</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- MISSÃO 3 — SSH -->
+        <div class="mission" id="m3" onclick="toggleMission('m3')">
+          <div class="mission-head">
+            <div class="mission-num" style="background:linear-gradient(135deg,#cc00aa,#ff00cc);">03</div>
+            <div class="mission-info">
+              <div class="mission-title">🔑 Configurar e Testar SSH no Servidor</div>
+              <div class="mission-meta">⏱️ 15 min · Acesso remoto seguro ao Ubuntu Server</div>
+            </div>
+            <div class="mission-xp">+30 XP</div>
+            <div class="mission-toggle">▼</div>
+          </div>
+          <div class="mission-body">
+            <div class="mission-desc">🎯 Verificar o status do SSH, personalizar o banner de login e testar a conexão remota à VM do Ubuntu Server.</div>
+            <div class="cmd-block">
+<span class="comment"># Verificar status do SSH</span>
+<span class="prompt">$</span> <span class="cmd">sudo systemctl status ssh</span>
+<span class="output">● ssh.service - OpenBSD Secure Shell server</span>
+<span class="output">     Loaded: loaded (/lib/systemd/system/ssh.service)</span>
+<span class="output">     Active: <span style="color:var(--green)">active (running)</span></span>
+
+<span class="comment"># Verificar IP da VM</span>
+<span class="prompt">$</span> <span class="cmd">ip addr show | grep inet</span>
+<span class="output">    inet 10.0.2.15/24 brd 10.0.2.255 scope global dynamic enp0s3</span>
+
+<span class="comment"># Permitir SSH no firewall (será feito na próxima missão)</span>
+<span class="prompt">$</span> <span class="cmd">sudo ufw allow OpenSSH</span>
+<span class="output">Rules updated</span>
+
+<span class="comment"># Criar banner de login personalizado</span>
+<span class="prompt">$</span> <span class="cmd">sudo nano /etc/motd</span>
+<span class="value">═══════════════════════════════════════
+  LAB-SERVER | ISO-103 | 3º Semestre
+  Acesso Autorizado Apenas para Alunos
+═══════════════════════════════════════</span>
+
+<span class="comment"># Reiniciar SSH após alterações</span>
+<span class="prompt">$</span> <span class="cmd">sudo systemctl restart ssh</span>
+            </div>
+            <button class="complete-btn" id="btn-m3" onclick="completeM('m3','btn-m3','a-ssh','bm-ssh','SSH configurado e operacional! 🔑','ssh')">✅ MISSÃO CONCLUÍDA — SSH Ativo!</button>
+          </div>
+        </div>
+
+        <!-- MISSÃO 4 — FIREWALL UFW -->
+        <div class="mission" id="m4" onclick="toggleMission('m4')">
+          <div class="mission-head">
+            <div class="mission-num orange-num">04</div>
+            <div class="mission-info">
+              <div class="mission-title">🔥 Configurar Firewall UFW no Ubuntu Server</div>
+              <div class="mission-meta">⏱️ 30 min · Dificuldade: ⭐⭐⭐ · Regras de entrada e saída</div>
+            </div>
+            <div class="mission-xp">+60 XP</div>
+            <div class="mission-toggle">▼</div>
+          </div>
+          <div class="mission-body">
+            <div class="mission-desc">🎯 Ativar o UFW, definir política padrão de negação, e criar regras específicas para serviços essenciais (SSH, HTTP, HTTPS).</div>
+
+            <div class="cmd-block">
+<span class="comment">## PASSO 1 — Verificar e ativar UFW</span>
+<span class="prompt">$</span> <span class="cmd">sudo ufw status</span>
+<span class="output">Status: inactive</span>
+
+<span class="comment"># IMPORTANTE: Libere SSH ANTES de ativar o UFW!</span>
+<span class="prompt">$</span> <span class="cmd">sudo ufw allow OpenSSH</span>
+<span class="output">Rules updated</span>
+
+<span class="prompt">$</span> <span class="cmd">sudo ufw enable</span>
+<span class="warn">Command may disrupt existing ssh connections. Proceed with operation (y|n)? y</span>
+<span class="output">Firewall is active and enabled on system startup</span>
+            </div>
+
+            <div class="cmd-block">
+<span class="comment">## PASSO 2 — Políticas padrão (DENY ALL primeiro!)</span>
+<span class="prompt">$</span> <span class="cmd">sudo ufw default deny incoming</span>
+<span class="output">Default incoming policy changed to 'deny'</span>
+
+<span class="prompt">$</span> <span class="cmd">sudo ufw default allow outgoing</span>
+<span class="output">Default outgoing policy changed to 'allow'</span>
+            </div>
+
+            <div class="cmd-block">
+<span class="comment">## PASSO 3 — Regras para serviços comuns</span>
+<span class="prompt">$</span> <span class="cmd">sudo ufw allow 22/tcp</span>    <span class="comment">  # SSH</span>
+<span class="prompt">$</span> <span class="cmd">sudo ufw allow 80/tcp</span>    <span class="comment">  # HTTP</span>
+<span class="prompt">$</span> <span class="cmd">sudo ufw allow 443/tcp</span>   <span class="comment">  # HTTPS</span>
+<span class="prompt">$</span> <span class="cmd">sudo ufw deny 23/tcp</span>     <span class="comment">  # Bloquear Telnet</span>
+<span class="prompt">$</span> <span class="cmd">sudo ufw deny 21/tcp</span>     <span class="comment">  # Bloquear FTP inseguro</span>
+            </div>
+
+            <div class="cmd-block">
+<span class="comment">## PASSO 4 — Verificar status detalhado</span>
+<span class="prompt">$</span> <span class="cmd">sudo ufw status verbose</span>
+<span class="output">Status: active
+Logging: on (low)
+Default: deny (incoming), allow (outgoing), disabled (routed)
+
+To           Action      From
+--           ------      ----
+OpenSSH      ALLOW IN    Anywhere
+22/tcp       ALLOW IN    Anywhere
+80/tcp       ALLOW IN    Anywhere
+443/tcp      ALLOW IN    Anywhere
+23/tcp       DENY IN     Anywhere
+21/tcp       DENY IN     Anywhere</span>
+            </div>
+            <div class="warn-box">⚠️ <strong>Nunca</strong> ative o UFW sem antes permitir SSH (porta 22)! Você pode perder acesso remoto à VM permanentemente.</div>
+            <button class="complete-btn" id="btn-m4" onclick="completeM('m4','btn-m4','a-fw','bm-fw','Firewall UFW configurado! 🔥','fw')">✅ MISSÃO CONCLUÍDA — Firewall UFW Ativo!</button>
+          </div>
+        </div>
+
+        <!-- MISSÃO 5 — Gerenciamento de Pacotes -->
+        <div class="mission" id="m5" onclick="toggleMission('m5')">
+          <div class="mission-head">
+            <div class="mission-num" style="background:linear-gradient(135deg,var(--purple2),var(--purple));">05</div>
+            <div class="mission-info">
+              <div class="mission-title">📦 Gerenciar Pacotes com APT</div>
+              <div class="mission-meta">⏱️ 15 min · Instalar, remover e atualizar software</div>
+            </div>
+            <div class="mission-xp">+30 XP</div>
+            <div class="mission-toggle">▼</div>
+          </div>
+          <div class="mission-body">
+            <div class="mission-desc">🎯 Dominar o apt para instalar utilitários essenciais, verificar dependências e manter o sistema atualizado.</div>
+            <div class="cmd-block">
+<span class="comment"># Atualizar lista de repositórios</span>
+<span class="prompt">$</span> <span class="cmd">sudo apt update</span>
+
+<span class="comment"># Aplicar todas as atualizações disponíveis</span>
+<span class="prompt">$</span> <span class="cmd">sudo apt upgrade -y</span>
+
+<span class="comment"># Instalar utilitários essenciais</span>
+<span class="prompt">$</span> <span class="cmd">sudo apt install -y net-tools curl wget htop nmap tree</span>
+
+<span class="comment"># Verificar informações de um pacote</span>
+<span class="prompt">$</span> <span class="cmd">apt show nmap</span>
+<span class="output">Package: nmap
+Version: 7.80+dfsg1-2build2</span>
+
+<span class="comment"># Remover pacote (mantendo configs)</span>
+<span class="prompt">$</span> <span class="cmd">sudo apt remove nmap</span>
+
+<span class="comment"># Remover pacote + configs + dependências órfãs</span>
+<span class="prompt">$</span> <span class="cmd">sudo apt purge nmap && sudo apt autoremove -y</span>
+
+<span class="comment"># Listar pacotes instalados</span>
+<span class="prompt">$</span> <span class="cmd">dpkg --list | grep "^ii" | less</span>
+            </div>
+            <button class="complete-btn" id="btn-m5" onclick="completeM('m5','btn-m5','a-apt','bm-vbox','APT dominado! Pacotes sob controle! 📦','apt')">✅ MISSÃO CONCLUÍDA — APT Dominado!</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SIMULADOR FIREWALL -->
+    <div class="card" id="section-fw-sim">
+      <div class="card-head">
+        <div class="card-icon ci-o">🛡️</div>
+        <div class="card-title">SIMULADOR DE REGRAS UFW</div>
+        <div class="xp-tag">+15 XP por regra</div>
+      </div>
+      <div class="card-body">
+        <p style="font-size:0.86em; color:var(--muted); margin-bottom:16px;">Pratique criando regras UFW. Adicione regras de allow/deny para portas e veja como ficaria seu firewall.</p>
+        <div class="fw-rule-row">
+          <input type="text" class="fw-input" id="fw-port" placeholder="Porta (ex: 3306)" />
+          <input type="text" class="fw-input" id="fw-proto" placeholder="Protocolo (tcp/udp)" />
+          <select class="fw-select" id="fw-action">
+            <option value="allow">ALLOW</option>
+            <option value="deny">DENY</option>
+          </select>
+          <button class="add-rule-btn" onclick="addFwRule()">+ Adicionar</button>
+        </div>
+        <div class="fw-rules-display" id="fw-display">
+          <div class="fw-rule-line header">Status: active · Default: deny (incoming), allow (outgoing)</div>
+          <div class="fw-rule-line header">To           Action      From</div>
+          <div class="fw-rule-line header">--           ------      ----</div>
+          <div class="fw-rule-line allow">22/tcp       ALLOW IN    Anywhere     (SSH)</div>
+        </div>
+        <div style="display:flex; gap:10px; margin-top:10px;">
+          <button onclick="clearFwRules()" style="padding:8px 16px; border:1px solid rgba(255,68,102,0.3); background:rgba(255,68,102,0.1); color:var(--red); border-radius:6px; cursor:pointer; font-size:0.8em; font-weight:700; font-family:'Exo 2',sans-serif;">🗑️ Limpar</button>
+          <span id="fw-count" style="font-size:0.78em; color:var(--muted); line-height:2.2;">1 regra ativa</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUIZ -->
+    <div class="card" id="section-quiz">
+      <div class="card-head">
+        <div class="card-icon ci-p">🧠</div>
+        <div class="card-title">QUIZ — Linux Install & Firewall</div>
+        <div class="xp-tag purple">+10 a +20 XP</div>
+      </div>
+      <div class="card-body">
+        <div class="quiz-prog-wrap">
+          <div class="quiz-prog-label"><span>Progresso</span><span id="q-cnt">0/6</span></div>
+          <div class="quiz-prog-bg"><div class="quiz-prog-fill" id="q-prog"></div></div>
+        </div>
+
+        <!-- Q0 -->
+        <div class="qcard active" id="qc0">
+          <h4>🖥️ Qual o requisito mínimo de RAM recomendado para instalar o Ubuntu Desktop 22.04 no VirtualBox?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(0,0,1)">A) 512 MB</button>
+            <button class="qopt" onclick="ansQ(0,1,1)">B) 2048 MB (2 GB)</button>
+            <button class="qopt" onclick="ansQ(0,2,1)">C) 8192 MB (8 GB)</button>
+            <button class="qopt" onclick="ansQ(0,3,1)">D) 256 MB</button>
+          </div>
+          <div class="qfb" id="qfb0"></div>
+          <div class="qnx" id="qnx0"><button class="qnx-btn" onclick="nextQ(1)">Próxima →</button></div>
+        </div>
+
+        <!-- Q1 -->
+        <div class="qcard" id="qc1">
+          <h4>🔥 Qual comando ativa o UFW sem perder acesso SSH ao servidor?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(1,0,2)">A) sudo ufw enable</button>
+            <button class="qopt" onclick="ansQ(1,1,2)">B) sudo ufw start</button>
+            <button class="qopt" onclick="ansQ(1,2,2)">C) sudo ufw allow OpenSSH && sudo ufw enable</button>
+            <button class="qopt" onclick="ansQ(1,3,2)">D) sudo systemctl start ufw</button>
+          </div>
+          <div class="qfb" id="qfb1"></div>
+          <div class="qnx" id="qnx1"><button class="qnx-btn" onclick="nextQ(2)">Próxima →</button></div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="qcard" id="qc2">
+          <h4>💾 No LVM, qual a hierarquia correta de criação dos volumes?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(2,0,1)">A) LV → VG → PV</button>
+            <button class="qopt" onclick="ansQ(2,1,1)">B) PV → VG → LV</button>
+            <button class="qopt" onclick="ansQ(2,2,1)">C) VG → PV → LV</button>
+            <button class="qopt" onclick="ansQ(2,3,1)">D) PV → LV → VG</button>
+          </div>
+          <div class="qfb" id="qfb2"></div>
+          <div class="qnx" id="qnx2"><button class="qnx-btn" onclick="nextQ(3)">Próxima →</button></div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="qcard" id="qc3">
+          <h4>📦 Qual comando no Ubuntu instala um pacote E todas as suas dependências?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(3,0,0)">A) sudo apt install nome-pacote</button>
+            <button class="qopt" onclick="ansQ(3,1,0)">B) sudo dpkg -i nome-pacote</button>
+            <button class="qopt" onclick="ansQ(3,2,0)">C) sudo yum install nome-pacote</button>
+            <button class="qopt" onclick="ansQ(3,3,0)">D) sudo snap install nome-pacote</button>
+          </div>
+          <div class="qfb" id="qfb3"></div>
+          <div class="qnx" id="qnx3"><button class="qnx-btn" onclick="nextQ(4)">Próxima →</button></div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="qcard" id="qc4">
+          <h4>🖧 Qual modo de rede do VirtualBox permite que a VM receba um IP da mesma rede do computador físico?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(4,0,2)">A) NAT</button>
+            <button class="qopt" onclick="ansQ(4,1,2)">B) Rede Interna</button>
+            <button class="qopt" onclick="ansQ(4,2,2)">C) Placa em Modo Bridge</button>
+            <button class="qopt" onclick="ansQ(4,3,2)">D) Host-only</button>
+          </div>
+          <div class="qfb" id="qfb4"></div>
+          <div class="qnx" id="qnx4"><button class="qnx-btn" onclick="nextQ(5)">Próxima →</button></div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="qcard" id="qc5">
+          <h4>🔑 Qual porta TCP é usada por padrão pelo protocolo SSH para acesso remoto ao servidor?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(5,0,1)">A) 21</button>
+            <button class="qopt" onclick="ansQ(5,1,1)">B) 22</button>
+            <button class="qopt" onclick="ansQ(5,2,1)">C) 23</button>
+            <button class="qopt" onclick="ansQ(5,3,1)">D) 80</button>
+          </div>
+          <div class="qfb" id="qfb5"></div>
+          <div class="qnx" id="qnx5"><button class="qnx-btn" onclick="showResult()">Ver Resultado 🏆</button></div>
+        </div>
+
+        <!-- RESULT -->
+        <div class="q-result" id="q-result">
+          <span class="q-score" id="q-score">0/6</span>
+          <p class="q-msg" id="q-msg">Resultado</p>
+          <p class="q-xp" id="q-xp-earned"></p>
+          <button class="restart-btn" onclick="restartQuiz()">↺ Tentar Novamente</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONQUISTAS -->
+    <div class="card" id="section-ach">
+      <div class="card-head">
+        <div class="card-icon ci-g">🏆</div>
+        <div class="card-title">CONQUISTAS</div>
+        <div class="xp-tag">12 Badges</div>
+      </div>
+      <div class="card-body">
+        <div class="ach-grid">
+          <div class="ach-card" id="a-start"><span class="ach-icon">🚀</span><div class="ach-name">Linux Boot</div></div>
+          <div class="ach-card" id="a-obj"><span class="ach-icon">🎯</span><div class="ach-name">Foco Total</div></div>
+          <div class="ach-card" id="a-desktop"><span class="ach-icon">🖥️</span><div class="ach-name">Desktop Online</div></div>
+          <div class="ach-card" id="a-server"><span class="ach-icon">🖧</span><div class="ach-name">Server Live</div></div>
+          <div class="ach-card" id="a-fw"><span class="ach-icon">🔥</span><div class="ach-name">Firewall Ativo</div></div>
+          <div class="ach-card" id="a-vbox"><span class="ach-icon">📦</span><div class="ach-name">VBox Master</div></div>
+          <div class="ach-card" id="a-lvm"><span class="ach-icon">💾</span><div class="ach-name">LVM Config</div></div>
+          <div class="ach-card" id="a-ssh"><span class="ach-icon">🔑</span><div class="ach-name">SSH Ativo</div></div>
+          <div class="ach-card" id="a-apt"><span class="ach-icon">📦</span><div class="ach-name">APT Master</div></div>
+          <div class="ach-card" id="a-rule"><span class="ach-icon">🛡️</span><div class="ach-name">UFW Rule +5</div></div>
+          <div class="ach-card" id="a-quiz"><span class="ach-icon">⚡</span><div class="ach-name">Sinal Forte</div></div>
+          <div class="ach-card" id="a-perfect"><span class="ach-icon">💎</span><div class="ach-name">Quiz Perfeito</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BIBLIOGRAFIA -->
+    <div class="card" id="section-bib">
+      <div class="card-head">
+        <div class="card-icon ci-c">📖</div>
+        <div class="card-title">BIBLIOGRAFIA</div>
+      </div>
+      <div class="card-body">
+        <div class="bib-item">SNYDER, Gary; NEMETH, Evi; HEIN, Trent. <strong>Manual completo do Linux: guia do administrador.</strong> 2.ed. Prentice Hall, 2007. Cap. 2: Instalação</div>
+        <div class="bib-item">NEGUS, Christopher. <strong>Linux Bible.</strong> Wiley, 2020. Cap. 9: Installing Linux</div>
+        <div class="bib-item">Ubuntu Documentation. <strong>Installation Guide — Ubuntu 22.04 LTS.</strong> Canonical, 2022. Disponível em: ubuntu.com/tutorials/install-ubuntu-server</div>
+        <div class="bib-item">Oracle VM VirtualBox. <strong>User Manual.</strong> Oracle Corporation, 2023. Disponível em: virtualbox.org/manual</div>
+      </div>
+    </div>
+
+    <!-- NAVEGAÇÃO -->
+    <div style="display:flex; justify-content:space-between; gap:12px; margin-top:4px;">
+      <a href="semana04.html" style="padding:13px 24px; background:rgba(0,212,255,0.1); border:1px solid rgba(0,212,255,0.3); color:var(--cyan); text-decoration:none; border-radius:9px; font-weight:700; font-size:0.9em; transition:all 0.2s;" onmouseover="this.style.background='rgba(0,212,255,0.2)'" onmouseout="this.style.background='rgba(0,212,255,0.1)'">← Semana 4 — Access Points</a>
+      <a href="semana06.html" style="padding:13px 24px; background:rgba(0,255,136,0.1); border:1px solid rgba(0,255,136,0.3); color:var(--green); text-decoration:none; border-radius:9px; font-weight:700; font-size:0.9em; transition:all 0.2s;" onmouseover="this.style.background='rgba(0,255,136,0.2)'" onmouseout="this.style.background='rgba(0,255,136,0.1)'">Semana 6 →</a>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// ========== STATE ==========
+let xp = 0, streak = 0, badges = 0;
+const TOTAL_XP = 360;
+const objChecked = [false,false,false,false,false,false,false];
+const missionsDone = {};
+let videosWatched = 0;
+let qCorrect = 0;
+const qAnswers = {};
+let fwRules = ['22/tcp       ALLOW IN    Anywhere     (SSH)'];
+let fwRuleCount = 1;
+
+// Start badge
+setTimeout(() => unlock('a-start','bm-start','Módulo Linux Install iniciado! 🚀'), 800);
+
+// ========== HUD ==========
+function updateHUD() {
+  document.getElementById('hud-xp').textContent = xp;
+  document.getElementById('hud-streak').textContent = streak;
+  document.getElementById('hud-badges').textContent = badges;
+  const pct = Math.min(Math.round(xp / TOTAL_XP * 100), 100);
+  document.getElementById('hud-bar').style.width = pct + '%';
+  document.getElementById('hud-pct').textContent = pct + '%';
+  const lvls = [[0,'Iniciante'],[50,'Operador Linux'],[120,'Técnico SO'],[200,'Admin Server'],[300,'Mestre Linux']];
+  let lv = lvls[0][1];
+  for (const [t,n] of lvls) { if (xp >= t) lv = n; }
+  document.getElementById('hud-level').textContent = lv;
+  const od = objChecked.filter(Boolean).length;
+  setBar('obj-bar','obj-pct', od/7*100, Math.round(od/7*100)+'%');
+  const md = Object.keys(missionsDone).length;
+  setBar('mis-bar','mis-pct', md/5*100, Math.round(md/5*100)+'%');
+  setBar('quiz-bar','quiz-pct', Math.min(qCorrect/6*100,100), Math.round(qCorrect/6*100)+'%');
+  setBar('ach-bar','ach-pct', badges/12*100, badges+'/12');
+}
+function setBar(bid, lid, pct, txt) {
+  document.getElementById(bid).style.width = Math.min(pct,100)+'%';
+  document.getElementById(lid).textContent = txt;
+}
+function addXP(amount, msg, icon) {
+  xp += amount; updateHUD();
+  toast(icon||'⚡', '+'+amount+' XP', msg);
+}
+function toast(icon, title, msg) {
+  document.getElementById('toast-icon').textContent = icon;
+  document.getElementById('toast-title').textContent = title;
+  document.getElementById('toast-msg').textContent = msg;
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+function unlock(achId, badgeId, msg) {
+  const a = document.getElementById(achId);
+  const b = document.getElementById(badgeId);
+  if (a && !a.classList.contains('unlocked')) {
+    a.classList.add('unlocked');
+    if (b) b.classList.add('unlocked');
+    badges++; updateHUD();
+    toast('🏆','Badge desbloqueado!', msg);
+  }
+}
+
+// ========== OBJECTIVES ==========
+function toggleObj(el, idx) {
+  el.classList.toggle('checked');
+  objChecked[idx] = el.classList.contains('checked');
+  if (objChecked[idx]) { addXP(5,'Objetivo marcado!','✅'); streak++; }
+  else streak = Math.max(0, streak-1);
+  const done = objChecked.filter(Boolean).length;
+  if (done === 7) { addXP(25,'Todos objetivos marcados!','🎯'); unlock('a-obj','bm-obj','Foco Total alcançado!'); }
+  updateHUD();
+}
+
+// ========== MISSION TABS ==========
+function switchOSM1(tab, btn) {
+  document.querySelectorAll('[id^="m1-panel-"]').forEach(p => p.classList.remove('active-panel'));
+  document.getElementById('m1-panel-'+tab).classList.add('active-panel');
+  event.stopPropagation();
+  btn.closest('.os-tabs').querySelectorAll('.os-tab').forEach(t => t.classList.remove('active-tab'));
+  btn.classList.add('active-tab');
+  if (tab === 'vbox') { addXP(3,'VirtualBox Setup visitado!','📦'); unlock('a-vbox','bm-vbox','VirtualBox Master!'); }
+}
+function switchOSM2(tab, btn) {
+  document.querySelectorAll('[id^="m2-panel-"]').forEach(p => p.classList.remove('active-panel'));
+  document.getElementById('m2-panel-'+tab).classList.add('active-panel');
+  event.stopPropagation();
+  btn.closest('.os-tabs').querySelectorAll('.os-tab').forEach(t => t.classList.remove('active-tab'));
+  btn.classList.add('active-tab');
+  if (tab === 'lvm') { addXP(5,'LVM estudado!','💾'); unlock('a-lvm','bm-lvm','LVM Configurado!'); }
+}
+
+// ========== MISSION ACCORDION ==========
+function toggleMission(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('open');
+}
+
+// ========== MISSION COMPLETE ==========
+function completeM(mId, btnId, achId, badgeId, msg, key) {
+  event.stopPropagation();
+  if (missionsDone[key]) return;
+  missionsDone[key] = true;
+  const btn = document.getElementById(btnId);
+  btn.disabled = true; btn.textContent = '✅ Missão Concluída!';
+  document.getElementById(mId).classList.add('done');
+  addXP(key === 'fw' ? 60 : 50, msg, '⚔️');
+  unlock(achId, badgeId, msg);
+  streak++; updateHUD();
+  // Check all missions done
+  if (Object.keys(missionsDone).length === 5) {
+    setTimeout(() => { addXP(50,'TODAS AS MISSÕES CONCLUÍDAS!','🏆'); unlock('a-all','bm-all','Linux Master — Tudo concluído!'); }, 500);
+  }
+}
+
+// ========== VIDEO ==========
+function watchVideo(el) {
+  if (!el.dataset.counted) {
+    el.dataset.counted = '1';
+    videosWatched++;
+    addXP(10,'Vídeo assistido!','🎬');
+    if (videosWatched >= 4) unlock('a-vbox','bm-vbox','Todos os vídeos assistidos! 📺');
+  }
+}
+
+// ========== FIREWALL SIMULATOR ==========
+function renderFwDisplay() {
+  const d = document.getElementById('fw-display');
+  d.innerHTML = '<div class="fw-rule-line header">Status: active · Default: deny (incoming), allow (outgoing)</div>'
+              + '<div class="fw-rule-line header">To           Action      From</div>'
+              + '<div class="fw-rule-line header">--           ------      ----</div>';
+  fwRules.forEach(r => {
+    const cls = r.includes('ALLOW') ? 'allow' : 'deny';
+    d.innerHTML += `<div class="fw-rule-line ${cls}">${r}</div>`;
+  });
+  document.getElementById('fw-count').textContent = fwRules.length + ' regra' + (fwRules.length !== 1 ? 's' : '') + ' ativa' + (fwRules.length !== 1 ? 's' : '');
+}
+function addFwRule() {
+  const port = document.getElementById('fw-port').value.trim();
+  const proto = document.getElementById('fw-proto').value.trim() || 'tcp';
+  const action = document.getElementById('fw-action').value;
+  if (!port) { toast('⚠️','Erro','Informe a porta!'); return; }
+  const portLabel = port + '/' + proto;
+  const actionLabel = action.toUpperCase() + ' IN ';
+  const spaces1 = ' '.repeat(Math.max(1, 13 - portLabel.length));
+  const rule = portLabel + spaces1 + actionLabel + '   Anywhere';
+  fwRules.push(rule);
+  fwRuleCount++;
+  renderFwDisplay();
+  document.getElementById('fw-port').value = '';
+  document.getElementById('fw-proto').value = '';
+  addXP(15,'Regra UFW adicionada!','🛡️');
+  if (fwRules.length >= 5) unlock('a-rule','bm-rule','5+ regras UFW criadas! 🛡️');
+}
+function clearFwRules() {
+  fwRules = ['22/tcp       ALLOW IN    Anywhere     (SSH)'];
+  renderFwDisplay();
+  toast('🗑️','Firewall','Regras resetadas');
+}
+
+// ========== QUIZ ==========
+const QFB = [
+  { ok:'✅ Correto! O Ubuntu Desktop 22.04 requer mínimo 2 GB de RAM para funcionar com a interface GNOME. 4 GB é o recomendado para melhor performance no VirtualBox.' },
+  { ok:'✅ Exato! Antes de ativar o UFW, é OBRIGATÓRIO liberar a porta SSH. Caso contrário, você perde o acesso remoto ao servidor instantaneamente.' },
+  { ok:'✅ Perfeito! A hierarquia do LVM é: Physical Volume (PV) → Volume Group (VG) → Logical Volume (LV). Cada nível adiciona uma camada de abstração.' },
+  { ok:'✅ Correto! O comando "apt install" resolve automaticamente todas as dependências do pacote, baixando tudo que for necessário.' },
+  { ok:'✅ Exato! O modo Bridge faz a VM aparecer como um dispositivo físico na rede, recebendo IP do roteador/DHCP local — ideal para laboratório.' },
+  { ok:'✅ Correto! A porta 22 é o padrão do SSH (Secure Shell). Por segurança, administradores costumam trocar essa porta em servidores de produção.' },
+];
+const QXPS = [10,15,15,10,10,15];
+
+function ansQ(qi, chosen, correct) {
+  const card = document.getElementById('qc'+qi);
+  const opts = card.querySelectorAll('.qopt');
+  opts.forEach(o => o.disabled = true);
+  opts[chosen].classList.add(chosen === correct ? 'correct' : 'wrong');
+  if (chosen !== correct) opts[correct].classList.add('correct');
+  const fb = document.getElementById('qfb'+qi);
+  const nx = document.getElementById('qnx'+qi);
+  const ok = chosen === correct;
+  fb.innerHTML = ok ? QFB[qi].ok : '❌ Errado. ' + QFB[qi].ok;
+  fb.className = 'qfb show ' + (ok?'ok':'fail');
+  nx.classList.add('show');
+  if (ok) { qCorrect++; addXP(QXPS[qi],'Resposta correta!','🎯'); streak++; }
+  else streak = 0;
+  qAnswers[qi] = ok;
+  document.getElementById('q-prog').style.width = ((qi+1)/6*100)+'%';
+  document.getElementById('q-cnt').textContent = (qi+1)+'/6';
+  updateHUD();
+}
+function nextQ(n) {
+  document.getElementById('qc'+(n-1)).classList.remove('active');
+  document.getElementById('qc'+n).classList.add('active');
+}
+function showResult() {
+  document.getElementById('qc5').classList.remove('active');
+  const r = document.getElementById('q-result');
+  r.classList.add('show');
+  document.getElementById('q-score').textContent = qCorrect+'/6';
+  const msgs = ['Continue estudando e tente novamente!','Progredindo, você consegue!','Bom trabalho, quase lá!','Ótimo domínio de Linux!','💎 Linux Expert! Quiz Perfeito!','💎 Linux Expert! Quiz Perfeito!'];
+  document.getElementById('q-msg').textContent = msgs[Math.min(qCorrect, 5)];
+  const earned = Object.keys(qAnswers).filter(k=>qAnswers[k]).reduce((a,k)=>a+QXPS[+k],0);
+  document.getElementById('q-xp-earned').textContent = '+'+earned+' XP conquistados no quiz';
+  document.getElementById('q-prog').style.width = '100%';
+  document.getElementById('q-cnt').textContent = '6/6';
+  if (qCorrect >= 4) unlock('a-quiz','bm-quiz','Sinal Forte — 4+ acertos!');
+  if (qCorrect === 6) unlock('a-perfect','bm-perfect','Linux Quiz Perfeito! 💎 6/6!');
+  updateHUD();
+}
+function restartQuiz() {
+  qCorrect = 0;
+  document.getElementById('q-result').classList.remove('show');
+  document.getElementById('q-prog').style.width = '0%';
+  document.getElementById('q-cnt').textContent = '0/6';
+  for (let i=0; i<6; i++) {
+    const c = document.getElementById('qc'+i);
+    c.classList.toggle('active', i===0);
+    c.querySelectorAll('.qopt').forEach(o => { o.disabled=false; o.classList.remove('correct','wrong'); });
+    const fb = c.querySelector('.qfb'); if (fb) { fb.className='qfb'; fb.innerHTML=''; }
+    const nx = c.querySelector('.qnx'); if (nx) nx.classList.remove('show');
+  }
+  updateHUD();
+}
+</script>
+</body>
+</html>
