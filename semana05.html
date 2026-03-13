@@ -900,7 +900,7 @@ body::before {
             <rect x="243" y="192" width="194" height="22" rx="12" fill="rgba(0,212,255,0.15)"/>
             <rect x="243" y="205" width="194" height="9" rx="0" fill="rgba(0,212,255,0.15)"/>
             <text font-family="'Orbitron',monospace" font-size="11" font-weight="700" fill="#00d4ff" x="340" y="208" text-anchor="middle">🖧 Ubuntu Server</text>
-            <text font-family="'Exo 2',sans-serif" font-size="10" fill="#e0f0ff" x="340" y="226" text-anchor="middle">22.04 LTS · CLI apenas</text>
+            <text font-family="'Exo 2',sans-serif" font-size="10" fill="#e0f0ff" x="340" y="226" text-anchor="middle">22.04 LTS · Mínima · CLI</text>
             <text font-family="'JetBrains Mono',monospace" font-size="10" fill="#00d4ff" x="340" y="243" text-anchor="middle">192.168.56.20</text>
             <text font-family="'JetBrains Mono',monospace" font-size="9" fill="#5a7a99" x="340" y="259" text-anchor="middle">RAM: 1 GB · Disco: 20 GB</text>
             <text font-family="'JetBrains Mono',monospace" font-size="9" fill="#5a7a99" x="340" y="274" text-anchor="middle">LVM + OpenSSH ativo</text>
@@ -913,10 +913,10 @@ body::before {
             <rect x="444" y="192" width="194" height="22" rx="12" fill="rgba(255,140,0,0.15)"/>
             <rect x="444" y="205" width="194" height="9" rx="0" fill="rgba(255,140,0,0.15)"/>
             <text font-family="'Orbitron',monospace" font-size="11" font-weight="700" fill="#ff8c00" x="541" y="208" text-anchor="middle">🔥 Firewall UFW</text>
-            <text font-family="'Exo 2',sans-serif" font-size="10" fill="#e0f0ff" x="541" y="226" text-anchor="middle">Ubuntu Server 22.04</text>
+            <text font-family="'Exo 2',sans-serif" font-size="10" fill="#e0f0ff" x="541" y="226" text-anchor="middle">Ubuntu Server 22.04 · Mínima</text>
             <text font-family="'JetBrains Mono',monospace" font-size="10" fill="#ff8c00" x="541" y="243" text-anchor="middle">192.168.56.1 (Gateway)</text>
-            <text font-family="'JetBrains Mono',monospace" font-size="9" fill="#5a7a99" x="541" y="259" text-anchor="middle">RAM: 1 GB · Disco: 15 GB</text>
-            <text font-family="'JetBrains Mono',monospace" font-size="9" fill="#5a7a99" x="541" y="274" text-anchor="middle">UFW: deny all + regras</text>
+            <text font-family="'JetBrains Mono',monospace" font-size="9" fill="#5a7a99" x="541" y="259" text-anchor="middle">enp0s3: NAT · enp0s8: 56.1</text>
+            <text font-family="'JetBrains Mono',monospace" font-size="9" fill="#5a7a99" x="541" y="274" text-anchor="middle">IP forward=1 · masquerade</text>
             <rect x="460" y="280" width="162" height="6" rx="3" fill="rgba(255,255,255,0.05)"/>
             <rect x="460" y="280" width="35" height="6" rx="3" fill="rgba(255,140,0,0.4)"/>
             <text font-family="'JetBrains Mono',monospace" font-size="8" fill="#5a7a99" x="460" y="296">Disco: 15 GB VDI</text>
@@ -974,7 +974,7 @@ body::before {
           </li>
           <li class="obj-item" onclick="toggleObj(this,2)">
             <div class="obj-circle">✓</div>
-            Instalar e configurar o Ubuntu Server 22.04 LTS
+            Instalar o Ubuntu Server 22.04 LTS — modalidade mínima (sem GUI)
           </li>
           <li class="obj-item" onclick="toggleObj(this,3)">
             <div class="obj-circle">✓</div>
@@ -1023,6 +1023,7 @@ body::before {
           </div>
           <div class="concept-card purple">
             <div class="concept-title">🖧 UBUNTU SERVER</div>
+            <span class="tag">Instalação mínima</span>
             <span class="tag">CLI apenas</span>
             <span class="tag">OpenSSH</span>
             <span class="tag">LVM</span>
@@ -1031,11 +1032,13 @@ body::before {
           </div>
           <div class="concept-card orange">
             <div class="concept-title">🔥 FIREWALL UFW</div>
+            <span class="tag">VM dedicada</span>
+            <span class="tag">2 NICs</span>
+            <span class="tag">IP forwarding</span>
+            <span class="tag">Masquerading</span>
+            <span class="tag">netplan</span>
             <span class="tag">allow/deny</span>
-            <span class="tag">status verbose</span>
-            <span class="tag">Portas TCP/UDP</span>
-            <span class="tag">Regras por app</span>
-            <span class="tag">Default policy</span>
+            <span class="tag">routed policy</span>
           </div>
         </div>
 
@@ -1048,6 +1051,9 @@ body::before {
             <div class="gloss-item"><div class="gloss-term">UFW</div><div class="gloss-def">Uncomplicated Firewall — interface simplificada para gerenciar o iptables no Ubuntu.</div></div>
             <div class="gloss-item"><div class="gloss-term">SSH</div><div class="gloss-def">Secure Shell — protocolo para acesso remoto seguro a servidores via linha de comando (porta 22).</div></div>
             <div class="gloss-item"><div class="gloss-term">NAT / Bridge</div><div class="gloss-def">Modos de rede do VirtualBox. NAT: VM acessa internet via host. Bridge: VM recebe IP da rede física.</div></div>
+            <div class="gloss-item"><div class="gloss-term">IP Forwarding</div><div class="gloss-def">Parâmetro do kernel Linux que permite encaminhar pacotes entre interfaces de rede. Essencial para o firewall funcionar como gateway.</div></div>
+            <div class="gloss-item"><div class="gloss-term">Masquerading</div><div class="gloss-def">Tipo de NAT que substitui o IP de origem dos pacotes pelo IP da interface de saída. Permite que toda a LAN saia pela mesma interface.</div></div>
+            <div class="gloss-item"><div class="gloss-term">netplan</div><div class="gloss-def">Ferramenta do Ubuntu para configurar interfaces de rede via arquivos YAML em /etc/netplan/.</div></div>
             <div class="gloss-item"><div class="gloss-term">apt</div><div class="gloss-def">Advanced Package Tool — gerenciador de pacotes do Ubuntu. Instala, atualiza e remove software.</div></div>
             <div class="gloss-item"><div class="gloss-term">PV / VG / LV</div><div class="gloss-def">Physical Volume → Volume Group → Logical Volume. Hierarquia do LVM para organizar o armazenamento.</div></div>
           </div>
@@ -1079,9 +1085,9 @@ body::before {
               <div class="play-btn" onclick="watchVideo(this)">▶</div>
             </div>
             <div class="video-info">
-              <h4>Ubuntu Server 22.04 — Setup Completo</h4>
-              <p>Instalação + pós-instalação + SSH</p>
-              <a href="https://www.youtube.com/results?search_query=ubuntu+server+22.04+instalacao+virtualbox" target="_blank" class="video-link">▶ YouTube</a>
+              <h4>Ubuntu Server 22.04 — Instalação Mínima</h4>
+              <p>Minimized install + pós-instalação + SSH</p>
+              <a href="https://www.youtube.com/results?search_query=ubuntu+server+22.04+minimized+instalacao+virtualbox" target="_blank" class="video-link">▶ YouTube</a>
             </div>
           </div>
           <div class="video-card">
@@ -1181,14 +1187,20 @@ body::before {
           <div class="mission-head">
             <div class="mission-num cyan-num">02</div>
             <div class="mission-info">
-              <div class="mission-title">🖧 Instalar Ubuntu Server 22.04 no VirtualBox</div>
-              <div class="mission-meta">⏱️ 40 min · Dificuldade: ⭐⭐⭐ · CLI apenas · SSH + LVM</div>
+              <div class="mission-title">🖧 Instalar Ubuntu Server 22.04 — Instalação Mínima</div>
+              <div class="mission-meta">⏱️ 40 min · Dificuldade: ⭐⭐⭐ · CLI apenas · SSH + LVM · Sem interface gráfica</div>
             </div>
             <div class="mission-xp">+50 XP</div>
             <div class="mission-toggle">▼</div>
           </div>
           <div class="mission-body">
-            <div class="mission-desc">🎯 Criar uma VM separada e instalar o Ubuntu Server 22.04 LTS com LVM, usuário administrador e OpenSSH configurado.</div>
+            <div class="mission-desc">🎯 Criar uma VM separada e instalar o Ubuntu Server 22.04 LTS na modalidade <strong>mínima</strong> — apenas CLI, sem GUI. Inclui LVM, usuário administrador e OpenSSH.</div>
+
+            <!-- NOTA PEDAGÓGICA -->
+            <div style="background:rgba(255,204,0,0.06); border:1px solid rgba(255,204,0,0.25); border-left:4px solid var(--yellow); border-radius:9px; padding:14px 16px; margin-bottom:16px; font-size:0.85em; line-height:1.6; color:var(--muted);">
+              <strong style="color:var(--yellow)">💡 Por que instalação mínima?</strong><br>
+              Em segurança da informação, menos software = menor superfície de ataque. Todo serviço desnecessário é uma vulnerabilidade potencial. Servidores reais de produção rodam sem interface gráfica — você precisará dominar o terminal para administrá-los. Além disso, a instalação mínima consome apenas <strong style="color:var(--cyan)">~1 GB de RAM</strong> e deixa você no controle total do que é instalado, usando o <code>apt</code> para adicionar apenas o necessário.
+            </div>
 
             <div class="os-tabs">
               <button class="os-tab active-tab" onclick="switchOSM2('vbox',this)">📦 VirtualBox</button>
@@ -1197,20 +1209,24 @@ body::before {
             </div>
 
             <div id="m2-panel-vbox" class="os-panel active-panel">
-              <div class="info-box">💡 Baixe a ISO em <strong>ubuntu.com/download/server</strong> — Ubuntu Server 22.04.3 LTS</div>
+              <div class="info-box">💡 Baixe a ISO em <strong>ubuntu.com/download/server</strong> — Ubuntu Server 22.04.3 LTS (~1.8 GB)</div>
               <div class="step"><div class="step-num">1</div><p>VirtualBox → Novo → Nome: <code>Ubuntu-Server-22</code> → Tipo: Linux → Versão: Ubuntu (64-bit)</p></div>
-              <div class="step"><div class="step-num">2</div><p>RAM: <code>1024 MB</code> (servidor não precisa de GUI) · Disco: <code>20 GB</code> VDI dinâmico</p></div>
+              <div class="step"><div class="step-num">2</div><p>RAM: <code>1024 MB</code> — servidor não usa GUI, 1 GB é suficiente · Disco: <code>20 GB</code> VDI dinâmico</p></div>
               <div class="step"><div class="step-num">3</div><p>Rede: Adaptador 1 → <code>NAT</code> + Adaptador 2 → <code>Rede Interna</code> (para comunicação entre VMs)</p></div>
             </div>
 
             <div id="m2-panel-install" class="os-panel">
+              <div class="warn-box">⚠️ <strong>Atenção:</strong> selecione <strong>Ubuntu Server (minimized)</strong> na tela de tipo de instalação — NÃO a opção padrão. Isso garante o menor conjunto de pacotes possível.</div>
               <div class="step"><div class="step-num">1</div><p>Boot da ISO → selecione <strong>Install Ubuntu Server</strong></p></div>
               <div class="step"><div class="step-num">2</div><p>Idioma: <strong>Português</strong> · Layout: <strong>Portuguese (Brazil)</strong></p></div>
-              <div class="step"><div class="step-num">3</div><p>Configuração de rede: aceite o DHCP por padrão ou configure IP estático depois</p></div>
-              <div class="step"><div class="step-num">4</div><p>Particionamento: escolha <strong>Use an entire disk and set up this disk as an LVM group</strong> para LVM automático</p></div>
-              <div class="step"><div class="step-num">5</div><p>Perfil: nome completo, nome da máquina (<code>lab-server</code>), usuário (<code>admin</code>), senha forte</p></div>
-              <div class="step"><div class="step-num">6</div><p>Marque obrigatoriamente: <strong>Install OpenSSH server</strong> → Instalar</p></div>
-              <div class="step"><div class="step-num">7</div><p>Aguarde instalação → <strong>Reboot Now</strong> → remova ISO → login com usuário criado</p></div>
+              <div class="step"><div class="step-num">3</div><p>Tipo de instalação: selecione <strong style="color:var(--green)">Ubuntu Server (minimized)</strong> — menos pacotes, maior segurança</p></div>
+              <div class="step"><div class="step-num">4</div><p>Configuração de rede: aceite o DHCP por padrão; vamos configurar IP estático depois via <code>netplan</code></p></div>
+              <div class="step"><div class="step-num">5</div><p>Particionamento: escolha <strong>Use an entire disk and set up this disk as an LVM group</strong> para LVM automático</p></div>
+              <div class="step"><div class="step-num">6</div><p>Perfil: nome completo, nome da máquina (<code>lab-server</code>), usuário (<code>admin</code>), senha forte</p></div>
+              <div class="step"><div class="step-num">7</div><p>Na tela <em>Featured Server Snaps</em>: <strong>não selecione nada</strong> — instalação mínima não precisa de snaps adicionais</p></div>
+              <div class="step"><div class="step-num">8</div><p>Marque obrigatoriamente: <strong>Install OpenSSH server</strong> → única adição necessária neste passo</p></div>
+              <div class="step"><div class="step-num">9</div><p>Aguarde instalação (~10 min) → <strong>Reboot Now</strong> → remova ISO → faça login com o usuário criado</p></div>
+              <div class="success-box" style="margin-top:12px;">✅ Ao fazer login, você verá apenas o prompt de terminal — <strong style="color:var(--green)">isso é o esperado!</strong> Sem janelas, sem ícones. Bem-vindo ao servidor Linux.</div>
             </div>
 
             <div id="m2-panel-lvm" class="os-panel">
@@ -1285,65 +1301,192 @@ body::before {
           <div class="mission-head">
             <div class="mission-num orange-num">04</div>
             <div class="mission-info">
-              <div class="mission-title">🔥 Configurar Firewall UFW no Ubuntu Server</div>
-              <div class="mission-meta">⏱️ 30 min · Dificuldade: ⭐⭐⭐ · Regras de entrada e saída</div>
+              <div class="mission-title">🔥 Configurar VM Firewall — Ubuntu Server + UFW como Gateway</div>
+              <div class="mission-meta">⏱️ 45 min · Dificuldade: ⭐⭐⭐⭐ · 2 NICs · IP Forwarding · NAT · Regras UFW</div>
             </div>
             <div class="mission-xp">+60 XP</div>
             <div class="mission-toggle">▼</div>
           </div>
           <div class="mission-body">
-            <div class="mission-desc">🎯 Ativar o UFW, definir política padrão de negação, e criar regras específicas para serviços essenciais (SSH, HTTP, HTTPS).</div>
+            <div class="mission-desc">🎯 Criar uma VM dedicada com Ubuntu Server 22.04 mínimo, configurar duas interfaces de rede, habilitar IP forwarding e masquerading, e aplicar regras UFW para atuar como firewall/gateway da rede interna.</div>
 
-            <div class="cmd-block">
-<span class="comment">## PASSO 1 — Verificar e ativar UFW</span>
-<span class="prompt">$</span> <span class="cmd">sudo ufw status</span>
-<span class="output">Status: inactive</span>
+            <!-- NOTA PEDAGÓGICA -->
+            <div style="background:rgba(255,140,0,0.06); border:1px solid rgba(255,140,0,0.25); border-left:4px solid var(--orange); border-radius:9px; padding:14px 16px; margin-bottom:16px; font-size:0.85em; line-height:1.6; color:var(--muted);">
+              <strong style="color:var(--orange)">🔥 Firewall como VM separada — por quê?</strong><br>
+              Em arquiteturas reais, o firewall é um dispositivo <strong style="color:var(--text)">dedicado</strong> que fica entre a rede interna e a internet. Neste laboratório, simulamos isso com uma VM que possui <strong style="color:var(--cyan)">duas placas de rede</strong>: uma voltada para a internet (NAT) e outra para a rede interna das VMs. Todo o tráfego passa por ela — e ela decide o que deixa passar.
+            </div>
 
-<span class="comment"># IMPORTANTE: Libere SSH ANTES de ativar o UFW!</span>
-<span class="prompt">$</span> <span class="cmd">sudo ufw allow OpenSSH</span>
+            <div class="os-tabs">
+              <button class="os-tab active-tab tab-orange" onclick="switchOSM4('vbox',this)">📦 VirtualBox</button>
+              <button class="os-tab tab-cyan" onclick="switchOSM4('rede',this)">🌐 Rede / IP</button>
+              <button class="os-tab" onclick="switchOSM4('forward',this)">⚡ Forwarding</button>
+              <button class="os-tab" onclick="switchOSM4('ufw',this)">🔥 UFW</button>
+            </div>
+
+            <!-- ABA 1 — VirtualBox -->
+            <div id="m4-panel-vbox" class="os-panel active-panel">
+              <div class="info-box">💡 Use a mesma ISO do Ubuntu Server 22.04 — instale como <strong>minimized</strong>, igual à VM do servidor.</div>
+              <div class="step"><div class="step-num">1</div><p>VirtualBox → Novo → Nome: <code>Ubuntu-Firewall-22</code> → Tipo: Linux → Versão: Ubuntu (64-bit)</p></div>
+              <div class="step"><div class="step-num">2</div><p>RAM: <code>1024 MB</code> · Disco: <code>15 GB</code> VDI dinâmico — firewall não precisa de muito espaço</p></div>
+              <div class="step"><div class="step-num">3</div><p>Configurações → Rede → <strong>Adaptador 1</strong>: <code>NAT</code> — esta é a interface que conecta à internet via host</p></div>
+              <div class="step"><div class="step-num">4</div><p>Configurações → Rede → <strong>Adaptador 2</strong>: habilitar → <code>Rede Interna</code> → nome: <code>intnet</code> — esta é a LAN das VMs</p></div>
+              <div class="step"><div class="step-num">5</div><p>Nas outras VMs (Desktop e Server): Adaptador 2 também deve ser <code>Rede Interna</code> com nome <code>intnet</code> (mesmo nome!)</p></div>
+              <div class="step"><div class="step-num">6</div><p>Instale o Ubuntu Server 22.04 <strong>minimized</strong> + OpenSSH, nome da máquina: <code>lab-firewall</code>, usuário: <code>admin</code></p></div>
+            </div>
+
+            <!-- ABA 2 — Rede / IP Estático -->
+            <div id="m4-panel-rede" class="os-panel">
+              <div class="warn-box">⚠️ O firewall precisa de <strong>IP estático</strong> na interface interna para ser o gateway fixo das outras VMs. Use o <code>netplan</code> para configurar.</div>
+              <div class="step"><div class="step-num">1</div><p>Identifique os nomes das interfaces de rede:</p></div>
+              <div class="cmd-block">
+<span class="comment"># Ver todas as interfaces e seus nomes</span>
+<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">ip link show</span>
+<span class="output">1: lo: &lt;LOOPBACK&gt; ...
+2: enp0s3: &lt;BROADCAST&gt; ...   ← Adaptador 1 (NAT / internet)
+3: enp0s8: &lt;BROADCAST&gt; ...   ← Adaptador 2 (Rede Interna / LAN)</span>
+              </div>
+              <div class="step"><div class="step-num">2</div><p>Edite o arquivo de configuração do netplan:</p></div>
+              <div class="cmd-block">
+<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo nano /etc/netplan/00-installer-config.yaml</span>
+              </div>
+              <div class="step"><div class="step-num">3</div><p>Substitua o conteúdo pelo seguinte (atenção à <strong>indentação com espaços</strong> — YAML não aceita tabs):</p></div>
+              <div class="cmd-block">
+<span class="comment"># /etc/netplan/00-installer-config.yaml</span>
+<span class="value">network:
+  version: 2
+  ethernets:
+    enp0s3:
+      dhcp4: true          </span><span class="comment"># NAT — recebe IP do VirtualBox automaticamente</span>
+<span class="value">    enp0s8:
+      dhcp4: false         </span><span class="comment"># LAN interna — IP fixo</span>
+<span class="value">      addresses:
+        - 192.168.56.1/24  </span><span class="comment"># Gateway da rede interna</span>
+<span class="value">      nameservers:
+        addresses: [8.8.8.8, 1.1.1.1]</span>
+              </div>
+              <div class="step"><div class="step-num">4</div><p>Aplique as configurações e verifique:</p></div>
+              <div class="cmd-block">
+<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo netplan apply</span>
+<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">ip addr show enp0s8</span>
+<span class="output">3: enp0s8: &lt;BROADCAST,MULTICAST,UP&gt;
+    inet <span style="color:var(--green)">192.168.56.1/24</span> brd 192.168.56.255 scope global enp0s8</span>
+              </div>
+              <div class="step"><div class="step-num">5</div><p>Nas VMs <strong>Desktop</strong> e <strong>Server</strong>, configure o gateway padrão como <code>192.168.56.1</code> no netplan delas (campo <code>gateway4</code> ou <code>routes</code>).</p></div>
+            </div>
+
+            <!-- ABA 3 — IP Forwarding -->
+            <div id="m4-panel-forward" class="os-panel">
+              <div class="info-box">💡 <strong>IP Forwarding</strong> permite que o kernel Linux encaminhe pacotes entre interfaces. Sem ele, o tráfego da LAN não chega à internet — o firewall simplesmente descartaria os pacotes.</div>
+              <div class="step"><div class="step-num">1</div><p>Habilitar IP forwarding permanentemente no kernel:</p></div>
+              <div class="cmd-block">
+<span class="comment"># Editar o arquivo de configuração do kernel</span>
+<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo nano /etc/sysctl.conf</span>
+
+<span class="comment"># Encontrar e descomentar (remover o #) a linha:</span>
+<span class="value">net.ipv4.ip_forward=1</span>
+
+<span class="comment"># Aplicar sem reiniciar</span>
+<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo sysctl -p</span>
+<span class="output">net.ipv4.ip_forward = 1</span>
+
+<span class="comment"># Confirmar que está ativo (deve retornar 1)</span>
+<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">cat /proc/sys/net/ipv4/ip_forward</span>
+<span class="output">1</span>
+              </div>
+              <div class="step"><div class="step-num">2</div><p>Configurar o <strong>masquerading</strong> (NAT) no UFW para que as VMs da LAN acessem a internet usando o IP do firewall:</p></div>
+              <div class="cmd-block">
+<span class="comment"># Editar as regras brutas do UFW (antes do *filter)</span>
+<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo nano /etc/ufw/before.rules</span>
+
+<span class="comment"># Adicionar no INÍCIO do arquivo, antes de *filter:</span>
+<span class="value"># NAT — masquerading para saída pela interface enp0s3 (internet)
+*nat
+:POSTROUTING ACCEPT [0:0]
+-A POSTROUTING -s 192.168.56.0/24 -o enp0s3 -j MASQUERADE
+COMMIT</span>
+              </div>
+              <div class="step"><div class="step-num">3</div><p>Permitir o encaminhamento (forwarding) no arquivo de configuração do UFW:</p></div>
+              <div class="cmd-block">
+<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo nano /etc/default/ufw</span>
+
+<span class="comment"># Alterar a linha DEFAULT_FORWARD_POLICY:</span>
+<span class="value">DEFAULT_FORWARD_POLICY="ACCEPT"</span>
+              </div>
+            </div>
+
+            <!-- ABA 4 — UFW Regras -->
+            <div id="m4-panel-ufw" class="os-panel">
+              <div class="warn-box">⚠️ <strong>Regra de ouro:</strong> sempre libere o SSH <strong>antes</strong> de ativar o UFW. Se esquecer, perde o acesso remoto à VM sem possibilidade de recuperação pelo terminal.</div>
+
+              <div class="cmd-block">
+<span class="comment">## PASSO 1 — Liberar SSH e ativar UFW</span>
+<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo ufw allow 22/tcp</span>
 <span class="output">Rules updated</span>
 
-<span class="prompt">$</span> <span class="cmd">sudo ufw enable</span>
+<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo ufw enable</span>
 <span class="warn">Command may disrupt existing ssh connections. Proceed with operation (y|n)? y</span>
 <span class="output">Firewall is active and enabled on system startup</span>
-            </div>
+              </div>
 
-            <div class="cmd-block">
-<span class="comment">## PASSO 2 — Políticas padrão (DENY ALL primeiro!)</span>
-<span class="prompt">$</span> <span class="cmd">sudo ufw default deny incoming</span>
+              <div class="cmd-block">
+<span class="comment">## PASSO 2 — Políticas padrão (negar tudo, permitir saída)</span>
+<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo ufw default deny incoming</span>
 <span class="output">Default incoming policy changed to 'deny'</span>
 
-<span class="prompt">$</span> <span class="cmd">sudo ufw default allow outgoing</span>
+<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo ufw default allow outgoing</span>
 <span class="output">Default outgoing policy changed to 'allow'</span>
-            </div>
 
-            <div class="cmd-block">
-<span class="comment">## PASSO 3 — Regras para serviços comuns</span>
-<span class="prompt">$</span> <span class="cmd">sudo ufw allow 22/tcp</span>    <span class="comment">  # SSH</span>
-<span class="prompt">$</span> <span class="cmd">sudo ufw allow 80/tcp</span>    <span class="comment">  # HTTP</span>
-<span class="prompt">$</span> <span class="cmd">sudo ufw allow 443/tcp</span>   <span class="comment">  # HTTPS</span>
-<span class="prompt">$</span> <span class="cmd">sudo ufw deny 23/tcp</span>     <span class="comment">  # Bloquear Telnet</span>
-<span class="prompt">$</span> <span class="cmd">sudo ufw deny 21/tcp</span>     <span class="comment">  # Bloquear FTP inseguro</span>
-            </div>
+<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo ufw default allow routed</span>
+<span class="output">Default routed policy changed to 'allow'</span>
+<span class="comment">                                  # ↑ essencial para o masquerading funcionar</span>
+              </div>
 
-            <div class="cmd-block">
-<span class="comment">## PASSO 4 — Verificar status detalhado</span>
-<span class="prompt">$</span> <span class="cmd">sudo ufw status verbose</span>
+              <div class="cmd-block">
+<span class="comment">## PASSO 3 — Regras para serviços permitidos</span>
+<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo ufw allow 22/tcp</span>    <span class="comment">  # SSH (já liberado, reforçando)</span>
+<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo ufw allow 80/tcp</span>    <span class="comment">  # HTTP</span>
+<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo ufw allow 443/tcp</span>   <span class="comment">  # HTTPS</span>
+
+<span class="comment">## PASSO 4 — Bloquear serviços inseguros explicitamente</span>
+<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo ufw deny 23/tcp</span>     <span class="comment">  # Telnet — protocolo sem criptografia</span>
+<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo ufw deny 21/tcp</span>     <span class="comment">  # FTP — senhas em texto claro</span>
+<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo ufw deny 3389/tcp</span>   <span class="comment">  # RDP — alvo frequente de ataques</span>
+              </div>
+
+              <div class="cmd-block">
+<span class="comment">## PASSO 5 — Recarregar e verificar status completo</span>
+<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo ufw reload</span>
+<span class="output">Firewall reloaded</span>
+
+<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo ufw status verbose</span>
 <span class="output">Status: active
 Logging: on (low)
-Default: deny (incoming), allow (outgoing), disabled (routed)
+Default: deny (incoming), allow (outgoing), allow (routed)
 
-To           Action      From
---           ------      ----
-OpenSSH      ALLOW IN    Anywhere
-22/tcp       ALLOW IN    Anywhere
-80/tcp       ALLOW IN    Anywhere
-443/tcp      ALLOW IN    Anywhere
-23/tcp       DENY IN     Anywhere
-21/tcp       DENY IN     Anywhere</span>
+To             Action      From
+--             ------      ----
+22/tcp         ALLOW IN    Anywhere
+80/tcp         ALLOW IN    Anywhere
+443/tcp        ALLOW IN    Anywhere
+23/tcp         DENY IN     Anywhere
+21/tcp         DENY IN     Anywhere
+3389/tcp       DENY IN     Anywhere</span>
+              </div>
+
+              <div class="cmd-block">
+<span class="comment">## PASSO 6 — Testar conectividade (nas VMs Desktop/Server)</span>
+<span class="comment"># Nas outras VMs, confirmar que o gateway está correto</span>
+<span class="prompt">admin@lab-desktop:~$</span> <span class="cmd">ip route show</span>
+<span class="output">default via <span style="color:var(--green)">192.168.56.1</span> dev enp0s8    ← tráfego passa pelo firewall</span>
+
+<span class="comment"># Testar que a internet funciona através do firewall</span>
+<span class="prompt">admin@lab-desktop:~$</span> <span class="cmd">ping -c 3 8.8.8.8</span>
+<span class="output">3 packets transmitted, 3 received, 0% packet loss</span>
+              </div>
+
+              <div class="success-box">✅ Se o ping funciona nas outras VMs, o masquerading e o IP forwarding estão funcionando. O tráfego está passando pelo firewall conforme esperado.</div>
+              <button class="complete-btn" id="btn-m4" onclick="completeM('m4','btn-m4','a-fw','bm-fw','Firewall UFW configurado como gateway! 🔥','fw')">✅ MISSÃO CONCLUÍDA — Firewall UFW Ativo como Gateway!</button>
             </div>
-            <div class="warn-box">⚠️ <strong>Nunca</strong> ative o UFW sem antes permitir SSH (porta 22)! Você pode perder acesso remoto à VM permanentemente.</div>
-            <button class="complete-btn" id="btn-m4" onclick="completeM('m4','btn-m4','a-fw','bm-fw','Firewall UFW configurado! 🔥','fw')">✅ MISSÃO CONCLUÍDA — Firewall UFW Ativo!</button>
           </div>
         </div>
 
@@ -1659,6 +1802,15 @@ function switchOSM2(tab, btn) {
   btn.closest('.os-tabs').querySelectorAll('.os-tab').forEach(t => t.classList.remove('active-tab'));
   btn.classList.add('active-tab');
   if (tab === 'lvm') { addXP(5,'LVM estudado!','💾'); unlock('a-lvm','bm-lvm','LVM Configurado!'); }
+}
+function switchOSM4(tab, btn) {
+  document.querySelectorAll('[id^="m4-panel-"]').forEach(p => p.classList.remove('active-panel'));
+  document.getElementById('m4-panel-'+tab).classList.add('active-panel');
+  event.stopPropagation();
+  btn.closest('.os-tabs').querySelectorAll('.os-tab').forEach(t => t.classList.remove('active-tab'));
+  btn.classList.add('active-tab');
+  if (tab === 'forward') { addXP(5,'IP Forwarding estudado!','⚡'); }
+  if (tab === 'ufw') { addXP(5,'Regras UFW estudadas!','🔥'); }
 }
 
 // ========== MISSION ACCORDION ==========
