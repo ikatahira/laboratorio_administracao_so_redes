@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semana 3 - Laboratório de Administração de Sistemas Operacionais de Redes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: #f0f2f5;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #003366 0%, #0066cc 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-content img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid white;
+            object-fit: cover;
+        }
+
+        .header-text h1 {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+
+        .header-text p {
+            font-size: 0.9em;
+            opacity: 0.95;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 0 20px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            height: fit-content;
+            position: sticky;
+            top: 120px;
+        }
+
+        .sidebar h2 {
+            color: #003366;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #0066cc;
+        }
+
+        .week-menu {
+            list-style: none;
+        }
+
+        .week-menu li {
+            margin-bottom: 8px;
+        }
+
+        .week-menu a {
+            display: block;
+            padding: 12px 15px;
+            background: #f8f9fa;
+            color: #003366;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+
+        .week-menu a:hover {
+            background: #e3f2fd;
+            border-left-color: #0066cc;
+            transform: translateX(5px);
+        }
+
+        .week-menu a.active {
+            background: #003366;
+            color: white;
+            border-left-color: #0066cc;
+        }
+
+        .week-badge {
+            background: #0066cc;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            margin-right: 8px;
+        }
+
+        .content {
+            flex: 1;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .week-title {
+            color: #003366;
+            font-size: 2em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .week-number {
+            background: linear-gradient(135deg, #003366 0%, #0066cc 100%);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .week-subtitle {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            color: #0066cc;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section h3 {
+            color: #003366;
+            font-size: 1.2em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .objectives-list, .topics-list {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #0066cc;
+        }
+
+        .objectives-list li, .topics-list li {
+            margin-bottom: 10px;
+            padding-left: 10px;
+        }
+
+        .video-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .video-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .video-thumbnail {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: linear-gradient(135deg, #003366 0%, #0066cc 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3em;
+        }
+
+        .video-info {
+            padding: 15px;
+        }
+
+        .video-info h4 {
+            color: #003366;
+            margin-bottom: 8px;
+        }
+
+        .video-link {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 15px;
+            background: #0066cc;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #0066cc;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .success-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .activity-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #0066cc;
+        }
+
+        .activity-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .activity-number {
+            background: #0066cc;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .activity-title {
+            color: #003366;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+
+        .materials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .material-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .material-card:hover {
+            border-color: #0066cc;
+            box-shadow: 0 5px 15px rgba(0,102,204,0.2);
+        }
+
+        .material-icon {
+            font-size: 2.5em;
+            color: #0066cc;
+            margin-bottom: 10px;
+        }
+
+        .bibliography {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .bibliography-item {
+            padding: 15px;
+            background: white;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border-left: 3px solid #0066cc;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .nav-button {
+            padding: 12px 25px;
+            background: #0066cc;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-button:hover {
+            background: #003366;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .step-by-step {
+            background: white;
+            border: 2px solid #0066cc;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .step {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .step:last-child {
+            border-bottom: none;
+        }
+
+        .step-number {
+            background: #0066cc;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 968px) {
+            .container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                position: static;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <img src="foto_professor.png" alt="Professor">
+            <div class="header-text">
+                <h1>Laboratório de Administração de Sistemas Operacionais de Redes</h1>
+                <p>ISO-103 | 3º Semestre | Curso Superior de Tecnologia em Segurança da Informação</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <aside class="sidebar">
+            <h2>📅 Cronograma</h2>
+            <ul class="week-menu">
+                <li><a href="semana01.html"><span class="week-badge">S1</span>Semana 1</a></li>
+                <li><a href="semana02.html"><span class="week-badge">S2</span>Semana 2</a></li>
+                <li><a href="semana03.html" class="active"><span class="week-badge">S3</span>Semana 3</a></li>
+                <li><a href="semana04.html"><span class="week-badge">S4</span>Semana 4</a></li>
+                <li><a href="semana05.html"><span class="week-badge">S5</span>Semana 5</a></li>
+                <li><a href="semana06.html"><span class="week-badge">S6</span>Semana 6</a></li>
+                <li><a href="semana07.html"><span class="week-badge">S7</span>Semana 7</a></li>
+                <li><a href="semana08.html"><span class="week-badge">S8</span>Semana 8</a></li>
+                <li><a href="semana09.html"><span class="week-badge">S9</span>Semana 9</a></li>
+                <li><a href="semana10.html"><span class="week-badge">S10</span>Semana 10</a></li>
+                <li><a href="semana11.html"><span class="week-badge">S11</span>Semana 11</a></li>
+                <li><a href="semana12.html"><span class="week-badge">S12</span>Semana 12</a></li>
+                <li><a href="semana13.html"><span class="week-badge">S13</span>Semana 13</a></li>
+                <li><a href="semana14.html"><span class="week-badge">S14</span>Semana 14</a></li>
+                <li><a href="semana15.html"><span class="week-badge">S15</span>Semana 15</a></li>
+                <li><a href="semana16.html"><span class="week-badge">S16</span>Semana 16</a></li>
+                <li><a href="semana17.html"><span class="week-badge">S17</span>Semana 17</a></li>
+                <li><a href="semana18.html"><span class="week-badge">S18</span>Semana 18</a></li>
+                <li><a href="semana19.html"><span class="week-badge">S19</span>Semana 19</a></li>
+                <li><a href="semana20.html"><span class="week-badge">S20</span>Semana 20</a></li>
+            </ul>
+        </aside>
+
+        <main class="content">
+            <div class="week-title">
+                <div class="week-number">03</div>
+                <div>
+                    <h1>Semana 3</h1>
+                    <p style="color: #666; font-size: 0.5em; margin: 0;">Patch Panels e Organização de Racks</p>
+                </div>
+            </div>
+
+            <p class="week-subtitle">
+                Montagem e conexão de patch panels, uso de alicate punch down, organização profissional de racks de rede e sistema de identificação com anilhas.
+            </p>
+
+            <div class="info-box">
+                <strong>🎯 Carga Horária:</strong> 2 horas/aula<br>
+                <strong>📍 Local:</strong> Laboratório de Redes<br>
+                <strong>⚠️ Pré-requisito:</strong> Conhecimentos das Semanas 1 e 2
+            </div>
+
+            <section class="section">
+                <h2><span class="icon">🎯</span>Objetivos de Aprendizagem</h2>
+                <ul class="objectives-list">
+                    <li>Compreender a função e importância dos patch panels em redes estruturadas</li>
+                    <li>Dominar o uso do alicate punch down (push down) para conexões em patch panels</li>
+                    <li>Organizar cabeamento em racks seguindo padrões profissionais</li>
+                    <li>Aplicar técnicas de identificação e documentação com anilhas</li>
+                    <li>Seguir normas de organização e estética em infraestrutura de rede</li>
+                    <li>Facilitar manutenção futura através de organização adequada</li>
+                </ul>
+            </section>
+
+            <section class="section">
+                <h2><span class="icon">📚</span>Conteúdo Programático</h2>
+                
+                <h3>1. Patch Panels</h3>
+                <ul class="topics-list">
+                    <li><strong>Função:</strong> Ponto centralizado de conexão do cabeamento horizontal</li>
+                    <li><strong>Tipos:</strong> Cat5e, Cat6, Cat6a - blindados e não blindados</li>
+                    <li><strong>Configurações:</strong> 12, 24, 48 portas</li>
+                    <li><strong>Blocos 110:</strong> Sistema de conexão por inserção (IDC)</li>
+                    <li><strong>Vantagens:</strong> Flexibilidade, organização, facilidade de manutenção</li>
+                    <li><strong>Normas:</strong> ANSI/TIA-568 para instalação</li>
+                </ul>
+
+                <h3>2. Alicate Punch Down (Push Down)</h3>
+                <ul class="topics-list">
+                    <li><strong>Tipos:</strong> 110 e Krone (mais comum: 110)</li>
+                    <li><strong>Mecanismo:</strong> Inserção e corte automático</li>
+                    <li><strong>Regulagem:</strong> Ajuste da profundidade de inserção</li>
+                    <li><strong>Técnica correta:</strong> Ângulo de 45-90 graus, pressão adequada</li>
+                    <li><strong>Manutenção:</strong> Verificação e troca de lâminas</li>
+                </ul>
+
+                <h3>3. Racks de Rede</h3>
+                <ul class="topics-list">
+                    <li><strong>Padrão 19 polegadas:</strong> Largura universal</li>
+                    <li><strong>Unidades (U):</strong> 1U = 1,75 polegadas (44,45mm)</li>
+                    <li><strong>Tipos:</strong> Abertos, fechados, de parede, de piso</li>
+                    <li><strong>Componentes:</strong> Guias de cabos, bandejas, PDUs, ventilação</li>
+                    <li><strong>Fluxo de ar:</strong> Front-to-back, side-to-side</li>
+                    <li><strong>Profundidade:</strong> 600mm, 800mm, 1000mm</li>
+                </ul>
+
+                <h3>4. Organização de Cabeamento</h3>
+                <ul class="topics-list">
+                    <li><strong>Gerenciadores horizontais:</strong> 1U, 2U com guias</li>
+                    <li><strong>Gerenciadores verticais:</strong> Laterais do rack</li>
+                    <li><strong>Patch cords:</strong> Comprimentos padronizados, cores</li>
+                    <li><strong>Raio de curvatura:</strong> Mínimo 4x diâmetro do cabo</li>
+                    <li><strong>Velcro vs abraçadeiras:</strong> Quando usar cada um</li>
+                    <li><strong>Folga de serviço:</strong> Margem para manutenção</li>
+                </ul>
+
+                <h3>5. Sistema de Identificação</h3>
+                <ul class="topics-list">
+                    <li><strong>Anilhas numéricas:</strong> Sistema sequencial</li>
+                    <li><strong>Anilhas coloridas:</strong> Código por departamento/função</li>
+                    <li><strong>Etiquetas:</strong> Informações complementares</li>
+                    <li><strong>Documentação:</strong> Planilhas, diagramas, As-Built</li>
+                    <li><strong>Padrões de cores:</strong> ANSI/TIA-606-B</li>
+                </ul>
+            </section>
+
+            <section class="section">
+                <h2><span class="icon">🔧</span>Processo de Instalação em Patch Panel</h2>
+                <div class="step-by-step">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Preparação do Cabo</h4>
+                            <p>Remova aproximadamente 7-10cm da capa externa do cabo UTP. Não destrance os pares ainda. Identifique qual porta do patch panel receberá este cabo.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Identificação e Organização</h4>
+                            <p>Coloque a anilha de identificação no cabo antes de conectá-lo. Organize os cabos de forma que fiquem alinhados e sem cruzamentos desnecessários.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Destrançamento Mínimo</h4>
+                            <p>Destrance apenas o necessário para alcançar os terminais. Manter os pares trançados o máximo possível preserva a qualidade do sinal.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Posicionamento dos Fios</h4>
+                            <p>Coloque cada fio no slot correspondente seguindo o código de cores impresso no patch panel (normalmente T568B). Verifique duas vezes antes de conectar.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>Uso do Alicate Punch Down</h4>
+                            <p>Posicione o alicate sobre o fio no ângulo correto (geralmente 90 graus). Pressione firmemente até ouvir o "click". A lâmina cortará a sobra automaticamente.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">6</div>
+                        <div class="step-content">
+                            <h4>Verificação Visual</h4>
+                            <p>Inspecione todas as conexões. Os fios devem estar firmemente inseridos, cortados uniformemente, sem sobras soltas.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">7</div>
+                        <div class="step-content">
+                            <h4>Fixação do Cabo</h4>
+                            <p>Prenda a capa externa do cabo na estrutura do patch panel usando o suporte apropriado ou abraçadeira. Isso evita tensão nas conexões.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">8</div>
+                        <div class="step-content">
+                            <h4>Teste de Certificação</h4>
+                            <p>Utilize testador de cabo para verificar continuidade, mapeamento correto e ausência de problemas. Documente os resultados.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+    <h2><span class="icon">🎬</span>Vídeos Recomendados</h2>
+    <div class="video-container">
+        <div class="video-card">
+            <div class="video-thumbnail">▶️</div>
+            <div class="video-info">
+                <h4>Instalação de Patch Panel Completo</h4>
+                <p>Tutorial passo a passo profissional da Delta Cable</p>
+                <a href="http://www.youtube.com/watch?v=0xzY5Mj6NFc" target="_blank" class="video-link">Assistir no YouTube</a>
+            </div>
+        </div>
+
+        <div class="video-card">
+            <div class="video-thumbnail">▶️</div>
+            <div class="video-info">
+                <h4>Como Usar Alicate Punch Down</h4>
+                <p>Dicas sobre a ferramenta de impacto e inserção</p>
+                <a href="http://www.youtube.com/watch?v=7V9BkkH18WA" target="_blank" class="video-link">Assistir no YouTube</a>
+            </div>
+        </div>
+
+        <div class="video-card">
+            <div class="video-thumbnail">▶️</div>
+            <div class="video-info">
+                <h4>Organização de Rack Profissional</h4>
+                <p>Dicas de cabeamento estruturado organizado e identificado</p>
+                <a href="http://www.youtube.com/watch?v=dc-ivYlvmBA" target="_blank" class="video-link">Assistir no YouTube</a>
+            </div>
+        </div>
+
+        <div class="video-card">
+            <div class="video-thumbnail">▶️</div>
+            <div class="video-info">
+                <h4>Sistema de Identificação de Cabos</h4>
+                <p>Uso de identificadores tipo anilha para organização</p>
+                <a href="http://www.youtube.com/watch?v=8Ggh-Pl9Gc4" target="_blank" class="video-link">Assistir no YouTube</a>
+            </div>
+        </div>
+    </div>
+</section>
+            <section class="section">
+                <h2><span class="icon">✏️</span>Atividades Práticas</h2>
+                
+                <div class="activity-card">
+                    <div class="activity-header">
+                        <div class="activity-number">1</div>
+                        <div class="activity-title">Demonstração de Patch Panel</div>
+                    </div>
+                    <p><strong>Objetivo:</strong> Compreender a estrutura interna do patch panel</p>
+                    <p><strong>Procedimento:</strong></p>
+                    <ul>
+                        <li>Examinar patch panel desmontado</li>
+                        <li>Identificar blocos 110 e código de cores</li>
+                        <li>Observar demonstração do professor</li>
+                        <li>Entender o fluxo do sinal</li>
+                    </ul>
+                    <p><strong>Duração:</strong> 20 minutos</p>
+                </div>
+
+                <div class="activity-card">
+                    <div class="activity-header">
+                        <div class="activity-number">2</div>
+                        <div class="activity-title">Prática com Alicate Punch Down</div>
+                    </div>
+                    <p><strong>Objetivo:</strong> Desenvolver habilidade no uso da ferramenta</p>
+                    <p><strong>Especificações:</strong></p>
+                    <ul>
+                        <li>Conectar 4 cabos em patch panel de prática</li>
+                        <li>Utilizar padrão T568B</li>
+                        <li>Aplicar anilhas sequenciais (1-4)</li>
+                        <li>Verificar qualidade das conexões</li>
+                    </ul>
+                    <p><strong>Duração:</strong> 40 minutos</p>
+                </div>
+
+                <div class="activity-card">
+                    <div class="activity-header">
+                        <div class="activity-number">3</div>
+                        <div class="activity-title">Organização de Rack</div>
+                    </div>
+                    <p><strong>Objetivo:</strong> Montar rack organizado seguindo padrões profissionais</p>
+                    <p><strong>Componentes:</strong></p>
+                    <ul>
+                        <li>1 Patch panel 24 portas</li>
+                        <li>1 Switch 24 portas</li>
+                        <li>1 Gerenciador horizontal 1U</li>
+                        <li>2 Gerenciadores verticais</li>
+                        <li>12 Patch cords de 50cm</li>
+                        <li>Velcros e organizadores</li>
+                    </ul>
+                    <p><strong>Critérios:</strong></p>
+                    <ul>
+                        <li>Alinhamento dos equipamentos</li>
+                        <li>Cabos organizados sem cruzamentos</li>
+                        <li>Raio de curvatura adequado</li>
+                        <li>Identificação clara</li>
+                        <li>Estética profissional</li>
+                    </ul>
+                    <p><strong>Duração:</strong> 45 minutos</p>
+                </div>
+
+                <div class="activity-card">
+                    <div class="activity-header">
+                        <div class="activity-number">4</div>
+                        <div class="activity-title">Documentação da Infraestrutura</div>
+                    </div>
+                    <p><strong>Objetivo:</strong> Criar documentação profissional do rack montado</p>
+                    <p><strong>Itens a documentar:</strong></p>
+                    <ul>
+                        <li>Diagrama de rack (visão frontal)</li>
+                        <li>Mapeamento de portas do patch panel</li>
+                        <li>Tabela de identificação de cabos</li>
+                        <li>Fotos antes e depois</li>
+                        <li>Lista de materiais utilizados</li>
+                    </ul>
+                    <p><strong>Duração:</strong> 15 minutos</p>
+                </div>
+            </section>
+
+            <div class="warning-box">
+                <strong>⚠️ CUIDADOS IMPORTANTES:</strong><br>
+                • Não force o alicate punch down além do necessário<br>
+                • Mantenha o destrançamento mínimo (máximo 1,3cm)<br>
+                • Verifique a orientação correta do alicate<br>
+                • Não dobre os cabos além do raio mínimo<br>
+                • Use EPI apropriado (óculos de proteção)<br>
+                • Organize antes de fixar definitivamente
+            </div>
+<section class="section">
+    <h2><span class="icon">📖</span>Material de Apoio</h2>
+    <div class="materials-grid">
+        <div class="material-card">
+            <div class="material-icon">📄</div>
+            <h4>Guia de Patch Panels</h4>
+            <p>Manual técnico de montagem e conectorização</p>
+            <a href="https://docente.ifsc.edu.br/cleber.amaral/ensino/2017-1/PJI11101/1.1%20Vis%C3%A3o%20geral%20do%20cabeamento.pdf" target="_blank" class="material-link">Abrir PDF (IFSC) →</a>
+        </div>
+        <div class="material-card">
+            <div class="material-icon">🎨</div>
+            <h4>Template de Documentação</h4>
+            <p>Folha de Excel para etiquetas e portas</p>
+            <a href="https://www.siemon.com/en/support/product-labels/" target="_blank" class="material-link">Download Excel (Siemon) →</a>
+        </div>
+        <div class="material-card">
+            <div class="material-icon">📋</div>
+            <h4>Checklist de Organização</h4>
+            <p>Normas e boas práticas de instalação</p>
+            <a href="https://www.caism.unicamp.br/download/ti/cabeamento_estruturado/01-Conceitos%20e%20Normas.pdf" target="_blank" class="material-link">Abrir PDF (Unicamp) →</a>
+        </div>
+        <div class="material-card">
+            <div class="material-icon">🏷️</div>
+            <h4>Padrões de Identificação</h4>
+            <p>Guia Prático da Norma TIA-606-B</p>
+            <a href="https://www.andes.org.br/img/midias/da2848b1162a54ffebaa337bd5f453fe_1523023902.pdf" target="_blank" class="material-link">Abrir PDF (ANDES) →</a>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <h2><span class="icon">📚</span>Bibliografia da Semana</h2>
+    <div class="bibliography">
+        <div class="bibliography-item">
+            <strong>OLIVIERO, Andrew; WOODWARD, Bill.</strong> Cabling: The Complete Guide to Copper and Fiber-Optic Networking. 4.ed. Sybex, 2010.<br>
+            <a href="https://archive.org/details/cablingcompleteg0000oliv" target="_blank">Consultar no Internet Archive</a>
+        </div>
+        <div class="bibliography-item">
+            <strong>PINHEIRO, Jose Maurício dos S.</strong> Guia Completo de Cabeamento de Redes. Rio de Janeiro: Campus, 2003.<br>
+            <a href="https://www.projetoderedes.com.br/artigos/artigo_identificacao_na_norma_606.php" target="_blank">Artigo do Autor sobre o Cap. 7</a>
+        </div>
+        <div class="bibliography-item">
+            <strong>MARIN, Paulo Sergio.</strong> Cabeamento Estruturado. São Paulo: Érica, 2004.<br>
+            <a href="https://books.google.com.br/books?id=f_U7DwAAQBAJ" target="_blank">Prévia no Google Books</a>
+        </div>
+    </div>
+</section>
+            <div class="success-box">
+                <strong>✅ Tarefa para Casa:</strong><br>
+                1. Finalizar documentação do rack montado<br>
+                2. Estudar sobre switches gerenciáveis e VLANs<br>
+                3. Revisar comandos básicos de configuração de switches<br>
+                4. Assistir vídeos sobre configuração de equipamentos de rede<br>
+                5. Ler sobre segurança em equipamentos de rede
+            </div>
+
+            <div class="info-box">
+                <strong>📝 Próxima Aula:</strong> Configuração de Switches, Roteadores e Access Points<br>
+                <strong>Preparação:</strong> Trazer anotações sobre VLANs e segurança de rede
+            </div>
+
+            <div class="navigation">
+                <a href="semana02.html" class="nav-button">⬅️ Semana Anterior</a>
+                <a href="semana04.html" class="nav-button">Próxima Semana ➡️</a>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

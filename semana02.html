@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semana 2 - Laboratório de Administração de Sistemas Operacionais de Redes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: #f0f2f5;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #003366 0%, #0066cc 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-content img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid white;
+            object-fit: cover;
+        }
+
+        .header-text h1 {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+
+        .header-text p {
+            font-size: 0.9em;
+            opacity: 0.95;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 0 20px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            height: fit-content;
+            position: sticky;
+            top: 120px;
+        }
+
+        .sidebar h2 {
+            color: #003366;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #0066cc;
+        }
+
+        .week-menu {
+            list-style: none;
+        }
+
+        .week-menu li {
+            margin-bottom: 8px;
+        }
+
+        .week-menu a {
+            display: block;
+            padding: 12px 15px;
+            background: #f8f9fa;
+            color: #003366;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+
+        .week-menu a:hover {
+            background: #e3f2fd;
+            border-left-color: #0066cc;
+            transform: translateX(5px);
+        }
+
+        .week-menu a.active {
+            background: #003366;
+            color: white;
+            border-left-color: #0066cc;
+        }
+
+        .week-badge {
+            background: #0066cc;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            margin-right: 8px;
+        }
+
+        .content {
+            flex: 1;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            min-height: 600px;
+        }
+
+        .week-title {
+            color: #003366;
+            font-size: 2em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .week-number {
+            background: linear-gradient(135deg, #003366 0%, #0066cc 100%);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .week-subtitle {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            color: #0066cc;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section h3 {
+            color: #003366;
+            font-size: 1.2em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .icon {
+            font-size: 1.2em;
+        }
+
+        .objectives-list, .topics-list {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #0066cc;
+        }
+
+        .objectives-list li, .topics-list li {
+            margin-bottom: 10px;
+            padding-left: 10px;
+        }
+
+        .video-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .video-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .video-thumbnail {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: linear-gradient(135deg, #003366 0%, #0066cc 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3em;
+            cursor: pointer;
+        }
+
+        .video-info {
+            padding: 15px;
+        }
+
+        .video-info h4 {
+            color: #003366;
+            margin-bottom: 8px;
+        }
+
+        .video-info p {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .video-link {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 15px;
+            background: #0066cc;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.9em;
+            transition: background 0.3s;
+        }
+
+        .video-link:hover {
+            background: #003366;
+        }
+
+        .materials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .material-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .material-card:hover {
+            border-color: #0066cc;
+            box-shadow: 0 5px 15px rgba(0,102,204,0.2);
+        }
+
+        .material-icon {
+            font-size: 2.5em;
+            color: #0066cc;
+            margin-bottom: 10px;
+        }
+
+        .material-card h4 {
+            color: #003366;
+            margin-bottom: 8px;
+        }
+
+        .material-card p {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .material-link {
+            color: #0066cc;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .material-link:hover {
+            text-decoration: underline;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #0066cc;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .success-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .danger-box {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .activity-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #0066cc;
+        }
+
+        .activity-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .activity-number {
+            background: #0066cc;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .activity-title {
+            color: #003366;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+
+        .bibliography {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .bibliography-item {
+            padding: 15px;
+            background: white;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border-left: 3px solid #0066cc;
+        }
+
+        .bibliography-item strong {
+            color: #003366;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .nav-button {
+            padding: 12px 25px;
+            background: #0066cc;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-button:hover {
+            background: #003366;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .nav-button.disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .step-by-step {
+            background: white;
+            border: 2px solid #0066cc;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .step {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .step:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .step-number {
+            background: #0066cc;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .step-content h4 {
+            color: #003366;
+            margin-bottom: 8px;
+        }
+
+        .step-content p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .tool-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .tool-card:hover {
+            border-color: #0066cc;
+            transform: scale(1.05);
+        }
+
+        .tool-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .tool-name {
+            color: #003366;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .tool-description {
+            color: #666;
+            font-size: 0.85em;
+        }
+
+        .comparison-table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table th {
+            background: #003366;
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .comparison-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        @media (max-width: 968px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                position: static;
+            }
+            
+            .header-text h1 {
+                font-size: 1.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <img src="foto_professor.png" alt="Professor">
+            <div class="header-text">
+                <h1>Laboratório de Administração de Sistemas Operacionais de Redes</h1>
+                <p>ISO-103 | 3º Semestre | Curso Superior de Tecnologia em Segurança da Informação</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <aside class="sidebar">
+            <h2>📅 Cronograma</h2>
+            <ul class="week-menu">
+                <li><a href="semana01.html"><span class="week-badge">S1</span>Semana 1</a></li>
+                <li><a href="semana02.html" class="active"><span class="week-badge">S2</span>Semana 2</a></li>
+                <li><a href="semana03.html"><span class="week-badge">S3</span>Semana 3</a></li>
+                <li><a href="semana04.html"><span class="week-badge">S4</span>Semana 4</a></li>
+                <li><a href="semana05.html"><span class="week-badge">S5</span>Semana 5</a></li>
+                <li><a href="semana06.html"><span class="week-badge">S6</span>Semana 6</a></li>
+                <li><a href="semana07.html"><span class="week-badge">S7</span>Semana 7</a></li>
+                <li><a href="semana08.html"><span class="week-badge">S8</span>Semana 8</a></li>
+                <li><a href="semana09.html"><span class="week-badge">S9</span>Semana 9</a></li>
+                <li><a href="semana10.html"><span class="week-badge">S10</span>Semana 10</a></li>
+                <li><a href="semana11.html"><span class="week-badge">S11</span>Semana 11</a></li>
+                <li><a href="semana12.html"><span class="week-badge">S12</span>Semana 12</a></li>
+                <li><a href="semana13.html"><span class="week-badge">S13</span>Semana 13</a></li>
+                <li><a href="semana14.html"><span class="week-badge">S14</span>Semana 14</a></li>
+                <li><a href="semana15.html"><span class="week-badge">S15</span>Semana 15</a></li>
+                <li><a href="semana16.html"><span class="week-badge">S16</span>Semana 16</a></li>
+                <li><a href="semana17.html"><span class="week-badge">S17</span>Semana 17</a></li>
+                <li><a href="semana18.html"><span class="week-badge">S18</span>Semana 18</a></li>
+                <li><a href="semana19.html"><span class="week-badge">S19</span>Semana 19</a></li>
+                <li><a href="semana20.html"><span class="week-badge">S20</span>Semana 20</a></li>
+            </ul>
+        </aside>
+
+        <main class="content">
+            <div class="week-title">
+                <div class="week-number">02</div>
+                <div>
+                    <h1>Semana 2</h1>
+                    <p style="color: #666; font-size: 0.5em; margin: 0;">Crimpagem de Cabos de Rede</p>
+                </div>
+            </div>
+
+            <p class="week-subtitle">
+    Práticas intensivas de crimpagem de cabos de rede, uso de alicate de crimpagem, aplicação dos padrões T568A e T568B, e testes de continuidade.
+    <strong>Esta base física é essencial para garantir a integridade dos dados e o desempenho dos protocolos na Administração de Sistemas Operacionais de Redes.</strong>
+</p>
+
+            <div class="info-box">
+                <strong>🎯 Carga Horária:</strong> 2 horas/aula<br>
+                <strong>📍 Local:</strong> Laboratório de Redes<br>
+                <strong>⚠️ Pré-requisito:</strong> Conhecimentos da Semana 1
+            </div>
+
+            <section class="section">
+                <h2><span class="icon">🎯</span>Objetivos de Aprendizagem</h2>
+                <ul class="objectives-list">
+                    <li>Dominar a técnica de crimpagem de cabos de rede RJ-45</li>
+                    <li>Utilizar corretamente o alicate de crimpagem</li>
+                    <li>Aplicar os padrões T568A e T568B na prática</li>
+                    <li>Diferenciar cabos diretos (straight-through) de cabos cruzados (crossover)</li>
+                    <li>Realizar testes de continuidade em cabos confeccionados</li>
+                    <li>Identificar e corrigir erros comuns de crimpagem</li>
+                    <li>Desenvolver agilidade e precisão na montagem de cabos</li>
+                </ul>
+            </section>
+
+            <section class="section">
+                <h2><span class="icon">📚</span>Conteúdo Programático</h2>
+                
+                <h3>1. Revisão dos Padrões T568A e T568B</h3>
+                <ul class="topics-list">
+                    <li><strong>T568A:</strong> Branco-Verde, Verde, Branco-Laranja, Azul, Branco-Azul, Laranja, Branco-Marrom, Marrom</li>
+                    <li><strong>T568B:</strong> Branco-Laranja, Laranja, Branco-Verde, Azul, Branco-Azul, Verde, Branco-Marrom, Marrom</li>
+                    <li>Aplicações e preferências de cada padrão</li>
+                    <li>Importância da consistência no padrão escolhido</li>
+                </ul>
+
+                <h3>2. Tipos de Cabos</h3>
+                <div class="comparison-table">
+                    <table style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Tipo de Cabo</th>
+                                <th>Extremidade 1</th>
+                                <th>Extremidade 2</th>
+                                <th>Aplicação</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Cabo Direto</strong></td>
+                                <td>T568A</td>
+                                <td>T568A</td>
+                                <td>Computador ↔ Switch/Hub</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Cabo Direto</strong></td>
+                                <td>T568B</td>
+                                <td>T568B</td>
+                                <td>Computador ↔ Switch/Hub</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Cabo Crossover</strong></td>
+                                <td>T568A</td>
+                                <td>T568B</td>
+                                <td>Computador ↔ Computador</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Cabo Crossover</strong></td>
+                                <td>T568B</td>
+                                <td>T568A</td>
+                                <td>Switch ↔ Switch</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>3. Ferramentas e Componentes</h3>
+                <div class="tools-grid">
+                    <div class="tool-card">
+                        <div class="tool-icon">✂️</div>
+                        <div class="tool-name">Alicate Crimpagem</div>
+                        <div class="tool-description">RJ-45 / RJ-11</div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">🔌</div>
+                        <div class="tool-name">Cabo UTP</div>
+                        <div class="tool-description">Cat5e ou Cat6</div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">🔗</div>
+                        <div class="tool-name">Conectores RJ-45</div>
+                        <div class="tool-description">8P8C</div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">🔪</div>
+                        <div class="tool-name">Decapador</div>
+                        <div class="tool-description">Remoção da capa</div>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <div class="tool-icon">📊</div>
+                        <div class="tool-name">Testador</div>
+                        <div class="tool-description">Continuidade</div>
+                    </div>
+                </div>
+
+                <h3>4. Processo de Crimpagem Passo a Passo</h3>
+                <div class="step-by-step">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Corte do Cabo</h4>
+                            <p>Corte o cabo UTP no comprimento desejado utilizando o alicate de crimpagem. Deixe sempre uma margem de segurança de 10-15cm a mais do que o necessário.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Remoção da Capa Externa</h4>
+                            <p>Utilizando o decapador ou a lâmina do alicate de crimpagem, remova aproximadamente 2,5 cm da capa externa do cabo. Cuidado para não danificar os fios internos.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Destrançamento dos Pares</h4>
+                            <p>Destrance os quatro pares de fios cuidadosamente. Evite destrançar mais do que o necessário para manter a integridade do sinal.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Organização dos Fios</h4>
+                            <p>Organize os fios na sequência correta conforme o padrão escolhido (T568A ou T568B). Mantenha os fios bem alinhados e paralelos.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>Nivelamento dos Fios</h4>
+                            <p>Corte os fios de forma reta e nivelada, deixando aproximadamente 1,2 a 1,5 cm a partir da capa externa. Use a parte de corte do alicate.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">6</div>
+                        <div class="step-content">
+                            <h4>Inserção no Conector RJ-45</h4>
+                            <p>Insira os fios no conector RJ-45 com o clip voltado para baixo. Certifique-se de que todos os fios chegam até o final do conector e que a capa externa entra no conector.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">7</div>
+                        <div class="step-content">
+                            <h4>Verificação Visual</h4>
+                            <p>Antes de crimpar, verifique se: todos os fios estão na ordem correta, todos chegam ao final do conector, a capa externa está dentro do conector.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">8</div>
+                        <div class="step-content">
+                            <h4>Crimpagem</h4>
+                            <p>Insira o conector no alicate de crimpagem e pressione firmemente até ouvir o "click". Aplique força suficiente para garantir o contato adequado.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">9</div>
+                        <div class="step-content">
+                            <h4>Teste de Continuidade</h4>
+                            <p>Utilize o testador de cabos para verificar se todos os pinos estão conectados corretamente e se não há curtos-circuitos ou fios cruzados.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="danger-box">
+                <strong>⚠️ ERROS COMUNS A EVITAR:</strong><br>
+                • Destrançar demais os pares (máximo 1,3 cm)<br>
+                • Fios não chegam até o final do conector<br>
+                • Capa externa não entra no conector (cabo solto)<br>
+                • Ordem incorreta dos fios<br>
+                • Pressão insuficiente na crimpagem<br>
+                • Danificar os fios ao remover a capa externa<br>
+                • Misturar padrões T568A e T568B no mesmo cabo direto
+            </div>
+
+            <section class="section">
+    <h2><span class="icon">🎬</span>Vídeos Recomendados</h2>
+    <div class="video-container">
+        <div class="video-card">
+            <div class="video-thumbnail">▶️</div>
+            <div class="video-info">
+                <h4>Como Crimpar Cabo de Rede em 1 Minuto</h4>
+                <p>Tutorial ultra rápido mostrando o processo na prática.</p>
+                <a href="https://www.youtube.com/watch?v=Lp4zSowLiSg" target="_blank" class="video-link">Assistir no YouTube</a>
+            </div>
+        </div>
+
+        <div class="video-card">
+            <div class="video-thumbnail">▶️</div>
+            <div class="video-info">
+                <h4>Padrão A ou B: Qual usar?</h4>
+                <p>Dica rápida sobre os padrões de cores para sua conexão.</p>
+                <a href="https://www.youtube.com/watch?v=AK6DSdb7lbA" target="_blank" class="video-link">Assistir no YouTube</a>
+            </div>
+        </div>
+
+        <div class="video-card">
+            <div class="video-thumbnail">▶️</div>
+            <div class="video-info">
+                <h4>Cabo Direto vs Crossover</h4>
+                <p>Entenda a diferença básica em menos de 1 minuto.</p>
+                <a href="https://www.youtube.com/watch?v=_HqLKWaXlks" target="_blank" class="video-link">Assistir no YouTube</a>
+            </div>
+        </div>
+
+        <div class="video-card">
+            <div class="video-thumbnail">▶️</div>
+            <div class="video-info">
+                <h4>Como usar Testador de Rede</h4>
+                <p>Demonstração rápida de como validar seus cabos.</p>
+                <a href="https://www.youtube.com/watch?v=e2wxsLm-TQA" target="_blank" class="video-link">Assistir no YouTube</a>
+            </div>
+        </div>
+
+        <div class="video-card">
+            <div class="video-thumbnail">▶️</div>
+            <div class="video-info">
+                <h4>RJ45 Vazado: Mais fácil de montar</h4>
+                <p>A técnica que evita erros comuns na hora de crimpar.</p>
+                <a href="https://www.youtube.com/watch?v=lCCBvAxEBL8" target="_blank" class="video-link">Assistir no YouTube</a>
+            </div>
+        </div>
+
+        <div class="video-card">
+            <div class="video-thumbnail">▶️</div>
+            <div class="video-info">
+                <h4>Aprenda a Sequência de Cores</h4>
+                <p>Guia visual rápido para não errar a ordem dos fios.</p>
+                <a href="https://www.youtube.com/watch?v=s6QPKJuOMno" target="_blank" class="video-link">Assistir no YouTube</a>
+            </div>
+        </div>
+    </div>
+</section>
+            <section class="section">
+                <h2><span class="icon">✏️</span>Atividades Práticas</h2>
+                
+                <div class="activity-card">
+                    <div class="activity-header">
+                        <div class="activity-number">1</div>
+                        <div class="activity-title">Demonstração pelo Professor</div>
+                    </div>
+                    <p><strong>Objetivo:</strong> Observar a técnica correta de crimpagem</p>
+                    <p><strong>Procedimento:</strong></p>
+                    <ul>
+                        <li>Acompanhar demonstração completa do processo</li>
+                        <li>Atentar para detalhes de cada etapa</li>
+                        <li>Fazer perguntas e esclarecer dúvidas</li>
+                        <li>Anotar pontos importantes e dicas</li>
+                    </ul>
+                    <p><strong>Duração:</strong> 15 minutos</p>
+                </div>
+
+                <div class="activity-card">
+                    <div class="activity-header">
+                        <div class="activity-number">2</div>
+                        <div class="activity-title">Primeira Crimpagem - Cabo Direto T568B</div>
+                    </div>
+                    <p><strong>Objetivo:</strong> Confeccionar o primeiro cabo de rede seguindo padrão T568B</p>
+                    <p><strong>Especificações:</strong></p>
+                    <ul>
+                        <li>Comprimento: 1,5 metros</li>
+                        <li>Padrão: T568B em ambas as extremidades</li>
+                        <li>Cabo: UTP Cat5e</li>
+                        <li>Teste obrigatório ao finalizar</li>
+                    </ul>
+                    <p><strong>Critérios de Avaliação:</strong></p>
+                    <ul>
+                        <li>Ordem correta dos fios</li>
+                        <li>Qualidade da crimpagem</li>
+                        <li>Aprovação no teste de continuidade</li>
+                        <li>Acabamento profissional</li>
+                    </ul>
+                    <p><strong>Duração:</strong> 30 minutos</p>
+                </div>
+
+                <div class="activity-card">
+                    <div class="activity-header">
+                        <div class="activity-number">3</div>
+                        <div class="activity-title">Segunda Crimpagem - Cabo Direto T568A</div>
+                    </div>
+                    <p><strong>Objetivo:</strong> Praticar com padrão T568A e comparar com T568B</p>
+                    <p><strong>Especificações:</strong></p>
+                    <ul>
+                        <li>Comprimento: 2 metros</li>
+                        <li>Padrão: T568A em ambas as extremidades</li>
+                        <li>Cabo: UTP Cat5e</li>
+                        <li>Identificar com etiqueta "T568A"</li>
+                    </ul>
+                    <p><strong>Duração:</strong> 25 minutos</p>
+                </div>
+
+                <div class="activity-card">
+                    <div class="activity-header">
+                        <div class="activity-number">4</div>
+                        <div class="activity-title">Terceira Crimpagem - Cabo Crossover</div>
+                    </div>
+                    <p><strong>Objetivo:</strong> Confeccionar cabo crossover para aplicações específicas</p>
+                    <p><strong>Especificações:</strong></p>
+                    <ul>
+                        <li>Comprimento: 1 metro</li>
+                        <li>Extremidade 1: T568B</li>
+                        <li>Extremidade 2: T568A</li>
+                        <li>Identificar com etiqueta "CROSSOVER"</li>
+                    </ul>
+                    <p><strong>Nota:</strong> Explicar quando este tipo de cabo é necessário (conexão direta entre computadores, switches antigos, etc.)</p>
+                    <p><strong>Duração:</strong> 30 minutos</p>
+                </div>
+
+                <div class="activity-card">
+                    <div class="activity-header">
+                        <div class="activity-number">5</div>
+                        <div class="activity-title">Desafio de Velocidade</div>
+                    </div>
+                    <p><strong>Objetivo:</strong> Desenvolver agilidade mantendo a qualidade</p>
+                    <p><strong>Procedimento:</strong></p>
+                    <ul>
+                        <li>Confeccionar cabo direto de 1m em menor tempo possível</li>
+                        <li>Padrão livre (T568A ou T568B)</li>
+                        <li>Deve passar no teste de continuidade</li>
+                        <li>Registrar tempo de execução</li>
+                    </ul>
+                    <p><strong>Meta Profissional:</strong> Menos de 3 minutos</p>
+                    <p><strong>Duração:</strong> 20 minutos</p>
+                </div>
+            </section>
+
+            <div class="info-box">
+                <strong>📝 REGISTRO DE DESEMPENHO</strong><br>
+                Os alunos devem registrar os resultados de cada cabo confeccionado:<br>
+                • Número do cabo<br>
+                • Tipo (direto/crossover)<br>
+                • Padrão usado<br>
+                • Comprimento<br>
+                • Resultado do teste<br>
+                • Tempo de execução<br>
+                • Observações/dificuldades
+            </div>
+
+            <section class="section">
+    <h2><span class="icon">📖</span>Material de Apoio</h2>
+    <div class="materials-grid">
+        <div class="material-card">
+            <div class="material-icon">📄</div>
+            <h4>Guia de Crimpagem</h4>
+            <p>Manual passo a passo ilustrado (WikiHow)</p>
+            <a href="https://pt.wikihow.com/Crimpar-um-Cabo-de-Rede" target="_blank" class="material-link">Acessar Guia →</a>
+        </div>
+
+        <div class="material-card">
+            <div class="material-icon">🎨</div>
+            <h4>Diagrama de Pinagem</h4>
+            <p>T568A e T568B (Imagem de Referência)</p>
+            <a href="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/T568A_with_RJ-45.svg/1200px-T568A_with_RJ-45.svg.png" target="_blank" class="material-link">Ver Imagem →</a>
+        </div>
+
+        <div class="material-card">
+            <div class="material-icon">📋</div>
+            <h4>Apostila de Redes</h4>
+            <p>Conceitos de cabeamento e infraestrutura (IFRN)</p>
+            <a href="https://docente.ifrn.edu.br/moisesoliveira/disciplinas/redes-de-computadores/apostila-de-redes-de-computadores" target="_blank" class="material-link">Baixar Material →</a>
+        </div>
+
+        <div class="material-card">
+            <div class="material-icon">📊</div>
+            <h4>Curso Online Grátis</h4>
+            <p>Introdução ao Cabeamento Estruturado</p>
+            <a href="https://www.iped.com.br/cursos-gratis/informatica/curso/introducao-ao-cabeamento-estruturado" target="_blank" class="material-link">Acessar Curso →</a>
+        </div>
+
+        <div class="material-card">
+            <div class="material-icon">🔧</div>
+            <h4>Manual de Problemas</h4>
+            <p>Diagnóstico de problemas em cabos (Cisco)</p>
+            <a href="https://www.cisco.com/c/pt_br/support/docs/switches/catalyst-6500-series-switches/12027-53.html" target="_blank" class="material-link">Ler Soluções →</a>
+        </div>
+
+        <div class="material-card">
+            <div class="material-icon">📹</div>
+            <h4>Vídeos Complementares</h4>
+            <p>Playlist com tutoriais selecionados</p>
+            <a href="https://www.youtube.com/playlist?list=PLpY_W9Pio3A_PzD1V_pM80jQG74y_tL_U" target="_blank" class="material-link">Acessar Playlist →</a>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <h2><span class="icon">📚</span>Bibliografia da Semana (Acesso Gratuito)</h2>
+    <div class="bibliography">
+        <div class="bibliography-item">
+            <strong>COMITÊ GESTOR DA INTERNET NO BRASIL.</strong> Apostila de Redes de Computadores. (Material Aberto).<br>
+            <a href="https://nic.br/media/docs/publicacoes/2/apostila_redes.
+
+            <div class="warning-box">
+                <strong>⚠️ Para a Próxima Aula:</strong><br>
+                • Estudar sobre patch panels<br>
+                • Assistir aos vídeos sobre uso de alicate punch down<br>
+                • Revisar conceitos de organização de racks
+            </div>
+
+            <div class="success-box">
+                <strong>✅ Tarefa para Casa:</strong><br>
+                1. Praticar mentalmente os passos de crimpagem<br>
+                2. Memorizar as sequências T568A e T568B<br>
+                3. Assistir aos vídeos recomendados<br>
+                4. Ler os capítulos da bibliografia<br>
+                5. Pesquisar sobre ferramentas de teste de cabos mais avançadas
+            </div>
+
+            <div class="navigation">
+                <a href="semana01.html" class="nav-button">⬅️ Semana Anterior</a>
+                <a href="semana03.html" class="nav-button">Próxima Semana ➡️</a>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semana 4 — Switches & Roteadores | ISO-103</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Source+Code+Pro:wght@400;500;600&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #003366;
+            --blue: #0066cc;
+            --blue2: #0080ff;
+            --light-blue: #e3f2fd;
+            --bg: #f0f2f5;
+            --white: #ffffff;
+            --text: #1a2a3a;
+            --muted: #64748b;
+            --border: #dde3ea;
+            --green: #10b981;
+            --green2: #059669;
+            --yellow: #f59e0b;
+            --red: #ef4444;
+            --purple: #8b5cf6;
+            --orange: #f97316;
+            --xp: #0066cc;
+            --radius: 12px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* ── HEADER ── */
+        .header {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+            color: white;
+            padding: 18px 0;
+            box-shadow: 0 3px 20px rgba(0,0,0,0.25);
+            position: sticky; top: 0; z-index: 1000;
+        }
+        .header-content {
+            max-width: 1400px; margin: 0 auto; padding: 0 20px;
+            display: flex; align-items: center; gap: 16px;
+        }
+        .header-content img {
+            width: 52px; height: 52px; border-radius: 50%;
+            border: 3px solid rgba(255,255,255,0.6); object-fit: cover;
+        }
+        .header-text h1 { font-size: 1.35em; font-weight: 700; }
+        .header-text p { font-size: 0.85em; opacity: 0.9; }
+
+        /* HUD no header */
+        .header-hud {
+            margin-left: auto;
+            display: flex; align-items: center; gap: 14px;
+        }
+        .hud-stat {
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px; padding: 6px 14px;
+            text-align: center; min-width: 70px;
+        }
+        .hud-stat .val {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.4em; font-weight: 700; color: #7dd3fc;
+            display: block; line-height: 1;
+        }
+        .hud-stat .lbl {
+            font-size: 0.62em; opacity: 0.8; letter-spacing: 1px;
+            text-transform: uppercase; display: block; margin-top: 2px;
+        }
+        .hud-xp-wrap {
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px; padding: 7px 14px; min-width: 140px;
+        }
+        .hud-xp-label {
+            font-size: 0.65em; opacity: 0.8; text-transform: uppercase;
+            letter-spacing: 1px; margin-bottom: 4px;
+            display: flex; justify-content: space-between;
+        }
+        .hud-xp-bar-bg {
+            background: rgba(0,0,0,0.3); border-radius: 100px;
+            height: 8px; overflow: hidden;
+        }
+        .hud-xp-bar {
+            height: 100%; background: linear-gradient(90deg, #38bdf8, #7dd3fc);
+            border-radius: 100px; transition: width 1s ease;
+            box-shadow: 0 0 8px rgba(56,189,248,0.6);
+        }
+
+        /* ── LAYOUT ── */
+        .container {
+            max-width: 1400px; margin: 24px auto; padding: 0 20px;
+            display: flex; gap: 22px;
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: 270px; flex-shrink: 0;
+            display: flex; flex-direction: column; gap: 16px;
+        }
+        .sidebar-card {
+            background: var(--white); border-radius: var(--radius);
+            padding: 18px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+        .sidebar-card h2 {
+            color: var(--navy); font-size: 1em; font-weight: 800;
+            margin-bottom: 12px; padding-bottom: 8px;
+            border-bottom: 2px solid var(--blue);
+            display: flex; align-items: center; gap: 6px;
+        }
+        .week-menu { list-style: none; }
+        .week-menu li { margin-bottom: 5px; }
+        .week-menu a {
+            display: flex; align-items: center; gap: 8px;
+            padding: 9px 12px;
+            background: #f8f9fa; color: var(--navy);
+            text-decoration: none; border-radius: 7px;
+            transition: all 0.2s; border-left: 3px solid transparent;
+            font-size: 0.88em; font-weight: 600;
+        }
+        .week-menu a:hover { background: var(--light-blue); border-left-color: var(--blue); transform: translateX(4px); }
+        .week-menu a.active {
+            background: var(--navy); color: white;
+            border-left-color: var(--blue2);
+        }
+        .week-badge {
+            background: var(--blue); color: white;
+            padding: 1px 7px; border-radius: 10px;
+            font-size: 0.78em; font-weight: 700; flex-shrink: 0;
+        }
+        .week-menu a.active .week-badge { background: var(--blue2); }
+
+        /* Progresso sidebar */
+        .progress-block { margin-bottom: 10px; }
+        .progress-label {
+            display: flex; justify-content: space-between;
+            font-size: 0.78em; font-weight: 700; color: var(--muted);
+            margin-bottom: 4px;
+        }
+        .progress-bar-bg {
+            background: #e2e8f0; border-radius: 100px; height: 8px; overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%; background: linear-gradient(90deg, var(--navy), var(--blue));
+            border-radius: 100px; transition: width 1s ease;
+        }
+        .progress-bar.green { background: linear-gradient(90deg, #059669, #10b981); }
+        .progress-bar.yellow { background: linear-gradient(90deg, #d97706, #f59e0b); }
+        .progress-bar.purple { background: linear-gradient(90deg, #7c3aed, #8b5cf6); }
+
+        /* Conquistas sidebar */
+        .ach-mini-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;
+        }
+        .ach-mini {
+            aspect-ratio: 1; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2em;
+            background: #f1f5f9; border: 2px solid #e2e8f0;
+            filter: grayscale(1) opacity(0.4);
+            transition: all 0.3s; cursor: default;
+            position: relative;
+        }
+        .ach-mini.unlocked {
+            filter: none;
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border-color: #f59e0b;
+            box-shadow: 0 0 12px rgba(245,158,11,0.3);
+        }
+        .ach-mini[title]:hover::after {
+            content: attr(title);
+            position: absolute; bottom: calc(100% + 6px); left: 50%;
+            transform: translateX(-50%);
+            background: var(--navy); color: white;
+            font-family: 'Nunito', sans-serif; font-size: 0.65em;
+            padding: 4px 8px; border-radius: 5px; white-space: nowrap;
+            z-index: 100; pointer-events: none;
+        }
+
+        /* ── MAIN CONTENT ── */
+        .main-content { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 20px; }
+
+        /* ── HERO ── */
+        .hero {
+            background: linear-gradient(135deg, var(--navy) 0%, #0055aa 60%, var(--blue) 100%);
+            border-radius: 16px; padding: 32px 36px;
+            color: white; position: relative; overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0,51,102,0.35);
+        }
+        .hero::before {
+            content: '';
+            position: absolute; top: -60px; right: -60px;
+            width: 300px; height: 300px; border-radius: 50%;
+            background: rgba(255,255,255,0.04);
+        }
+        .hero::after {
+            content: '';
+            position: absolute; bottom: -40px; right: 60px;
+            width: 180px; height: 180px; border-radius: 50%;
+            background: rgba(0,128,255,0.15);
+        }
+        .hero-top { display: flex; align-items: flex-start; gap: 20px; margin-bottom: 20px; }
+        .hero-badge-num {
+            background: rgba(255,255,255,0.15);
+            border: 2px solid rgba(255,255,255,0.3);
+            width: 64px; height: 64px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 2em; font-weight: 700; flex-shrink: 0;
+            color: #7dd3fc;
+        }
+        .hero h1 { font-size: 1.9em; font-weight: 800; margin-bottom: 4px; }
+        .hero-sub { opacity: 0.85; font-size: 1em; }
+        .hero-meta {
+            display: flex; gap: 12px; flex-wrap: wrap;
+        }
+        .hero-chip {
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 100px; padding: 5px 14px;
+            font-size: 0.82em; font-weight: 600;
+            display: flex; align-items: center; gap: 5px;
+        }
+
+        /* ── CARD ── */
+        .card {
+            background: var(--white); border-radius: var(--radius);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+            overflow: hidden;
+        }
+        .card-header {
+            padding: 18px 24px 14px;
+            display: flex; align-items: center; gap: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+        .card-icon {
+            width: 36px; height: 36px; border-radius: 9px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1em; flex-shrink: 0;
+        }
+        .ci-blue   { background: #dbeafe; }
+        .ci-green  { background: #d1fae5; }
+        .ci-yellow { background: #fef3c7; }
+        .ci-purple { background: #ede9fe; }
+        .ci-orange { background: #ffedd5; }
+        .ci-red    { background: #fee2e2; }
+        .card-header h2 {
+            font-size: 1.05em; font-weight: 800; color: var(--navy);
+        }
+        .card-header .xp-badge {
+            margin-left: auto; background: linear-gradient(135deg, var(--navy), var(--blue));
+            color: white; padding: 3px 12px; border-radius: 100px;
+            font-size: 0.75em; font-weight: 700; white-space: nowrap;
+        }
+        .card-body { padding: 20px 24px; }
+
+        /* ── OBJETIVOS ── */
+        .obj-list { list-style: none; display: grid; gap: 8px; }
+        .obj-item {
+            display: flex; align-items: flex-start; gap: 10px;
+            padding: 10px 14px; border-radius: 8px;
+            background: #f8fafc; border: 1px solid var(--border);
+            font-size: 0.92em; font-weight: 600; cursor: pointer;
+            transition: all 0.2s;
+        }
+        .obj-item:hover { background: var(--light-blue); border-color: var(--blue); }
+        .obj-item.checked {
+            background: #f0fdf4; border-color: var(--green);
+            text-decoration: line-through; color: var(--muted);
+        }
+        .obj-check {
+            width: 22px; height: 22px; border-radius: 50%;
+            border: 2px solid var(--border); flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s; font-size: 0.8em;
+        }
+        .obj-item.checked .obj-check {
+            background: var(--green); border-color: var(--green); color: white;
+        }
+
+        /* ── TOPICOS GRID ── */
+        .topic-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px;
+        }
+        .topic-block {
+            background: #f8fafc; border-radius: 10px; padding: 16px;
+            border: 1px solid var(--border); border-top: 3px solid;
+        }
+        .topic-block.t-switch  { border-top-color: var(--blue); }
+        .topic-block.t-router  { border-top-color: var(--green); }
+        .topic-block.t-wifi    { border-top-color: var(--purple); }
+        .topic-block h3 {
+            font-size: 0.9em; font-weight: 800; margin-bottom: 10px;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .topic-block.t-switch h3 { color: var(--blue); }
+        .topic-block.t-router h3 { color: var(--green2); }
+        .topic-block.t-wifi   h3 { color: var(--purple); }
+        .topic-tag {
+            display: inline-flex; align-items: center;
+            background: white; border: 1px solid var(--border);
+            border-radius: 5px; padding: 3px 9px;
+            font-size: 0.78em; font-weight: 600; color: var(--text);
+            margin: 3px 2px; transition: all 0.2s;
+        }
+
+        /* ── MISSÕES / ATIVIDADES ── */
+        .mission-list { display: flex; flex-direction: column; gap: 14px; }
+        .mission {
+            border: 2px solid var(--border); border-radius: 12px;
+            overflow: hidden; transition: all 0.2s;
+        }
+        .mission.done { border-color: var(--green); }
+        .mission-header {
+            padding: 14px 18px; display: flex; align-items: center; gap: 14px;
+            cursor: pointer; user-select: none;
+            background: #f8fafc; transition: background 0.2s;
+        }
+        .mission.done .mission-header { background: #f0fdf4; }
+        .mission-header:hover { background: #f0f4ff; }
+        .mission-num {
+            width: 38px; height: 38px; border-radius: 9px;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Rajdhani', sans-serif; font-size: 1.2em; font-weight: 700;
+            flex-shrink: 0; color: white;
+            background: linear-gradient(135deg, var(--navy), var(--blue));
+        }
+        .mission.done .mission-num { background: linear-gradient(135deg, #059669, #10b981); }
+        .mission-info { flex: 1; }
+        .mission-title { font-weight: 800; font-size: 0.95em; color: var(--navy); }
+        .mission.done .mission-title { color: var(--green2); }
+        .mission-meta { font-size: 0.78em; color: var(--muted); font-weight: 600; margin-top: 2px; }
+        .mission-xp {
+            background: linear-gradient(135deg, var(--navy), var(--blue));
+            color: white; padding: 4px 12px; border-radius: 100px;
+            font-size: 0.75em; font-weight: 700;
+        }
+        .mission.done .mission-xp { background: linear-gradient(135deg, #059669, #10b981); }
+        .mission-toggle { font-size: 0.85em; color: var(--muted); transition: transform 0.3s; }
+        .mission.open .mission-toggle { transform: rotate(180deg); }
+        .mission-body {
+            padding: 0 18px; max-height: 0; overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.3s;
+        }
+        .mission.open .mission-body { max-height: 600px; padding: 0 18px 18px; }
+        .mission-steps { margin-top: 12px; }
+        .step {
+            display: flex; gap: 12px; margin-bottom: 10px; align-items: flex-start;
+            font-size: 0.88em;
+        }
+        .step-dot {
+            width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
+            background: var(--blue); color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.75em; font-weight: 700; margin-top: 1px;
+        }
+        .step p { line-height: 1.5; color: var(--text); }
+        .step code {
+            background: var(--navy); color: #7dd3fc;
+            font-family: 'Source Code Pro', monospace;
+            padding: 1px 7px; border-radius: 4px; font-size: 0.9em;
+        }
+        .cmd-block {
+            background: #0d1f35; border-radius: 8px; padding: 12px 16px;
+            font-family: 'Source Code Pro', monospace; font-size: 0.82em;
+            line-height: 1.8; margin: 10px 0; overflow-x: auto;
+        }
+        .cmd-block .prompt { color: #38bdf8; }
+        .cmd-block .cmd    { color: #a3e635; }
+        .cmd-block .comment { color: #64748b; }
+        .cmd-block .output { color: #cbd5e1; }
+        .complete-btn {
+            margin-top: 14px; padding: 10px 22px;
+            background: linear-gradient(135deg, var(--navy), var(--blue));
+            color: white; border: none; border-radius: 8px;
+            font-family: 'Nunito', sans-serif; font-size: 0.88em;
+            font-weight: 700; cursor: pointer; transition: all 0.2s;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .complete-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,51,102,0.3); }
+        .complete-btn:disabled { background: linear-gradient(135deg, #059669, #10b981); cursor: default; }
+
+        /* ── QUIZ ── */
+        .quiz-wrap { display: flex; flex-direction: column; gap: 0; }
+        .q-progress-bar-bg {
+            height: 6px; background: #e2e8f0; border-radius: 100px;
+            margin-bottom: 18px; overflow: hidden;
+        }
+        .q-progress-bar {
+            height: 100%; background: linear-gradient(90deg, var(--navy), var(--blue));
+            border-radius: 100px; transition: width 0.5s ease;
+        }
+        .qcard { display: none; animation: fadeUp 0.3s ease; }
+        .qcard.active { display: block; }
+        @keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+        .q-num-tag {
+            font-family: 'Rajdhani', sans-serif; font-size: 0.82em; font-weight: 600;
+            color: var(--muted); letter-spacing: 1px; margin-bottom: 8px;
+        }
+        .q-text {
+            font-size: 1em; font-weight: 700; color: var(--navy);
+            margin-bottom: 14px; line-height: 1.5;
+        }
+        .q-opts { display: flex; flex-direction: column; gap: 8px; }
+        .qopt {
+            padding: 11px 16px; border-radius: 9px;
+            background: #f8fafc; border: 2px solid var(--border);
+            text-align: left; cursor: pointer; font-family: 'Nunito', sans-serif;
+            font-size: 0.9em; font-weight: 600; color: var(--text);
+            transition: all 0.2s; display: flex; align-items: center; gap: 10px;
+        }
+        .qopt:hover:not(:disabled) { background: var(--light-blue); border-color: var(--blue); transform: translateX(4px); }
+        .qopt .opt-letter {
+            width: 26px; height: 26px; border-radius: 6px;
+            background: var(--border); color: var(--muted);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8em; font-weight: 800; flex-shrink: 0; transition: all 0.2s;
+        }
+        .qopt.correct { background: #f0fdf4; border-color: var(--green); }
+        .qopt.correct .opt-letter { background: var(--green); color: white; }
+        .qopt.wrong   { background: #fef2f2; border-color: var(--red); }
+        .qopt.wrong .opt-letter { background: var(--red); color: white; }
+        .q-feedback {
+            margin-top: 12px; padding: 12px 16px; border-radius: 8px;
+            font-size: 0.88em; font-weight: 600; display: none;
+        }
+        .q-feedback.show { display: block; }
+        .q-feedback.ok   { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+        .q-feedback.fail { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+        .q-next {
+            margin-top: 12px; padding: 9px 22px;
+            background: linear-gradient(135deg, var(--navy), var(--blue));
+            color: white; border: none; border-radius: 8px;
+            font-family: 'Nunito', sans-serif; font-size: 0.88em;
+            font-weight: 700; cursor: pointer; display: none;
+            transition: all 0.2s;
+        }
+        .q-next.show { display: inline-flex; align-items: center; gap: 6px; }
+        .q-next:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,51,102,0.3); }
+        .q-result {
+            text-align: center; display: none; padding: 20px 0;
+        }
+        .q-result.show { display: block; }
+        .q-score-big {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 4em; font-weight: 700;
+            color: var(--navy); line-height: 1;
+        }
+        .q-score-msg { color: var(--muted); font-size: 0.95em; margin: 8px 0 20px; font-weight: 600; }
+        .q-restart {
+            padding: 10px 24px; border: 2px solid var(--border); border-radius: 8px;
+            background: white; color: var(--navy); font-family: 'Nunito', sans-serif;
+            font-size: 0.88em; font-weight: 700; cursor: pointer; transition: all 0.2s;
+        }
+        .q-restart:hover { background: var(--light-blue); border-color: var(--blue); }
+
+        /* ── VÍDEOS ── */
+        .video-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+        .video-card {
+            border-radius: 10px; overflow: hidden;
+            border: 1px solid var(--border); transition: all 0.2s;
+            background: white;
+        }
+        .video-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+        .video-thumb {
+            width: 100%; aspect-ratio: 16/9;
+            background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2.5em; color: rgba(255,255,255,0.9);
+            position: relative;
+        }
+        .video-play-circle {
+            width: 52px; height: 52px; border-radius: 50%;
+            background: rgba(255,255,255,0.2); border: 3px solid rgba(255,255,255,0.5);
+            display: flex; align-items: center; justify-content: center; font-size: 0.7em;
+        }
+        .video-info { padding: 14px; }
+        .video-info h4 { font-size: 0.88em; font-weight: 800; color: var(--navy); margin-bottom: 4px; }
+        .video-info p { font-size: 0.78em; color: var(--muted); margin-bottom: 10px; font-weight: 600; }
+        .video-link {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 6px 14px; background: var(--blue); color: white;
+            text-decoration: none; border-radius: 6px; font-size: 0.8em;
+            font-weight: 700; transition: all 0.2s;
+        }
+        .video-link:hover { background: var(--navy); }
+
+        /* ── CONQUISTAS ── */
+        .ach-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+        .ach {
+            background: #f8fafc; border: 2px solid var(--border); border-radius: 12px;
+            padding: 16px 12px; text-align: center;
+            filter: grayscale(1) opacity(0.4); transition: all 0.4s;
+        }
+        .ach.unlocked {
+            filter: none; border-color: #f59e0b;
+            background: linear-gradient(135deg, #fffbeb, #fef3c7);
+            box-shadow: 0 0 20px rgba(245,158,11,0.2);
+        }
+        .ach-icon { font-size: 2em; margin-bottom: 7px; }
+        .ach-name { font-size: 0.72em; font-weight: 800; color: var(--navy); }
+        .ach-desc { font-size: 0.68em; color: var(--muted); margin-top: 3px; font-weight: 600; }
+
+        /* ── GLOSSÁRIO ── */
+        .gloss-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+        .gloss-item {
+            background: #f8fafc; border: 1px solid var(--border);
+            border-radius: 9px; padding: 12px 14px;
+            border-left: 3px solid var(--blue); cursor: pointer;
+            transition: all 0.2s;
+        }
+        .gloss-item:hover { background: var(--light-blue); border-left-color: var(--navy); }
+        .gloss-term { font-size: 0.85em; font-weight: 800; color: var(--navy); margin-bottom: 4px; }
+        .gloss-def { font-size: 0.78em; color: var(--muted); font-weight: 600; line-height: 1.45; }
+
+        /* ── BIBIBLIOGRAFIA ── */
+        .bib-item {
+            padding: 12px 16px; background: #f8fafc;
+            border-radius: 8px; border-left: 3px solid var(--blue);
+            margin-bottom: 10px; font-size: 0.88em; color: var(--text); font-weight: 600;
+        }
+
+        /* ── NAVEGAÇÃO BOTTOM ── */
+        .bot-nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 18px 24px; border-top: 1px solid var(--border);
+            background: white; border-radius: 0 0 var(--radius) var(--radius);
+        }
+        .nav-btn {
+            padding: 11px 22px; background: var(--blue); color: white;
+            text-decoration: none; border-radius: 8px;
+            font-weight: 700; font-size: 0.88em; transition: all 0.2s;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .nav-btn:hover { background: var(--navy); transform: translateY(-2px); }
+        .nav-btn.ghost { background: transparent; color: var(--navy); border: 2px solid var(--border); }
+        .nav-btn.ghost:hover { background: var(--light-blue); border-color: var(--blue); }
+
+        /* ── TOAST ── */
+        .toast {
+            position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+            background: var(--navy); color: white;
+            border-radius: 12px; padding: 14px 20px;
+            display: flex; align-items: center; gap: 12px;
+            box-shadow: 0 8px 28px rgba(0,51,102,0.4);
+            transform: translateY(100px) scale(0.9); opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
+            max-width: 320px;
+        }
+        .toast.show { transform: translateY(0) scale(1); opacity: 1; }
+        .toast-icon { font-size: 1.6em; }
+        .toast-title { font-weight: 800; font-size: 0.92em; }
+        .toast-msg { font-size: 0.8em; opacity: 0.85; margin-top: 2px; }
+
+        /* ── FINAL SCORE ── */
+        .final-box {
+            background: linear-gradient(135deg, var(--navy) 0%, #0055aa 100%);
+            border-radius: 14px; padding: 28px; text-align: center; color: white;
+            margin-top: 4px;
+        }
+        .final-xp-num {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 3.5em; font-weight: 700; color: #7dd3fc;
+        }
+        .final-label { font-size: 0.8em; opacity: 0.7; letter-spacing: 2px; text-transform: uppercase; }
+
+        @media (max-width: 900px) {
+            .container { flex-direction: column; }
+            .sidebar { width: 100%; }
+            .header-hud { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+    <div class="toast-icon" id="toast-icon">⚡</div>
+    <div>
+        <div class="toast-title" id="toast-title">+XP</div>
+        <div class="toast-msg" id="toast-msg"></div>
+    </div>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+    <div class="header-content">
+        <img src="foto_professor.png" alt="Professor">
+        <div class="header-text">
+            <h1>Laboratório de Administração de Sistemas Operacionais de Redes</h1>
+            <p>ISO-103 | 3º Semestre | Segurança da Informação · FATEC Ourinhos</p>
+        </div>
+        <div class="header-hud">
+            <div class="hud-stat">
+                <span class="val" id="hud-xp">0</span>
+                <span class="lbl">XP Total</span>
+            </div>
+            <div class="hud-stat">
+                <span class="val" id="hud-streak">0</span>
+                <span class="lbl">Streak</span>
+            </div>
+            <div class="hud-stat">
+                <span class="val" id="hud-badges">0</span>
+                <span class="lbl">Badges</span>
+            </div>
+            <div class="hud-xp-wrap">
+                <div class="hud-xp-label">
+                    <span id="hud-level">Recruta</span>
+                    <span id="hud-xp-pct">0%</span>
+                </div>
+                <div class="hud-xp-bar-bg">
+                    <div class="hud-xp-bar" id="hud-bar" style="width:0%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+
+    <!-- ── SIDEBAR ── -->
+    <aside class="sidebar">
+
+        <div class="sidebar-card">
+            <h2>📅 Cronograma</h2>
+            <ul class="week-menu">
+                <li><a href="semana01.html"><span class="week-badge">S1</span>Semana 1</a></li>
+                <li><a href="semana02.html"><span class="week-badge">S2</span>Semana 2</a></li>
+                <li><a href="semana03.html"><span class="week-badge">S3</span>Semana 3</a></li>
+                <li><a href="semana04.html" class="active"><span class="week-badge">S4</span>Semana 4</a></li>
+                <li><a href="semana05.html"><span class="week-badge">S5</span>Semana 5</a></li>
+                <li><a href="semana06.html"><span class="week-badge">S6</span>Semana 6</a></li>
+                <li><a href="semana07.html"><span class="week-badge">S7</span>Semana 7</a></li>
+                <li><a href="semana08.html"><span class="week-badge">S8</span>Semana 8</a></li>
+                <li><a href="semana09.html"><span class="week-badge">S9</span>Semana 9</a></li>
+                <li><a href="semana10.html"><span class="week-badge">S10</span>Semana 10</a></li>
+                <li><a href="semana11.html"><span class="week-badge">S11</span>Semana 11</a></li>
+                <li><a href="semana12.html"><span class="week-badge">S12</span>Semana 12</a></li>
+                <li><a href="semana13.html"><span class="week-badge">S13</span>Semana 13</a></li>
+                <li><a href="semana14.html"><span class="week-badge">S14</span>Semana 14</a></li>
+                <li><a href="semana15.html"><span class="week-badge">S15</span>Semana 15</a></li>
+                <li><a href="semana16.html"><span class="week-badge">S16</span>Semana 16</a></li>
+                <li><a href="semana17.html"><span class="week-badge">S17</span>Semana 17</a></li>
+                <li><a href="semana18.html"><span class="week-badge">S18</span>Semana 18</a></li>
+                <li><a href="semana19.html"><span class="week-badge">S19</span>Semana 19</a></li>
+                <li><a href="semana20.html"><span class="week-badge">S20</span>Semana 20</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-card">
+            <h2>📊 Progresso da Aula</h2>
+            <div class="progress-block">
+                <div class="progress-label"><span>Objetivos</span><span id="obj-pct">0%</span></div>
+                <div class="progress-bar-bg"><div class="progress-bar" id="obj-bar" style="width:0%"></div></div>
+            </div>
+            <div class="progress-block">
+                <div class="progress-label"><span>Missões</span><span id="mis-pct">0%</span></div>
+                <div class="progress-bar-bg"><div class="progress-bar green" id="mis-bar" style="width:0%"></div></div>
+            </div>
+            <div class="progress-block">
+                <div class="progress-label"><span>Quiz</span><span id="quiz-pct">0%</span></div>
+                <div class="progress-bar-bg"><div class="progress-bar yellow" id="quiz-bar" style="width:0%"></div></div>
+            </div>
+            <div class="progress-block">
+                <div class="progress-label"><span>Conquistas</span><span id="ach-pct">0/8</span></div>
+                <div class="progress-bar-bg"><div class="progress-bar purple" id="ach-bar" style="width:0%"></div></div>
+            </div>
+        </div>
+
+        <div class="sidebar-card">
+            <h2>🏆 Conquistas</h2>
+            <div class="ach-mini-grid">
+                <div class="ach-mini" id="am-start"    title="Iniciou a Semana 4">🚀</div>
+                <div class="ach-mini" id="am-obj"      title="Todos os objetivos marcados">🎯</div>
+                <div class="ach-mini" id="am-vlan"     title="Missão VLAN completa">🌐</div>
+                <div class="ach-mini" id="am-router"   title="Missão Roteador completa">📡</div>
+                <div class="ach-mini" id="am-wifi"     title="Missão Wi-Fi completa">📶</div>
+                <div class="ach-mini" id="am-integra"  title="Integração completa">🔗</div>
+                <div class="ach-mini" id="am-quiz7"    title="Quiz: 7+ acertos">🎓</div>
+                <div class="ach-mini" id="am-perfect"  title="Quiz perfeito!">💎</div>
+            </div>
+        </div>
+
+    </aside>
+
+    <!-- ── MAIN ── -->
+    <main class="main-content">
+
+        <!-- HERO -->
+        <div class="hero">
+            <div class="hero-top">
+                <div class="hero-badge-num">04</div>
+                <div>
+                    <h1>Switches, Roteadores e Access Points</h1>
+                    <p class="hero-sub">Configuração de VLANs · Roteamento · Wi-Fi Seguro · Infraestrutura Completa</p>
+                </div>
+            </div>
+            <div class="hero-meta">
+                <div class="hero-chip">⏱️ 2h/aula</div>
+                <div class="hero-chip">🔬 Laboratório de Redes</div>
+                <div class="hero-chip">⚡ 420 XP disponíveis</div>
+                <div class="hero-chip">🏆 8 conquistas</div>
+            </div>
+        </div>
+
+        <!-- OBJETIVOS -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon ci-blue">🎯</div>
+                <h2>Objetivos de Aprendizagem</h2>
+                <span class="xp-badge">+30 XP ao marcar todos</span>
+            </div>
+            <div class="card-body">
+                <p style="font-size:0.85em;color:var(--muted);font-weight:600;margin-bottom:12px">Clique em cada objetivo conforme for cumprindo durante a aula 👇</p>
+                <ul class="obj-list">
+                    <li class="obj-item" onclick="toggleObj(this,0)">
+                        <div class="obj-check"></div>
+                        <span>Configurar VLANs em switches gerenciáveis</span>
+                    </li>
+                    <li class="obj-item" onclick="toggleObj(this,1)">
+                        <div class="obj-check">✓</div>
+                        <span>Realizar configuração básica de roteadores</span>
+                    </li>
+                    <li class="obj-item" onclick="toggleObj(this,2)">
+                        <div class="obj-check"></div>
+                        <span>Configurar access points e redes Wi-Fi seguras</span>
+                    </li>
+                    <li class="obj-item" onclick="toggleObj(this,3)">
+                        <div class="obj-check"></div>
+                        <span>Aplicar conceitos de segurança em equipamentos de rede</span>
+                    </li>
+                    <li class="obj-item" onclick="toggleObj(this,4)">
+                        <div class="obj-check"></div>
+                        <span>Integrar todos os componentes de infraestrutura aprendidos</span>
+                    </li>
+                    <li class="obj-item" onclick="toggleObj(this,5)">
+                        <div class="obj-check"></div>
+                        <span>Documentar configurações e testar conectividade</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- CONTEÚDO -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon ci-blue">📖</div>
+                <h2>Conteúdo da Semana</h2>
+            </div>
+            <div class="card-body">
+                <div class="topic-grid">
+                    <div class="topic-block t-switch">
+                        <h3>🔀 Switches & VLANs</h3>
+                        <span class="topic-tag">VLANs</span>
+                        <span class="topic-tag">Trunk/Access ports</span>
+                        <span class="topic-tag">Inter-VLAN routing</span>
+                        <span class="topic-tag">Port security</span>
+                        <span class="topic-tag">MAC filtering</span>
+                        <span class="topic-tag">STP</span>
+                    </div>
+                    <div class="topic-block t-router">
+                        <h3>📡 Roteadores</h3>
+                        <span class="topic-tag">Console/Telnet/SSH</span>
+                        <span class="topic-tag">Interfaces LAN/WAN</span>
+                        <span class="topic-tag">Roteamento estático</span>
+                        <span class="topic-tag">NAT e PAT</span>
+                        <span class="topic-tag">ACL</span>
+                        <span class="topic-tag">Backup de config</span>
+                    </div>
+                    <div class="topic-block t-wifi">
+                        <h3>📶 Access Points</h3>
+                        <span class="topic-tag">IEEE 802.11 a/b/g/n/ac/ax</span>
+                        <span class="topic-tag">SSIDs</span>
+                        <span class="topic-tag">WPA2/WPA3</span>
+                        <span class="topic-tag">Gestão de canais</span>
+                        <span class="topic-tag">RADIUS</span>
+                        <span class="topic-tag">Roaming</span>
+                    </div>
+                </div>
+
+                <!-- Glossário rápido -->
+                <div style="margin-top:20px">
+                    <div style="font-size:0.85em;font-weight:800;color:var(--navy);margin-bottom:10px;display:flex;align-items:center;gap:6px">
+                        📘 Glossário Rápido
+                    </div>
+                    <div class="gloss-grid">
+                        <div class="gloss-item">
+                            <div class="gloss-term">VLAN</div>
+                            <div class="gloss-def">Virtual LAN — segmenta logicamente a rede sem hardware adicional, isolando tráfego por função/departamento.</div>
+                        </div>
+                        <div class="gloss-item">
+                            <div class="gloss-term">Trunk Port</div>
+                            <div class="gloss-def">Porta que carrega tráfego de múltiplas VLANs usando tags IEEE 802.1Q. Conecta switches entre si.</div>
+                        </div>
+                        <div class="gloss-item">
+                            <div class="gloss-term">NAT / PAT</div>
+                            <div class="gloss-def">Traduz IPs privados para público. PAT (Port Address Translation) mapeia múltiplos hosts num único IP externo.</div>
+                        </div>
+                        <div class="gloss-item">
+                            <div class="gloss-term">ACL</div>
+                            <div class="gloss-def">Access Control List — filtra pacotes por origem/destino/protocolo. Aplica política de segurança no roteador.</div>
+                        </div>
+                        <div class="gloss-item">
+                            <div class="gloss-term">STP</div>
+                            <div class="gloss-def">Spanning Tree Protocol — evita loops de layer 2 bloqueando portas redundantes automaticamente.</div>
+                        </div>
+                        <div class="gloss-item">
+                            <div class="gloss-term">WPA3</div>
+                            <div class="gloss-def">Protocolo de segurança Wi-Fi mais recente. SAE substitui PSK, oferecendo resistência a ataques de dicionário.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VÍDEOS -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon ci-purple">🎬</div>
+                <h2>Vídeos Recomendados</h2>
+                <span class="xp-badge">+10 XP por vídeo assistido</span>
+            </div>
+            <div class="card-body">
+                <div class="video-grid">
+                    <div class="video-card">
+                        <div class="video-thumb">
+                            <div class="video-play-circle">▶</div>
+                        </div>
+                        <div class="video-info">
+                            <h4>Configuração de VLANs — Passo a Passo</h4>
+                            <p>Tutorial prático completo · Cisco IOS</p>
+                            <a href="https://www.youtube.com/watch?v=example1" target="_blank" class="video-link" onclick="watchVideo(this)">▶ Assistir</a>
+                        </div>
+                    </div>
+                    <div class="video-card">
+                        <div class="video-thumb">
+                            <div class="video-play-circle">▶</div>
+                        </div>
+                        <div class="video-info">
+                            <h4>Roteador Cisco — Configuração Inicial</h4>
+                            <p>Comandos essenciais · IOS básico</p>
+                            <a href="https://www.youtube.com/watch?v=example2" target="_blank" class="video-link" onclick="watchVideo(this)">▶ Assistir</a>
+                        </div>
+                    </div>
+                    <div class="video-card">
+                        <div class="video-thumb">
+                            <div class="video-play-circle">▶</div>
+                        </div>
+                        <div class="video-info">
+                            <h4>Access Point Empresarial</h4>
+                            <p>Setup profissional · WPA3 + RADIUS</p>
+                            <a href="https://www.youtube.com/watch?v=example3" target="_blank" class="video-link" onclick="watchVideo(this)">▶ Assistir</a>
+                        </div>
+                    </div>
+                    <div class="video-card">
+                        <div class="video-thumb">
+                            <div class="video-play-circle">▶</div>
+                        </div>
+                        <div class="video-info">
+                            <h4>Projeto de Rede Completo</h4>
+                            <p>Integração de componentes · Lab final</p>
+                            <a href="https://www.youtube.com/watch?v=example4" target="_blank" class="video-link" onclick="watchVideo(this)">▶ Assistir</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MISSÕES -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon ci-green">⚔️</div>
+                <h2>Missões Práticas</h2>
+                <span class="xp-badge">até +240 XP</span>
+            </div>
+            <div class="card-body">
+                <div class="mission-list">
+
+                    <!-- MISSÃO 1 -->
+                    <div class="mission" id="m1" onclick="toggleMission('m1')">
+                        <div class="mission-header">
+                            <div class="mission-num">M1</div>
+                            <div class="mission-info">
+                                <div class="mission-title">Configuração de VLANs no Switch</div>
+                                <div class="mission-meta">🔀 Switches · ⏱ 30 min · Dificuldade: Médio</div>
+                            </div>
+                            <span class="mission-xp">+60 XP</span>
+                            <span class="mission-toggle">▼</span>
+                        </div>
+                        <div class="mission-body">
+                            <p style="font-size:0.88em;color:var(--muted);font-weight:600">Criar 3 VLANs (Administração, Vendas, TI) e configurar portas de acesso e trunk.</p>
+                            <div class="mission-steps">
+                                <div class="step">
+                                    <div class="step-dot">1</div>
+                                    <p>Acesse o switch via console e entre em modo privilegiado com <code>enable</code>, depois <code>configure terminal</code>.</p>
+                                </div>
+                                <div class="step">
+                                    <div class="step-dot">2</div>
+                                    <p>Crie as três VLANs no switch:</p>
+                                </div>
+                            </div>
+                            <div class="cmd-block">
+<span class="prompt">Switch(config)#</span> <span class="cmd">vlan 10</span><br>
+<span class="prompt">Switch(config-vlan)#</span> <span class="cmd">name Administracao</span><br>
+<span class="prompt">Switch(config-vlan)#</span> <span class="cmd">exit</span><br>
+<span class="prompt">Switch(config)#</span> <span class="cmd">vlan 20</span><br>
+<span class="prompt">Switch(config-vlan)#</span> <span class="cmd">name Vendas</span><br>
+<span class="prompt">Switch(config-vlan)#</span> <span class="cmd">exit</span><br>
+<span class="prompt">Switch(config)#</span> <span class="cmd">vlan 30</span><br>
+<span class="prompt">Switch(config-vlan)#</span> <span class="cmd">name TI</span>
+                            </div>
+                            <div class="mission-steps">
+                                <div class="step">
+                                    <div class="step-dot">3</div>
+                                    <p>Atribua porta <code>Fa0/1</code> à VLAN 10 (Administração) como access port:</p>
+                                </div>
+                            </div>
+                            <div class="cmd-block">
+<span class="prompt">Switch(config)#</span> <span class="cmd">interface FastEthernet 0/1</span><br>
+<span class="prompt">Switch(config-if)#</span> <span class="cmd">switchport mode access</span><br>
+<span class="prompt">Switch(config-if)#</span> <span class="cmd">switchport access vlan 10</span><br>
+<span class="comment">! Repita para Fa0/2 (VLAN 20) e Fa0/3 (VLAN 30)</span>
+                            </div>
+                            <div class="mission-steps">
+                                <div class="step">
+                                    <div class="step-dot">4</div>
+                                    <p>Configure a porta <code>Gi0/1</code> como trunk para o roteador (router-on-a-stick):</p>
+                                </div>
+                            </div>
+                            <div class="cmd-block">
+<span class="prompt">Switch(config)#</span> <span class="cmd">interface GigabitEthernet 0/1</span><br>
+<span class="prompt">Switch(config-if)#</span> <span class="cmd">switchport mode trunk</span><br>
+<span class="prompt">Switch(config-if)#</span> <span class="cmd">switchport trunk allowed vlan 10,20,30</span>
+                            </div>
+                            <div class="mission-steps">
+                                <div class="step">
+                                    <div class="step-dot">5</div>
+                                    <p>Verifique com <code>show vlan brief</code> e <code>show interfaces trunk</code>.</p>
+                                </div>
+                            </div>
+                            <button class="complete-btn" id="btn-m1" onclick="completeMission(event,'m1','am-vlan','Missão VLAN concluída! +60 XP',60)">
+                                ✅ Marcar como concluída
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- MISSÃO 2 -->
+                    <div class="mission" id="m2" onclick="toggleMission('m2')">
+                        <div class="mission-header">
+                            <div class="mission-num">M2</div>
+                            <div class="mission-info">
+                                <div class="mission-title">Setup de Roteador Básico</div>
+                                <div class="mission-meta">📡 Roteadores · ⏱ 30 min · Dificuldade: Médio</div>
+                            </div>
+                            <span class="mission-xp">+60 XP</span>
+                            <span class="mission-toggle">▼</span>
+                        </div>
+                        <div class="mission-body">
+                            <p style="font-size:0.88em;color:var(--muted);font-weight:600">Configurar IP nas interfaces, roteamento estático entre duas redes e NAT.</p>
+                            <div class="mission-steps">
+                                <div class="step">
+                                    <div class="step-dot">1</div>
+                                    <p>Acesse o roteador via console. Configure as subinterfaces para inter-VLAN routing (router-on-a-stick):</p>
+                                </div>
+                            </div>
+                            <div class="cmd-block">
+<span class="prompt">Router(config)#</span> <span class="cmd">interface GigabitEthernet 0/0</span><br>
+<span class="prompt">Router(config-if)#</span> <span class="cmd">no shutdown</span><br>
+<br>
+<span class="prompt">Router(config)#</span> <span class="cmd">interface GigabitEthernet 0/0.10</span><br>
+<span class="prompt">Router(config-subif)#</span> <span class="cmd">encapsulation dot1Q 10</span><br>
+<span class="prompt">Router(config-subif)#</span> <span class="cmd">ip address 192.168.10.1 255.255.255.0</span><br>
+<br>
+<span class="prompt">Router(config)#</span> <span class="cmd">interface GigabitEthernet 0/0.20</span><br>
+<span class="prompt">Router(config-subif)#</span> <span class="cmd">encapsulation dot1Q 20</span><br>
+<span class="prompt">Router(config-subif)#</span> <span class="cmd">ip address 192.168.20.1 255.255.255.0</span>
+                            </div>
+                            <div class="mission-steps">
+                                <div class="step">
+                                    <div class="step-dot">2</div>
+                                    <p>Configure a interface WAN (<code>Gi0/1</code>) com IP público e habilite NAT:</p>
+                                </div>
+                            </div>
+                            <div class="cmd-block">
+<span class="prompt">Router(config)#</span> <span class="cmd">interface GigabitEthernet 0/1</span><br>
+<span class="prompt">Router(config-if)#</span> <span class="cmd">ip address 200.10.5.1 255.255.255.0</span><br>
+<span class="prompt">Router(config-if)#</span> <span class="cmd">ip nat outside</span><br>
+<span class="prompt">Router(config-if)#</span> <span class="cmd">no shutdown</span><br>
+<br>
+<span class="prompt">Router(config)#</span> <span class="cmd">interface GigabitEthernet 0/0.10</span><br>
+<span class="prompt">Router(config-subif)#</span> <span class="cmd">ip nat inside</span><br>
+<br>
+<span class="prompt">Router(config)#</span> <span class="cmd">ip nat inside source list 1 interface Gi0/1 overload</span><br>
+<span class="prompt">Router(config)#</span> <span class="cmd">access-list 1 permit 192.168.0.0 0.0.255.255</span>
+                            </div>
+                            <div class="mission-steps">
+                                <div class="step">
+                                    <div class="step-dot">3</div>
+                                    <p>Verifique com <code>show ip route</code>, <code>show ip nat translations</code> e faça ping entre VLANs.</p>
+                                </div>
+                            </div>
+                            <button class="complete-btn" id="btn-m2" onclick="completeMission(event,'m2','am-router','Roteador configurado! +60 XP',60)">
+                                ✅ Marcar como concluída
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- MISSÃO 3 -->
+                    <div class="mission" id="m3" onclick="toggleMission('m3')">
+                        <div class="mission-header">
+                            <div class="mission-num">M3</div>
+                            <div class="mission-info">
+                                <div class="mission-title">Configuração de Wi-Fi Seguro (WPA3)</div>
+                                <div class="mission-meta">📶 Access Point · ⏱ 25 min · Dificuldade: Fácil</div>
+                            </div>
+                            <span class="mission-xp">+50 XP</span>
+                            <span class="mission-toggle">▼</span>
+                        </div>
+                        <div class="mission-body">
+                            <p style="font-size:0.88em;color:var(--muted);font-weight:600">Configurar SSID, senha forte, canal adequado e segurança WPA3 no access point.</p>
+                            <div class="mission-steps">
+                                <div class="step">
+                                    <div class="step-dot">1</div>
+                                    <p>Acesse a interface web do AP (tipicamente <code>192.168.1.1</code> ou <code>192.168.0.1</code>) com admin/admin.</p>
+                                </div>
+                                <div class="step">
+                                    <div class="step-dot">2</div>
+                                    <p>Configure as redes SSIDs — uma para cada VLAN/departamento:</p>
+                                </div>
+                            </div>
+                            <div class="cmd-block">
+<span class="comment">── SSID Corporativo ───────────────────────────</span><br>
+<span class="output">Nome (SSID)  :</span> <span class="cmd">REDES-CORP-S4</span><br>
+<span class="output">Segurança    :</span> <span class="cmd">WPA3-SAE</span>  <span class="comment">(ou WPA2/WPA3 Mixed para compatibilidade)</span><br>
+<span class="output">Senha        :</span> <span class="cmd">Ft3ch@2025!Seguro</span>  <span class="comment">(mín 12 chars, maiúscula, número, símbolo)</span><br>
+<span class="output">Banda        :</span> <span class="cmd">5GHz</span>  <span class="comment">(menos interferência)</span><br>
+<span class="output">Canal        :</span> <span class="cmd">Auto / 36</span>  <span class="comment">(canais não sobrepostos: 36,40,44,48...)</span><br>
+<span class="output">VLAN tag     :</span> <span class="cmd">10</span>  <span class="comment">(VLAN Administração)</span><br>
+<br>
+<span class="comment">── SSID Visitantes ────────────────────────────</span><br>
+<span class="output">Nome (SSID)  :</span> <span class="cmd">REDES-GUEST-S4</span><br>
+<span class="output">Segurança    :</span> <span class="cmd">WPA2-PSK</span><br>
+<span class="output">Isolamento   :</span> <span class="cmd">Habilitado</span>  <span class="comment">(impede acesso entre clientes)</span><br>
+<span class="output">VLAN tag     :</span> <span class="cmd">99</span>  <span class="comment">(VLAN isolada)</span>
+                            </div>
+                            <div class="mission-steps">
+                                <div class="step">
+                                    <div class="step-dot">3</div>
+                                    <p>Desative o WPS (vulnerável a ataques de força bruta) e oculte o SSID de visitantes se necessário.</p>
+                                </div>
+                                <div class="step">
+                                    <div class="step-dot">4</div>
+                                    <p>Teste a conexão a partir de um dispositivo e confirme que o IP atribuído pertence à sub-rede correta.</p>
+                                </div>
+                            </div>
+                            <button class="complete-btn" id="btn-m3" onclick="completeMission(event,'m3','am-wifi','Wi-Fi seguro configurado! +50 XP',50)">
+                                ✅ Marcar como concluída
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- MISSÃO 4 -->
+                    <div class="mission" id="m4" onclick="toggleMission('m4')">
+                        <div class="mission-header">
+                            <div class="mission-num">M4</div>
+                            <div class="mission-info">
+                                <div class="mission-title">Integração Completa — Topologia Funcional</div>
+                                <div class="mission-meta">🔗 Lab Final · ⏱ 35 min · Dificuldade: Avançado</div>
+                            </div>
+                            <span class="mission-xp">+70 XP</span>
+                            <span class="mission-toggle">▼</span>
+                        </div>
+                        <div class="mission-body">
+                            <p style="font-size:0.88em;color:var(--muted);font-weight:600">Integrar switch com VLANs, roteador e access point numa topologia totalmente funcional.</p>
+                            <div class="mission-steps">
+                                <div class="step">
+                                    <div class="step-dot">1</div>
+                                    <p>Confirme que o switch tem as VLANs 10, 20 e 30 criadas (Missão 1) e o trunk para o roteador ativo.</p>
+                                </div>
+                                <div class="step">
+                                    <div class="step-dot">2</div>
+                                    <p>Confirme que o roteador tem as subinterfaces <code>.10</code>, <code>.20</code> e <code>.30</code> com IPs gateway para cada VLAN.</p>
+                                </div>
+                                <div class="step">
+                                    <div class="step-dot">3</div>
+                                    <p>Conecte o access point a uma porta do switch na VLAN de gerência. Configure o IP do AP na mesma sub-rede do gateway.</p>
+                                </div>
+                                <div class="step">
+                                    <div class="step-dot">4</div>
+                                    <p>Execute o checklist de verificação:</p>
+                                </div>
+                            </div>
+                            <div class="cmd-block">
+<span class="comment">── Checklist de Verificação ───────────────────</span><br>
+<span class="output">[ ]</span> <span class="cmd">ping 192.168.10.1</span>  <span class="comment">→ Gateway VLAN Admin responde?</span><br>
+<span class="output">[ ]</span> <span class="cmd">ping 192.168.20.1</span>  <span class="comment">→ Gateway VLAN Vendas responde?</span><br>
+<span class="output">[ ]</span> <span class="cmd">ping 192.168.30.1</span>  <span class="comment">→ Gateway VLAN TI responde?</span><br>
+<span class="output">[ ]</span> <span class="cmd">ping 8.8.8.8</span>       <span class="comment">→ NAT/WAN funciona? (internet)</span><br>
+<span class="output">[ ]</span> <span class="comment">Wi-Fi conectado entrega IP da VLAN correta?</span><br>
+<span class="output">[ ]</span> <span class="comment">VLANs isoladas entre si? (testar ping cross-VLAN)</span>
+                            </div>
+                            <div class="mission-steps">
+                                <div class="step">
+                                    <div class="step-dot">5</div>
+                                    <p>Documente a topologia (esboço com IPs, VLANs, interfaces) e salve a configuração: <code>copy running-config startup-config</code>.</p>
+                                </div>
+                            </div>
+                            <button class="complete-btn" id="btn-m4" onclick="completeMission(event,'m4','am-integra','Integração completa! +70 XP 🔗',70)">
+                                ✅ Marcar como concluída
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- QUIZ -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon ci-yellow">🎯</div>
+                <h2>Quiz de Diagnóstico</h2>
+                <span class="xp-badge">até +100 XP</span>
+            </div>
+            <div class="card-body">
+                <div class="quiz-wrap">
+                    <div class="q-progress-bar-bg">
+                        <div class="q-progress-bar" id="q-prog" style="width:0%"></div>
+                    </div>
+
+                    <!-- Q1 -->
+                    <div class="qcard active" id="qc0">
+                        <div class="q-num-tag">QUESTÃO 01 / 08 · +10 XP</div>
+                        <div class="q-text">Qual é a principal função de uma VLAN em uma rede corporativa?</div>
+                        <div class="q-opts">
+                            <button class="qopt" onclick="ansQ(0,0,2)"><span class="opt-letter">A</span>Aumentar a velocidade das interfaces físicas do switch</button>
+                            <button class="qopt" onclick="ansQ(0,1,2)"><span class="opt-letter">B</span>Criar redundância de links caso uma porta falhe</button>
+                            <button class="qopt" onclick="ansQ(0,2,2)"><span class="opt-letter">C</span>Segmentar logicamente a rede, isolando tráfego por departamento/função</button>
+                            <button class="qopt" onclick="ansQ(0,3,2)"><span class="opt-letter">D</span>Substituir o protocolo IP por um mais seguro nas LANs</button>
+                        </div>
+                        <div class="q-feedback" id="qfb0"></div>
+                        <button class="q-next" id="qnx0" onclick="nextQ(1)">Próxima →</button>
+                    </div>
+
+                    <!-- Q2 -->
+                    <div class="qcard" id="qc1">
+                        <div class="q-num-tag">QUESTÃO 02 / 08 · +10 XP</div>
+                        <div class="q-text">Uma porta de switch configurada como <strong>Trunk</strong> é usada para:</div>
+                        <div class="q-opts">
+                            <button class="qopt" onclick="ansQ(1,0,1)"><span class="opt-letter">A</span>Conectar apenas um dispositivo final (PC, impressora) a uma única VLAN</button>
+                            <button class="qopt" onclick="ansQ(1,1,1)"><span class="opt-letter">B</span>Transportar tráfego de múltiplas VLANs simultaneamente (usando tags 802.1Q)</button>
+                            <button class="qopt" onclick="ansQ(1,2,1)"><span class="opt-letter">C</span>Bloquear todo o tráfego externo para proteger a rede</button>
+                            <button class="qopt" onclick="ansQ(1,3,1)"><span class="opt-letter">D</span>Aumentar a largura de banda juntando duas portas físicas</button>
+                        </div>
+                        <div class="q-feedback" id="qfb1"></div>
+                        <button class="q-next" id="qnx1" onclick="nextQ(2)">Próxima →</button>
+                    </div>
+
+                    <!-- Q3 -->
+                    <div class="qcard" id="qc2">
+                        <div class="q-num-tag">QUESTÃO 03 / 08 · +10 XP</div>
+                        <div class="q-text">No roteador Cisco, qual comando exibe a tabela de roteamento atual?</div>
+                        <div class="q-opts">
+                            <button class="qopt" onclick="ansQ(2,0,3)"><span class="opt-letter">A</span><code>show interfaces</code></button>
+                            <button class="qopt" onclick="ansQ(2,1,3)"><span class="opt-letter">B</span><code>show running-config</code></button>
+                            <button class="qopt" onclick="ansQ(2,2,3)"><span class="opt-letter">C</span><code>show vlan brief</code></button>
+                            <button class="qopt" onclick="ansQ(2,3,3)"><span class="opt-letter">D</span><code>show ip route</code></button>
+                        </div>
+                        <div class="q-feedback" id="qfb2"></div>
+                        <button class="q-next" id="qnx2" onclick="nextQ(3)">Próxima →</button>
+                    </div>
+
+                    <!-- Q4 -->
+                    <div class="qcard" id="qc3">
+                        <div class="q-num-tag">QUESTÃO 04 / 08 · +15 XP</div>
+                        <div class="q-text">O que é NAT (Network Address Translation) e por que é usado?</div>
+                        <div class="q-opts">
+                            <button class="qopt" onclick="ansQ(3,0,2)"><span class="opt-letter">A</span>Protocolo que criptografa dados entre roteadores para segurança WAN</button>
+                            <button class="qopt" onclick="ansQ(3,1,2)"><span class="opt-letter">B</span>Técnica que aumenta a banda disponível somando interfaces físicas</button>
+                            <button class="qopt" onclick="ansQ(3,2,2)"><span class="opt-letter">C</span>Tradução de endereços IP privados para público, permitindo múltiplos hosts compartilharem um único IP externo</button>
+                            <button class="qopt" onclick="ansQ(3,3,2)"><span class="opt-letter">D</span>Protocolo de monitoramento de rede para mapear topologias automaticamente</button>
+                        </div>
+                        <div class="q-feedback" id="qfb3"></div>
+                        <button class="q-next" id="qnx3" onclick="nextQ(4)">Próxima →</button>
+                    </div>
+
+                    <!-- Q5 -->
+                    <div class="qcard" id="qc4">
+                        <div class="q-num-tag">QUESTÃO 05 / 08 · +15 XP</div>
+                        <div class="q-text">Qual padrão Wi-Fi é o mais recente e oferece maior velocidade e eficiência em ambientes densos?</div>
+                        <div class="q-opts">
+                            <button class="qopt" onclick="ansQ(4,0,3)"><span class="opt-letter">A</span>IEEE 802.11b (Wi-Fi 1) — 11 Mbps, 2.4 GHz</button>
+                            <button class="qopt" onclick="ansQ(4,1,3)"><span class="opt-letter">B</span>IEEE 802.11g (Wi-Fi 3) — 54 Mbps, 2.4 GHz</button>
+                            <button class="qopt" onclick="ansQ(4,2,3)"><span class="opt-letter">C</span>IEEE 802.11ac (Wi-Fi 5) — até 3.5 Gbps, 5 GHz</button>
+                            <button class="qopt" onclick="ansQ(4,3,3)"><span class="opt-letter">D</span>IEEE 802.11ax (Wi-Fi 6/6E) — até 9.6 Gbps, OFDMA e MU-MIMO</button>
+                        </div>
+                        <div class="q-feedback" id="qfb4"></div>
+                        <button class="q-next" id="qnx4" onclick="nextQ(5)">Próxima →</button>
+                    </div>
+
+                    <!-- Q6 -->
+                    <div class="qcard" id="qc5">
+                        <div class="q-num-tag">QUESTÃO 06 / 08 · +15 XP</div>
+                        <div class="q-text">O Spanning Tree Protocol (STP) é necessário em redes com switches porque:</div>
+                        <div class="q-opts">
+                            <button class="qopt" onclick="ansQ(5,0,1)"><span class="opt-letter">A</span>Ele distribui o tráfego igualmente entre todas as portas para balanceamento de carga</button>
+                            <button class="qopt" onclick="ansQ(5,1,1)"><span class="opt-letter">B</span>Previne loops de camada 2 que causariam tempestade de broadcast e queda da rede</button>
+                            <button class="qopt" onclick="ansQ(5,2,1)"><span class="opt-letter">C</span>Criptografa o tráfego entre switches para maior segurança</button>
+                            <button class="qopt" onclick="ansQ(5,3,1)"><span class="opt-letter">D</span>Atribui endereços IP automaticamente para os dispositivos conectados</button>
+                        </div>
+                        <div class="q-feedback" id="qfb5"></div>
+                        <button class="q-next" id="qnx5" onclick="nextQ(6)">Próxima →</button>
+                    </div>
+
+                    <!-- Q7 -->
+                    <div class="qcard" id="qc6">
+                        <div class="q-num-tag">QUESTÃO 07 / 08 · +15 XP</div>
+                        <div class="q-text">Você precisa configurar acesso SSH seguro ao roteador Cisco. Qual sequência de comandos está correta?</div>
+                        <div class="q-opts">
+                            <button class="qopt" onclick="ansQ(6,0,0)"><span class="opt-letter">A</span><code>ip domain-name lab.local</code> → <code>crypto key generate rsa</code> → <code>line vty 0 4 / transport input ssh</code></button>
+                            <button class="qopt" onclick="ansQ(6,1,0)"><span class="opt-letter">B</span><code>enable secret cisco</code> → <code>line console 0</code> → <code>ssh enable</code></button>
+                            <button class="qopt" onclick="ansQ(6,2,0)"><span class="opt-letter">C</span><code>service ssh on</code> → <code>username admin password cisco</code> → <code>exit</code></button>
+                            <button class="qopt" onclick="ansQ(6,3,0)"><span class="opt-letter">D</span><code>ip ssh version 2</code> somente, pois o SSH já vem habilitado por padrão</button>
+                        </div>
+                        <div class="q-feedback" id="qfb6"></div>
+                        <button class="q-next" id="qnx6" onclick="nextQ(7)">Próxima →</button>
+                    </div>
+
+                    <!-- Q8 -->
+                    <div class="qcard" id="qc7">
+                        <div class="q-num-tag">QUESTÃO 08 / 08 · +10 XP</div>
+                        <div class="q-text">No cenário de "router-on-a-stick" (inter-VLAN routing), o roteador possui:</div>
+                        <div class="q-opts">
+                            <button class="qopt" onclick="ansQ(7,0,2)"><span class="opt-letter">A</span>Uma interface física por VLAN, cada uma com IP de gateway diferente</button>
+                            <button class="qopt" onclick="ansQ(7,1,2)"><span class="opt-letter">B</span>Múltiplos roteadores, um por VLAN, todos conectados ao mesmo switch</button>
+                            <button class="qopt" onclick="ansQ(7,2,2)"><span class="opt-letter">C</span>Uma única interface física com subinterfaces lógicas (dot1Q), uma por VLAN, cada uma sendo o gateway de sua VLAN</button>
+                            <button class="qopt" onclick="ansQ(7,3,2)"><span class="opt-letter">D</span>Sem interface — o roteamento inter-VLAN é feito pelo próprio switch Layer 2</button>
+                        </div>
+                        <div class="q-feedback" id="qfb7"></div>
+                        <button class="q-next" id="qnx7" onclick="showResult()">Ver Resultado →</button>
+                    </div>
+
+                    <!-- RESULTADO -->
+                    <div class="q-result" id="q-result">
+                        <div class="q-score-big" id="q-score">0/8</div>
+                        <div class="q-score-msg" id="q-msg">—</div>
+                        <div style="margin-bottom:18px">
+                            <span style="font-family:'Rajdhani',sans-serif;font-size:1.6em;font-weight:700;color:var(--blue)" id="q-xp-earned"></span>
+                        </div>
+                        <button class="q-restart" onclick="restartQuiz()">↺ Refazer Quiz</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONQUISTAS -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon ci-yellow">🏆</div>
+                <h2>Conquistas da Semana 4</h2>
+            </div>
+            <div class="card-body">
+                <div class="ach-grid">
+                    <div class="ach" id="a-start">
+                        <div class="ach-icon">🚀</div>
+                        <div class="ach-name">ONLINE!</div>
+                        <div class="ach-desc">Iniciou a Semana 4</div>
+                    </div>
+                    <div class="ach" id="a-obj">
+                        <div class="ach-icon">🎯</div>
+                        <div class="ach-name">FOCO TOTAL</div>
+                        <div class="ach-desc">Todos os objetivos marcados</div>
+                    </div>
+                    <div class="ach" id="a-vlan">
+                        <div class="ach-icon">🌐</div>
+                        <div class="ach-name">VLAN MASTER</div>
+                        <div class="ach-desc">Missão VLANs concluída</div>
+                    </div>
+                    <div class="ach" id="a-router">
+                        <div class="ach-icon">📡</div>
+                        <div class="ach-name">SYSADMIN</div>
+                        <div class="ach-desc">Roteador configurado</div>
+                    </div>
+                    <div class="ach" id="a-wifi">
+                        <div class="ach-icon">📶</div>
+                        <div class="ach-name">AIRWAVE</div>
+                        <div class="ach-desc">Wi-Fi seguro no ar</div>
+                    </div>
+                    <div class="ach" id="a-integra">
+                        <div class="ach-icon">🔗</div>
+                        <div class="ach-name">INTEGRADOR</div>
+                        <div class="ach-desc">Topologia completa</div>
+                    </div>
+                    <div class="ach" id="a-quiz7">
+                        <div class="ach-icon">🎓</div>
+                        <div class="ach-name">QUASE LÁ</div>
+                        <div class="ach-desc">7+ acertos no quiz</div>
+                    </div>
+                    <div class="ach" id="a-perfect">
+                        <div class="ach-icon">💎</div>
+                        <div class="ach-name">PERFEITO</div>
+                        <div class="ach-desc">Quiz 8/8 corretos!</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PLACAR FINAL -->
+            <div class="final-box" id="final-box">
+                <div class="final-label">XP CONQUISTADO ESTA SEMANA</div>
+                <div class="final-xp-num" id="final-xp">0 XP</div>
+                <div style="font-size:0.78em;opacity:0.6;margin-top:4px">ISO-103 · Semana 4 · FATEC Ourinhos</div>
+            </div>
+
+            <!-- NAV -->
+            <div class="bot-nav">
+                <a href="semana03.html" class="nav-btn ghost">← Semana Anterior</a>
+                <a href="index.html" class="nav-btn ghost">⌂ Índice</a>
+                <a href="semana05.html" class="nav-btn">Próxima Semana →</a>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<!-- ── SCRIPTS ── -->
+<script>
+// ── STATE ──────────────────────────────────────────────────────
+let xp = 0, streak = 0, badgeCount = 0;
+let objChecked = Array(6).fill(false);
+let missionDone = {m1:false, m2:false, m3:false, m4:false};
+let videosWatched = 0;
+let qCorrect = 0, qAnswers = {};
+const TOTAL_XP = 420;
+
+// ── INIT ───────────────────────────────────────────────────────
+window.onload = () => {
+    setTimeout(() => unlock('a-start', 'am-start', 'Bem-vindo à Semana 4! 🚀'), 600);
+    updateHUD();
+};
+
+// ── XP / HUD ──────────────────────────────────────────────────
+function addXP(amount, msg, icon) {
+    xp += amount;
+    updateHUD();
+    showToast(icon || '⚡', `+${amount} XP`, msg);
+    document.getElementById('final-xp').textContent = xp + ' XP';
+}
+
+function updateHUD() {
+    document.getElementById('hud-xp').textContent = xp;
+    document.getElementById('hud-streak').textContent = streak;
+    document.getElementById('hud-badges').textContent = badgeCount;
+    const pct = Math.min(Math.round(xp / TOTAL_XP * 100), 100);
+    document.getElementById('hud-bar').style.width = pct + '%';
+    document.getElementById('hud-xp-pct').textContent = pct + '%';
+    const levels = [
+        [0,'Recruta'], [80,'Operador'], [180,'Técnico'],
+        [300,'Especialista'], [400,'Mestre de Redes']
+    ];
+    let lv = levels[0][1];
+    for (const [th, name] of levels) { if (xp >= th) lv = name; }
+    document.getElementById('hud-level').textContent = lv;
+
+    // sidebar progress
+    const objDone = objChecked.filter(Boolean).length;
+    setBar('obj-bar', 'obj-pct', objDone / 6 * 100, Math.round(objDone/6*100)+'%');
+    const misDone = Object.values(missionDone).filter(Boolean).length;
+    setBar('mis-bar', 'mis-pct', misDone / 4 * 100, Math.round(misDone/4*100)+'%');
+    setBar('quiz-bar', 'quiz-pct', Math.min(qCorrect/8*100,100), Math.round(qCorrect/8*100)+'%');
+    setBar('ach-bar', 'ach-pct', badgeCount/8*100, badgeCount+'/8');
+}
+
+function setBar(barId, lblId, pct, txt) {
+    document.getElementById(barId).style.width = Math.min(pct,100) + '%';
+    document.getElementById(lblId).textContent = txt;
+}
+
+// ── TOAST ─────────────────────────────────────────────────────
+function showToast(icon, title, msg) {
+    document.getElementById('toast-icon').textContent = icon;
+    document.getElementById('toast-title').textContent = title;
+    document.getElementById('toast-msg').textContent = msg;
+    const t = document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+// ── ACHIEVEMENTS ──────────────────────────────────────────────
+function unlock(bigId, miniId, msg) {
+    const big  = document.getElementById(bigId);
+    const mini = document.getElementById(miniId);
+    if (big && !big.classList.contains('unlocked')) {
+        big.classList.add('unlocked');
+        if (mini) mini.classList.add('unlocked');
+        badgeCount++;
+        updateHUD();
+        showToast('🏆', 'Badge desbloqueado!', msg);
+    }
+}
+
+// ── OBJETIVOS ─────────────────────────────────────────────────
+function toggleObj(el, idx) {
+    el.classList.toggle('checked');
+    objChecked[idx] = el.classList.contains('checked');
+    streak = objChecked[idx] ? streak + 1 : Math.max(0, streak - 1);
+    if (objChecked[idx]) addXP(5, 'Objetivo marcado!', '✅');
+    const done = objChecked.filter(Boolean).length;
+    if (done === 6) {
+        addXP(30, 'Todos os objetivos! +30 XP bônus', '🎯');
+        unlock('a-obj', 'am-obj', 'Foco total alcançado!');
+    }
+    updateHUD();
+}
+
+// ── MISSÕES ───────────────────────────────────────────────────
+function toggleMission(id) {
+    const el = document.getElementById(id);
+    const wasOpen = el.classList.contains('open');
+    document.querySelectorAll('.mission').forEach(m => m.classList.remove('open'));
+    if (!wasOpen) el.classList.add('open');
+}
+
+function completeMission(e, mId, achMini, msg, xpAmt) {
+    e.stopPropagation();
+    if (missionDone[mId]) return;
+    missionDone[mId] = true;
+    const btn = document.getElementById('btn-' + mId);
+    btn.disabled = true;
+    btn.textContent = '✅ Concluída!';
+    const el = document.getElementById(mId);
+    el.classList.add('done');
+    const achMap = {
+        'am-vlan':    'a-vlan',
+        'am-router':  'a-router',
+        'am-wifi':    'a-wifi',
+        'am-integra': 'a-integra',
+    };
+    addXP(xpAmt, msg, '⚔️');
+    if (achMap[achMini]) unlock(achMap[achMini], achMini, msg);
+    streak++;
+    updateHUD();
+}
+
+// ── VÍDEOS ────────────────────────────────────────────────────
+function watchVideo(el) {
+    if (!el.dataset.counted) {
+        el.dataset.counted = '1';
+        videosWatched++;
+        addXP(10, `Vídeo ${videosWatched} assistido!`, '🎬');
+    }
+}
+
+// ── QUIZ ──────────────────────────────────────────────────────
+const QFB = [
+    { ok: '✅ Correto! VLANs criam segmentação lógica — sem elas toda a rede compartilha o mesmo domínio de broadcast.' },
+    { ok: '✅ Certo! Portas trunk transportam múltiplas VLANs etiquetadas com 802.1Q. Portas access conectam dispositivos finais a uma única VLAN.' },
+    { ok: '✅ Exato! <code>show ip route</code> exibe rotas estáticas, dinâmicas (OSPF/EIGRP) e diretamente conectadas.' },
+    { ok: '✅ Perfeito! NAT/PAT é o que permite centenas de dispositivos internos compartilharem um único IP público — fundamental para economizar endereços IPv4.' },
+    { ok: '✅ Correto! Wi-Fi 6 (802.11ax) traz OFDMA e MU-MIMO aprimorado, ideal para ambientes com muitos dispositivos simultâneos.' },
+    { ok: '✅ Exato! Sem STP, loops de L2 geram tempestade de broadcast que derruba toda a rede em segundos.' },
+    { ok: '✅ Perfeito! A sequência correta: domain-name → gerar chave RSA → configurar VTY para aceitar só SSH.' },
+    { ok: '✅ Correto! Router-on-a-stick: uma interface física + subinterfaces dot1Q, uma por VLAN, cada uma como gateway. Economia de hardware!' },
+];
+const QXP = [10, 10, 10, 15, 15, 15, 15, 10];
+
+function ansQ(qi, chosen, correct) {
+    const card = document.getElementById('qc' + qi);
+    const opts  = card.querySelectorAll('.qopt');
+    opts.forEach(o => o.disabled = true);
+    opts[chosen].classList.add(chosen === correct ? 'correct' : 'wrong');
+    if (chosen !== correct) opts[correct].classList.add('correct');
+    const fb = document.getElementById('qfb' + qi);
+    const nx = document.getElementById('qnx' + qi);
+    const ok = chosen === correct;
+    fb.innerHTML = ok ? QFB[qi].ok : `❌ Errado. ${QFB[qi].ok}`;
+    fb.className = 'q-feedback show ' + (ok ? 'ok' : 'fail');
+    nx.classList.add('show');
+    if (ok) {
+        qCorrect++;
+        addXP(QXP[qi], 'Resposta correta!', '🎯');
+        streak++;
+    } else {
+        streak = 0;
+    }
+    qAnswers[qi] = ok;
+    document.getElementById('q-prog').style.width = ((qi+1)/8*100) + '%';
+    updateHUD();
+}
+
+function nextQ(n) {
+    document.getElementById('qc' + (n-1)).classList.remove('active');
+    document.getElementById('qc' + n).classList.add('active');
+}
+
+function showResult() {
+    document.getElementById('qc7').classList.remove('active');
+    const r = document.getElementById('q-result');
+    r.classList.add('show');
+    document.getElementById('q-score').textContent = qCorrect + '/8';
+    const msgs = [
+        'Não desanime — revise o conteúdo e tente novamente!',
+        'Progredindo! Alguns conceitos precisam de reforço.',
+        'Bom trabalho! Você está entendendo bem a matéria.',
+        '🎉 Excelente! Domínio sólido de redes e switches.',
+        '💎 Perfeito! Você é um expert em infraestrutura de rede!'
+    ];
+    document.getElementById('q-msg').textContent = msgs[Math.min(Math.floor(qCorrect/2), 4)];
+    const totalXPquiz = Object.keys(qAnswers).filter(k => qAnswers[k]).reduce((a,k)=>a+QXP[+k],0);
+    document.getElementById('q-xp-earned').textContent = '+' + totalXPquiz + ' XP conquistados no quiz';
+    document.getElementById('q-prog').style.width = '100%';
+    if (qCorrect >= 7) unlock('a-quiz7', 'am-quiz7', 'Sharp Shooter — 7+ acertos!');
+    if (qCorrect === 8) unlock('a-perfect', 'am-perfect', 'Quiz Perfeito! 💎 8/8!');
+    updateHUD();
+}
+
+function restartQuiz() {
+    qCorrect = 0; qAnswers = {};
+    document.getElementById('q-result').classList.remove('show');
+    document.getElementById('q-prog').style.width = '0%';
+    for (let i = 0; i < 8; i++) {
+        const card = document.getElementById('qc' + i);
+        card.classList.toggle('active', i === 0);
+        card.querySelectorAll('.qopt').forEach(o => {
+            o.disabled = false;
+            o.classList.remove('correct','wrong');
+        });
+        const fb = card.querySelector('.q-feedback');
+        if (fb) { fb.classList.remove('show','ok','fail'); fb.innerHTML = ''; }
+        const nx = card.querySelector('.q-next');
+        if (nx) nx.classList.remove('show');
+    }
+    updateHUD();
+}
+</script>
+
+</body>
+</html>
