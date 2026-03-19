@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia de Estudo - Semana 20</title>
+    <style>* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .header h1 {
+            color: #6a11cb;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+
+        .header .week-info {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .nav-btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(106, 17, 203, 0.4);
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .section h2 {
+            color: #6a11cb;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #2575fc;
+        }
+
+        .exercise-block {
+            background: #f8f9fa;
+            border-left: 5px solid #6a11cb;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+
+        .exercise-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .exercise-number {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+
+        .exercise-title {
+            flex: 1;
+            color: #6a11cb;
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+
+        .rubric-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .rubric-table th {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .rubric-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .rubric-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .rubric-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .criterion {
+            font-weight: bold;
+            color: #6a11cb;
+        }
+
+        .solution-box {
+            background: linear-gradient(to right, #e8f5e9, #f1f8e9);
+            border-left: 5px solid #4caf50;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .solution-box h3 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .example-box {
+            background: #fff3e0;
+            border-left: 5px solid #ff9800;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .example-box h4 {
+            color: #e65100;
+            margin-bottom: 10px;
+        }
+
+        .tip-box {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .tip-box strong {
+            color: #1976d2;
+        }
+
+        .command-box {
+            background: #263238;
+            color: #4caf50;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+
+        .scenario-box {
+            background: #ffebee;
+            border-left: 5px solid #f44336;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .scenario-box h4 {
+            color: #c62828;
+            margin-bottom: 10px;
+        }
+
+        ul, ol {
+            margin-left: 20px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #d32f2f;
+        }
+
+        .project-box {
+            background: linear-gradient(to right, #e1f5fe, #f3e5f5);
+            border-left: 5px solid #9c27b0;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .project-box h4 {
+            color: #6a1b9a;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Guia de Estudo - Semana 20</h1>
+            <p class="week-info">Troubleshooting e Projeto Final</p>
+            <div class="nav-buttons">
+                <a href="index.html" class="nav-btn">⬅️ Voltar ao Índice</a>
+                <a href="semana20.html" class="nav-btn">📄 Ver Conteúdo da Semana</a>
+            </div>
+        </div>
+
+        <!-- EXERCÍCIO 1 -->
+        <div class="section">
+            <h2>✏️ Exercício 1: Cenários de Troubleshooting</h2>
+            
+            <div class="exercise-block">
+                <div class="exercise-header">
+                    <div class="exercise-number">1</div>
+                    <div class="exercise-title">Cenários de Troubleshooting</div>
+                </div>
+
+                <p><strong>📋 Objetivo:</strong> Resolver problemas propostos</p>
+                <p><strong>⏱️ Duração:</strong> 40 minutos</p>
+                <p><strong>📄 Descrição:</strong> 5 cenários de problemas para resolver</p>
+
+                <h3 style="color: #6a11cb; margin-top: 25px; margin-bottom: 15px;">📊 Rubrica de Avaliação</h3>
+                
+                <table class="rubric-table">
+                    <thead>
+                        <tr>
+                            <th>Critério</th>
+                            <th>Insuficiente (0-5)</th>
+                            <th>Básico (6-7)</th>
+                            <th>Proficiente (8-9)</th>
+                            <th>Excelente (10)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="criterion">Metodologia</td>
+                            <td>Abordagem desorganizada</td>
+                            <td>Tentativa e erro básico</td>
+                            <td>Metodologia estruturada</td>
+                            <td>Metodologia profissional documentada</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Diagnóstico</td>
+                            <td>Não identifica causa raiz</td>
+                            <td>Identifica sintomas</td>
+                            <td>Identifica causa provável</td>
+                            <td>Identifica e valida causa raiz</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Uso de Ferramentas</td>
+                            <td>Não usa ferramentas</td>
+                            <td>Usa ferramentas básicas</td>
+                            <td>Usa ferramentas apropriadas</td>
+                            <td>Domínio completo das ferramentas</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Solução</td>
+                            <td>Não resolve o problema</td>
+                            <td>Solução paliativa</td>
+                            <td>Resolve o problema</td>
+                            <td>Solução otimizada e preventiva</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Documentação</td>
+                            <td>Sem documentação</td>
+                            <td>Anotações básicas</td>
+                            <td>Documentação clara</td>
+                            <td>Documentação completa com KB</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="solution-box">
+                    <h3>💡 Solução dos Cenários de Troubleshooting</h3>
+                    
+                    <div class="scenario-box">
+                        <h4>🔴 Cenário 1: Usuário não consegue acessar compartilhamento de rede</h4>
+                        <p><strong>Sintoma:</strong> Ao tentar acessar \\servidor\dados, recebe erro "Caminho de rede não encontrado"</p>
+                        
+                        <p><strong>Metodologia de Resolução:</strong></p>
+                        <ol>
+                            <li><strong>Identificação:</strong> Problema de conectividade de rede ou compartilhamento</li>
+                            <li><strong>Coleta de Informações:</strong>
+                                <div class="command-box">
+# No cliente
+ping servidor
+nslookup servidor
+net view \\servidor
+ipconfig /all
+
+# No servidor (verificar se Samba/SMB está rodando)
+# Linux:
+systemctl status smbd
+systemctl status nmbd
+
+# Windows:
+Get-Service LanmanServer
+Get-SmbShare
+                                </div>
+                            </li>
+                            <li><strong>Hipóteses:</strong>
+                                <ul>
+                                    <li>Servidor não está acessível (rede)</li>
+                                    <li>Serviço de compartilhamento parado</li>
+                                    <li>Firewall bloqueando portas 139/445</li>
+                                    <li>Permissões incorretas</li>
+                                </ul>
+                            </li>
+                            <li><strong>Testes:</strong>
+                                <div class="command-box">
+# Testar conectividade
+ping servidor
+telnet servidor 445
+
+# Verificar firewall no servidor
+# Linux:
+sudo ufw status
+sudo iptables -L | grep -E '139|445'
+
+# Windows:
+Test-NetConnection -ComputerName servidor -Port 445
+Get-NetFirewallRule | Where-Object {$_.DisplayName -like "*File*"}
+                                </div>
+                            </li>
+                            <li><strong>Solução Típica:</strong>
+                                <div class="command-box">
+# Se serviço parado (Linux):
+sudo systemctl restart smbd nmbd
+
+# Se firewall bloqueando (Linux):
+sudo ufw allow samba
+
+# Windows:
+Restart-Service LanmanServer
+New-NetFirewallRule -DisplayName "File Sharing" -Direction Inbound -Protocol TCP -LocalPort 445 -Action Allow
+                                </div>
+                            </li>
+                        </ol>
+                    </div>
+
+                    <div class="scenario-box">
+                        <h4>🔴 Cenário 2: DNS não está resolvendo nomes</h4>
+                        <p><strong>Sintoma:</strong> Ping google.com retorna "could not find host", mas ping 8.8.8.8 funciona</p>
+                        
+                        <p><strong>Diagnóstico e Solução:</strong></p>
+                        <div class="command-box">
+# 1. Verificar configuração DNS do cliente
+ipconfig /all  # Windows
+cat /etc/resolv.conf  # Linux
+
+# 2. Testar DNS
+nslookup google.com
+nslookup google.com 8.8.8.8  # Testar com DNS público
+
+# 3. Se DNS local não funciona, verificar servidor DNS
+# No servidor DNS Linux:
+systemctl status named  # ou bind9
+journalctl -u named -n 50
+
+# Verificar arquivo de zona
+named-checkzone example.com /etc/bind/db.example.com
+
+# Windows:
+Get-Service DNS
+Get-DnsServerZone
+Test-DnsServer -IPAddress 192.168.1.10
+
+# 4. Solução comum:
+# Linux - reiniciar BIND
+sudo systemctl restart named
+
+# Windows - limpar cache DNS
+ipconfig /flushdns  # Cliente
+Clear-DnsServerCache  # Servidor
+                        </div>
+                    </div>
+
+                    <div class="scenario-box">
+                        <h4>🔴 Cenário 3: Servidor lento - alta utilização de CPU</h4>
+                        <p><strong>Sintoma:</strong> Aplicações lentas, servidor respondendo devagar</p>
+                        
+                        <p><strong>Diagnóstico:</strong></p>
+                        <div class="command-box">
+# Linux
+top
+htop
+ps aux --sort=-%cpu | head -10
+sar -u 1 10  # Monitorar CPU
+
+# Identificar processo problemático
+ps aux | grep <processo_suspeito>
+lsof -p <PID>  # Arquivos abertos pelo processo
+
+# Windows PowerShell
+Get-Process | Sort-Object CPU -Descending | Select-Object -First 10
+Get-Counter '\Processor(_Total)\% Processor Time' -SampleInterval 1 -MaxSamples 10
+
+# Verificar serviços
+Get-Service | Where-Object {$_.Status -eq "Running"} | Sort-Object
+
+# 5. Solução:
+# Se processo malicioso ou travado:
+kill -9 <PID>  # Linux
+Stop-Process -Id <PID> -Force  # Windows
+
+# Se serviço legítimo consumindo muito:
+systemctl restart <serviço>  # Linux
+Restart-Service <serviço>  # Windows
+                        </div>
+                    </div>
+
+                    <div class="scenario-box">
+                        <h4>🔴 Cenário 4: Usuários não conseguem fazer login no domínio</h4>
+                        <p><strong>Sintoma:</strong> "The trust relationship between this workstation and the domain failed"</p>
+                        
+                        <p><strong>Solução:</strong></p>
+                        <div class="command-box">
+# 1. Verificar conectividade com DC
+Test-ComputerSecureChannel -Verbose
+
+# 2. Se falhar, reparar:
+Test-ComputerSecureChannel -Repair -Credential (Get-Credential)
+
+# 3. Se não funcionar, remover e readicionar ao domínio:
+# Remover do domínio
+Remove-Computer -UnjoinDomainCredential (Get-Credential) -WorkgroupName WORKGROUP -Restart
+
+# Após reiniciar, adicionar novamente
+Add-Computer -DomainName empresa.local -Credential (Get-Credential) -Restart
+
+# 4. No servidor DC, verificar:
+Get-ADComputer -Identity COMPUTADOR-NOME
+# Se objeto órfão, remover:
+Remove-ADComputer -Identity COMPUTADOR-NOME
+                        </div>
+                    </div>
+
+                    <div class="scenario-box">
+                        <h4>🔴 Cenário 5: DHCP não está distribuindo IPs</h4>
+                        <p><strong>Sintoma:</strong> Clientes recebendo IP 169.254.x.x (APIPA)</p>
+                        
+                        <p><strong>Diagnóstico e Solução:</strong></p>
+                        <div class="command-box">
+# 1. Verificar serviço DHCP
+# Linux:
+systemctl status isc-dhcp-server
+journalctl -u isc-dhcp-server -n 50
+
+# Windows:
+Get-Service DHCPServer
+Get-DhcpServerv4Scope
+Get-DhcpServerv4Lease -ScopeId 192.168.1.0
+
+# 2. Verificar configuração
+# Linux:
+sudo nano /etc/dhcp/dhcpd.conf
+sudo dhcpd -t  # Testar configuração
+
+# Windows:
+Get-DhcpServerv4Scope | Format-List *
+Get-DhcpServerv4ScopeStatistics
+
+# 3. Verificar autorização (Windows):
+Get-DhcpServerInDC
+
+# Se não autorizado:
+Add-DhcpServerInDC -DnsName srv-dhcp.empresa.local -IPAddress 192.168.1.10
+
+# 4. Verificar se escopo tem IPs disponíveis:
+# Se pool esgotado, aumentar range:
+Set-DhcpServerv4Scope -ScopeId 192.168.1.0 -EndRange 192.168.1.250
+
+# 5. Reiniciar serviço:
+sudo systemctl restart isc-dhcp-server  # Linux
+Restart-Service DHCPServer  # Windows
+
+# 6. No cliente, renovar IP:
+sudo dhclient -r && sudo dhclient  # Linux
+ipconfig /release && ipconfig /renew  # Windows
+                        </div>
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>💡 METODOLOGIA PROFISSIONAL DE TROUBLESHOOTING:</strong>
+                        <ol>
+                            <li><strong>Identificar o problema:</strong> Definir sintomas claramente</li>
+                            <li><strong>Coletar informações:</strong> Logs, comandos de diagnóstico, histórico</li>
+                            <li><strong>Formular hipóteses:</strong> Listar possíveis causas (da mais provável à menos)</li>
+                            <li><strong>Testar hipóteses:</strong> Um teste por vez, documentando resultados</li>
+                            <li><strong>Implementar solução:</strong> Aplicar correção validada</li>
+                            <li><strong>Verificar:</strong> Confirmar que problema foi resolvido</li>
+                            <li><strong>Documentar:</strong> Criar KB (Knowledge Base) para futuros incidentes</li>
+                            <li><strong>Revisar:</strong> Análise pós-incidente, prevenção</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- EXERCÍCIO 2 -->
+        <div class="section">
+            <h2>✏️ Exercício 2: Projeto Final - Implementação</h2>
+            
+            <div class="exercise-block">
+                <div class="exercise-header">
+                    <div class="exercise-number">2</div>
+                    <div class="exercise-title">Projeto Final - Implementação</div>
+                </div>
+
+                <p><strong>📋 Objetivo:</strong> Montar ambiente completo</p>
+                <p><strong>⏱️ Duração:</strong> 60 minutos</p>
+                <p><strong>📄 Descrição:</strong> Infraestrutura com Linux e Windows integrados</p>
+
+                <h3 style="color: #6a11cb; margin-top: 25px; margin-bottom: 15px;">📊 Rubrica de Avaliação do Projeto</h3>
+                
+                <table class="rubric-table">
+                    <thead>
+                        <tr>
+                            <th>Critério</th>
+                            <th>Peso</th>
+                            <th>Descrição</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="criterion">Planejamento</td>
+                            <td>10%</td>
+                            <td>Topologia de rede documentada, requisitos claros</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Active Directory</td>
+                            <td>20%</td>
+                            <td>DC funcionando, OUs estruturadas, usuários criados, GPOs aplicadas</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Serviços de Rede</td>
+                            <td>20%</td>
+                            <td>DNS e DHCP funcionais e integrados</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Compartilhamento</td>
+                            <td>15%</td>
+                            <td>File Server e/ou Samba com permissões corretas</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Automação</td>
+                            <td>15%</td>
+                            <td>Scripts funcionais (Shell ou PowerShell)</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Backup</td>
+                            <td>10%</td>
+                            <td>Estratégia de backup implementada</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Documentação</td>
+                            <td>10%</td>
+                            <td>Documentação técnica completa</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="project-box">
+                    <h4>🎯 Requisitos Mínimos do Projeto Final</h4>
+                    
+                    <p><strong>Infraestrutura Obrigatória:</strong></p>
+                    <ol>
+                        <li><strong>Windows Server:</strong>
+                            <ul>
+                                <li>Active Directory Domain Services</li>
+                                <li>Mínimo 3 OUs organizacionais</li>
+                                <li>Mínimo 5 usuários e 3 grupos</li>
+                                <li>Pelo menos 2 GPOs funcionais</li>
+                                <li>DNS integrado ao AD</li>
+                                <li>DHCP autorizado e funcional</li>
+                            </ul>
+                        </li>
+                        <li><strong>Linux Server:</strong>
+                            <ul>
+                                <li>Servidor de arquivos Samba OU serviço web</li>
+                                <li>Mínimo 2 scripts de automação</li>
+                                <li>Backup automatizado via script</li>
+                            </ul>
+                        </li>
+                        <li><strong>Integração:</strong>
+                            <ul>
+                                <li>Clientes Windows autenticando no AD</li>
+                                <li>Resolução DNS funcionando</li>
+                                <li>DHCP distribuindo IPs</li>
+                                <li>Compartilhamentos acessíveis</li>
+                            </ul>
+                        </li>
+                    </ol>
+
+                    <p><strong>Topologia Sugerida:</strong></p>
+                    <div class="example-box">
+                        <pre>
+┌─────────────────────────────────────────────────┐
+│           Rede 192.168.1.0/24                   │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│  ┌──────────────┐      ┌──────────────┐        │
+│  │ Windows DC   │      │ Linux Server │        │
+│  │ .10          │      │ .20          │        │
+│  │              │      │              │        │
+│  │ - AD DS      │      │ - Samba      │        │
+│  │ - DNS        │      │ - Scripts    │        │
+│  │ - DHCP       │      │ - Backup     │        │
+│  │ - File Server│      │              │        │
+│  └──────────────┘      └──────────────┘        │
+│         │                      │                │
+│         └──────────┬───────────┘                │
+│                    │                            │
+│         ┌──────────┴──────────┐                 │
+│         │                     │                 │
+│   ┌─────┴─────┐        ┌─────┴─────┐           │
+│   │ Cliente 1 │        │ Cliente 2 │           │
+│   │ (Windows) │        │ (Linux)   │           │
+│   │ DHCP      │        │ DHCP      │           │
+│   └───────────┘        └───────────┘           │
+└─────────────────────────────────────────────────┘
+                        </pre>
+                    </div>
+
+                    <p><strong>Checklist de Implementação:</strong></p>
+                    <div class="command-box">
+# Windows Server - Checklist
+☐ Sistema instalado e atualizado
+☐ IP estático configurado (192.168.1.10)
+☐ AD DS instalado e promovido
+☐ Domínio criado (ex: empresa.local)
+☐ OUs criadas (Usuarios, Computadores, Grupos)
+☐ Usuários criados e organizados
+☐ Grupos criados com membros
+☐ GPO de senha configurada
+☐ GPO de wallpaper/scripts configurada
+☐ DNS funcionando (nslookup)
+☐ DHCP autorizado e scope criado
+☐ File Server com shares configurados
+☐ Cliente Windows ingressado no domínio
+
+# Linux Server - Checklist
+☐ Sistema instalado e atualizado
+☐ IP estático configurado (192.168.1.20)
+☐ Hostname configurado
+☐ Samba instalado e configurado
+☐ Share público criado
+☐ Share privado com autenticação
+☐ Script de backup criado
+☐ Script agendado no cron
+☐ Firewall configurado
+☐ Testes de conectividade OK
+
+# Testes de Integração
+☐ Cliente obtém IP via DHCP
+☐ DNS resolve nomes (ping servidor)
+☐ Logon no domínio funciona
+☐ GPOs são aplicadas
+☐ Acesso a shares Windows funciona
+☐ Acesso a shares Samba funciona
+☐ Scripts executam sem erros
+☐ Backup é criado automaticamente
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <strong>💡 DICA PARA O PROJETO:</strong> Comece pelo Active Directory! É a base de tudo. Depois configure DNS e DHCP. Só então parta para os serviços adicionais (File Server, Samba). Teste cada componente antes de passar para o próximo.
+                </div>
+            </div>
+        </div>
+
+        <!-- EXERCÍCIO 3 -->
+        <div class="section">
+            <h2>✏️ Exercício 3: Documentação e Apresentação</h2>
+            
+            <div class="exercise-block">
+                <div class="exercise-header">
+                    <div class="exercise-number">3</div>
+                    <div class="exercise-title">Documentação e Apresentação</div>
+                </div>
+
+                <p><strong>📋 Objetivo:</strong> Documentar e apresentar projeto</p>
+                <p><strong>⏱️ Duração:</strong> 20 minutos</p>
+                <p><strong>📄 Descrição:</strong> Criar documentação técnica, apresentar para turma</p>
+
+                <h3 style="color: #6a11cb; margin-top: 25px; margin-bottom: 15px;">📊 Rubrica de Avaliação</h3>
+                
+                <table class="rubric-table">
+                    <thead>
+                        <tr>
+                            <th>Critério</th>
+                            <th>Insuficiente (0-5)</th>
+                            <th>Básico (6-7)</th>
+                            <th>Proficiente (8-9)</th>
+                            <th>Excelente (10)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="criterion">Completude</td>
+                            <td>Documentação incompleta</td>
+                            <td>Faltam alguns itens</td>
+                            <td>Documentação completa</td>
+                            <td>Documentação exemplar</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Clareza</td>
+                            <td>Confusa e desorganizada</td>
+                            <td>Compreensível básico</td>
+                            <td>Clara e bem estruturada</td>
+                            <td>Cristalina, profissional</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Apresentação</td>
+                            <td>Não apresenta ou muito breve</td>
+                            <td>Apresentação básica</td>
+                            <td>Boa apresentação</td>
+                            <td>Apresentação excelente</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Domínio Técnico</td>
+                            <td>Não domina o conteúdo</td>
+                            <td>Domínio superficial</td>
+                            <td>Bom domínio</td>
+                            <td>Domínio completo, responde questões</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="solution-box">
+                    <h3>💡 Template de Documentação Técnica</h3>
+                    
+                    <div class="example-box">
+                        <h4>📋 Estrutura da Documentação</h4>
+                        
+                        <p><strong>1. CAPA</strong></p>
+                        <ul>
+                            <li>Nome do projeto</li>
+                            <li>Nome dos integrantes</li>
+                            <li>Data</li>
+                            <li>Instituição</li>
+                        </ul>
+
+                        <p><strong>2. SUMÁRIO</strong></p>
+                        <ul>
+                            <li>Lista de seções com páginas</li>
+                        </ul>
+
+                        <p><strong>3. INTRODUÇÃO</strong></p>
+                        <ul>
+                            <li>Objetivo do projeto</li>
+                            <li>Escopo</li>
+                            <li>Requisitos</li>
+                        </ul>
+
+                        <p><strong>4. TOPOLOGIA DE REDE</strong></p>
+                        <ul>
+                            <li>Diagrama de rede</li>
+                            <li>Lista de servidores e IPs</li>
+                            <li>Tabela de endereçamento</li>
+                        </ul>
+
+                        <p><strong>5. IMPLEMENTAÇÃO</strong></p>
+                        
+                        <p><em>5.1 Windows Server</em></p>
+                        <ul>
+                            <li>Instalação e configuração inicial</li>
+                            <li>Active Directory Domain Services</li>
+                            <li>Estrutura de OUs (com screenshot)</li>
+                            <li>Usuários e Grupos criados</li>
+                            <li>GPOs implementadas (com detalhes)</li>
+                            <li>DNS - zonas configuradas</li>
+                            <li>DHCP - scopes e opções</li>
+                            <li>File Server - shares e permissões</li>
+                        </ul>
+
+                        <p><em>5.2 Linux Server</em></p>
+                        <ul>
+                            <li>Instalação e configuração inicial</li>
+                            <li>Samba - configuração de shares</li>
+                            <li>Scripts desenvolvidos (com código)</li>
+                            <li>Backup - estratégia e automação</li>
+                        </ul>
+
+                        <p><strong>6. TESTES</strong></p>
+                        <ul>
+                            <li>Testes realizados</li>
+                            <li>Resultados (com screenshots)</li>
+                            <li>Problemas encontrados e soluções</li>
+                        </ul>
+
+                        <p><strong>7. CONCLUSÃO</strong></p>
+                        <ul>
+                            <li>Objetivos alcançados</li>
+                            <li>Aprendizados</li>
+                            <li>Melhorias futuras</li>
+                        </ul>
+
+                        <p><strong>8. ANEXOS</strong></p>
+                        <ul>
+                            <li>Códigos de scripts completos</li>
+                            <li>Arquivos de configuração importantes</li>
+                            <li>Screenshots adicionais</li>
+                        </ul>
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>💡 DICAS PARA APRESENTAÇÃO:</strong>
+                        <ul>
+                            <li><strong>Tempo:</strong> 10-15 minutos (pratique antes!)</li>
+                            <li><strong>Estrutura:</strong> Introdução (1 min) > Demo ao vivo (8 min) > Conclusão (1 min) > Perguntas (5 min)</li>
+                            <li><strong>Demo:</strong> Mostre funcionando! Login no domínio, acesso a shares, GPO sendo aplicada, etc.</li>
+                            <li><strong>Preparo:</strong> Tenha ambiente pronto e testado. Backup de screenshots caso algo falhe</li>
+                            <li><strong>Conhecimento:</strong> Esteja pronto para explicar CADA configuração que fez</li>
+                            <li><strong>Visual:</strong> Slides simples e objetivos, foco na demonstração prática</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-buttons" style="margin-top: 30px; background: white; border-radius: 12px; padding: 20px;">
+            <a href="index.html" class="nav-btn">⬅️ Voltar ao Índice</a>
+            <a href="semana20.html" class="nav-btn">📄 Ver Conteúdo da Semana</a>
+        </div>
+    </div>
+</body>
+</html>

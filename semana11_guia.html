@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia de Estudo - Semana 11</title>
+    <style>* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .header h1 {
+            color: #6a11cb;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+
+        .header .week-info {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .nav-btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(106, 17, 203, 0.4);
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .section h2 {
+            color: #6a11cb;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #2575fc;
+        }
+
+        .exercise-block {
+            background: #f8f9fa;
+            border-left: 5px solid #6a11cb;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+
+        .exercise-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .exercise-number {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+
+        .exercise-title {
+            flex: 1;
+            color: #6a11cb;
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+
+        .rubric-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .rubric-table th {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .rubric-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .rubric-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .rubric-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .criterion {
+            font-weight: bold;
+            color: #6a11cb;
+        }
+
+        .solution-box {
+            background: linear-gradient(to right, #e8f5e9, #f1f8e9);
+            border-left: 5px solid #4caf50;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .solution-box h3 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .example-box {
+            background: #fff3e0;
+            border-left: 5px solid #ff9800;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .example-box h4 {
+            color: #e65100;
+            margin-bottom: 10px;
+        }
+
+        .tip-box {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .tip-box strong {
+            color: #1976d2;
+        }
+
+        .command-box {
+            background: #263238;
+            color: #4caf50;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+
+        ul, ol {
+            margin-left: 20px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .highlight {
+            background: #fff9c4;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #d32f2f;
+        }</style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Guia de Estudo - Semana 11</h1>
+            <p class="week-info">Scripts Avançados e Agendamento com Cron</p>
+            <div class="nav-buttons">
+                <a href="index.html" class="nav-btn">⬅️ Voltar ao Índice</a>
+                <a href="semana11.html" class="nav-btn">📄 Ver Conteúdo da Semana</a>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>✏️ Exercício 1: Script de Backup Completo</h2>
+            
+            <div class="exercise-block">
+                <div class="exercise-header">
+                    <div class="exercise-number">1</div>
+                    <div class="exercise-title">Script de Backup Completo</div>
+                </div>
+
+                <p><strong>📋 Objetivo:</strong> Backup automatizado robusto</p>
+                <p><strong>⏱️ Duração:</strong> 35 minutos</p>
+                <p><strong>📄 Descrição:</strong> Backup com rotação, logs, notificações</p>
+
+                <h3 style="color: #6a11cb; margin-top: 25px; margin-bottom: 15px;">📊 Rubrica de Avaliação</h3>
+                
+                <table class="rubric-table">
+                    <thead>
+                        <tr>
+                            <th>Critério</th>
+                            <th>Insuficiente (0-5)</th>
+                            <th>Básico (6-7)</th>
+                            <th>Proficiente (8-9)</th>
+                            <th>Excelente (10)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="criterion">Execução dos Comandos</td>
+                            <td>Comandos incorretos ou não funcionam</td>
+                            <td>Comandos executados com erros</td>
+                            <td>Comandos executados corretamente</td>
+                            <td>Comandos perfeitos com validação</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Compreensão</td>
+                            <td>Não compreende o que está fazendo</td>
+                            <td>Compreensão básica</td>
+                            <td>Boa compreensão dos conceitos</td>
+                            <td>Domínio completo com explicações</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Documentação</td>
+                            <td>Sem documentação</td>
+                            <td>Documentação mínima</td>
+                            <td>Documentação adequada</td>
+                            <td>Documentação completa com prints</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Testes e Validação</td>
+                            <td>Não realiza testes</td>
+                            <td>Testes básicos</td>
+                            <td>Testes adequados</td>
+                            <td>Testes completos com casos edge</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="solution-box">
+                    <h3>💡 Solução Detalhada do Exercício 1</h3>
+                    
+                    <p><strong>Explicação:</strong> Script profissional de backup com logging e rotação</p>
+                    
+                    <h4 style="color: #2e7d32; margin-top: 20px;">📝 Comandos Passo a Passo</h4>
+                    
+                    <div class="command-box">
+nano backup_avancado.sh
+#!/bin/bash
+LOG="/var/log/backup.log"
+exec > >(tee -a $LOG) 2>&1
+DATA=$(date '+%Y-%m-%d_%H-%M-%S')
+ORIGEM="/dados"
+DESTINO="/backup"
+DIAS_MANTER=7
+echo "[$(date)] Iniciando backup..."
+tar -czf $DESTINO/backup_$DATA.tar.gz $ORIGEM
+find $DESTINO -name 'backup_*.tar.gz' -mtime +$DIAS_MANTER -delete
+echo "[$(date)] Backup concluído!"
+                    </div>
+                    
+                    <div class="tip-box">
+                        <strong>💡 DICA:</strong> Sempre verifique os resultados de cada comando antes de prosseguir para o próximo passo. Use comandos de verificação como <code>id usuário</code>, <code>groups usuário</code>, <code>ls -la</code> para confirmar as alterações.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>✏️ Exercício 2: Agendamento com Cron</h2>
+            
+            <div class="exercise-block">
+                <div class="exercise-header">
+                    <div class="exercise-number">2</div>
+                    <div class="exercise-title">Agendamento com Cron</div>
+                </div>
+
+                <p><strong>📋 Objetivo:</strong> Automatizar execução</p>
+                <p><strong>⏱️ Duração:</strong> 20 minutos</p>
+                <p><strong>📄 Descrição:</strong> Configurar crontab para backup diário</p>
+
+                <h3 style="color: #6a11cb; margin-top: 25px; margin-bottom: 15px;">📊 Rubrica de Avaliação</h3>
+                
+                <table class="rubric-table">
+                    <thead>
+                        <tr>
+                            <th>Critério</th>
+                            <th>Insuficiente (0-5)</th>
+                            <th>Básico (6-7)</th>
+                            <th>Proficiente (8-9)</th>
+                            <th>Excelente (10)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="criterion">Execução dos Comandos</td>
+                            <td>Comandos incorretos ou não funcionam</td>
+                            <td>Comandos executados com erros</td>
+                            <td>Comandos executados corretamente</td>
+                            <td>Comandos perfeitos com validação</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Compreensão</td>
+                            <td>Não compreende o que está fazendo</td>
+                            <td>Compreensão básica</td>
+                            <td>Boa compreensão dos conceitos</td>
+                            <td>Domínio completo com explicações</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Documentação</td>
+                            <td>Sem documentação</td>
+                            <td>Documentação mínima</td>
+                            <td>Documentação adequada</td>
+                            <td>Documentação completa com prints</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Testes e Validação</td>
+                            <td>Não realiza testes</td>
+                            <td>Testes básicos</td>
+                            <td>Testes adequados</td>
+                            <td>Testes completos com casos edge</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="solution-box">
+                    <h3>💡 Solução Detalhada do Exercício 2</h3>
+                    
+                    <p><strong>Explicação:</strong> Agendamento de tarefas com cron</p>
+                    
+                    <h4 style="color: #2e7d32; margin-top: 20px;">📝 Comandos Passo a Passo</h4>
+                    
+                    <div class="command-box">
+crontab -e
+# Adicionar linha:
+# 0 2 * * * /home/usuario/backup_avancado.sh
+# Formatos: minuto hora dia mês dia_semana comando
+# */5 * * * *  = a cada 5 minutos
+# 0 */2 * * *  = a cada 2 horas
+# 0 0 * * 0    = todo domingo à meia-noite
+crontab -l
+                    </div>
+                    
+                    <div class="tip-box">
+                        <strong>💡 DICA:</strong> Sempre verifique os resultados de cada comando antes de prosseguir para o próximo passo. Use comandos de verificação como <code>id usuário</code>, <code>groups usuário</code>, <code>ls -la</code> para confirmar as alterações.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>✏️ Exercício 3: Script de Monitoramento</h2>
+            
+            <div class="exercise-block">
+                <div class="exercise-header">
+                    <div class="exercise-number">3</div>
+                    <div class="exercise-title">Script de Monitoramento</div>
+                </div>
+
+                <p><strong>📋 Objetivo:</strong> Verificar saúde do sistema</p>
+                <p><strong>⏱️ Duração:</strong> 25 minutos</p>
+                <p><strong>📄 Descrição:</strong> CPU, memória, disco, alertas</p>
+
+                <h3 style="color: #6a11cb; margin-top: 25px; margin-bottom: 15px;">📊 Rubrica de Avaliação</h3>
+                
+                <table class="rubric-table">
+                    <thead>
+                        <tr>
+                            <th>Critério</th>
+                            <th>Insuficiente (0-5)</th>
+                            <th>Básico (6-7)</th>
+                            <th>Proficiente (8-9)</th>
+                            <th>Excelente (10)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="criterion">Execução dos Comandos</td>
+                            <td>Comandos incorretos ou não funcionam</td>
+                            <td>Comandos executados com erros</td>
+                            <td>Comandos executados corretamente</td>
+                            <td>Comandos perfeitos com validação</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Compreensão</td>
+                            <td>Não compreende o que está fazendo</td>
+                            <td>Compreensão básica</td>
+                            <td>Boa compreensão dos conceitos</td>
+                            <td>Domínio completo com explicações</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Documentação</td>
+                            <td>Sem documentação</td>
+                            <td>Documentação mínima</td>
+                            <td>Documentação adequada</td>
+                            <td>Documentação completa com prints</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Testes e Validação</td>
+                            <td>Não realiza testes</td>
+                            <td>Testes básicos</td>
+                            <td>Testes adequados</td>
+                            <td>Testes completos com casos edge</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="solution-box">
+                    <h3>💡 Solução Detalhada do Exercício 3</h3>
+                    
+                    <p><strong>Explicação:</strong> Monitoramento abrangente do sistema</p>
+                    
+                    <h4 style="color: #2e7d32; margin-top: 20px;">📝 Comandos Passo a Passo</h4>
+                    
+                    <div class="command-box">
+nano monitor_sistema.sh
+#!/bin/bash
+CPU=$(top -bn1 | grep 'Cpu(s)' | awk '{print $2}' | cut -d'%' -f1)
+MEM=$(free | grep Mem | awk '{print ($3/$2) * 100.0}')
+DISCO=$(df / | tail -1 | awk '{print $5}' | sed 's/%//')
+echo "CPU: $CPU% | Memória: $MEM% | Disco: $DISCO%"
+if (( $(echo "$CPU > 80" | bc -l) )); then
+  echo "ALERTA: CPU alta!"
+fi
+                    </div>
+                    
+                    <div class="tip-box">
+                        <strong>💡 DICA:</strong> Sempre verifique os resultados de cada comando antes de prosseguir para o próximo passo. Use comandos de verificação como <code>id usuário</code>, <code>groups usuário</code>, <code>ls -la</code> para confirmar as alterações.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-buttons" style="margin-top: 30px; background: white; border-radius: 12px; padding: 20px;">
+            <a href="index.html" class="nav-btn">⬅️ Voltar ao Índice</a>
+            <a href="semana11.html" class="nav-btn">📄 Ver Conteúdo da Semana</a>
+        </div>
+    </div>
+</body>
+</html>

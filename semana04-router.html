@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📡 Roteadores — Semana 4 | ISO-103</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Barlow:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #050e05;
+  --bg2: #081208;
+  --card: #0a160a;
+  --card2: #0d1d0d;
+  --green: #00ff44;
+  --green2: #00cc33;
+  --green3: #00882b;
+  --lime: #88ff00;
+  --amber: #ffaa00;
+  --red: #ff3333;
+  --blue: #00aaff;
+  --text: #d0ffd0;
+  --text2: #a0d0a0;
+  --muted: #448044;
+  --border: rgba(0,255,68,0.12);
+  --glow: 0 0 20px rgba(0,255,68,0.3);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Barlow', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* SCANLINES */
+body::after {
+  content:'';
+  position: fixed; top:0; left:0; right:0; bottom:0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+  pointer-events: none; z-index: 999;
+}
+
+body::before {
+  content:'';
+  position: fixed; top:0; left:0; right:0; bottom:0;
+  background:
+    radial-gradient(ellipse at 30% 10%, rgba(0,255,68,0.04) 0%, transparent 40%),
+    radial-gradient(ellipse at 70% 90%, rgba(0,136,43,0.05) 0%, transparent 40%);
+  pointer-events:none; z-index:0;
+}
+
+/* GRID LINES */
+.grid-lines {
+  position: fixed; top:0; left:0; right:0; bottom:0;
+  pointer-events:none; z-index:0; opacity:0.03;
+  background-image:
+    linear-gradient(rgba(0,255,68,1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,68,1) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* HEADER */
+.header {
+  position: sticky; top:0; z-index:100;
+  background: rgba(5,14,5,0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 0;
+}
+.header::after {
+  content:'';
+  position: absolute; bottom:0; left:0; right:0; height:1px;
+  background: linear-gradient(90deg, transparent, var(--green), transparent);
+  box-shadow: 0 0 10px var(--green);
+}
+.header-inner {
+  max-width: 1300px; margin:0 auto; padding:0 24px;
+  display:flex; align-items:center; gap:16px;
+}
+.header-brand {
+  font-family: 'JetBrains Mono', monospace;
+  font-size:0.7em; color:var(--muted); letter-spacing:1px;
+}
+.header-title {
+  font-family: 'Orbitron', monospace;
+  font-size:1em; font-weight:900; color:var(--green);
+  text-shadow: 0 0 12px rgba(0,255,68,0.5);
+}
+.back-btn {
+  background: rgba(0,255,68,0.06);
+  border: 1px solid rgba(0,255,68,0.2);
+  color: var(--green2); padding: 6px 14px; border-radius:4px;
+  font-family: 'JetBrains Mono', monospace; font-size:0.75em; font-weight:500;
+  cursor:pointer; text-decoration:none; transition:all 0.2s;
+}
+.back-btn:hover { background: rgba(0,255,68,0.12); box-shadow: var(--glow); }
+
+/* HUD */
+.hud { margin-left:auto; display:flex; align-items:center; gap:10px; }
+.hud-stat {
+  background: rgba(0,255,68,0.04); border: 1px solid rgba(0,255,68,0.15);
+  border-radius:4px; padding:6px 14px; text-align:center;
+}
+.hud-stat .v {
+  font-family: 'JetBrains Mono', monospace; font-size:1.2em; font-weight:600;
+  color:var(--green); display:block; line-height:1;
+  text-shadow: 0 0 8px rgba(0,255,68,0.5);
+}
+.hud-stat .l { font-size:0.55em; color:var(--muted); letter-spacing:1px; text-transform:uppercase; display:block; margin-top:2px; }
+.hud-xp {
+  background: rgba(0,255,68,0.04); border: 1px solid rgba(0,255,68,0.15);
+  border-radius:4px; padding:7px 14px; min-width:150px;
+}
+.hud-xp-lbl { display:flex; justify-content:space-between; font-family:'JetBrains Mono',monospace; font-size:0.55em; color:var(--muted); margin-bottom:5px; }
+.hud-bar-bg { background:rgba(0,0,0,0.4); border-radius:2px; height:5px; overflow:hidden; }
+.hud-bar { height:100%; background:linear-gradient(90deg,var(--green3),var(--green)); border-radius:2px; transition:width 0.8s ease; box-shadow:0 0 8px rgba(0,255,68,0.4); }
+
+/* LAYOUT */
+.layout {
+  max-width:1300px; margin:0 auto; padding:28px 24px;
+  display:grid; grid-template-columns:260px 1fr; gap:24px;
+  position:relative; z-index:1;
+}
+
+/* SIDEBAR */
+.sidebar { display:flex; flex-direction:column; gap:14px; }
+.scard {
+  background: var(--card); border: 1px solid var(--border); border-radius:6px; padding:16px;
+}
+.scard-title {
+  font-family:'JetBrains Mono',monospace; font-size:0.65em; font-weight:600;
+  color:var(--green); text-transform:uppercase; letter-spacing:2px;
+  margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid var(--border);
+}
+.scard-title::before { content:'> '; }
+
+/* NAV */
+.nav-link {
+  display:flex; align-items:center; gap:8px; padding:8px 10px;
+  border-radius:3px; text-decoration:none; color:var(--muted);
+  font-family:'JetBrains Mono',monospace; font-size:0.75em; font-weight:500;
+  transition:all 0.2s; margin-bottom:3px; border-left:3px solid transparent;
+}
+.nav-link:hover { color:var(--green); background:rgba(0,255,68,0.04); border-left-color:var(--green3); }
+.nav-link.active { color:var(--green); background:rgba(0,255,68,0.07); border-left-color:var(--green); }
+.nav-link::before { content:'$ '; opacity:0.5; }
+.nav-link.active::before { opacity:1; }
+
+/* PROGRESS */
+.prog-block { margin-bottom:10px; }
+.prog-label { display:flex; justify-content:space-between; font-family:'JetBrains Mono',monospace; font-size:0.65em; color:var(--muted); margin-bottom:4px; }
+.prog-label span:last-child { color:var(--green); }
+.prog-bg { background:rgba(0,0,0,0.4); height:4px; border-radius:1px; overflow:hidden; }
+.prog-fill { height:100%; border-radius:1px; transition:width 0.8s ease; }
+.pf-g { background:var(--green); box-shadow:0 0 6px rgba(0,255,68,0.4); }
+.pf-a { background:var(--amber); box-shadow:0 0 6px rgba(255,170,0,0.4); }
+.pf-b { background:var(--blue); box-shadow:0 0 6px rgba(0,170,255,0.4); }
+.pf-l { background:var(--lime); }
+
+/* BADGE GRID */
+.badge-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }
+.badge-item {
+  aspect-ratio:1; border-radius:4px; border:1px solid rgba(0,255,68,0.08);
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.2em; background:rgba(0,0,0,0.3);
+  filter:grayscale(1) opacity(0.25); transition:all 0.4s; position:relative;
+}
+.badge-item.unlocked {
+  filter:none; background:rgba(0,255,68,0.08); border-color:rgba(0,255,68,0.3);
+  box-shadow:0 0 14px rgba(0,255,68,0.25);
+}
+.badge-item[title]:hover::after {
+  content:attr(title); position:absolute; bottom:calc(100% + 5px); left:50%; transform:translateX(-50%);
+  background:#0a160a; color:var(--green); border:1px solid var(--border);
+  font-family:'JetBrains Mono',monospace; font-size:0.6em; padding:3px 7px; border-radius:3px; white-space:nowrap; z-index:100;
+}
+
+/* MAIN */
+.main { display:flex; flex-direction:column; gap:20px; }
+
+/* HERO / TERMINAL */
+.hero {
+  background: var(--card); border:1px solid rgba(0,255,68,0.2);
+  border-radius:8px; padding:0; overflow:hidden;
+  box-shadow: 0 0 40px rgba(0,255,68,0.06);
+}
+.terminal-bar {
+  background: #0d1f0d; padding:10px 16px;
+  display:flex; align-items:center; gap:8px;
+  border-bottom:1px solid var(--border);
+}
+.t-dot { width:12px; height:12px; border-radius:50%; }
+.t-dot.r { background:#ff5f57; }
+.t-dot.y { background:#febc2e; }
+.t-dot.g { background:#28c840; }
+.t-title { font-family:'JetBrains Mono',monospace; font-size:0.72em; color:var(--muted); margin-left:auto; margin-right:auto; }
+.terminal-body { padding:28px 32px; }
+.terminal-body .prompt-line {
+  font-family:'JetBrains Mono',monospace; font-size:0.78em; color:var(--muted); margin-bottom:4px;
+}
+.terminal-body h1 {
+  font-family:'Orbitron',monospace; font-size:1.9em; font-weight:900;
+  color:var(--green); text-shadow:var(--glow); line-height:1.15; margin-bottom:8px;
+}
+.terminal-body .hero-sub { color:var(--text2); font-size:0.88em; margin-bottom:18px; }
+.hero-chips { display:flex; gap:8px; flex-wrap:wrap; }
+.chip {
+  background:rgba(0,255,68,0.06); border:1px solid rgba(0,255,68,0.15);
+  border-radius:3px; padding:4px 12px; font-size:0.75em; font-weight:700; color:var(--green2);
+  font-family:'JetBrains Mono',monospace;
+}
+.chip.amber { background:rgba(255,170,0,0.06); border-color:rgba(255,170,0,0.15); color:var(--amber); }
+.chip.blue { background:rgba(0,170,255,0.06); border-color:rgba(0,170,255,0.15); color:var(--blue); }
+
+/* CARD */
+.card { background:var(--card); border:1px solid var(--border); border-radius:6px; overflow:hidden; }
+.card-head {
+  padding:14px 20px; display:flex; align-items:center; gap:10px;
+  border-bottom:1px solid var(--border); background:rgba(0,255,68,0.02);
+}
+.card-icon {
+  width:32px; height:32px; border-radius:4px;
+  display:flex; align-items:center; justify-content:center; font-size:1em;
+}
+.ci-g { background:rgba(0,255,68,0.1); border:1px solid rgba(0,255,68,0.2); }
+.ci-a { background:rgba(255,170,0,0.1); border:1px solid rgba(255,170,0,0.2); }
+.ci-b { background:rgba(0,170,255,0.1); border:1px solid rgba(0,170,255,0.2); }
+.card-title {
+  font-family:'JetBrains Mono',monospace; font-size:0.78em; font-weight:600;
+  color:var(--green); letter-spacing:1px;
+}
+.xp-tag {
+  margin-left:auto; background:rgba(0,255,68,0.08); border:1px solid rgba(0,255,68,0.2);
+  color:var(--green); padding:2px 10px; border-radius:2px;
+  font-family:'JetBrains Mono',monospace; font-size:0.65em; font-weight:600;
+}
+.xp-tag.amber { background:rgba(255,170,0,0.08); border-color:rgba(255,170,0,0.2); color:var(--amber); }
+.card-body { padding:20px; }
+
+/* OBJECTIVES */
+.obj-list { list-style:none; display:flex; flex-direction:column; gap:7px; }
+.obj-item {
+  display:flex; align-items:center; gap:10px; padding:10px 14px;
+  background:rgba(0,0,0,0.2); border:1px solid rgba(0,255,68,0.06);
+  border-radius:4px; cursor:pointer; transition:all 0.2s;
+  font-size:0.88em; font-weight:600;
+}
+.obj-item:hover { background:rgba(0,255,68,0.04); border-color:rgba(0,255,68,0.15); }
+.obj-item.checked { background:rgba(0,255,68,0.05); border-color:rgba(0,255,68,0.2); text-decoration:line-through; color:var(--muted); }
+.obj-circle {
+  width:20px; height:20px; border-radius:2px; flex-shrink:0;
+  border:1px solid rgba(0,255,68,0.2);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'JetBrains Mono',monospace; font-size:0.65em; transition:all 0.2s;
+}
+.obj-item.checked .obj-circle {
+  background:var(--green); border-color:var(--green); color:#000; font-weight:700;
+  box-shadow:0 0 10px rgba(0,255,68,0.4);
+}
+
+/* CONCEPT GRID */
+.concept-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:12px; margin-bottom:20px; }
+.concept-card {
+  background:rgba(0,0,0,0.3); border:1px solid rgba(0,255,68,0.08);
+  border-radius:5px; padding:14px; border-left:3px solid var(--green3);
+  transition:all 0.2s;
+}
+.concept-card:hover { border-left-color:var(--green); background:rgba(0,255,68,0.03); }
+.concept-card.amber { border-left-color:var(--amber); }
+.concept-card.blue { border-left-color:var(--blue); }
+.concept-title {
+  font-family:'JetBrains Mono',monospace; font-size:0.75em; font-weight:600;
+  color:var(--green); margin-bottom:8px;
+}
+.concept-card.amber .concept-title { color:var(--amber); }
+.concept-card.blue .concept-title { color:var(--blue); }
+.tag {
+  display:inline-flex; background:rgba(0,0,0,0.3); border:1px solid rgba(0,255,68,0.08);
+  border-radius:2px; padding:2px 7px; font-family:'JetBrains Mono',monospace;
+  font-size:0.68em; color:var(--muted); margin:2px 1px; transition:all 0.15s;
+}
+.tag:hover { color:var(--green); border-color:rgba(0,255,68,0.2); }
+
+/* CMD BLOCK */
+.cmd-block {
+  background:#020802; border:1px solid rgba(0,255,68,0.12);
+  border-radius:5px; padding:14px 16px;
+  font-family:'JetBrains Mono',monospace; font-size:0.77em;
+  line-height:1.8; margin:10px 0; overflow-x:auto;
+  box-shadow:inset 0 0 30px rgba(0,0,0,0.5);
+}
+.cmd-block .prompt { color:#00cc33; }
+.cmd-block .cmd { color:#b8e0b8; }
+.cmd-block .comment { color:#224422; }
+.cmd-block .output { color:var(--amber); }
+.cmd-block .value { color:var(--green); font-weight:600; }
+.cmd-block .error { color:var(--red); }
+
+/* STEP */
+.step { display:flex; gap:10px; margin-bottom:10px; align-items:flex-start; }
+.step-num {
+  width:24px; height:24px; border-radius:3px; flex-shrink:0;
+  background:rgba(0,255,68,0.1); border:1px solid rgba(0,255,68,0.25);
+  color:var(--green); display:flex; align-items:center; justify-content:center;
+  font-family:'JetBrains Mono',monospace; font-size:0.7em; font-weight:600; margin-top:2px;
+}
+.step p { font-size:0.86em; line-height:1.5; color:var(--text2); }
+.step code { font-family:'JetBrains Mono',monospace; background:rgba(0,255,68,0.08); color:var(--green); padding:1px 5px; border-radius:2px; font-size:0.9em; }
+
+/* GLOSSARY */
+.gloss-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:8px; }
+.gloss-item {
+  background:rgba(0,0,0,0.2); border:1px solid rgba(0,255,68,0.06);
+  border-radius:4px; padding:10px 12px; transition:all 0.2s;
+}
+.gloss-item:hover { border-color:rgba(0,255,68,0.15); }
+.gloss-term { font-family:'JetBrains Mono',monospace; font-size:0.75em; font-weight:600; color:var(--green); margin-bottom:3px; }
+.gloss-def { font-size:0.75em; color:var(--muted); line-height:1.4; }
+
+/* VIDEO */
+.video-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(210px,1fr)); gap:12px; }
+.video-card {
+  background:rgba(0,0,0,0.2); border:1px solid rgba(0,255,68,0.06);
+  border-radius:5px; overflow:hidden; transition:all 0.2s;
+}
+.video-card:hover { border-color:rgba(0,255,68,0.2); transform:translateY(-2px); }
+.video-thumb {
+  height:90px; background:linear-gradient(135deg,#020a02,#050e05);
+  display:flex; align-items:center; justify-content:center;
+}
+.play-btn {
+  width:42px; height:42px; border-radius:50%;
+  background:rgba(0,255,68,0.12); border:1px solid rgba(0,255,68,0.3);
+  color:var(--green); font-size:1.1em; cursor:pointer; transition:all 0.2s;
+  display:flex; align-items:center; justify-content:center;
+}
+.play-btn:hover { background:rgba(0,255,68,0.25); box-shadow:0 0 16px rgba(0,255,68,0.3); transform:scale(1.1); }
+.video-info { padding:10px 12px; }
+.video-info h4 { font-size:0.8em; font-weight:700; color:var(--text); margin-bottom:3px; }
+.video-info p { font-size:0.7em; color:var(--muted); margin-bottom:7px; }
+.video-link {
+  font-family:'JetBrains Mono',monospace; font-size:0.65em; color:var(--green);
+  text-decoration:none; border:1px solid rgba(0,255,68,0.2);
+  padding:3px 8px; border-radius:2px; display:inline-flex; align-items:center; gap:4px; transition:all 0.2s;
+}
+.video-link:hover { background:rgba(0,255,68,0.08); }
+
+/* MISSIONS */
+.mission { border:1px solid rgba(0,255,68,0.08); border-radius:5px; overflow:hidden; transition:all 0.2s; margin-bottom:10px; }
+.mission:hover { border-color:rgba(0,255,68,0.18); }
+.mission.done { border-color:rgba(0,255,68,0.3); }
+.mission-head {
+  padding:12px 16px; display:flex; align-items:center; gap:12px;
+  cursor:pointer; background:rgba(0,0,0,0.2); user-select:none; transition:background 0.2s;
+}
+.mission.done .mission-head { background:rgba(0,255,68,0.04); }
+.mission-head:hover { background:rgba(0,255,68,0.04); }
+.mission-num {
+  width:36px; height:36px; border-radius:4px; flex-shrink:0;
+  font-family:'JetBrains Mono',monospace; font-size:0.8em; font-weight:600;
+  background:rgba(0,255,68,0.1); border:1px solid rgba(0,255,68,0.2); color:var(--green);
+  display:flex; align-items:center; justify-content:center;
+}
+.mission.done .mission-num { background:rgba(0,255,68,0.2); color:var(--green); border-color:rgba(0,255,68,0.4); }
+.mission-info { flex:1; }
+.mission-title { font-weight:700; font-size:0.9em; color:var(--text); }
+.mission.done .mission-title { color:var(--green); }
+.mission-meta { font-size:0.7em; color:var(--muted); margin-top:2px; }
+.mission-xp { background:rgba(0,255,68,0.08); border:1px solid rgba(0,255,68,0.15); color:var(--green); padding:2px 10px; border-radius:2px; font-family:'JetBrains Mono',monospace; font-size:0.65em; font-weight:600; }
+.mission.done .mission-xp { background:rgba(0,255,68,0.15); border-color:rgba(0,255,68,0.3); }
+.mission-toggle { color:var(--muted); font-size:0.75em; transition:transform 0.3s; }
+.mission.open .mission-toggle { transform:rotate(180deg); }
+.mission-body { max-height:0; overflow:hidden; transition:max-height 0.4s ease, padding 0.3s; padding:0 16px; }
+.mission.open .mission-body { max-height:900px; padding:4px 16px 16px; }
+.mission-desc { font-size:0.83em; color:var(--muted); margin-bottom:12px; padding:8px 12px; background:rgba(0,0,0,0.2); border-left:2px solid var(--green3); border-radius:0 4px 4px 0; }
+
+/* COMPLETE BTN */
+.complete-btn {
+  width:100%; margin-top:12px; padding:11px; border:none; border-radius:4px;
+  cursor:pointer; font-family:'JetBrains Mono',monospace; font-size:0.82em; font-weight:600;
+  background:rgba(0,255,68,0.06); border:1px solid rgba(0,255,68,0.2); color:var(--green);
+  transition:all 0.3s; letter-spacing:1px;
+}
+.complete-btn:hover:not(:disabled) { background:rgba(0,255,68,0.14); box-shadow:0 0 16px rgba(0,255,68,0.2); }
+.complete-btn:disabled { background:rgba(0,255,68,0.1); border-color:rgba(0,255,68,0.3); cursor:default; }
+
+/* ROUTE TABLE INTERACTIVE */
+.route-table { width:100%; border-collapse:collapse; font-family:'JetBrains Mono',monospace; font-size:0.72em; }
+.route-table th {
+  background:rgba(0,255,68,0.08); color:var(--green); font-weight:600;
+  padding:8px 12px; text-align:left; border-bottom:1px solid var(--border);
+  letter-spacing:1px;
+}
+.route-table td { padding:7px 12px; border-bottom:1px solid rgba(0,255,68,0.04); color:var(--text2); }
+.route-table tr:hover td { background:rgba(0,255,68,0.03); color:var(--text); }
+.route-type { display:inline-block; padding:1px 6px; border-radius:2px; font-size:0.85em; }
+.rt-s { background:rgba(0,170,255,0.12); color:var(--blue); border:1px solid rgba(0,170,255,0.2); }
+.rt-c { background:rgba(0,255,68,0.12); color:var(--green); border:1px solid rgba(0,255,68,0.2); }
+.rt-o { background:rgba(255,170,0,0.12); color:var(--amber); border:1px solid rgba(255,170,0,0.2); }
+
+/* NAT DEMO */
+.nat-demo { display:flex; align-items:center; gap:12px; flex-wrap:wrap; justify-content:center; padding:20px; background:rgba(0,0,0,0.2); border-radius:5px; }
+.nat-box {
+  background:rgba(0,255,68,0.04); border:1px solid rgba(0,255,68,0.15);
+  border-radius:5px; padding:12px 16px; text-align:center; min-width:110px;
+}
+.nat-box .nat-label { font-family:'JetBrains Mono',monospace; font-size:0.65em; color:var(--muted); margin-bottom:4px; }
+.nat-box .nat-ip { font-family:'JetBrains Mono',monospace; font-size:0.85em; color:var(--green); font-weight:600; }
+.nat-arrow { font-size:1.4em; color:var(--green3); flex-shrink:0; animation:arrowPulse 1.5s ease-in-out infinite; }
+@keyframes arrowPulse { 0%,100%{opacity:0.4} 50%{opacity:1; color:var(--green);} }
+.nat-translate {
+  background:rgba(255,170,0,0.06); border:1px solid rgba(255,170,0,0.2);
+  border-radius:5px; padding:10px 14px; text-align:center;
+}
+.nat-translate .nt-label { font-family:'JetBrains Mono',monospace; font-size:0.6em; color:var(--amber); }
+.nat-translate .nt-text { font-family:'JetBrains Mono',monospace; font-size:0.75em; color:var(--amber); font-weight:600; margin-top:2px; }
+
+/* QUIZ */
+.quiz-prog-wrap { margin-bottom:14px; }
+.qprog-label { display:flex; justify-content:space-between; font-family:'JetBrains Mono',monospace; font-size:0.65em; color:var(--muted); margin-bottom:4px; }
+.qprog-bg { background:rgba(0,0,0,0.4); height:3px; border-radius:1px; overflow:hidden; }
+.qprog-fill { height:100%; width:0%; background:var(--green); transition:width 0.5s ease; box-shadow:0 0 6px rgba(0,255,68,0.4); }
+.qcard { display:none; }
+.qcard.active { display:block; }
+.qcard h4 { font-size:0.9em; font-weight:700; color:var(--text); margin-bottom:12px; line-height:1.4; }
+.qopts { display:flex; flex-direction:column; gap:7px; margin-bottom:10px; }
+.qopt {
+  padding:9px 14px; border-radius:3px; cursor:pointer;
+  background:rgba(0,0,0,0.2); border:1px solid rgba(0,255,68,0.06);
+  color:var(--text2); font-family:'Barlow',sans-serif; font-size:0.84em; font-weight:600;
+  text-align:left; transition:all 0.2s;
+}
+.qopt:hover:not(:disabled) { background:rgba(0,255,68,0.05); border-color:rgba(0,255,68,0.2); color:var(--green); }
+.qopt.correct { background:rgba(0,255,68,0.08); border-color:rgba(0,255,68,0.35); color:var(--green); }
+.qopt.wrong { background:rgba(255,51,51,0.06); border-color:rgba(255,51,51,0.3); color:var(--red); }
+.qopt:disabled { cursor:default; }
+.qfb { display:none; padding:9px 12px; border-radius:3px; font-size:0.8em; line-height:1.4; margin:8px 0; }
+.qfb.show { display:block; }
+.qfb.ok { background:rgba(0,255,68,0.06); border:1px solid rgba(0,255,68,0.2); color:var(--green); }
+.qfb.fail { background:rgba(255,51,51,0.05); border:1px solid rgba(255,51,51,0.2); color:var(--red); }
+.qnx { display:none; }
+.qnx.show { display:flex; justify-content:flex-end; }
+.qnx-btn {
+  padding:6px 16px; border:1px solid rgba(0,255,68,0.2); background:rgba(0,255,68,0.06); color:var(--green);
+  border-radius:2px; cursor:pointer; font-family:'JetBrains Mono',monospace; font-size:0.72em; transition:all 0.2s;
+}
+.qnx-btn:hover { background:rgba(0,255,68,0.12); }
+.q-result { display:none; text-align:center; padding:24px 0; }
+.q-result.show { display:block; }
+.q-score { font-family:'JetBrains Mono',monospace; font-size:3em; font-weight:600; color:var(--green); text-shadow:0 0 20px rgba(0,255,68,0.5); display:block; margin-bottom:8px; }
+.q-msg { color:var(--muted); margin-bottom:12px; font-size:0.85em; }
+.q-xp { color:var(--green2); font-family:'JetBrains Mono',monospace; font-size:0.78em; margin-bottom:14px; }
+.restart-btn { padding:8px 20px; border:1px solid rgba(0,255,68,0.2); background:rgba(0,255,68,0.06); color:var(--green); border-radius:3px; cursor:pointer; font-family:'JetBrains Mono',monospace; font-size:0.78em; transition:all 0.2s; }
+.restart-btn:hover { background:rgba(0,255,68,0.12); }
+
+/* ACHIEVEMENTS */
+.ach-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+.ach-card {
+  background:rgba(0,0,0,0.2); border:1px solid rgba(0,255,68,0.06);
+  border-radius:4px; padding:12px; text-align:center;
+  filter:grayscale(1) opacity(0.25); transition:all 0.4s;
+}
+.ach-card.unlocked { filter:none; background:rgba(0,255,68,0.06); border-color:rgba(0,255,68,0.25); box-shadow:0 0 16px rgba(0,255,68,0.12); }
+.ach-icon { font-size:1.8em; display:block; margin-bottom:5px; }
+.ach-name { font-family:'JetBrains Mono',monospace; font-size:0.62em; color:var(--muted); line-height:1.2; }
+.ach-card.unlocked .ach-name { color:var(--green); }
+
+/* SECTION TITLE */
+.section-title {
+  font-family:'JetBrains Mono',monospace; font-size:0.65em; letter-spacing:2px;
+  color:var(--muted); text-transform:uppercase; margin-bottom:12px;
+  display:flex; align-items:center; gap:8px;
+}
+.section-title::before { content:'# '; color:var(--green); }
+.section-title::after { content:''; flex:1; height:1px; background:linear-gradient(90deg,var(--border),transparent); }
+
+/* TOAST */
+.toast {
+  position:fixed; bottom:24px; right:24px; z-index:9998;
+  background:var(--card2); border:1px solid rgba(0,255,68,0.25);
+  border-radius:5px; padding:12px 16px; display:flex; align-items:center; gap:12px;
+  box-shadow:0 8px 28px rgba(0,0,0,0.6), 0 0 20px rgba(0,255,68,0.1);
+  transform:translateY(100px) scale(0.9); opacity:0;
+  transition:all 0.4s cubic-bezier(0.175,0.885,0.32,1.275); max-width:300px;
+}
+.toast.show { transform:translateY(0) scale(1); opacity:1; }
+.toast-icon { font-size:1.4em; }
+.toast-title { font-family:'JetBrains Mono',monospace; font-weight:600; font-size:0.85em; color:var(--green); }
+.toast-msg { font-size:0.72em; color:var(--muted); margin-top:2px; }
+
+@media (max-width:900px) { .layout { grid-template-columns:1fr; } .hud { display:none; } }
+</style>
+</head>
+<body>
+<div class="grid-lines"></div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-icon" id="toast-icon">📡</div>
+  <div><div class="toast-title" id="toast-title">+XP</div><div class="toast-msg" id="toast-msg"></div></div>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <div>
+      <div class="header-brand">// ISO-103 · FATEC OURINHOS · 3º SEM</div>
+      <div class="header-title">SEMANA 04 ─── ROTEADORES</div>
+    </div>
+    <a href="semana04.html" class="back-btn">← back</a>
+    <div class="hud">
+      <div class="hud-stat"><span class="v" id="hud-xp">0</span><span class="l">xp</span></div>
+      <div class="hud-stat"><span class="v" id="hud-streak">0</span><span class="l">streak</span></div>
+      <div class="hud-stat"><span class="v" id="hud-badges">0</span><span class="l">badges</span></div>
+      <div class="hud-xp">
+        <div class="hud-xp-lbl"><span id="hud-level">novice</span><span id="hud-pct">0%</span></div>
+        <div class="hud-bar-bg"><div class="hud-bar" id="hud-bar" style="width:0%"></div></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="scard">
+      <div class="scard-title">módulos s4</div>
+      <a href="semana04-ap.html" class="nav-link">access_points</a>
+      <a href="semana04-router.html" class="nav-link active">roteadores</a>
+      <a href="semana04-vlan.html" class="nav-link">vlans</a>
+    </div>
+
+    <div class="scard">
+      <div class="scard-title">progresso</div>
+      <div class="prog-block">
+        <div class="prog-label"><span>objetivos</span><span id="obj-pct">0%</span></div>
+        <div class="prog-bg"><div class="prog-fill pf-g" id="obj-bar" style="width:0%"></div></div>
+      </div>
+      <div class="prog-block">
+        <div class="prog-label"><span>missões</span><span id="mis-pct">0%</span></div>
+        <div class="prog-bg"><div class="prog-fill pf-a" id="mis-bar" style="width:0%"></div></div>
+      </div>
+      <div class="prog-block">
+        <div class="prog-label"><span>quiz</span><span id="quiz-pct">0%</span></div>
+        <div class="prog-bg"><div class="prog-fill pf-b" id="quiz-bar" style="width:0%"></div></div>
+      </div>
+      <div class="prog-block">
+        <div class="prog-label"><span>conquistas</span><span id="ach-pct">0/6</span></div>
+        <div class="prog-bg"><div class="prog-fill pf-l" id="ach-bar" style="width:0%"></div></div>
+      </div>
+    </div>
+
+    <div class="scard">
+      <div class="scard-title">conquistas</div>
+      <div class="badge-grid">
+        <div class="badge-item" id="bm-start" title="Módulo iniciado">🚀</div>
+        <div class="badge-item" id="bm-obj" title="Todos objetivos">🎯</div>
+        <div class="badge-item" id="bm-router" title="Missão roteador">📡</div>
+        <div class="badge-item" id="bm-nat" title="NAT configurado">🔀</div>
+        <div class="badge-item" id="bm-quiz" title="Quiz 4+ acertos">🎓</div>
+        <div class="badge-item" id="bm-perfect" title="Quiz perfeito!">💎</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- HERO TERMINAL -->
+    <div class="hero">
+      <div class="terminal-bar">
+        <div class="t-dot r"></div>
+        <div class="t-dot y"></div>
+        <div class="t-dot g"></div>
+        <div class="t-title">router@cisco:~$ — ISO-103 Semana 04</div>
+      </div>
+      <div class="terminal-body">
+        <div class="prompt-line">root@fatec:~$ ./carregar-modulo roteadores.sh</div>
+        <h1>Roteadores<br>& Roteamento</h1>
+        <div class="hero-sub">Console/SSH · Interfaces LAN/WAN · Roteamento Estático · NAT/PAT · ACL · Backup</div>
+        <div class="hero-chips">
+          <div class="chip">⏱ 45 min</div>
+          <div class="chip">🖥 CLI Lab</div>
+          <div class="chip amber">⚡ 200 XP</div>
+          <div class="chip blue">🏆 6 conquistas</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OBJETIVOS -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon ci-g">🎯</div>
+        <div class="card-title">// OBJETIVOS DO MÓDULO</div>
+        <div class="xp-tag">+25 XP</div>
+      </div>
+      <div class="card-body">
+        <ul class="obj-list">
+          <li class="obj-item" onclick="toggleObj(this,0)">
+            <div class="obj-circle"></div>
+            <span>Configurar interfaces LAN e WAN no roteador Cisco</span>
+          </li>
+          <li class="obj-item" onclick="toggleObj(this,1)">
+            <div class="obj-circle"></div>
+            <span>Implementar roteamento estático entre redes</span>
+          </li>
+          <li class="obj-item" onclick="toggleObj(this,2)">
+            <div class="obj-circle"></div>
+            <span>Configurar NAT/PAT para compartilhamento de IP público</span>
+          </li>
+          <li class="obj-item" onclick="toggleObj(this,3)">
+            <div class="obj-circle"></div>
+            <span>Criar ACLs de controle de tráfego</span>
+          </li>
+          <li class="obj-item" onclick="toggleObj(this,4)">
+            <div class="obj-circle"></div>
+            <span>Configurar acesso SSH seguro ao roteador</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- CONTEÚDO -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon ci-g">📖</div>
+        <div class="card-title">// CONTEÚDO TÉCNICO</div>
+      </div>
+      <div class="card-body">
+        <div class="section-title">Comandos e Protocolos</div>
+        <div class="concept-grid">
+          <div class="concept-card">
+            <div class="concept-title">⚙️ Interfaces</div>
+            <span class="tag">ip address</span>
+            <span class="tag">no shutdown</span>
+            <span class="tag">GigabitEthernet</span>
+            <span class="tag">subinterface</span>
+            <span class="tag">description</span>
+          </div>
+          <div class="concept-card amber">
+            <div class="concept-title">🔀 NAT / PAT</div>
+            <span class="tag">ip nat inside</span>
+            <span class="tag">ip nat outside</span>
+            <span class="tag">overload (PAT)</span>
+            <span class="tag">access-list</span>
+            <span class="tag">show nat translations</span>
+          </div>
+          <div class="concept-card blue">
+            <div class="concept-title">🛡 ACL & SSH</div>
+            <span class="tag">access-list</span>
+            <span class="tag">permit/deny</span>
+            <span class="tag">crypto key generate</span>
+            <span class="tag">ip ssh version 2</span>
+            <span class="tag">login local</span>
+          </div>
+        </div>
+
+        <!-- ROUTE TABLE INTERACTIVE -->
+        <div class="section-title" style="margin-top:20px">Tabela de Roteamento Interativa</div>
+        <p style="font-size:0.78em;color:var(--muted);margin-bottom:10px">Clique numa rota para ver detalhes</p>
+        <table class="route-table">
+          <thead>
+            <tr>
+              <th>Tipo</th><th>Rede Destino</th><th>Máscara</th><th>Próx. Salto</th><th>Interface</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr onclick="showRouteInfo('C','192.168.10.0/24','Diretamente conectada — VLAN 10 Admin')">
+              <td><span class="route-type rt-c">C</span></td>
+              <td>192.168.10.0</td><td>/24</td><td>—</td><td>Gi0/0.10</td>
+            </tr>
+            <tr onclick="showRouteInfo('C','192.168.20.0/24','Diretamente conectada — VLAN 20 Vendas')">
+              <td><span class="route-type rt-c">C</span></td>
+              <td>192.168.20.0</td><td>/24</td><td>—</td><td>Gi0/0.20</td>
+            </tr>
+            <tr onclick="showRouteInfo('S','10.0.0.0/8','Rota estática — rede corporativa remota')">
+              <td><span class="route-type rt-s">S</span></td>
+              <td>10.0.0.0</td><td>/8</td><td>200.10.5.254</td><td>Gi0/1</td>
+            </tr>
+            <tr onclick="showRouteInfo('S','0.0.0.0/0','Rota padrão — gateway para Internet')">
+              <td><span class="route-type rt-s">S*</span></td>
+              <td>0.0.0.0</td><td>/0</td><td>200.10.5.254</td><td>Gi0/1</td>
+            </tr>
+          </tbody>
+        </table>
+        <div id="route-info" style="display:none;margin-top:10px;padding:10px 14px;background:rgba(0,255,68,0.04);border:1px solid rgba(0,255,68,0.15);border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.75em;color:var(--green)"></div>
+
+        <!-- NAT DEMO -->
+        <div class="section-title" style="margin-top:20px">Demonstração NAT/PAT</div>
+        <div class="nat-demo">
+          <div class="nat-box">
+            <div class="nat-label">CLIENTE A</div>
+            <div class="nat-ip">192.168.10.5</div>
+          </div>
+          <div class="nat-arrow">→</div>
+          <div class="nat-translate">
+            <div class="nt-label">ROTEADOR + NAT</div>
+            <div class="nt-text">PAT Overload</div>
+          </div>
+          <div class="nat-arrow">→</div>
+          <div class="nat-box">
+            <div class="nat-label">INTERNET</div>
+            <div class="nat-ip">200.10.5.1</div>
+          </div>
+        </div>
+
+        <div class="section-title" style="margin-top:20px">Glossário de Roteamento</div>
+        <div class="gloss-grid">
+          <div class="gloss-item">
+            <div class="gloss-term">NAT/PAT</div>
+            <div class="gloss-def">Traduz IPs privados para público. PAT mapeia múltiplos hosts numa única porta do IP externo.</div>
+          </div>
+          <div class="gloss-item">
+            <div class="gloss-term">ACL</div>
+            <div class="gloss-def">Access Control List — filtra pacotes por origem/destino/protocolo. Política de segurança no roteador.</div>
+          </div>
+          <div class="gloss-item">
+            <div class="gloss-term">Router-on-Stick</div>
+            <div class="gloss-def">Uma interface física + subinterfaces dot1Q. Uma subinterface por VLAN, cada uma como gateway.</div>
+          </div>
+          <div class="gloss-item">
+            <div class="gloss-term">SSH v2</div>
+            <div class="gloss-def">Secure Shell — acesso remoto seguro ao IOS. Substitui Telnet que transmite em texto claro.</div>
+          </div>
+          <div class="gloss-item">
+            <div class="gloss-term">Default Route</div>
+            <div class="gloss-def">0.0.0.0/0 — rota coringa. Todo tráfego sem rota específica é encaminhado aqui (gateway da Internet).</div>
+          </div>
+          <div class="gloss-item">
+            <div class="gloss-term">show ip route</div>
+            <div class="gloss-def">Exibe rotas estáticas (S), dinâmicas (O/E) e diretamente conectadas (C) na tabela de roteamento.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VÍDEOS -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon ci-a">🎬</div>
+        <div class="card-title">// VÍDEOS RECOMENDADOS</div>
+        <div class="xp-tag amber">+10 XP por vídeo</div>
+      </div>
+      <div class="card-body">
+        <div class="video-grid">
+          <div class="video-card">
+            <div class="video-thumb"><div class="play-btn" onclick="watchVideo(this)">▶</div></div>
+            <div class="video-info">
+              <h4>Roteador Cisco — Config Inicial</h4>
+              <p>Comandos essenciais · IOS básico</p>
+              <a href="https://www.youtube.com/watch?v=example2" target="_blank" class="video-link" onclick="watchVideo(this)">▶ assistir</a>
+            </div>
+          </div>
+          <div class="video-card">
+            <div class="video-thumb"><div class="play-btn" onclick="watchVideo(this)">▶</div></div>
+            <div class="video-info">
+              <h4>NAT e PAT na prática</h4>
+              <p>Configuração completa · Packet Tracer</p>
+              <a href="https://www.youtube.com/watch?v=example7" target="_blank" class="video-link" onclick="watchVideo(this)">▶ assistir</a>
+            </div>
+          </div>
+          <div class="video-card">
+            <div class="video-thumb"><div class="play-btn" onclick="watchVideo(this)">▶</div></div>
+            <div class="video-info">
+              <h4>ACL — Controle de Acesso</h4>
+              <p>Standard e Extended · exemplos</p>
+              <a href="https://www.youtube.com/watch?v=example8" target="_blank" class="video-link" onclick="watchVideo(this)">▶ assistir</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MISSÃO -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon ci-g">⚔️</div>
+        <div class="card-title">// MISSÃO PRÁTICA</div>
+        <div class="xp-tag">+60 XP</div>
+      </div>
+      <div class="card-body">
+        <div class="mission" id="m-router" onclick="toggleMission('m-router')">
+          <div class="mission-head">
+            <div class="mission-num">M1</div>
+            <div class="mission-info">
+              <div class="mission-title">Setup de Roteador Básico</div>
+              <div class="mission-meta">📡 Roteadores · ⏱ 30 min · Dificuldade: Médio</div>
+            </div>
+            <span class="mission-xp">+60 XP</span>
+            <span class="mission-toggle">▼</span>
+          </div>
+          <div class="mission-body">
+            <div class="mission-desc">Configurar IP nas interfaces, roteamento estático entre duas redes e NAT/PAT.</div>
+            <div class="step">
+              <div class="step-num">1</div>
+              <p>Configure as subinterfaces para inter-VLAN routing (router-on-a-stick):</p>
+            </div>
+            <div class="cmd-block">
+<span class="prompt">Router(config)#</span> <span class="cmd">interface GigabitEthernet 0/0</span><br>
+<span class="prompt">Router(config-if)#</span> <span class="cmd">no shutdown</span><br>
+<br>
+<span class="prompt">Router(config)#</span> <span class="cmd">interface GigabitEthernet 0/0.10</span><br>
+<span class="prompt">Router(config-subif)#</span> <span class="cmd">encapsulation dot1Q 10</span><br>
+<span class="prompt">Router(config-subif)#</span> <span class="cmd">ip address 192.168.10.1 255.255.255.0</span><br>
+<br>
+<span class="prompt">Router(config)#</span> <span class="cmd">interface GigabitEthernet 0/0.20</span><br>
+<span class="prompt">Router(config-subif)#</span> <span class="cmd">encapsulation dot1Q 20</span><br>
+<span class="prompt">Router(config-subif)#</span> <span class="cmd">ip address 192.168.20.1 255.255.255.0</span>
+            </div>
+            <div class="step">
+              <div class="step-num">2</div>
+              <p>Configure a interface WAN (<code>Gi0/1</code>) com IP público e habilite NAT:</p>
+            </div>
+            <div class="cmd-block">
+<span class="prompt">Router(config)#</span> <span class="cmd">interface GigabitEthernet 0/1</span><br>
+<span class="prompt">Router(config-if)#</span> <span class="cmd">ip address 200.10.5.1 255.255.255.0</span><br>
+<span class="prompt">Router(config-if)#</span> <span class="cmd">ip nat outside</span><br>
+<span class="prompt">Router(config-if)#</span> <span class="cmd">no shutdown</span><br>
+<br>
+<span class="prompt">Router(config)#</span> <span class="cmd">interface GigabitEthernet 0/0.10</span><br>
+<span class="prompt">Router(config-subif)#</span> <span class="cmd">ip nat inside</span><br>
+<br>
+<span class="prompt">Router(config)#</span> <span class="cmd">ip nat inside source list 1 interface Gi0/1 overload</span><br>
+<span class="prompt">Router(config)#</span> <span class="cmd">access-list 1 permit 192.168.0.0 0.0.255.255</span>
+            </div>
+            <div class="step">
+              <div class="step-num">3</div>
+              <p>Verifique com <code>show ip route</code>, <code>show ip nat translations</code> e faça ping entre VLANs.</p>
+            </div>
+            <button class="complete-btn" id="btn-mr" onclick="completeMission(event)">
+              [ENTER] ── MARCAR COMO CONCLUÍDA
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUIZ -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon ci-a">🧠</div>
+        <div class="card-title">// QUIZ — ROTEADORES</div>
+        <div class="xp-tag amber">até +60 XP</div>
+      </div>
+      <div class="card-body">
+        <div class="quiz-prog-wrap">
+          <div class="qprog-label"><span>// questão</span><span id="q-cnt">0/5</span></div>
+          <div class="qprog-bg"><div class="qprog-fill" id="q-prog"></div></div>
+        </div>
+
+        <div class="qcard active" id="qc0">
+          <h4>O que o comando <code>show ip route</code> exibe no roteador Cisco?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(0,0,2)">A) Lista de usuários autenticados</button>
+            <button class="qopt" onclick="ansQ(0,1,2)">B) Status das interfaces físicas</button>
+            <button class="qopt" onclick="ansQ(0,2,2)">C) Rotas estáticas, dinâmicas e diretamente conectadas</button>
+            <button class="qopt" onclick="ansQ(0,3,2)">D) Tabela ARP</button>
+          </div>
+          <div class="qfb" id="qfb0"></div>
+          <div class="qnx" id="qnx0"><button class="qnx-btn" onclick="nextQ(1)">next →</button></div>
+        </div>
+
+        <div class="qcard" id="qc1">
+          <h4>NAT/PAT permite que centenas de dispositivos internos compartilhem um único IP público. Qual comando habilita o PAT?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(1,0,0)">A) ip nat inside source list 1 interface Gi0/1 overload</button>
+            <button class="qopt" onclick="ansQ(1,1,0)">B) ip nat enable</button>
+            <button class="qopt" onclick="ansQ(1,2,0)">C) nat overload global</button>
+            <button class="qopt" onclick="ansQ(1,3,0)">D) interface nat outside overload</button>
+          </div>
+          <div class="qfb" id="qfb1"></div>
+          <div class="qnx" id="qnx1"><button class="qnx-btn" onclick="nextQ(2)">next →</button></div>
+        </div>
+
+        <div class="qcard" id="qc2">
+          <h4>Para configurar SSH no roteador Cisco, qual a sequência correta de passos?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(2,0,2)">A) enable secret → telnet → login</button>
+            <button class="qopt" onclick="ansQ(2,1,2)">B) ssh version → access-list → VTY</button>
+            <button class="qopt" onclick="ansQ(2,2,2)">C) ip domain-name → crypto key generate rsa → VTY transport ssh</button>
+            <button class="qopt" onclick="ansQ(2,3,2)">D) username → password → ip ssh</button>
+          </div>
+          <div class="qfb" id="qfb2"></div>
+          <div class="qnx" id="qnx2"><button class="qnx-btn" onclick="nextQ(3)">next →</button></div>
+        </div>
+
+        <div class="qcard" id="qc3">
+          <h4>O que é "Router-on-a-Stick"?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(3,0,3)">A) Roteador conectado em série com apenas um switch</button>
+            <button class="qopt" onclick="ansQ(3,1,3)">B) Protocolo de roteamento dinâmico</button>
+            <button class="qopt" onclick="ansQ(3,2,3)">C) Técnica de backup de configuração</button>
+            <button class="qopt" onclick="ansQ(3,3,3)">D) Uma interface física + subinterfaces dot1Q — uma por VLAN como gateway</button>
+          </div>
+          <div class="qfb" id="qfb3"></div>
+          <div class="qnx" id="qnx3"><button class="qnx-btn" onclick="nextQ(4)">next →</button></div>
+        </div>
+
+        <div class="qcard" id="qc4">
+          <h4>Uma ACL standard filtra pacotes baseada em qual critério?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(4,0,0)">A) Apenas endereço IP de origem</button>
+            <button class="qopt" onclick="ansQ(4,1,0)">B) Endereço IP de origem e destino</button>
+            <button class="qopt" onclick="ansQ(4,2,0)">C) Protocolo e porta</button>
+            <button class="qopt" onclick="ansQ(4,3,0)">D) MAC address</button>
+          </div>
+          <div class="qfb" id="qfb4"></div>
+          <div class="qnx" id="qnx4"><button class="qnx-btn" onclick="showResult()">resultado →</button></div>
+        </div>
+
+        <div class="q-result" id="q-result">
+          <span class="q-score" id="q-score">0/5</span>
+          <div class="q-msg" id="q-msg"></div>
+          <div class="q-xp" id="q-xp-earned"></div>
+          <button class="restart-btn" onclick="restartQuiz()">restart_quiz()</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONQUISTAS -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon ci-b">🏆</div>
+        <div class="card-title">// CONQUISTAS — ROTEADORES</div>
+      </div>
+      <div class="card-body">
+        <div class="ach-grid">
+          <div class="ach-card" id="a-start"><span class="ach-icon">🚀</span><div class="ach-name">boot_ok</div></div>
+          <div class="ach-card" id="a-obj"><span class="ach-icon">🎯</span><div class="ach-name">obj_completo</div></div>
+          <div class="ach-card" id="a-router"><span class="ach-icon">📡</span><div class="ach-name">router_up</div></div>
+          <div class="ach-card" id="a-nat"><span class="ach-icon">🔀</span><div class="ach-name">nat_online</div></div>
+          <div class="ach-card" id="a-quiz"><span class="ach-icon">🎓</span><div class="ach-name">quiz_pass</div></div>
+          <div class="ach-card" id="a-perfect"><span class="ach-icon">💎</span><div class="ach-name">100pct_score</div></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+let xp = 0, streak = 0, badges = 0;
+const TOTAL_XP = 200;
+const objChecked = [false,false,false,false,false];
+let missionDone = false;
+let videosWatched = 0;
+let qCorrect = 0;
+const qAnswers = {};
+
+setTimeout(() => unlock('a-start','bm-start','Módulo roteadores carregado!'), 800);
+
+function updateHUD() {
+  document.getElementById('hud-xp').textContent = xp;
+  document.getElementById('hud-streak').textContent = streak;
+  document.getElementById('hud-badges').textContent = badges;
+  const pct = Math.min(Math.round(xp / TOTAL_XP * 100), 100);
+  document.getElementById('hud-bar').style.width = pct + '%';
+  document.getElementById('hud-pct').textContent = pct + '%';
+  const lvls = [[0,'novice'],[50,'operator'],[100,'technician'],[160,'specialist'],[200,'routing_master']];
+  let lv = lvls[0][1];
+  for (const [t,n] of lvls) { if (xp >= t) lv = n; }
+  document.getElementById('hud-level').textContent = lv;
+  const od = objChecked.filter(Boolean).length;
+  setBar('obj-bar','obj-pct', od/5*100, Math.round(od/5*100)+'%');
+  setBar('mis-bar','mis-pct', missionDone?100:0, missionDone?'100%':'0%');
+  setBar('quiz-bar','quiz-pct', Math.min(qCorrect/5*100,100), Math.round(qCorrect/5*100)+'%');
+  setBar('ach-bar','ach-pct', badges/6*100, badges+'/6');
+}
+function setBar(bid, lid, pct, txt) {
+  document.getElementById(bid).style.width = Math.min(pct,100)+'%';
+  document.getElementById(lid).textContent = txt;
+}
+function addXP(amount, msg, icon) {
+  xp += amount; updateHUD();
+  toast(icon||'⚡', '+'+amount+' XP', msg);
+}
+function toast(icon, title, msg) {
+  document.getElementById('toast-icon').textContent = icon;
+  document.getElementById('toast-title').textContent = title;
+  document.getElementById('toast-msg').textContent = msg;
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+function unlock(achId, badgeId, msg) {
+  const a = document.getElementById(achId);
+  const b = document.getElementById(badgeId);
+  if (a && !a.classList.contains('unlocked')) {
+    a.classList.add('unlocked');
+    if (b) b.classList.add('unlocked');
+    badges++; updateHUD();
+    toast('🏆','badge_unlocked', msg);
+  }
+}
+function toggleObj(el, idx) {
+  el.classList.toggle('checked');
+  objChecked[idx] = el.classList.contains('checked');
+  if (objChecked[idx]) { addXP(5,'obj marcado','✅'); streak++; } else streak = Math.max(0,streak-1);
+  if (objChecked.filter(Boolean).length === 5) { addXP(25,'todos objetivos!','🎯'); unlock('a-obj','bm-obj','obj_complete!'); }
+  updateHUD();
+}
+function toggleMission(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+function completeMission(e) {
+  e.stopPropagation();
+  if (missionDone) return;
+  missionDone = true;
+  const btn = document.getElementById('btn-mr');
+  btn.disabled = true; btn.textContent = '[OK] MISSÃO CONCLUÍDA';
+  document.getElementById('m-router').classList.add('done');
+  addXP(60,'Roteador configurado!','⚔️');
+  unlock('a-router','bm-router','router_up — missão OK!');
+  unlock('a-nat','bm-nat','nat_online — PAT configurado!');
+  streak++; updateHUD();
+}
+function watchVideo(el) {
+  if (!el.dataset.counted) {
+    el.dataset.counted='1'; videosWatched++;
+    addXP(10,'vídeo '+videosWatched+' assistido!','🎬');
+  }
+}
+function showRouteInfo(type, net, desc) {
+  const types = { C:'Conectada diretamente', S:'Rota estática', O:'OSPF', E:'EIGRP' };
+  const box = document.getElementById('route-info');
+  box.style.display = 'block';
+  box.innerHTML = `<span style="color:#00cc33">${types[type[0]]||type}</span>  ${net} — ${desc}`;
+  addXP(2,'Rota explorada!','🗺️');
+}
+
+const QFB = [
+  { ok:'✅ Correto! show ip route exibe rotas estáticas (S), dinâmicas (O/E) e diretamente conectadas (C).' },
+  { ok:'✅ Exato! O "overload" ao final é o que ativa o PAT — múltiplos hosts mapeados numa única porta do IP público.' },
+  { ok:'✅ Perfeito! A sequência correta: ip domain-name → crypto key generate rsa → VTY transport input ssh.' },
+  { ok:'✅ Correto! Router-on-a-stick: uma interface física + subinterfaces dot1Q, economizando hardware.' },
+  { ok:'✅ Exato! ACL standard (1-99) filtra apenas pelo IP de origem. ACL extended (100-199) filtra origem, destino e protocolo.' },
+];
+const QXPS = [10,15,15,10,10];
+
+function ansQ(qi, chosen, correct) {
+  const card = document.getElementById('qc'+qi);
+  const opts = card.querySelectorAll('.qopt');
+  opts.forEach(o => o.disabled = true);
+  opts[chosen].classList.add(chosen===correct?'correct':'wrong');
+  if (chosen!==correct) opts[correct].classList.add('correct');
+  const fb = document.getElementById('qfb'+qi);
+  const nx = document.getElementById('qnx'+qi);
+  const ok = chosen===correct;
+  fb.innerHTML = ok ? QFB[qi].ok : '❌ Errado. ' + QFB[qi].ok;
+  fb.className = 'qfb show '+(ok?'ok':'fail');
+  nx.classList.add('show');
+  if (ok) { qCorrect++; addXP(QXPS[qi],'resposta correta!','🎯'); streak++; } else streak=0;
+  qAnswers[qi]=ok;
+  document.getElementById('q-prog').style.width = ((qi+1)/5*100)+'%';
+  document.getElementById('q-cnt').textContent = (qi+1)+'/5';
+  updateHUD();
+}
+function nextQ(n) {
+  document.getElementById('qc'+(n-1)).classList.remove('active');
+  document.getElementById('qc'+n).classList.add('active');
+}
+function showResult() {
+  document.getElementById('qc4').classList.remove('active');
+  const r = document.getElementById('q-result');
+  r.classList.add('show');
+  document.getElementById('q-score').textContent = qCorrect+'/5';
+  const msgs = ['revise o conteúdo e tente novamente','progredindo...','bom trabalho!','ótimo domínio de routing!','💎 routing_master desbloqueado!'];
+  document.getElementById('q-msg').textContent = '// ' + msgs[Math.min(qCorrect,4)];
+  const earned = Object.keys(qAnswers).filter(k=>qAnswers[k]).reduce((a,k)=>a+QXPS[+k],0);
+  document.getElementById('q-xp-earned').textContent = '// +'+earned+' XP earned';
+  document.getElementById('q-prog').style.width='100%';
+  document.getElementById('q-cnt').textContent='5/5';
+  if (qCorrect>=4) unlock('a-quiz','bm-quiz','quiz_pass — 4+ acertos!');
+  if (qCorrect===5) unlock('a-perfect','bm-perfect','100pct_score! 💎 5/5');
+  updateHUD();
+}
+function restartQuiz() {
+  qCorrect=0;
+  document.getElementById('q-result').classList.remove('show');
+  document.getElementById('q-prog').style.width='0%';
+  document.getElementById('q-cnt').textContent='0/5';
+  for (let i=0;i<5;i++) {
+    const c = document.getElementById('qc'+i);
+    c.classList.toggle('active',i===0);
+    c.querySelectorAll('.qopt').forEach(o=>{o.disabled=false;o.classList.remove('correct','wrong');});
+    const fb=c.querySelector('.qfb'); if(fb){fb.className='qfb';fb.innerHTML='';}
+    const nx=c.querySelector('.qnx'); if(nx)nx.classList.remove('show');
+  }
+  updateHUD();
+}
+</script>
+</body>
+</html>

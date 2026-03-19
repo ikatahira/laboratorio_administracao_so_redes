@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plano de Ensino - Laboratório de Administração de Sistemas Operacionais de Redes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .header {
+            background-color: #003366;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #003366;
+            border-bottom: 3px solid #003366;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #0066cc;
+            margin-top: 25px;
+            border-left: 4px solid #0066cc;
+            padding-left: 10px;
+        }
+        h3 {
+            color: #0099cc;
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #003366;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .info-box {
+            background-color: #e6f2ff;
+            border-left: 4px solid #0066cc;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .destaque {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        ul, ol {
+            margin-left: 20px;
+        }
+        .cronograma {
+            margin: 20px 0;
+        }
+        .semana {
+            background-color: #f8f9fa;
+            border-left: 3px solid #0066cc;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .foto-professor-container {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 20px;
+            align-items: flex-start;
+        }
+        .foto-professor-box {
+            min-width: 200px;
+            text-align: center;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #003366;
+        }
+        .foto-professor {
+            width: 180px;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: 3px solid #003366;
+        }
+        @media (max-width: 768px) {
+            .foto-professor-container {
+                flex-direction: column;
+            }
+            .foto-professor-box {
+                width: 100%;
+                min-width: auto;
+            }
+        }
+        @media print {
+            body {
+                background-color: white;
+            }
+            .container {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>FATEC OURINHOS</h1>
+        <p>Centro Paula Souza</p>
+        <p>Curso Superior de Tecnologia em Segurança da Informação</p>
+    </div>
+
+    <div class="container">
+        <h1>PLANO DE ENSINO</h1>
+        
+        <h2>1. IDENTIFICAÇÃO</h2>
+        
+        <div style="display: flex; gap: 30px; margin-bottom: 20px; align-items: flex-start;">
+            <div style="flex: 1;">
+                <table>
+                    <tr>
+                        <th>Disciplina</th>
+                        <td colspan="3">Laboratório de Administração de Sistemas Operacionais de Redes</td>
+                    </tr>
+                    <tr>
+                        <th>Código</th>
+                        <td>ISO-103</td>
+                        <th>Semestre</th>
+                        <td>3º Semestre</td>
+                    </tr>
+                    <tr>
+                        <th>Carga Horária Total</th>
+                        <td>40 horas</td>
+                        <th>Aulas Semanais</th>
+                        <td>2 aulas</td>
+                    </tr>
+                    <tr>
+                        <th>Carga Horária Teórica</th>
+                        <td>0 horas</td>
+                        <th>Carga Horária Prática</th>
+                        <td>40 horas</td>
+                    </tr>
+                </table>
+            </div>
+            <div style="min-width: 200px; text-align: center; background-color: #f8f9fa; padding: 15px; border-radius: 8px; border: 2px solid #003366;">
+                <img src="foto2.png" alt="Professor Responsável" style="width: 180px; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; border: 3px solid #003366;">
+                <p style="margin: 0; font-weight: bold; color: #003366;">Professor Responsável: Isaque Katahira</p>
+            </div>
+        </div>
+
+        <h2>2. EMENTA</h2>
+        <p>Abordagem prática em laboratório dos processos de administração de sistemas operacionais de redes, dando ênfase a tecnologias amplamente adotadas na área e complementando os estudos desenvolvidos em "Administração de Sistemas Operacionais de Redes". Nivelamento inicial com infraestrutura física de redes de computadores incluindo componentes de cabeamento estruturado, equipamentos de conectividade e técnicas de montagem e configuração.</p>
+
+        <h2>3. OBJETIVOS</h2>
+        
+        <h3>3.1 Objetivo Geral</h3>
+        <p>Capacitar o aluno para a administração de sistemas operacionais de redes utilizando-se de boas práticas e ferramentas amplamente adotadas na área, com domínio prévio da infraestrutura física necessária para a implementação de ambientes de rede.</p>
+
+        <h3>3.2 Objetivos Específicos</h3>
+        <ul>
+            <li>Conhecer e manipular corretamente os principais componentes de hardware utilizados em redes de computadores</li>
+            <li>Desenvolver habilidades práticas em crimpagem de cabos de rede e utilização de ferramentas específicas</li>
+            <li>Compreender a organização física de ambientes de rede (racks, patch panels, cabeamento estruturado)</li>
+            <li>Configurar equipamentos de rede como switches, roteadores e access points</li>
+            <li>Instalar e configurar sistemas operacionais de rede em diferentes plataformas</li>
+            <li>Implementar serviços de rede essenciais em ambientes corporativos</li>
+            <li>Aplicar técnicas de administração, monitoramento e troubleshooting em sistemas operacionais de rede</li>
+            <li>Automatizar tarefas administrativas através de scripts</li>
+            <li>Implementar políticas de segurança em sistemas operacionais de rede</li>
+        </ul>
+
+        <h2>4. COMPETÊNCIAS E HABILIDADES</h2>
+        <ul>
+            <li>Montar e organizar infraestrutura física de redes de computadores</li>
+            <li>Confeccionar cabos de rede seguindo padrões de mercado (T568A e T568B)</li>
+            <li>Configurar VLANs e gerenciar switches gerenciáveis</li>
+            <li>Instalar e configurar sistemas operacionais de rede (Windows Server e Linux)</li>
+            <li>Gerenciar usuários, grupos e permissões em ambientes de rede</li>
+            <li>Implementar compartilhamento de recursos e serviços de diretório</li>
+            <li>Configurar serviços essenciais: DNS, DHCP, arquivo, impressão</li>
+            <li>Realizar backup e recuperação de sistemas</li>
+            <li>Monitorar desempenho e disponibilidade de serviços</li>
+            <li>Desenvolver scripts para automação de tarefas administrativas</li>
+            <li>Diagnosticar e solucionar problemas em ambientes de rede</li>
+        </ul>
+
+        <h2>5. CONTEÚDO PROGRAMÁTICO</h2>
+
+        <div class="destaque">
+            <h3>MÓDULO 1 - NIVELAMENTO: INFRAESTRUTURA FÍSICA DE REDES (Semanas 1-4)</h3>
+        </div>
+
+        <h3>5.1 Fundamentos de Cabeamento Estruturado</h3>
+        <ul>
+            <li>Normas e padrões de cabeamento (ANSI/TIA/EIA-568, ISO/IEC 11801)</li>
+            <li>Categorias de cabos (Cat5e, Cat6, Cat6a)</li>
+            <li>Padrões de pinagem T568A e T568B</li>
+            <li>Cabos diretos (straight-through) e cabos cruzados (crossover)</li>
+            <li>Patch cords: tipos, aplicações e boas práticas</li>
+        </ul>
+
+        <h3>5.2 Componentes e Equipamentos</h3>
+        <ul>
+            <li><strong>Patch Panel:</strong> tipos, categoria, aplicação e montagem</li>
+            <li><strong>Racks de rede:</strong> tamanhos (U), organização e ventilação</li>
+            <li><strong>Conectores RJ-45:</strong> tipos (blindado e não blindado), características</li>
+            <li><strong>Anilhas de identificação:</strong> organização e documentação</li>
+            <li><strong>Switches:</strong> não gerenciáveis e gerenciáveis, VLANs</li>
+            <li><strong>Roteadores:</strong> conceitos básicos, configuração inicial</li>
+            <li><strong>Access Points:</strong> redes sem fio, padrões 802.11, configuração</li>
+        </ul>
+
+        <h3>5.3 Ferramentas e Técnicas</h3>
+        <ul>
+            <li><strong>Alicate de crimpagem:</strong> uso correto, manutenção</li>
+            <li><strong>Alicate punch down (push down):</strong> conexão em patch panels e blocos 110</li>
+            <li><strong>Testadores de cabo:</strong> continuidade e certificação</li>
+            <li>Técnicas de crimpagem de cabos de rede</li>
+            <li>Organização de cabeamento em racks</li>
+            <li>Identificação e etiquetagem de cabos</li>
+            <li>Teste e certificação de enlaces</li>
+        </ul>
+
+        <h3>5.4 Configuração Básica de Equipamentos</h3>
+        <ul>
+            <li>Configuração de VLANs em switches gerenciáveis</li>
+            <li>Configuração básica de roteadores</li>
+            <li>Configuração de access points e redes Wi-Fi</li>
+            <li>Segurança básica em equipamentos de rede</li>
+        </ul>
+
+        <div class="destaque">
+            <h3>MÓDULO 2 - SISTEMAS OPERACIONAIS DE REDE LINUX (Semanas 5-11)</h3>
+        </div>
+
+        <h3>5.5 Instalação e Configuração Inicial</h3>
+        <ul>
+            <li>Planejamento de instalação de servidores Linux</li>
+            <li>Particionamento de discos e sistemas de arquivos</li>
+            <li>Instalação de distribuições servidor (Ubuntu Server, CentOS/Rocky Linux, Debian)</li>
+            <li>Configuração inicial pós-instalação</li>
+            <li>Gerenciamento de pacotes (apt, yum/dnf)</li>
+        </ul>
+
+        <h3>5.6 Administração de Usuários e Permissões</h3>
+        <ul>
+            <li>Criação e gerenciamento de usuários e grupos</li>
+            <li>Permissões de arquivos e diretórios (chmod, chown, chgrp)</li>
+            <li>Permissões especiais (SUID, SGID, Sticky Bit)</li>
+            <li>ACLs (Access Control Lists)</li>
+            <li>Políticas de senhas e autenticação</li>
+        </ul>
+
+        <h3>5.7 Serviços de Rede em Linux</h3>
+        <ul>
+            <li>Configuração de rede (interfaces, IP estático/dinâmico, roteamento)</li>
+            <li>Servidor DHCP (ISC DHCP Server)</li>
+            <li>Servidor DNS (BIND9)</li>
+            <li>Servidor de arquivos (Samba, NFS)</li>
+            <li>Servidor de impressão (CUPS)</li>
+            <li>Servidor SSH (configuração e segurança)</li>
+        </ul>
+
+        <h3>5.8 Automação com Scripts</h3>
+        <ul>
+            <li>Shell Script: conceitos fundamentais</li>
+            <li>Variáveis, estruturas de controle e loops</li>
+            <li>Scripts para automação de tarefas administrativas</li>
+            <li>Agendamento de tarefas (cron, at)</li>
+            <li>Scripts de backup automatizado</li>
+        </ul>
+
+        <div class="destaque">
+            <h3>MÓDULO 3 - SISTEMAS OPERACIONAIS DE REDE WINDOWS (Semanas 12-18)</h3>
+        </div>
+
+        <h3>5.9 Windows Server - Instalação e Configuração</h3>
+        <ul>
+            <li>Planejamento e instalação do Windows Server</li>
+            <li>Server Core vs Desktop Experience</li>
+            <li>Configuração inicial (Server Manager)</li>
+            <li>Gerenciamento de funções e recursos</li>
+            <li>Windows Admin Center</li>
+        </ul>
+
+        <h3>5.10 Active Directory Domain Services (AD DS)</h3>
+        <ul>
+            <li>Conceitos de domínio, árvore e floresta</li>
+            <li>Instalação e configuração de controlador de domínio</li>
+            <li>Gerenciamento de usuários, grupos e unidades organizacionais</li>
+            <li>Group Policy Objects (GPO)</li>
+            <li>Replicação e backup do Active Directory</li>
+        </ul>
+
+        <h3>5.11 Serviços de Rede em Windows Server</h3>
+        <ul>
+            <li>Servidor DHCP</li>
+            <li>Servidor DNS integrado ao Active Directory</li>
+            <li>Servidor de arquivos e compartilhamento (File Server)</li>
+            <li>DFS (Distributed File System)</li>
+            <li>Servidor de impressão (Print Server)</li>
+            <li>Remote Desktop Services</li>
+        </ul>
+
+        <h3>5.12 Automação com PowerShell</h3>
+        <ul>
+            <li>Introdução ao PowerShell</li>
+            <li>Cmdlets essenciais para administração</li>
+            <li>Scripts PowerShell para automação</li>
+            <li>Gerenciamento remoto (PSRemoting)</li>
+            <li>Scripts de administração do Active Directory</li>
+        </ul>
+
+        <div class="destaque">
+            <h3>MÓDULO 4 - MONITORAMENTO, BACKUP E TROUBLESHOOTING (Semanas 19-20)</h3>
+        </div>
+
+        <h3>5.13 Monitoramento e Performance</h3>
+        <ul>
+            <li>Ferramentas de monitoramento em Linux (top, htop, iotop, netstat)</li>
+            <li>Logs do sistema (/var/log, journalctl)</li>
+            <li>Performance Monitor e Event Viewer no Windows</li>
+            <li>Análise de desempenho e otimização</li>
+        </ul>
+
+        <h3>5.14 Backup e Recuperação</h3>
+        <ul>
+            <li>Estratégias de backup (completo, incremental, diferencial)</li>
+            <li>Ferramentas de backup em Linux (rsync, tar, Bacula)</li>
+            <li>Windows Server Backup</li>
+            <li>Testes de recuperação</li>
+            <li>Documentação de procedimentos</li>
+        </ul>
+
+        <h3>5.15 Troubleshooting</h3>
+        <ul>
+            <li>Metodologia de resolução de problemas</li>
+            <li>Ferramentas de diagnóstico de rede (ping, traceroute, nslookup, dig)</li>
+            <li>Análise de logs e eventos</li>
+            <li>Resolução de problemas comuns em servidores</li>
+        </ul>
+
+        <h2>6. METODOLOGIA DE ENSINO</h2>
+        <p>A disciplina será desenvolvida de forma eminentemente prática em laboratório, com as seguintes estratégias:</p>
+        <ul>
+            <li><strong>Aulas práticas em laboratório:</strong> Manipulação direta de equipamentos e sistemas operacionais</li>
+            <li><strong>Demonstrações práticas:</strong> Professor demonstra procedimentos e técnicas</li>
+            <li><strong>Atividades hands-on:</strong> Alunos executam tarefas práticas sob supervisão</li>
+            <li><strong>Projetos práticos:</strong> Implementação de ambientes de rede completos</li>
+            <li><strong>Estudos de caso:</strong> Análise e solução de problemas reais</li>
+            <li><strong>Trabalhos em equipe:</strong> Colaboração para implementação de projetos</li>
+            <li><strong>Documentação técnica:</strong> Elaboração de relatórios e manuais de procedimentos</li>
+        </ul>
+
+        <div class="info-box">
+            <strong>Observação:</strong> O laboratório deverá estar equipado com computadores para prática, equipamentos de rede (switches, roteadores, access points), ferramentas de cabeamento e componentes necessários para as atividades práticas.
+        </div>
+
+        <h2>7. CRONOGRAMA DE ATIVIDADES</h2>
+
+        <div class="cronograma">
+            <div class="semana">
+                <strong>Semana 1:</strong> Apresentação da disciplina. Normas de segurança em laboratório. Introdução ao cabeamento estruturado. Padrões e normas.
+            </div>
+            <div class="semana">
+                <strong>Semana 2:</strong> Práticas de crimpagem de cabos de rede. Uso de alicate de crimpagem. Padrões T568A e T568B. Testes de continuidade.
+            </div>
+            <div class="semana">
+                <strong>Semana 3:</strong> Patch panels: montagem e conexão. Uso de alicate punch down. Organização de racks de rede. Identificação com anilhas.
+            </div>
+            <div class="semana">
+                <strong>Semana 4:</strong> Configuração de switches (VLANs). Configuração de roteadores. Configuração de access points. Montagem de infraestrutura completa.
+            </div>
+            <div class="semana">
+                <strong>Semana 5:</strong> Planejamento e instalação de Linux Server. Particionamento. Configuração inicial.
+            </div>
+            <div class="semana">
+                <strong>Semana 6:</strong> Gerenciamento de usuários e grupos em Linux. Permissões de arquivos.
+            </div>
+            <div class="semana">
+                <strong>Semana 7:</strong> Configuração de rede em Linux. Servidor DHCP.
+            </div>
+            <div class="semana">
+                <strong>Semana 8:</strong> Servidor DNS (BIND9). Configuração de zonas.
+            </div>
+            <div class="semana">
+                <strong>Semana 9:</strong> Servidor de arquivos Samba. Integração com Windows.
+            </div>
+            <div class="semana">
+                <strong>Semana 10:</strong> Introdução a Shell Script. Automação de tarefas.
+            </div>
+            <div class="semana">
+                <strong>Semana 11:</strong> Scripts avançados. Agendamento com cron. Projeto integrado Linux.
+            </div>
+            <div class="semana">
+                <strong>Semana 12:</strong> Instalação e configuração do Windows Server. Server Manager.
+            </div>
+            <div class="semana">
+                <strong>Semana 13:</strong> Active Directory: conceitos e instalação de DC.
+            </div>
+            <div class="semana">
+                <strong>Semana 14:</strong> Gerenciamento de usuários e grupos no AD. Unidades organizacionais.
+            </div>
+            <div class="semana">
+                <strong>Semana 15:</strong> Group Policy Objects (GPO). Políticas de segurança.
+            </div>
+            <div class="semana">
+                <strong>Semana 16:</strong> Serviços DHCP e DNS no Windows Server.
+            </div>
+            <div class="semana">
+                <strong>Semana 17:</strong> Servidor de arquivos e impressão. DFS.
+            </div>
+            <div class="semana">
+                <strong>Semana 18:</strong> Introdução ao PowerShell. Automação com scripts.
+            </div>
+            <div class="semana">
+                <strong>Semana 19:</strong> Monitoramento de servidores. Backup e recuperação.
+            </div>
+            <div class="semana">
+                <strong>Semana 20:</strong> Troubleshooting. Projeto final integrado. Avaliação prática.
+            </div>
+        </div>
+
+        <h2>8. AVALIAÇÃO</h2>
+
+        <h3>8.1 Instrumentos de Avaliação</h3>
+        <ul>
+            <li><strong>Atividades práticas em laboratório (40%):</strong> Exercícios individuais e em grupo executados durante as aulas</li>
+            <li><strong>Projetos práticos (30%):</strong> Implementação de ambientes completos de rede</li>
+            <li><strong>Relatórios técnicos (15%):</strong> Documentação de procedimentos e configurações realizadas</li>
+            <li><strong>Avaliação prática final (15%):</strong> Prova prática envolvendo todos os módulos</li>
+        </ul>
+
+        <h3>8.2 Critérios de Avaliação</h3>
+        <ul>
+            <li>Domínio das técnicas de crimpagem e montagem de infraestrutura física</li>
+            <li>Capacidade de instalação e configuração de sistemas operacionais de rede</li>
+            <li>Habilidade em configurar serviços de rede essenciais</li>
+            <li>Qualidade dos scripts desenvolvidos</li>
+            <li>Capacidade de diagnosticar e resolver problemas</li>
+            <li>Organização e documentação do trabalho realizado</li>
+            <li>Aplicação de boas práticas e normas de segurança</li>
+            <li>Trabalho em equipe e colaboração</li>
+        </ul>
+
+        <h3>8.3 Composição da Nota Final</h3>
+        <p><strong>Média Final = (AP × 0,40) + (PP × 0,30) + (RT × 0,15) + (AVF × 0,15)</strong></p>
+        <p>Onde:</p>
+        <ul>
+            <li>AP = Atividades Práticas</li>
+            <li>PP = Projetos Práticos</li>
+            <li>RT = Relatórios Técnicos</li>
+            <li>AVF = Avaliação Final</li>
+        </ul>
+
+        <div class="info-box">
+            <strong>Critério de Aprovação:</strong> Média Final ≥ 6,0 e frequência mínima de 75%
+        </div>
+
+        <h2>9. BIBLIOGRAFIA BÁSICA</h2>
+        <ol>
+            <li>BURGESS, Mark. <strong>Princípios de Administração de Redes e Sistemas.</strong> 2.ed. Rio de Janeiro: LTC, 2006.</li>
+            <li>SNYDER, Gary; NEMETH, Evi; HEIN, Trent. <strong>Manual completo do Linux: guia do administrador.</strong> 2.ed. São Paulo: Prentice Hall Brasil, 2007.</li>
+            <li>STANEK, William R. <strong>Windows Server 2008: guia completo.</strong> Porto Alegre: Bookman Companhia Editora, 2009.</li>
+        </ol>
+
+        <h2>10. BIBLIOGRAFIA COMPLEMENTAR</h2>
+        <ol>
+            <li>FORD JR., Jerry Lee. <strong>Microsoft WSH and VBScript Programming.</strong> Florence: Course Technology PTR, 2008.</li>
+            <li>JARGAS, Aurélio Marinho. <strong>Shell Script Profissional.</strong> São Paulo: Novatec, 2008.</li>
+            <li>LIMONCELLI, Thomas A.; HOGAN, Christina J.; CHALUP, Strata R. <strong>The Practice of System and Network Administration, Second Edition.</strong> Addison-Wesley Professional, 2007.</li>
+            <li>OLIVIERO, Andrew; WOODWARD, Bill. <strong>Cabling: The Complete Guide to Copper and Fiber-Optic Networking.</strong> 4.ed. Sybex, 2010.</li>
+            <li>SHIMONSKI, Robert J.; STEINER, Richard; SHEEDY, Sean M. <strong>Cabeamento de Rede.</strong> Rio de Janeiro: LTC, 2010.</li>
+        </ol>
+
+        <h2>11. RECURSOS NECESSÁRIOS</h2>
+
+        <h3>11.1 Infraestrutura de Laboratório</h3>
+        <ul>
+            <li>Computadores com virtualização (VirtualBox ou VMware) - mínimo de 8GB RAM</li>
+            <li>Servidores físicos ou recursos de virtualização adequados</li>
+            <li>Acesso à internet</li>
+            <li>Projetor multimídia</li>
+        </ul>
+
+        <h3>11.2 Equipamentos de Rede</h3>
+        <ul>
+            <li>Switches gerenciáveis (com suporte a VLANs)</li>
+            <li>Roteadores</li>
+            <li>Access Points Wi-Fi</li>
+            <li>Racks de rede (mínimo 12U)</li>
+            <li>Patch Panels de 24 portas</li>
+            <li>Réguas de energia para rack</li>
+        </ul>
+
+        <h3>11.3 Ferramentas e Materiais</h3>
+        <ul>
+            <li>Alicates de crimpagem RJ-45</li>
+            <li>Alicates punch down (push down)</li>
+            <li>Testadores de cabo</li>
+            <li>Cabos UTP Cat5e ou Cat6 (rolos)</li>
+            <li>Conectores RJ-45</li>
+            <li>Patch cords de diversas cores e tamanhos</li>
+            <li>Anilhas de identificação</li>
+            <li>Organizadores de cabos</li>
+            <li>Abraçadeiras (velcro e nylon)</li>
+        </ul>
+
+        <h3>11.4 Software</h3>
+        <ul>
+            <li>Distribuições Linux: Ubuntu Server, CentOS/Rocky Linux, Debian</li>
+            <li>Windows Server (2016/2019/2022) - licenças educacionais</li>
+            <li>Software de virtualização (VirtualBox, VMware Workstation)</li>
+            <li>Editores de texto e IDEs para scripts</li>
+            <li>Ferramentas de acesso remoto (PuTTY, RDP)</li>
+        </ul>
+
+        <h2>12. OBSERVAÇÕES</h2>
+        <div class="info-box">
+            <ul>
+                <li>Esta é uma disciplina eminentemente prática, requerendo presença obrigatória nas atividades de laboratório</li>
+                <li>O aluno deverá trazer pen drive para salvar configurações e documentação</li>
+                <li>Recomenda-se que o aluno tenha notebook próprio para práticas complementares</li>
+                <li>As práticas com equipamentos físicos devem observar normas de segurança</li>
+                <li>O nivelamento inicial é fundamental para acompanhamento da disciplina</li>
+                <li>A disciplina complementa os conhecimentos teóricos de "Administração de Sistemas Operacionais de Redes" (ISO-003)</li>
+            </ul>
+        </div>
+
+        <div style="margin-top: 40px; padding-top: 20px; border-top: 2px solid #003366;">
+            <p><strong>Professor Responsável:</strong> _________________________________</p>
+            <p><strong>Data:</strong> _________________________________</p>
+            <p><strong>Coordenação do Curso:</strong> _________________________________</p>
+        </div>
+    </div>
+</body>
+</html>

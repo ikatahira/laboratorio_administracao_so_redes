@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia de Estudo - Semana 15</title>
+    <style>* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .header h1 {
+            color: #6a11cb;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+
+        .header .week-info {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .nav-btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(106, 17, 203, 0.4);
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .section h2 {
+            color: #6a11cb;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #2575fc;
+        }
+
+        .exercise-block {
+            background: #f8f9fa;
+            border-left: 5px solid #6a11cb;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+
+        .exercise-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .exercise-number {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+
+        .exercise-title {
+            flex: 1;
+            color: #6a11cb;
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+
+        .rubric-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .rubric-table th {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .rubric-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .rubric-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .rubric-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .criterion {
+            font-weight: bold;
+            color: #6a11cb;
+        }
+
+        .solution-box {
+            background: linear-gradient(to right, #e8f5e9, #f1f8e9);
+            border-left: 5px solid #4caf50;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .solution-box h3 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .example-box {
+            background: #fff3e0;
+            border-left: 5px solid #ff9800;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .example-box h4 {
+            color: #e65100;
+            margin-bottom: 10px;
+        }
+
+        .tip-box {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .tip-box strong {
+            color: #1976d2;
+        }
+
+        .command-box {
+            background: #263238;
+            color: #4caf50;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+
+        ul, ol {
+            margin-left: 20px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .highlight {
+            background: #fff9c4;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #d32f2f;
+        }</style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Guia de Estudo - Semana 15</h1>
+            <p class="week-info">Group Policy Objects (GPO)</p>
+            <div class="nav-buttons">
+                <a href="index.html" class="nav-btn">⬅️ Voltar ao Índice</a>
+                <a href="semana15.html" class="nav-btn">📄 Ver Conteúdo da Semana</a>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>✏️ Exercício 1: Primeira GPO</h2>
+            
+            <div class="exercise-block">
+                <div class="exercise-header">
+                    <div class="exercise-number">1</div>
+                    <div class="exercise-title">Primeira GPO</div>
+                </div>
+
+                <p><strong>📋 Objetivo:</strong> Criar e aplicar GPO simples</p>
+                <p><strong>⏱️ Duração:</strong> 20 minutos</p>
+                <p><strong>📄 Descrição:</strong> GPO de papel de parede corporativo</p>
+
+                <h3 style="color: #6a11cb; margin-top: 25px; margin-bottom: 15px;">📊 Rubrica de Avaliação</h3>
+                
+                <table class="rubric-table">
+                    <thead>
+                        <tr>
+                            <th>Critério</th>
+                            <th>Insuficiente (0-5)</th>
+                            <th>Básico (6-7)</th>
+                            <th>Proficiente (8-9)</th>
+                            <th>Excelente (10)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="criterion">Execução dos Comandos</td>
+                            <td>Comandos incorretos ou não funcionam</td>
+                            <td>Comandos executados com erros</td>
+                            <td>Comandos executados corretamente</td>
+                            <td>Comandos perfeitos com validação</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Compreensão</td>
+                            <td>Não compreende o que está fazendo</td>
+                            <td>Compreensão básica</td>
+                            <td>Boa compreensão dos conceitos</td>
+                            <td>Domínio completo com explicações</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Documentação</td>
+                            <td>Sem documentação</td>
+                            <td>Documentação mínima</td>
+                            <td>Documentação adequada</td>
+                            <td>Documentação completa com prints</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Testes e Validação</td>
+                            <td>Não realiza testes</td>
+                            <td>Testes básicos</td>
+                            <td>Testes adequados</td>
+                            <td>Testes completos com casos edge</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="solution-box">
+                    <h3>💡 Solução Detalhada do Exercício 1</h3>
+                    
+                    <p><strong>Explicação:</strong> Criação de GPO para configuração de desktop</p>
+                    
+                    <h4 style="color: #2e7d32; margin-top: 20px;">📝 Comandos Passo a Passo</h4>
+                    
+                    <div class="command-box">
+# PowerShell:
+New-GPO -Name "Papel de Parede Corporativo"
+# Via GPMC:
+# 1. Group Policy Management
+# 2. Criar nova GPO
+# 3. Edit > User Config > Policies > Admin Templates > Desktop > Desktop
+# 4. Desktop Wallpaper: Enabled
+# 5. Wallpaper Name: \\servidor\wallpaper\logo.jpg
+# 6. Wallpaper Style: Fill
+# 7. Link à OU desejada
+                    </div>
+                    
+                    <div class="tip-box">
+                        <strong>💡 DICA:</strong> Sempre verifique os resultados de cada comando antes de prosseguir para o próximo passo. Use comandos de verificação como <code>id usuário</code>, <code>groups usuário</code>, <code>ls -la</code> para confirmar as alterações.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>✏️ Exercício 2: Política de Senha</h2>
+            
+            <div class="exercise-block">
+                <div class="exercise-header">
+                    <div class="exercise-number">2</div>
+                    <div class="exercise-title">Política de Senha</div>
+                </div>
+
+                <p><strong>📋 Objetivo:</strong> Implementar política de senha forte</p>
+                <p><strong>⏱️ Duração:</strong> 15 minutos</p>
+                <p><strong>📄 Descrição:</strong> Requisitos de complexidade, tempo de expiração</p>
+
+                <h3 style="color: #6a11cb; margin-top: 25px; margin-bottom: 15px;">📊 Rubrica de Avaliação</h3>
+                
+                <table class="rubric-table">
+                    <thead>
+                        <tr>
+                            <th>Critério</th>
+                            <th>Insuficiente (0-5)</th>
+                            <th>Básico (6-7)</th>
+                            <th>Proficiente (8-9)</th>
+                            <th>Excelente (10)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="criterion">Execução dos Comandos</td>
+                            <td>Comandos incorretos ou não funcionam</td>
+                            <td>Comandos executados com erros</td>
+                            <td>Comandos executados corretamente</td>
+                            <td>Comandos perfeitos com validação</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Compreensão</td>
+                            <td>Não compreende o que está fazendo</td>
+                            <td>Compreensão básica</td>
+                            <td>Boa compreensão dos conceitos</td>
+                            <td>Domínio completo com explicações</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Documentação</td>
+                            <td>Sem documentação</td>
+                            <td>Documentação mínima</td>
+                            <td>Documentação adequada</td>
+                            <td>Documentação completa com prints</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Testes e Validação</td>
+                            <td>Não realiza testes</td>
+                            <td>Testes básicos</td>
+                            <td>Testes adequados</td>
+                            <td>Testes completos com casos edge</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="solution-box">
+                    <h3>💡 Solução Detalhada do Exercício 2</h3>
+                    
+                    <p><strong>Explicação:</strong> Política de senha para todo o domínio</p>
+                    
+                    <h4 style="color: #2e7d32; margin-top: 20px;">📝 Comandos Passo a Passo</h4>
+                    
+                    <div class="command-box">
+# Via GPMC:
+# 1. Edit Default Domain Policy
+# 2. Computer Config > Policies > Windows Settings > Security Settings
+# 3. Account Policies > Password Policy
+# 4. Configurar:
+#    - Enforce password history: 24
+#    - Maximum password age: 90 days
+#    - Minimum password length: 12
+#    - Password must meet complexity: Enabled
+gpupdate /force
+                    </div>
+                    
+                    <div class="tip-box">
+                        <strong>💡 DICA:</strong> Sempre verifique os resultados de cada comando antes de prosseguir para o próximo passo. Use comandos de verificação como <code>id usuário</code>, <code>groups usuário</code>, <code>ls -la</code> para confirmar as alterações.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>✏️ Exercício 3: Mapeamento de Drives</h2>
+            
+            <div class="exercise-block">
+                <div class="exercise-header">
+                    <div class="exercise-number">3</div>
+                    <div class="exercise-title">Mapeamento de Drives</div>
+                </div>
+
+                <p><strong>📋 Objetivo:</strong> Automatizar conexão a shares</p>
+                <p><strong>⏱️ Duração:</strong> 20 minutos</p>
+                <p><strong>📄 Descrição:</strong> GPO Preferences para drive mapping</p>
+
+                <h3 style="color: #6a11cb; margin-top: 25px; margin-bottom: 15px;">📊 Rubrica de Avaliação</h3>
+                
+                <table class="rubric-table">
+                    <thead>
+                        <tr>
+                            <th>Critério</th>
+                            <th>Insuficiente (0-5)</th>
+                            <th>Básico (6-7)</th>
+                            <th>Proficiente (8-9)</th>
+                            <th>Excelente (10)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="criterion">Execução dos Comandos</td>
+                            <td>Comandos incorretos ou não funcionam</td>
+                            <td>Comandos executados com erros</td>
+                            <td>Comandos executados corretamente</td>
+                            <td>Comandos perfeitos com validação</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Compreensão</td>
+                            <td>Não compreende o que está fazendo</td>
+                            <td>Compreensão básica</td>
+                            <td>Boa compreensão dos conceitos</td>
+                            <td>Domínio completo com explicações</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Documentação</td>
+                            <td>Sem documentação</td>
+                            <td>Documentação mínima</td>
+                            <td>Documentação adequada</td>
+                            <td>Documentação completa com prints</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Testes e Validação</td>
+                            <td>Não realiza testes</td>
+                            <td>Testes básicos</td>
+                            <td>Testes adequados</td>
+                            <td>Testes completos com casos edge</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="solution-box">
+                    <h3>💡 Solução Detalhada do Exercício 3</h3>
+                    
+                    <p><strong>Explicação:</strong> Mapeamento automático de unidades de rede</p>
+                    
+                    <h4 style="color: #2e7d32; margin-top: 20px;">📝 Comandos Passo a Passo</h4>
+                    
+                    <div class="command-box">
+# Via GPMC:
+# 1. Criar/editar GPO
+# 2. User Config > Preferences > Windows Settings > Drive Maps
+# 3. New > Mapped Drive
+# 4. Location: \\servidor\compartilhado
+# 5. Drive Letter: H:
+# 6. Reconnect: Enabled
+# 7. Label as: Arquivos Departamentais
+# 8. Common > Item-level targeting (opcional)
+gpupdate /force
+                    </div>
+                    
+                    <div class="tip-box">
+                        <strong>💡 DICA:</strong> Sempre verifique os resultados de cada comando antes de prosseguir para o próximo passo. Use comandos de verificação como <code>id usuário</code>, <code>groups usuário</code>, <code>ls -la</code> para confirmar as alterações.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>✏️ Exercício 4: Troubleshooting de GPO</h2>
+            
+            <div class="exercise-block">
+                <div class="exercise-header">
+                    <div class="exercise-number">4</div>
+                    <div class="exercise-title">Troubleshooting de GPO</div>
+                </div>
+
+                <p><strong>📋 Objetivo:</strong> Diagnosticar problemas</p>
+                <p><strong>⏱️ Duração:</strong> 25 minutos</p>
+                <p><strong>📄 Descrição:</strong> Usar gpresult, verificar aplicação</p>
+
+                <h3 style="color: #6a11cb; margin-top: 25px; margin-bottom: 15px;">📊 Rubrica de Avaliação</h3>
+                
+                <table class="rubric-table">
+                    <thead>
+                        <tr>
+                            <th>Critério</th>
+                            <th>Insuficiente (0-5)</th>
+                            <th>Básico (6-7)</th>
+                            <th>Proficiente (8-9)</th>
+                            <th>Excelente (10)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="criterion">Execução dos Comandos</td>
+                            <td>Comandos incorretos ou não funcionam</td>
+                            <td>Comandos executados com erros</td>
+                            <td>Comandos executados corretamente</td>
+                            <td>Comandos perfeitos com validação</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Compreensão</td>
+                            <td>Não compreende o que está fazendo</td>
+                            <td>Compreensão básica</td>
+                            <td>Boa compreensão dos conceitos</td>
+                            <td>Domínio completo com explicações</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Documentação</td>
+                            <td>Sem documentação</td>
+                            <td>Documentação mínima</td>
+                            <td>Documentação adequada</td>
+                            <td>Documentação completa com prints</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Testes e Validação</td>
+                            <td>Não realiza testes</td>
+                            <td>Testes básicos</td>
+                            <td>Testes adequados</td>
+                            <td>Testes completos com casos edge</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="solution-box">
+                    <h3>💡 Solução Detalhada do Exercício 4</h3>
+                    
+                    <p><strong>Explicação:</strong> Ferramentas de diagnóstico de GPOs</p>
+                    
+                    <h4 style="color: #2e7d32; margin-top: 20px;">📝 Comandos Passo a Passo</h4>
+                    
+                    <div class="command-box">
+# PowerShell/CMD:
+gpresult /r
+gpresult /h gpo_report.html
+gpresult /scope:computer /v
+gpresult /scope:user /v
+# GPMC:
+# Group Policy Results Wizard
+# ou
+# rsop.msc (Resultant Set of Policy)
+Get-GPOReport -Name "Nome da GPO" -ReportType Html -Path C:\gpo.html
+                    </div>
+                    
+                    <div class="tip-box">
+                        <strong>💡 DICA:</strong> Sempre verifique os resultados de cada comando antes de prosseguir para o próximo passo. Use comandos de verificação como <code>id usuário</code>, <code>groups usuário</code>, <code>ls -la</code> para confirmar as alterações.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-buttons" style="margin-top: 30px; background: white; border-radius: 12px; padding: 20px;">
+            <a href="index.html" class="nav-btn">⬅️ Voltar ao Índice</a>
+            <a href="semana15.html" class="nav-btn">📄 Ver Conteúdo da Semana</a>
+        </div>
+    </div>
+</body>
+</html>

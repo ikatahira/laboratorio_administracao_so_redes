@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌐 VLANs — Semana 4 | ISO-103</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0c0716;
+  --bg2: #110a1f;
+  --card: #15102a;
+  --card2: #1c1438;
+  --purple: #a855f7;
+  --purple2: #7c3aed;
+  --purple3: #4c1d95;
+  --orange: #f97316;
+  --orange2: #ea580c;
+  --yellow: #eab308;
+  --pink: #ec4899;
+  --teal: #14b8a6;
+  --text: #f0e8ff;
+  --text2: #c4b5d4;
+  --muted: #6b5a80;
+  --border: rgba(168,85,247,0.15);
+  --glow-p: 0 0 20px rgba(168,85,247,0.35);
+  --glow-o: 0 0 20px rgba(249,115,22,0.35);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Space Grotesk', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* BG DECORATION */
+body::before {
+  content:'';
+  position:fixed; top:0; left:0; right:0; bottom:0;
+  background:
+    radial-gradient(ellipse at 15% 30%, rgba(124,58,237,0.08) 0%, transparent 45%),
+    radial-gradient(ellipse at 85% 70%, rgba(249,115,22,0.06) 0%, transparent 45%),
+    radial-gradient(ellipse at 50% 90%, rgba(168,85,247,0.04) 0%, transparent 30%);
+  pointer-events:none; z-index:0;
+}
+
+/* FLOATING HEXAGONS */
+.hex-bg {
+  position:fixed; top:0; left:0; right:0; bottom:0;
+  pointer-events:none; z-index:0; overflow:hidden;
+}
+.hex {
+  position:absolute; opacity:0.04;
+  width:60px; height:69px;
+  background:var(--purple2);
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  animation:hexFloat 20s linear infinite;
+}
+.hex:nth-child(1) { left:5%; top:-10%; animation-delay:0s; animation-duration:18s; }
+.hex:nth-child(2) { left:85%; top:20%; animation-delay:5s; animation-duration:22s; width:40px; height:46px; }
+.hex:nth-child(3) { left:60%; top:-5%; animation-delay:10s; animation-duration:16s; width:80px; height:92px; background:var(--orange); }
+.hex:nth-child(4) { left:30%; top:70%; animation-delay:3s; animation-duration:25s; width:50px; height:58px; }
+@keyframes hexFloat {
+  0% { transform:translateY(0) rotate(0deg); }
+  100% { transform:translateY(110vh) rotate(360deg); }
+}
+
+/* HEADER */
+.header {
+  position:sticky; top:0; z-index:100;
+  background:rgba(12,7,22,0.93); backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border); padding:14px 0;
+}
+.header::after {
+  content:''; position:absolute; bottom:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg, transparent, var(--purple), var(--orange), transparent);
+}
+.header-inner {
+  max-width:1300px; margin:0 auto; padding:0 24px;
+  display:flex; align-items:center; gap:16px;
+}
+.header-logo {
+  font-family:'IBM Plex Mono',monospace; font-size:0.65em; color:var(--muted); letter-spacing:1px;
+}
+.header-title { font-family:'Syne',sans-serif; font-size:1.05em; font-weight:800; color:var(--text); }
+.header-title span { color:var(--purple); }
+.back-btn {
+  background:rgba(168,85,247,0.08); border:1px solid var(--border);
+  color:var(--purple); padding:6px 14px; border-radius:8px;
+  font-size:0.8em; font-weight:700; cursor:pointer; text-decoration:none; transition:all 0.2s;
+}
+.back-btn:hover { background:rgba(168,85,247,0.16); box-shadow:var(--glow-p); }
+
+/* HUD */
+.hud { margin-left:auto; display:flex; align-items:center; gap:10px; }
+.hud-pill {
+  background:rgba(168,85,247,0.07); border:1px solid rgba(168,85,247,0.2);
+  border-radius:10px; padding:6px 14px; text-align:center;
+}
+.hud-pill .v { font-family:'IBM Plex Mono',monospace; font-size:1.2em; font-weight:600; color:var(--purple); display:block; line-height:1; }
+.hud-pill .l { font-size:0.55em; color:var(--muted); text-transform:uppercase; letter-spacing:1px; display:block; margin-top:2px; }
+.hud-xp {
+  background:rgba(168,85,247,0.07); border:1px solid rgba(168,85,247,0.2);
+  border-radius:10px; padding:7px 14px; min-width:150px;
+}
+.hud-xp-lbl { display:flex; justify-content:space-between; font-size:0.6em; color:var(--muted); margin-bottom:4px; }
+.hud-bar-bg { background:rgba(0,0,0,0.3); border-radius:100px; height:6px; overflow:hidden; }
+.hud-bar { height:100%; background:linear-gradient(90deg,var(--purple2),var(--purple),var(--orange)); border-radius:100px; transition:width 0.8s ease; box-shadow:0 0 10px rgba(168,85,247,0.4); }
+
+/* LAYOUT */
+.layout {
+  max-width:1300px; margin:0 auto; padding:28px 24px;
+  display:grid; grid-template-columns:260px 1fr; gap:24px; position:relative; z-index:1;
+}
+
+/* SIDEBAR */
+.sidebar { display:flex; flex-direction:column; gap:14px; }
+.scard { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:18px; }
+.scard-title {
+  font-family:'Syne',sans-serif; font-size:0.75em; font-weight:800;
+  color:var(--purple); text-transform:uppercase; letter-spacing:2px;
+  margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--border);
+}
+
+/* NAV */
+.nav-link {
+  display:flex; align-items:center; gap:8px; padding:9px 12px; border-radius:9px;
+  text-decoration:none; color:var(--muted); font-size:0.85em; font-weight:700;
+  transition:all 0.2s; margin-bottom:4px; border:1px solid transparent;
+}
+.nav-link:hover { color:var(--purple); background:rgba(168,85,247,0.07); border-color:var(--border); }
+.nav-link.active { color:var(--purple); background:rgba(168,85,247,0.12); border-color:rgba(168,85,247,0.25); }
+.nl-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+
+/* PROGRESS */
+.prog-block { margin-bottom:10px; }
+.prog-label { display:flex; justify-content:space-between; font-size:0.75em; color:var(--muted); font-weight:600; margin-bottom:4px; }
+.prog-label span:last-child { color:var(--purple); font-family:'IBM Plex Mono',monospace; }
+.prog-bg { background:rgba(0,0,0,0.3); border-radius:100px; height:6px; overflow:hidden; }
+.prog-fill { height:100%; border-radius:100px; transition:width 0.8s ease; }
+.pf-p { background:linear-gradient(90deg,var(--purple2),var(--purple)); box-shadow:0 0 8px rgba(168,85,247,0.3); }
+.pf-o { background:linear-gradient(90deg,var(--orange2),var(--orange)); box-shadow:0 0 8px rgba(249,115,22,0.3); }
+.pf-t { background:linear-gradient(90deg,#0d8078,var(--teal)); }
+.pf-y { background:linear-gradient(90deg,#a16207,var(--yellow)); }
+
+/* BADGE GRID */
+.badge-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }
+.badge-item {
+  aspect-ratio:1; border-radius:9px; border:1px solid rgba(168,85,247,0.08);
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.2em; background:rgba(0,0,0,0.2);
+  filter:grayscale(1) opacity(0.25); transition:all 0.4s; position:relative;
+}
+.badge-item.unlocked {
+  filter:none; background:rgba(168,85,247,0.1); border-color:rgba(168,85,247,0.35);
+  box-shadow:0 0 16px rgba(168,85,247,0.25);
+  animation:badgePop 0.4s ease;
+}
+@keyframes badgePop { 0%{transform:scale(0.5);opacity:0} 70%{transform:scale(1.2)} 100%{transform:scale(1)} }
+.badge-item[title]:hover::after {
+  content:attr(title); position:absolute; bottom:calc(100%+5px); left:50%; transform:translateX(-50%);
+  background:var(--card2); color:var(--purple); border:1px solid var(--border);
+  font-size:0.6em; padding:3px 8px; border-radius:5px; white-space:nowrap; z-index:100;
+}
+
+/* MAIN */
+.main { display:flex; flex-direction:column; gap:20px; }
+
+/* HERO */
+.hero {
+  background:var(--card); border:1px solid rgba(168,85,247,0.2);
+  border-radius:18px; padding:36px 40px; position:relative; overflow:hidden;
+  box-shadow:0 0 60px rgba(168,85,247,0.07);
+}
+.hero::before {
+  content:''; position:absolute; top:-80px; right:-80px;
+  width:300px; height:300px; border-radius:50%;
+  background:radial-gradient(circle, rgba(168,85,247,0.12) 0%, transparent 70%);
+  pointer-events:none;
+}
+.hero::after {
+  content:''; position:absolute; bottom:-60px; left:20%;
+  width:200px; height:200px; border-radius:50%;
+  background:radial-gradient(circle, rgba(249,115,22,0.08) 0%, transparent 70%);
+  pointer-events:none;
+}
+.hero-eyebrow {
+  font-size:0.7em; letter-spacing:3px; font-weight:700; color:var(--orange);
+  text-transform:uppercase; margin-bottom:10px; opacity:0.9;
+}
+.hero h1 { font-family:'Syne',sans-serif; font-size:2.2em; font-weight:800; color:var(--text); line-height:1.15; margin-bottom:8px; }
+.hero h1 span { color:var(--purple); }
+.hero-sub { color:var(--text2); font-size:0.9em; margin-bottom:20px; }
+.hero-chips { display:flex; gap:10px; flex-wrap:wrap; }
+.chip {
+  border-radius:8px; padding:5px 14px; font-size:0.78em; font-weight:700;
+  display:inline-flex; align-items:center; gap:5px;
+}
+.chip-p { background:rgba(168,85,247,0.12); border:1px solid rgba(168,85,247,0.25); color:var(--purple); }
+.chip-o { background:rgba(249,115,22,0.1); border:1px solid rgba(249,115,22,0.25); color:var(--orange); }
+.chip-t { background:rgba(20,184,166,0.1); border:1px solid rgba(20,184,166,0.25); color:var(--teal); }
+.chip-y { background:rgba(234,179,8,0.1); border:1px solid rgba(234,179,8,0.25); color:var(--yellow); }
+
+/* CARD */
+.card { background:var(--card); border:1px solid var(--border); border-radius:14px; overflow:hidden; }
+.card-head {
+  padding:16px 22px; display:flex; align-items:center; gap:12px;
+  border-bottom:1px solid var(--border); background:rgba(168,85,247,0.03);
+}
+.card-icon { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.1em; flex-shrink:0; }
+.ci-p { background:rgba(168,85,247,0.15); border:1px solid rgba(168,85,247,0.3); }
+.ci-o { background:rgba(249,115,22,0.15); border:1px solid rgba(249,115,22,0.3); }
+.ci-t { background:rgba(20,184,166,0.15); border:1px solid rgba(20,184,166,0.3); }
+.ci-y { background:rgba(234,179,8,0.15); border:1px solid rgba(234,179,8,0.3); }
+.card-title { font-family:'Syne',sans-serif; font-size:0.9em; font-weight:800; color:var(--text); }
+.xp-tag {
+  margin-left:auto; border-radius:100px; padding:3px 12px;
+  font-size:0.72em; font-weight:700;
+}
+.xt-p { background:rgba(168,85,247,0.12); border:1px solid rgba(168,85,247,0.25); color:var(--purple); }
+.xt-o { background:rgba(249,115,22,0.12); border:1px solid rgba(249,115,22,0.25); color:var(--orange); }
+.card-body { padding:22px; }
+
+/* OBJECTIVES */
+.obj-list { list-style:none; display:flex; flex-direction:column; gap:8px; }
+.obj-item {
+  display:flex; align-items:center; gap:12px; padding:12px 16px; border-radius:10px;
+  background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05);
+  cursor:pointer; transition:all 0.2s; font-size:0.9em; font-weight:600;
+}
+.obj-item:hover { background:rgba(168,85,247,0.06); border-color:rgba(168,85,247,0.2); }
+.obj-item.checked { background:rgba(20,184,166,0.06); border-color:rgba(20,184,166,0.2); color:var(--muted); text-decoration:line-through; }
+.obj-circle {
+  width:24px; height:24px; border-radius:6px; flex-shrink:0;
+  border:2px solid rgba(168,85,247,0.2); display:flex; align-items:center; justify-content:center;
+  font-size:0.8em; transition:all 0.3s;
+}
+.obj-item.checked .obj-circle { background:var(--teal); border-color:var(--teal); color:#000; box-shadow:0 0 12px rgba(20,184,166,0.4); }
+
+/* VLAN VISUALIZER */
+.vlan-viz {
+  display:flex; flex-direction:column; gap:10px; padding:20px;
+  background:rgba(0,0,0,0.2); border-radius:12px; border:1px solid var(--border);
+}
+.vlan-row {
+  display:flex; align-items:center; gap:12px;
+  padding:10px 16px; border-radius:8px; cursor:pointer;
+  transition:all 0.2s; border:1px solid transparent;
+}
+.vlan-row:hover { transform:translateX(4px); }
+.vlan-row.v10 { background:rgba(168,85,247,0.08); border-color:rgba(168,85,247,0.2); }
+.vlan-row.v20 { background:rgba(249,115,22,0.08); border-color:rgba(249,115,22,0.2); }
+.vlan-row.v30 { background:rgba(20,184,166,0.08); border-color:rgba(20,184,166,0.2); }
+.vlan-id {
+  font-family:'IBM Plex Mono',monospace; font-size:0.8em; font-weight:600;
+  padding:3px 10px; border-radius:5px; flex-shrink:0; min-width:60px; text-align:center;
+}
+.vid-10 { background:rgba(168,85,247,0.2); color:var(--purple); }
+.vid-20 { background:rgba(249,115,22,0.2); color:var(--orange); }
+.vid-30 { background:rgba(20,184,166,0.2); color:var(--teal); }
+.vlan-name { font-weight:700; font-size:0.88em; flex:1; }
+.vlan-ports { font-family:'IBM Plex Mono',monospace; font-size:0.72em; color:var(--muted); }
+.vlan-badge { font-size:0.68em; font-weight:700; padding:2px 8px; border-radius:100px; }
+.vb-access { background:rgba(20,184,166,0.15); color:var(--teal); }
+.vb-trunk { background:rgba(168,85,247,0.15); color:var(--purple); }
+
+/* TRUNK DIAGRAM */
+.trunk-diagram {
+  display:flex; align-items:center; justify-content:center; gap:0; padding:24px;
+  background:rgba(0,0,0,0.2); border-radius:12px; flex-wrap:wrap;
+}
+.device-box {
+  background:var(--card2); border:1px solid var(--border); border-radius:10px;
+  padding:14px 18px; text-align:center; min-width:100px;
+}
+.device-icon { font-size:2em; display:block; margin-bottom:5px; }
+.device-name { font-size:0.72em; font-weight:700; color:var(--text2); }
+.device-sub { font-family:'IBM Plex Mono',monospace; font-size:0.6em; color:var(--muted); margin-top:2px; }
+.trunk-line {
+  flex:1; min-width:60px; display:flex; flex-direction:column; align-items:center; position:relative;
+}
+.trunk-wire {
+  width:100%; height:3px;
+  background:linear-gradient(90deg,var(--purple),var(--orange),var(--teal));
+  box-shadow:0 0 8px rgba(168,85,247,0.4); position:relative;
+}
+.trunk-label { font-size:0.6em; color:var(--purple); font-family:'IBM Plex Mono',monospace; margin-top:4px; font-weight:600; }
+.trunk-vlans { display:flex; gap:4px; margin-top:3px; }
+.tv { font-size:0.55em; padding:1px 5px; border-radius:3px; font-weight:700; }
+.tv-10 { background:rgba(168,85,247,0.2); color:var(--purple); }
+.tv-20 { background:rgba(249,115,22,0.2); color:var(--orange); }
+.tv-30 { background:rgba(20,184,166,0.2); color:var(--teal); }
+
+/* GLOSSARY */
+.gloss-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(210px,1fr)); gap:10px; }
+.gloss-item {
+  background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05);
+  border-radius:10px; padding:12px 14px; transition:all 0.2s;
+}
+.gloss-item:hover { border-color:rgba(168,85,247,0.2); background:rgba(168,85,247,0.04); }
+.gloss-term { font-family:'IBM Plex Mono',monospace; font-size:0.78em; font-weight:600; color:var(--purple); margin-bottom:4px; }
+.gloss-def { font-size:0.76em; color:var(--muted); line-height:1.4; }
+
+/* CONCEPT TAGS */
+.concept-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(190px,1fr)); gap:12px; }
+.concept-card {
+  background:rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.05);
+  border-radius:10px; padding:14px; border-top:3px solid var(--purple); transition:all 0.2s;
+}
+.concept-card:hover { border-color:rgba(168,85,247,0.2); background:rgba(168,85,247,0.04); }
+.concept-card.orange { border-top-color:var(--orange); }
+.concept-card.orange:hover { background:rgba(249,115,22,0.04); }
+.concept-card.teal { border-top-color:var(--teal); }
+.concept-title { font-size:0.8em; font-weight:800; color:var(--purple); margin-bottom:8px; }
+.concept-card.orange .concept-title { color:var(--orange); }
+.concept-card.teal .concept-title { color:var(--teal); }
+.tag {
+  display:inline-flex; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07);
+  border-radius:4px; padding:2px 8px; font-size:0.72em; font-weight:600; color:var(--muted);
+  margin:2px 1px; transition:all 0.15s;
+}
+.tag:hover { color:var(--purple); border-color:rgba(168,85,247,0.2); }
+
+/* CMD BLOCK */
+.cmd-block {
+  background:#060214; border:1px solid rgba(168,85,247,0.15);
+  border-radius:10px; padding:14px 16px; font-family:'IBM Plex Mono',monospace;
+  font-size:0.77em; line-height:1.8; margin:10px 0; overflow-x:auto;
+}
+.cmd-block .prompt { color:var(--purple); }
+.cmd-block .cmd { color:#ece0ff; }
+.cmd-block .comment { color:#3d2b5a; }
+.cmd-block .value { color:var(--orange); font-weight:600; }
+
+/* STEP */
+.step { display:flex; gap:10px; margin-bottom:10px; align-items:flex-start; }
+.step-num {
+  width:26px; height:26px; border-radius:7px; flex-shrink:0;
+  background:rgba(168,85,247,0.15); border:1px solid rgba(168,85,247,0.3);
+  color:var(--purple); display:flex; align-items:center; justify-content:center;
+  font-size:0.7em; font-weight:700; margin-top:2px;
+}
+.step p { font-size:0.86em; line-height:1.5; color:var(--text2); }
+.step code { font-family:'IBM Plex Mono',monospace; background:rgba(168,85,247,0.1); color:var(--purple); padding:1px 6px; border-radius:4px; font-size:0.9em; }
+
+/* VIDEO */
+.video-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(210px,1fr)); gap:12px; }
+.video-card { background:rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.05); border-radius:10px; overflow:hidden; transition:all 0.2s; }
+.video-card:hover { border-color:rgba(168,85,247,0.25); transform:translateY(-2px); }
+.video-thumb { height:90px; background:linear-gradient(135deg,#0c0716,#1c0535); display:flex; align-items:center; justify-content:center; }
+.play-btn {
+  width:44px; height:44px; border-radius:50%;
+  background:rgba(168,85,247,0.15); border:1px solid rgba(168,85,247,0.35);
+  color:var(--purple); font-size:1.1em; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:center;
+}
+.play-btn:hover { background:rgba(168,85,247,0.3); box-shadow:var(--glow-p); transform:scale(1.1); }
+.video-info { padding:10px 14px; }
+.video-info h4 { font-size:0.8em; font-weight:700; color:var(--text); margin-bottom:3px; }
+.video-info p { font-size:0.7em; color:var(--muted); margin-bottom:7px; }
+.video-link { font-size:0.72em; font-weight:700; color:var(--purple); text-decoration:none; border:1px solid rgba(168,85,247,0.25); padding:3px 9px; border-radius:5px; display:inline-flex; align-items:center; gap:4px; transition:all 0.2s; }
+.video-link:hover { background:rgba(168,85,247,0.1); }
+
+/* MISSIONS */
+.mission { border:1px solid rgba(255,255,255,0.06); border-radius:12px; overflow:hidden; transition:all 0.2s; margin-bottom:10px; }
+.mission:hover { border-color:rgba(168,85,247,0.2); }
+.mission.done { border-color:rgba(20,184,166,0.3); }
+.mission-head { padding:14px 18px; display:flex; align-items:center; gap:12px; cursor:pointer; background:rgba(255,255,255,0.02); user-select:none; transition:background 0.2s; }
+.mission.done .mission-head { background:rgba(20,184,166,0.04); }
+.mission-head:hover { background:rgba(168,85,247,0.05); }
+.mission-num {
+  width:38px; height:38px; border-radius:10px; flex-shrink:0;
+  font-family:'IBM Plex Mono',monospace; font-size:0.85em; font-weight:600;
+  background:linear-gradient(135deg,var(--purple2),var(--purple)); color:white;
+  display:flex; align-items:center; justify-content:center;
+}
+.mission.done .mission-num { background:linear-gradient(135deg,#0d8078,var(--teal)); color:#000; }
+.mission-info { flex:1; }
+.mission-title { font-weight:800; font-size:0.92em; color:var(--text); }
+.mission.done .mission-title { color:var(--teal); }
+.mission-meta { font-size:0.73em; color:var(--muted); margin-top:2px; font-weight:600; }
+.mission-xp { background:rgba(168,85,247,0.1); border:1px solid rgba(168,85,247,0.25); color:var(--purple); padding:3px 11px; border-radius:100px; font-size:0.72em; font-weight:700; }
+.mission.done .mission-xp { background:rgba(20,184,166,0.1); border-color:rgba(20,184,166,0.25); color:var(--teal); }
+.mission-toggle { color:var(--muted); font-size:0.8em; transition:transform 0.3s; }
+.mission.open .mission-toggle { transform:rotate(180deg); }
+.mission-body { max-height:0; overflow:hidden; transition:max-height 0.4s ease, padding 0.3s; padding:0 18px; }
+.mission.open .mission-body { max-height:900px; padding:4px 18px 18px; }
+.mission-desc { font-size:0.84em; color:var(--muted); margin-bottom:14px; padding:10px 14px; background:rgba(168,85,247,0.04); border-left:3px solid var(--purple2); border-radius:0 8px 8px 0; }
+
+/* COMPLETE BTN */
+.complete-btn {
+  width:100%; margin-top:14px; padding:13px; border:none; border-radius:10px;
+  cursor:pointer; font-family:'Space Grotesk',sans-serif; font-size:0.9em; font-weight:800;
+  background:linear-gradient(135deg,rgba(168,85,247,0.15),rgba(168,85,247,0.08));
+  border:1px solid rgba(168,85,247,0.3); color:var(--purple); transition:all 0.3s; letter-spacing:1px;
+}
+.complete-btn:hover:not(:disabled) { background:linear-gradient(135deg,rgba(168,85,247,0.25),rgba(168,85,247,0.15)); box-shadow:var(--glow-p); transform:translateY(-1px); }
+.complete-btn:disabled { background:rgba(20,184,166,0.1); border-color:rgba(20,184,166,0.3); color:var(--teal); cursor:default; transform:none; }
+
+/* QUIZ */
+.quiz-prog-wrap { margin-bottom:16px; }
+.qprog-label { display:flex; justify-content:space-between; font-size:0.75em; color:var(--muted); margin-bottom:5px; font-weight:600; }
+.qprog-bg { background:rgba(0,0,0,0.3); border-radius:100px; height:5px; overflow:hidden; }
+.qprog-fill { height:100%; width:0%; background:linear-gradient(90deg,var(--purple),var(--orange)); border-radius:100px; transition:width 0.5s ease; box-shadow:0 0 8px rgba(168,85,247,0.4); }
+.qcard { display:none; }
+.qcard.active { display:block; }
+.qcard h4 { font-size:0.95em; font-weight:700; color:var(--text); margin-bottom:14px; line-height:1.4; }
+.qopts { display:flex; flex-direction:column; gap:8px; margin-bottom:10px; }
+.qopt { padding:11px 16px; border-radius:9px; cursor:pointer; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); color:var(--text2); font-family:'Space Grotesk',sans-serif; font-size:0.86em; font-weight:600; text-align:left; transition:all 0.2s; }
+.qopt:hover:not(:disabled) { background:rgba(168,85,247,0.07); border-color:rgba(168,85,247,0.25); color:var(--purple); }
+.qopt.correct { background:rgba(20,184,166,0.1); border-color:rgba(20,184,166,0.35); color:var(--teal); }
+.qopt.wrong { background:rgba(236,72,153,0.08); border-color:rgba(236,72,153,0.3); color:var(--pink); }
+.qopt:disabled { cursor:default; }
+.qfb { display:none; padding:10px 14px; border-radius:9px; font-size:0.82em; line-height:1.4; margin:8px 0; }
+.qfb.show { display:block; }
+.qfb.ok { background:rgba(20,184,166,0.07); border:1px solid rgba(20,184,166,0.2); color:var(--teal); }
+.qfb.fail { background:rgba(236,72,153,0.07); border:1px solid rgba(236,72,153,0.2); color:var(--pink); }
+.qnx { display:none; }
+.qnx.show { display:flex; justify-content:flex-end; }
+.qnx-btn { padding:8px 18px; border:1px solid rgba(168,85,247,0.3); background:rgba(168,85,247,0.1); color:var(--purple); border-radius:8px; cursor:pointer; font-size:0.82em; font-weight:700; font-family:'Space Grotesk',sans-serif; transition:all 0.2s; }
+.qnx-btn:hover { background:rgba(168,85,247,0.2); }
+.q-result { display:none; text-align:center; padding:28px 0; }
+.q-result.show { display:block; }
+.q-score { font-family:'Syne',sans-serif; font-size:3.5em; font-weight:800; color:var(--purple); text-shadow:var(--glow-p); display:block; margin-bottom:8px; }
+.q-msg { color:var(--muted); margin-bottom:12px; font-size:0.9em; }
+.q-xp { color:var(--orange); font-weight:700; font-size:0.85em; margin-bottom:16px; }
+.restart-btn { padding:10px 24px; border:1px solid rgba(168,85,247,0.3); background:rgba(168,85,247,0.1); color:var(--purple); border-radius:10px; cursor:pointer; font-size:0.85em; font-weight:700; font-family:'Space Grotesk',sans-serif; transition:all 0.2s; }
+.restart-btn:hover { background:rgba(168,85,247,0.2); box-shadow:var(--glow-p); }
+
+/* ACHIEVEMENTS */
+.ach-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+.ach-card { background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:12px; padding:14px; text-align:center; filter:grayscale(1) opacity(0.25); transition:all 0.4s; }
+.ach-card.unlocked { filter:none; background:rgba(168,85,247,0.07); border-color:rgba(168,85,247,0.25); box-shadow:0 0 20px rgba(168,85,247,0.15); }
+.ach-icon { font-size:1.8em; display:block; margin-bottom:5px; }
+.ach-name { font-size:0.68em; font-weight:700; color:var(--muted); line-height:1.2; }
+.ach-card.unlocked .ach-name { color:var(--purple); }
+
+/* SECTION TITLE */
+.section-title {
+  font-family:'Syne',sans-serif; font-size:0.75em; font-weight:800; letter-spacing:2px;
+  color:var(--muted); text-transform:uppercase; margin-bottom:14px;
+  display:flex; align-items:center; gap:10px;
+}
+.section-title::after { content:''; flex:1; height:1px; background:linear-gradient(90deg,var(--border),transparent); }
+
+/* TOAST */
+.toast {
+  position:fixed; bottom:24px; right:24px; z-index:9998;
+  background:var(--card2); border:1px solid rgba(168,85,247,0.3);
+  border-radius:12px; padding:14px 18px; display:flex; align-items:center; gap:12px;
+  box-shadow:0 8px 30px rgba(0,0,0,0.5), var(--glow-p);
+  transform:translateY(100px) scale(0.9); opacity:0;
+  transition:all 0.4s cubic-bezier(0.175,0.885,0.32,1.275); max-width:300px;
+}
+.toast.show { transform:translateY(0) scale(1); opacity:1; }
+.toast-icon { font-size:1.5em; }
+.toast-title { font-weight:800; font-size:0.88em; color:var(--purple); }
+.toast-msg { font-size:0.74em; color:var(--muted); margin-top:2px; }
+
+@media (max-width:900px) { .layout { grid-template-columns:1fr; } .hud { display:none; } .hero h1 { font-size:1.5em; } }
+</style>
+</head>
+<body>
+<div class="hex-bg">
+  <div class="hex"></div><div class="hex"></div>
+  <div class="hex"></div><div class="hex"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-icon" id="toast-icon">🌐</div>
+  <div><div class="toast-title" id="toast-title">+XP</div><div class="toast-msg" id="toast-msg"></div></div>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <div>
+      <div class="header-logo">ISO-103 · FATEC OURINHOS</div>
+      <div class="header-title">SEMANA 04 — <span>VLANs</span></div>
+    </div>
+    <a href="semana04.html" class="back-btn">← Voltar</a>
+    <div class="hud">
+      <div class="hud-pill"><span class="v" id="hud-xp">0</span><span class="l">XP</span></div>
+      <div class="hud-pill"><span class="v" id="hud-streak">0</span><span class="l">Streak</span></div>
+      <div class="hud-pill"><span class="v" id="hud-badges">0</span><span class="l">Badges</span></div>
+      <div class="hud-xp">
+        <div class="hud-xp-lbl"><span id="hud-level">Iniciante</span><span id="hud-pct">0%</span></div>
+        <div class="hud-bar-bg"><div class="hud-bar" id="hud-bar" style="width:0%"></div></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="scard">
+      <div class="scard-title">Módulos S4</div>
+      <a href="semana04-ap.html" class="nav-link"><div class="nl-dot" style="background:#00d4ff"></div>Access Points</a>
+      <a href="semana04-router.html" class="nav-link"><div class="nl-dot" style="background:#00ff44"></div>Roteadores</a>
+      <a href="semana04-vlan.html" class="nav-link active"><div class="nl-dot" style="background:#a855f7;box-shadow:0 0 6px #a855f7"></div>VLANs</a>
+    </div>
+
+    <div class="scard">
+      <div class="scard-title">Progresso</div>
+      <div class="prog-block">
+        <div class="prog-label"><span>Objetivos</span><span id="obj-pct">0%</span></div>
+        <div class="prog-bg"><div class="prog-fill pf-p" id="obj-bar" style="width:0%"></div></div>
+      </div>
+      <div class="prog-block">
+        <div class="prog-label"><span>Missões</span><span id="mis-pct">0%</span></div>
+        <div class="prog-bg"><div class="prog-fill pf-o" id="mis-bar" style="width:0%"></div></div>
+      </div>
+      <div class="prog-block">
+        <div class="prog-label"><span>Quiz</span><span id="quiz-pct">0%</span></div>
+        <div class="prog-bg"><div class="prog-fill pf-t" id="quiz-bar" style="width:0%"></div></div>
+      </div>
+      <div class="prog-block">
+        <div class="prog-label"><span>Conquistas</span><span id="ach-pct">0/6</span></div>
+        <div class="prog-bg"><div class="prog-fill pf-y" id="ach-bar" style="width:0%"></div></div>
+      </div>
+    </div>
+
+    <div class="scard">
+      <div class="scard-title">Conquistas</div>
+      <div class="badge-grid">
+        <div class="badge-item" id="bm-start" title="Módulo iniciado">🚀</div>
+        <div class="badge-item" id="bm-obj" title="Todos objetivos">🎯</div>
+        <div class="badge-item" id="bm-vlan" title="Missão VLAN">🌐</div>
+        <div class="badge-item" id="bm-trunk" title="Trunk configurado">🔗</div>
+        <div class="badge-item" id="bm-quiz" title="Quiz 4+">🎓</div>
+        <div class="badge-item" id="bm-perfect" title="Quiz perfeito">💎</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-eyebrow">🌐 Módulo · VLANs & Segmentação de Rede</div>
+      <h1>Virtual LANs —<br><span>Segmentação Inteligente</span></h1>
+      <p class="hero-sub">VLANs · Trunk/Access Ports · Inter-VLAN Routing · Port Security · STP</p>
+      <div class="hero-chips">
+        <div class="chip chip-p">⏱️ 45 min</div>
+        <div class="chip chip-o">🔀 Switch Lab</div>
+        <div class="chip chip-t">⚡ 200 XP</div>
+        <div class="chip chip-y">🏆 6 conquistas</div>
+      </div>
+    </div>
+
+    <!-- OBJETIVOS -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon ci-p">🎯</div>
+        <div class="card-title">Objetivos do Módulo</div>
+        <div class="xp-tag xt-p">+25 XP</div>
+      </div>
+      <div class="card-body">
+        <ul class="obj-list">
+          <li class="obj-item" onclick="toggleObj(this,0)">
+            <div class="obj-circle"></div>
+            <span>Criar e nomear VLANs em switches gerenciáveis</span>
+          </li>
+          <li class="obj-item" onclick="toggleObj(this,1)">
+            <div class="obj-circle"></div>
+            <span>Configurar portas Access e Trunk (IEEE 802.1Q)</span>
+          </li>
+          <li class="obj-item" onclick="toggleObj(this,2)">
+            <div class="obj-circle"></div>
+            <span>Implementar inter-VLAN routing via router-on-a-stick</span>
+          </li>
+          <li class="obj-item" onclick="toggleObj(this,3)">
+            <div class="obj-circle"></div>
+            <span>Configurar Port Security no switch</span>
+          </li>
+          <li class="obj-item" onclick="toggleObj(this,4)">
+            <div class="obj-circle"></div>
+            <span>Verificar com show vlan brief e show interfaces trunk</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- CONTEÚDO -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon ci-p">📖</div>
+        <div class="card-title">Conteúdo Técnico</div>
+      </div>
+      <div class="card-body">
+        <div class="section-title">Conceitos e Comandos</div>
+        <div class="concept-grid">
+          <div class="concept-card">
+            <div class="concept-title">🔀 VLANs Básicas</div>
+            <span class="tag">vlan 10</span>
+            <span class="tag">name Administracao</span>
+            <span class="tag">show vlan brief</span>
+            <span class="tag">access vlan</span>
+            <span class="tag">switchport mode</span>
+          </div>
+          <div class="concept-card orange">
+            <div class="concept-title">🔗 Trunk Ports</div>
+            <span class="tag">switchport trunk</span>
+            <span class="tag">802.1Q tagging</span>
+            <span class="tag">allowed vlan</span>
+            <span class="tag">native vlan</span>
+            <span class="tag">show interfaces trunk</span>
+          </div>
+          <div class="concept-card teal">
+            <div class="concept-title">🛡 Port Security</div>
+            <span class="tag">port-security</span>
+            <span class="tag">sticky MAC</span>
+            <span class="tag">violation shutdown</span>
+            <span class="tag">max-mac-count</span>
+            <span class="tag">STP</span>
+          </div>
+        </div>
+
+        <!-- VLAN VISUALIZER -->
+        <div class="section-title" style="margin-top:20px">Visualizador de VLANs</div>
+        <p style="font-size:0.8em;color:var(--muted);margin-bottom:12px">Clique numa VLAN para ver mais detalhes:</p>
+        <div class="vlan-viz">
+          <div class="vlan-row v10" onclick="showVlanInfo(10)">
+            <div class="vlan-id vid-10">VLAN 10</div>
+            <div class="vlan-name">Administração</div>
+            <div class="vlan-ports">Fa0/1–Fa0/5</div>
+            <span class="vlan-badge vb-access">Access</span>
+          </div>
+          <div class="vlan-row v20" onclick="showVlanInfo(20)">
+            <div class="vlan-id vid-20">VLAN 20</div>
+            <div class="vlan-name">Vendas</div>
+            <div class="vlan-ports">Fa0/6–Fa0/10</div>
+            <span class="vlan-badge vb-access">Access</span>
+          </div>
+          <div class="vlan-row v30" onclick="showVlanInfo(30)">
+            <div class="vlan-id" style="background:rgba(20,184,166,0.2);color:var(--teal)">VLAN 30</div>
+            <div class="vlan-name">TI</div>
+            <div class="vlan-ports">Fa0/11–Fa0/15</div>
+            <span class="vlan-badge vb-access">Access</span>
+          </div>
+          <div class="vlan-row" style="background:rgba(255,255,255,0.03);border-color:rgba(255,255,255,0.1)" onclick="showVlanInfo('trunk')">
+            <div class="vlan-id" style="background:rgba(255,255,255,0.08);color:var(--text2)">TRUNK</div>
+            <div class="vlan-name" style="color:var(--text2)">Uplink → Roteador</div>
+            <div class="vlan-ports">Gi0/1</div>
+            <span class="vlan-badge vb-trunk">Trunk</span>
+          </div>
+        </div>
+        <div id="vlan-info" style="display:none;margin-top:10px;padding:12px 16px;background:rgba(168,85,247,0.05);border:1px solid rgba(168,85,247,0.2);border-radius:10px;font-size:0.82em;color:var(--purple)"></div>
+
+        <!-- TRUNK DIAGRAM -->
+        <div class="section-title" style="margin-top:20px">Diagrama Trunk</div>
+        <div class="trunk-diagram">
+          <div class="device-box">
+            <span class="device-icon">🖥</span>
+            <div class="device-name">Switch</div>
+            <div class="device-sub">VLANs 10,20,30</div>
+          </div>
+          <div class="trunk-line">
+            <div class="trunk-wire"></div>
+            <div class="trunk-label">TRUNK 802.1Q</div>
+            <div class="trunk-vlans">
+              <span class="tv tv-10">10</span>
+              <span class="tv tv-20">20</span>
+              <span class="tv tv-30">30</span>
+            </div>
+          </div>
+          <div class="device-box">
+            <span class="device-icon">📡</span>
+            <div class="device-name">Roteador</div>
+            <div class="device-sub">Inter-VLAN</div>
+          </div>
+        </div>
+
+        <div class="section-title" style="margin-top:20px">Glossário de VLANs</div>
+        <div class="gloss-grid">
+          <div class="gloss-item">
+            <div class="gloss-term">VLAN</div>
+            <div class="gloss-def">Virtual LAN — segmenta logicamente a rede sem hardware adicional, isolando tráfego por função.</div>
+          </div>
+          <div class="gloss-item">
+            <div class="gloss-term">Trunk Port</div>
+            <div class="gloss-def">Porta que carrega tráfego de múltiplas VLANs usando tags IEEE 802.1Q. Conecta switches entre si.</div>
+          </div>
+          <div class="gloss-item">
+            <div class="gloss-term">Access Port</div>
+            <div class="gloss-def">Porta que pertence a uma única VLAN. Conecta dispositivos finais (PCs, impressoras).</div>
+          </div>
+          <div class="gloss-item">
+            <div class="gloss-term">Native VLAN</div>
+            <div class="gloss-def">VLAN sem tag em links trunk. Frames não tagueados pertencem à native VLAN (default: VLAN 1).</div>
+          </div>
+          <div class="gloss-item">
+            <div class="gloss-term">STP</div>
+            <div class="gloss-def">Spanning Tree Protocol — evita loops de layer 2 bloqueando portas redundantes automaticamente.</div>
+          </div>
+          <div class="gloss-item">
+            <div class="gloss-term">Port Security</div>
+            <div class="gloss-def">Limita MACs por porta, bloqueando dispositivos não autorizados. Ativa shutdown na violação.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VÍDEOS -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon ci-o">🎬</div>
+        <div class="card-title">Vídeos Recomendados</div>
+        <div class="xp-tag xt-o">+10 XP por vídeo</div>
+      </div>
+      <div class="card-body">
+        <div class="video-grid">
+          <div class="video-card">
+            <div class="video-thumb"><div class="play-btn" onclick="watchVideo(this)">▶</div></div>
+            <div class="video-info">
+              <h4>Configuração de VLANs</h4>
+              <p>Tutorial prático completo · Cisco IOS</p>
+              <a href="https://www.youtube.com/watch?v=example1" target="_blank" class="video-link" onclick="watchVideo(this)">▶ Assistir</a>
+            </div>
+          </div>
+          <div class="video-card">
+            <div class="video-thumb"><div class="play-btn" onclick="watchVideo(this)">▶</div></div>
+            <div class="video-info">
+              <h4>Trunk Ports 802.1Q</h4>
+              <p>Configuração e verificação</p>
+              <a href="https://www.youtube.com/watch?v=example9" target="_blank" class="video-link" onclick="watchVideo(this)">▶ Assistir</a>
+            </div>
+          </div>
+          <div class="video-card">
+            <div class="video-thumb"><div class="play-btn" onclick="watchVideo(this)">▶</div></div>
+            <div class="video-info">
+              <h4>Inter-VLAN Routing</h4>
+              <p>Router-on-a-stick · Packet Tracer</p>
+              <a href="https://www.youtube.com/watch?v=example10" target="_blank" class="video-link" onclick="watchVideo(this)">▶ Assistir</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MISSÃO -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon ci-t">⚔️</div>
+        <div class="card-title">Missão Prática</div>
+        <div class="xp-tag xt-p">+60 XP</div>
+      </div>
+      <div class="card-body">
+        <div class="mission" id="m-vlan" onclick="toggleMission('m-vlan')">
+          <div class="mission-head">
+            <div class="mission-num">M1</div>
+            <div class="mission-info">
+              <div class="mission-title">Configuração de VLANs no Switch</div>
+              <div class="mission-meta">🔀 Switches · ⏱ 30 min · Dificuldade: Médio</div>
+            </div>
+            <span class="mission-xp">+60 XP</span>
+            <span class="mission-toggle">▼</span>
+          </div>
+          <div class="mission-body">
+            <div class="mission-desc">Criar 3 VLANs (Administração, Vendas, TI) e configurar portas de acesso e trunk.</div>
+            <div class="step"><div class="step-num">1</div><p>Acesse o switch via console com <code>enable</code>, depois <code>configure terminal</code>.</p></div>
+            <div class="step"><div class="step-num">2</div><p>Crie as três VLANs no switch:</p></div>
+            <div class="cmd-block">
+<span class="prompt">Switch(config)#</span> <span class="cmd">vlan 10</span><br>
+<span class="prompt">Switch(config-vlan)#</span> <span class="cmd">name Administracao</span><br>
+<span class="prompt">Switch(config-vlan)#</span> <span class="cmd">exit</span><br>
+<span class="prompt">Switch(config)#</span> <span class="cmd">vlan 20</span><br>
+<span class="prompt">Switch(config-vlan)#</span> <span class="cmd">name Vendas</span><br>
+<span class="prompt">Switch(config-vlan)#</span> <span class="cmd">exit</span><br>
+<span class="prompt">Switch(config)#</span> <span class="cmd">vlan 30</span><br>
+<span class="prompt">Switch(config-vlan)#</span> <span class="cmd">name TI</span>
+            </div>
+            <div class="step"><div class="step-num">3</div><p>Atribua porta <code>Fa0/1</code> à VLAN 10 (Administração) como access port:</p></div>
+            <div class="cmd-block">
+<span class="prompt">Switch(config)#</span> <span class="cmd">interface FastEthernet 0/1</span><br>
+<span class="prompt">Switch(config-if)#</span> <span class="cmd">switchport mode access</span><br>
+<span class="prompt">Switch(config-if)#</span> <span class="cmd">switchport access vlan 10</span><br>
+<span class="comment">! Repita para Fa0/2 (VLAN 20) e Fa0/3 (VLAN 30)</span>
+            </div>
+            <div class="step"><div class="step-num">4</div><p>Configure a porta <code>Gi0/1</code> como trunk para o roteador:</p></div>
+            <div class="cmd-block">
+<span class="prompt">Switch(config)#</span> <span class="cmd">interface GigabitEthernet 0/1</span><br>
+<span class="prompt">Switch(config-if)#</span> <span class="cmd">switchport mode trunk</span><br>
+<span class="prompt">Switch(config-if)#</span> <span class="cmd">switchport trunk allowed vlan 10,20,30</span>
+            </div>
+            <div class="step"><div class="step-num">5</div><p>Verifique com <code>show vlan brief</code> e <code>show interfaces trunk</code>.</p></div>
+            <button class="complete-btn" id="btn-mv" onclick="completeMission(event)">
+              ✅ MARCAR COMO CONCLUÍDA
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUIZ -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon ci-y">🧠</div>
+        <div class="card-title">Quiz — VLANs</div>
+        <div class="xp-tag xt-o">até +60 XP</div>
+      </div>
+      <div class="card-body">
+        <div class="quiz-prog-wrap">
+          <div class="qprog-label"><span>Questão</span><span id="q-cnt">0/5</span></div>
+          <div class="qprog-bg"><div class="qprog-fill" id="q-prog"></div></div>
+        </div>
+
+        <div class="qcard active" id="qc0">
+          <h4>O que VLANs criam numa rede física compartilhada?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(0,0,2)">A) Redes físicas separadas</button>
+            <button class="qopt" onclick="ansQ(0,1,2)">B) Canais de comunicação criptografados</button>
+            <button class="qopt" onclick="ansQ(0,2,2)">C) Segmentação lógica — sem hardware adicional</button>
+            <button class="qopt" onclick="ansQ(0,3,2)">D) Balanceamento de carga automático</button>
+          </div>
+          <div class="qfb" id="qfb0"></div>
+          <div class="qnx" id="qnx0"><button class="qnx-btn" onclick="nextQ(1)">Próxima →</button></div>
+        </div>
+
+        <div class="qcard" id="qc1">
+          <h4>Qual é a diferença entre porta Access e porta Trunk?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(1,0,1)">A) Access é para switches, Trunk é para PCs</button>
+            <button class="qopt" onclick="ansQ(1,1,1)">B) Trunk transporta múltiplas VLANs tagueadas; Access conecta à uma única VLAN</button>
+            <button class="qopt" onclick="ansQ(1,2,1)">C) Access tem mais velocidade que Trunk</button>
+            <button class="qopt" onclick="ansQ(1,3,1)">D) São a mesma coisa, apenas nomes diferentes</button>
+          </div>
+          <div class="qfb" id="qfb1"></div>
+          <div class="qnx" id="qnx1"><button class="qnx-btn" onclick="nextQ(2)">Próxima →</button></div>
+        </div>
+
+        <div class="qcard" id="qc2">
+          <h4>Qual padrão define o tagging de VLANs em links trunk?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(2,0,2)">A) 802.11</button>
+            <button class="qopt" onclick="ansQ(2,1,2)">B) 802.3</button>
+            <button class="qopt" onclick="ansQ(2,2,2)">C) 802.1Q</button>
+            <button class="qopt" onclick="ansQ(2,3,2)">D) 802.1X</button>
+          </div>
+          <div class="qfb" id="qfb2"></div>
+          <div class="qnx" id="qnx2"><button class="qnx-btn" onclick="nextQ(3)">Próxima →</button></div>
+        </div>
+
+        <div class="qcard" id="qc3">
+          <h4>Para que serve o comando <code>show vlan brief</code>?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(3,0,0)">A) Lista VLANs criadas com seus nomes e portas atribuídas</button>
+            <button class="qopt" onclick="ansQ(3,1,0)">B) Exibe a tabela de roteamento</button>
+            <button class="qopt" onclick="ansQ(3,2,0)">C) Mostra o status do Spanning Tree</button>
+            <button class="qopt" onclick="ansQ(3,3,0)">D) Lista os endereços MAC aprendidos</button>
+          </div>
+          <div class="qfb" id="qfb3"></div>
+          <div class="qnx" id="qnx3"><button class="qnx-btn" onclick="nextQ(4)">Próxima →</button></div>
+        </div>
+
+        <div class="qcard" id="qc4">
+          <h4>O Spanning Tree Protocol (STP) foi criado para resolver qual problema?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(4,0,1)">A) Lentidão em redes Wi-Fi</button>
+            <button class="qopt" onclick="ansQ(4,1,1)">B) Loops de layer 2 que causam tempestade de broadcast</button>
+            <button class="qopt" onclick="ansQ(4,2,1)">C) Conflito de endereços IP</button>
+            <button class="qopt" onclick="ansQ(4,3,1)">D) Colisões em redes Ethernet</button>
+          </div>
+          <div class="qfb" id="qfb4"></div>
+          <div class="qnx" id="qnx4"><button class="qnx-btn" onclick="showResult()">Ver Resultado ✨</button></div>
+        </div>
+
+        <div class="q-result" id="q-result">
+          <span class="q-score" id="q-score">0/5</span>
+          <div class="q-msg" id="q-msg"></div>
+          <div class="q-xp" id="q-xp-earned"></div>
+          <button class="restart-btn" onclick="restartQuiz()">↺ Tentar Novamente</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONQUISTAS -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon ci-y">🏆</div>
+        <div class="card-title">Conquistas — VLANs</div>
+      </div>
+      <div class="card-body">
+        <div class="ach-grid">
+          <div class="ach-card" id="a-start"><span class="ach-icon">🚀</span><div class="ach-name">Segmentação Iniciada</div></div>
+          <div class="ach-card" id="a-obj"><span class="ach-icon">🎯</span><div class="ach-name">Objetivos Completos</div></div>
+          <div class="ach-card" id="a-vlan"><span class="ach-icon">🌐</span><div class="ach-name">VLAN Mestre</div></div>
+          <div class="ach-card" id="a-trunk"><span class="ach-icon">🔗</span><div class="ach-name">Trunk Ativo</div></div>
+          <div class="ach-card" id="a-quiz"><span class="ach-icon">🎓</span><div class="ach-name">Engenheiro L2</div></div>
+          <div class="ach-card" id="a-perfect"><span class="ach-icon">💎</span><div class="ach-name">Segmentação Perfeita</div></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+let xp = 0, streak = 0, badges = 0;
+const TOTAL_XP = 200;
+const objChecked = [false,false,false,false,false];
+let missionDone = false;
+let videosWatched = 0;
+let qCorrect = 0;
+const qAnswers = {};
+
+setTimeout(() => unlock('a-start','bm-start','Módulo VLAN iniciado!'), 800);
+
+function updateHUD() {
+  document.getElementById('hud-xp').textContent = xp;
+  document.getElementById('hud-streak').textContent = streak;
+  document.getElementById('hud-badges').textContent = badges;
+  const pct = Math.min(Math.round(xp / TOTAL_XP * 100), 100);
+  document.getElementById('hud-bar').style.width = pct + '%';
+  document.getElementById('hud-pct').textContent = pct + '%';
+  const lvls = [[0,'Iniciante'],[50,'Técnico VLAN'],[100,'Eng. de Redes'],[160,'Especialista L2'],[200,'Mestre Segmentação']];
+  let lv = lvls[0][1];
+  for (const [t,n] of lvls) { if (xp >= t) lv = n; }
+  document.getElementById('hud-level').textContent = lv;
+  const od = objChecked.filter(Boolean).length;
+  setBar('obj-bar','obj-pct', od/5*100, Math.round(od/5*100)+'%');
+  setBar('mis-bar','mis-pct', missionDone?100:0, missionDone?'100%':'0%');
+  setBar('quiz-bar','quiz-pct', Math.min(qCorrect/5*100,100), Math.round(qCorrect/5*100)+'%');
+  setBar('ach-bar','ach-pct', badges/6*100, badges+'/6');
+}
+function setBar(bid, lid, pct, txt) {
+  document.getElementById(bid).style.width = Math.min(pct,100)+'%';
+  document.getElementById(lid).textContent = txt;
+}
+function addXP(amount, msg, icon) {
+  xp += amount; updateHUD();
+  toast(icon||'⚡', '+'+amount+' XP', msg);
+}
+function toast(icon, title, msg) {
+  document.getElementById('toast-icon').textContent = icon;
+  document.getElementById('toast-title').textContent = title;
+  document.getElementById('toast-msg').textContent = msg;
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+function unlock(achId, badgeId, msg) {
+  const a = document.getElementById(achId);
+  const b = document.getElementById(badgeId);
+  if (a && !a.classList.contains('unlocked')) {
+    a.classList.add('unlocked');
+    if (b) b.classList.add('unlocked');
+    badges++; updateHUD();
+    toast('🏆','Badge desbloqueado!', msg);
+  }
+}
+function toggleObj(el, idx) {
+  el.classList.toggle('checked');
+  objChecked[idx] = el.classList.contains('checked');
+  if (objChecked[idx]) { addXP(5,'Objetivo marcado!','✅'); streak++; } else streak = Math.max(0,streak-1);
+  if (objChecked.filter(Boolean).length === 5) { addXP(25,'Todos objetivos!','🎯'); unlock('a-obj','bm-obj','Objetivos completos!'); }
+  updateHUD();
+}
+function toggleMission(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+function completeMission(e) {
+  e.stopPropagation();
+  if (missionDone) return;
+  missionDone = true;
+  const btn = document.getElementById('btn-mv');
+  btn.disabled = true; btn.textContent = '✅ Missão Concluída!';
+  document.getElementById('m-vlan').classList.add('done');
+  addXP(60,'VLANs configuradas!','⚔️');
+  unlock('a-vlan','bm-vlan','VLAN Mestre — missão concluída!');
+  unlock('a-trunk','bm-trunk','Trunk Ativo — 802.1Q configurado!');
+  streak++; updateHUD();
+}
+function watchVideo(el) {
+  if (!el.dataset.counted) {
+    el.dataset.counted='1'; videosWatched++;
+    addXP(10,'Vídeo assistido!','🎬');
+  }
+}
+function showVlanInfo(id) {
+  const box = document.getElementById('vlan-info');
+  box.style.display = 'block';
+  const info = {
+    10: '🟣 VLAN 10 — Administração: Gateway 192.168.10.1 · Portas Fa0/1–Fa0/5 · Segmenta tráfego administrativo.',
+    20: '🟠 VLAN 20 — Vendas: Gateway 192.168.20.1 · Portas Fa0/6–Fa0/10 · Isolada da VLAN de TI.',
+    30: '🩵 VLAN 30 — TI: Gateway 192.168.30.1 · Portas Fa0/11–Fa0/15 · Acesso privilegiado aos servidores.',
+    trunk: '🔗 TRUNK (Gi0/1): Carrega VLANs 10, 20 e 30 tagueadas com 802.1Q para o roteador — inter-VLAN routing.'
+  };
+  box.textContent = info[id] || '';
+  addXP(2,'VLAN explorada!','🔍');
+}
+
+const QFB = [
+  { ok:'✅ Correto! VLANs criam segmentação lógica — sem elas toda a rede compartilha o mesmo domínio de broadcast.' },
+  { ok:'✅ Certo! Trunk transporta múltiplas VLANs tagueadas com 802.1Q. Access conecta dispositivos finais a uma única VLAN.' },
+  { ok:'✅ Exato! IEEE 802.1Q é o padrão de tagging para VLANs em links trunk. Cada frame recebe uma tag de 4 bytes.' },
+  { ok:'✅ Perfeito! show vlan brief mostra ID, nome e status de todas as VLANs e as portas atribuídas a cada uma.' },
+  { ok:'✅ Correto! Sem STP, loops de layer 2 geram tempestade de broadcast que derruba toda a rede em segundos.' },
+];
+const QXPS = [10,10,10,15,15];
+
+function ansQ(qi, chosen, correct) {
+  const card = document.getElementById('qc'+qi);
+  const opts = card.querySelectorAll('.qopt');
+  opts.forEach(o => o.disabled = true);
+  opts[chosen].classList.add(chosen===correct?'correct':'wrong');
+  if (chosen!==correct) opts[correct].classList.add('correct');
+  const fb = document.getElementById('qfb'+qi);
+  const nx = document.getElementById('qnx'+qi);
+  const ok = chosen===correct;
+  fb.innerHTML = ok ? QFB[qi].ok : '❌ Errado. ' + QFB[qi].ok;
+  fb.className = 'qfb show '+(ok?'ok':'fail');
+  nx.classList.add('show');
+  if (ok) { qCorrect++; addXP(QXPS[qi],'Resposta correta!','🎯'); streak++; } else streak=0;
+  qAnswers[qi]=ok;
+  document.getElementById('q-prog').style.width = ((qi+1)/5*100)+'%';
+  document.getElementById('q-cnt').textContent = (qi+1)+'/5';
+  updateHUD();
+}
+function nextQ(n) {
+  document.getElementById('qc'+(n-1)).classList.remove('active');
+  document.getElementById('qc'+n).classList.add('active');
+}
+function showResult() {
+  document.getElementById('qc4').classList.remove('active');
+  const r = document.getElementById('q-result');
+  r.classList.add('show');
+  document.getElementById('q-score').textContent = qCorrect+'/5';
+  const msgs = ['Revise e tente novamente!','Progredindo!','Bom trabalho!','Excelente domínio de VLANs!','💎 Segmentação Perfeita!'];
+  document.getElementById('q-msg').textContent = msgs[Math.min(qCorrect,4)];
+  const earned = Object.keys(qAnswers).filter(k=>qAnswers[k]).reduce((a,k)=>a+QXPS[+k],0);
+  document.getElementById('q-xp-earned').textContent = '+'+earned+' XP conquistados no quiz';
+  document.getElementById('q-prog').style.width='100%';
+  document.getElementById('q-cnt').textContent='5/5';
+  if (qCorrect>=4) unlock('a-quiz','bm-quiz','Engenheiro L2 — 4+ acertos!');
+  if (qCorrect===5) unlock('a-perfect','bm-perfect','Segmentação Perfeita! 💎 5/5');
+  updateHUD();
+}
+function restartQuiz() {
+  qCorrect=0;
+  document.getElementById('q-result').classList.remove('show');
+  document.getElementById('q-prog').style.width='0%';
+  document.getElementById('q-cnt').textContent='0/5';
+  for (let i=0;i<5;i++) {
+    const c = document.getElementById('qc'+i);
+    c.classList.toggle('active',i===0);
+    c.querySelectorAll('.qopt').forEach(o=>{o.disabled=false;o.classList.remove('correct','wrong');});
+    const fb=c.querySelector('.qfb'); if(fb){fb.className='qfb';fb.innerHTML='';}
+    const nx=c.querySelector('.qnx'); if(nx)nx.classList.remove('show');
+  }
+  updateHUD();
+}
+</script>
+</body>
+</html>

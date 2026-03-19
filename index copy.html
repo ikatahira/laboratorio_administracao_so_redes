@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratório de Administração de Sistemas Operacionais de Redes - ISO-103</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #003366;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            color: #666;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .header .info {
+            background: linear-gradient(135deg, #003366 0%, #0066cc 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        .plano-ensino-box {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .plano-ensino-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 20px 40px;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 1.3em;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        }
+
+        .plano-ensino-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(40, 167, 69, 0.6);
+        }
+
+        .plano-ensino-link::before {
+            content: "📋 ";
+            font-size: 1.2em;
+        }
+
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .section h2 {
+            color: #003366;
+            font-size: 2em;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #0066cc;
+        }
+
+        .weeks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .week-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            padding: 25px;
+            border: 2px solid #0066cc;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .week-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, #003366, #0066cc);
+        }
+
+        .week-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 102, 204, 0.3);
+            border-color: #003366;
+        }
+
+        .week-number {
+            background: linear-gradient(135deg, #003366 0%, #0066cc 100%);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .week-title {
+            color: #003366;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .week-subtitle {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .week-links {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .week-link {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.3s;
+            font-size: 0.9em;
+        }
+
+        .link-content {
+            background: #0066cc;
+            color: white;
+        }
+
+        .link-content:hover {
+            background: #003366;
+        }
+
+        .link-guide {
+            background: #28a745;
+            color: white;
+        }
+
+        .link-guide:hover {
+            background: #218838;
+        }
+
+        .module-separator {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 30px 0;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .module-separator h3 {
+            color: #0066cc;
+            font-size: 1.5em;
+            margin: 0;
+        }
+
+        .legend {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .legend h3 {
+            color: #003366;
+            margin-bottom: 15px;
+        }
+
+        .legend-items {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .legend-badge {
+            padding: 8px 15px;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .badge-content {
+            background: #0066cc;
+        }
+
+        .badge-guide {
+            background: #28a745;
+        }
+
+        .footer {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .footer p {
+            color: #666;
+            margin: 5px 0;
+        }
+
+        @media (max-width: 768px) {
+            .weeks-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .legend-items {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <h1>📚 Laboratório de Administração de Sistemas Operacionais de Redes</h1>
+            <p class="subtitle">Curso Superior de Tecnologia em Segurança da Informação</p>
+            <div class="info">
+                <strong>ISO-103</strong> | 3º Semestre | 40 horas | FATEC Ourinhos
+            </div>
+        </div>
+
+        <!-- PLANO DE ENSINO -->
+        <div class="plano-ensino-box">
+            <h2 style="color: #003366; margin-bottom: 20px;">📋 Plano de Ensino da Disciplina</h2>
+            <p style="color: #666; margin-bottom: 20px;">
+                Acesse o plano de ensino completo com ementa, objetivos, cronograma, bibliografia e critérios de avaliação.
+            </p>
+            <a href="plano_ensino_laboratorio_sistemas_operacionais.html" class="plano-ensino-link" target="_blank">
+                Visualizar Plano de Ensino Completo
+            </a>
+        </div>
+
+        <!-- LEGENDA -->
+        <div class="legend">
+            <h3>📖 Legenda</h3>
+            <div class="legend-items">
+                <div class="legend-item">
+                    <span class="legend-badge badge-content">Conteúdo</span>
+                    <span>Aula com objetivos, conteúdo e atividades práticas</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-badge badge-guide">Guia</span>
+                    <span>Rubricas de avaliação e soluções detalhadas</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- MÓDULO 1: INFRAESTRUTURA FÍSICA -->
+        <div class="section">
+            <div class="module-separator">
+                <h3>🔧 MÓDULO 1: Infraestrutura Física de Redes (Semanas 1-4)</h3>
+            </div>
+
+            <div class="weeks-grid">
+                <!-- Semana 1 -->
+                <div class="week-card">
+                    <div class="week-number">01</div>
+                    <div class="week-title">Introdução ao Cabeamento Estruturado</div>
+                    <div class="week-subtitle">
+                        Normas de segurança, padrões de cabeamento, tipos de cabos e conectores
+                    </div>
+                    <div class="week-links">
+                        <a href="semana01.html" class="week-link link-content">📄 Conteúdo</a>
+                        <a href="semana01_guia.html" class="week-link link-guide">📚 Guia</a>
+                    </div>
+                </div>
+
+                <!-- Semana 2 -->
+                <div class="week-card">
+                    <div class="week-number">02</div>
+                    <div class="week-title">Crimpagem de Cabos de Rede</div>
+                    <div class="week-subtitle">
+                        Prática de crimpagem, padrões T568A e T568B, testes de continuidade
+                    </div>
+                    <div class="week-links">
+                        <a href="semana02.html" class="week-link link-content">📄 Conteúdo</a>
+                        <a href="semana02_guia.html" class="week-link link-guide">📚 Guia</a>
+                    </div>
+                </div>
+
+                <!-- Semana 3 -->
+                <div class="week-card">
+                    <div class="week-number">03</div>
+                    <div class="week-title">Patch Panels e Organização de Racks</div>
+                    <div class="week-subtitle">
+                        Montagem de patch panels, uso de punch down, organização e identificação
+                    </div>
+                    <div class="week-links">
+                        <a href="semana03.html" class="week-link link-content">📄 Conteúdo</a>
+                        <a href="semana03_guia.html" class="week-link link-guide">📚 Guia</a>
+                    </div>
+                </div>
+
+                <!-- Semana 4 -->
+                <div class="week-card">
+                    <div class="week-number">04</div>
+                    <div class="week-title">Configuração de Equipamentos de Rede</div>
+                    <div class="week-subtitle">
+                        Switches (VLANs), roteadores, access points, montagem completa
+                    </div>
+                    <div class="week-links">
+                        <a href="semana04.html" class="week-link link-content">📄 Conteúdo</a>
+                        <a href="semana04_guia.html" class="week-link link-guide">📚 Guia</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MÓDULO 2: LINUX SERVER -->
+        <div class="section">
+            <div class="module-separator">
+                <h3>🐧 MÓDULO 2: Administração de Linux Server (Semanas 5-11)</h3>
+            </div>
+
+            <div class="weeks-grid">
+                <!-- Semanas 5-11 -->
+                <div class="week-card">
+                    <div class="week-number">05</div>
+                    <div class="week-title">Instalação de Linux Server</div>
+                    <div class="week-subtitle">
+                        Planejamento, instalação Ubuntu Server, particionamento, configuração inicial
+                    </div>
+                    <div class="week-links">
+                        <a href="semana05.html" class="week-link link-content">📄 Conteúdo</a>
+                        <a href="semana05_guia.html" class="week-link link-guide">📚 Guia</a>
+                    </div>
+                </div>
+
+                <div class="week-card">
+                    <div class="week-number">06</div>
+                    <div class="week-title">Usuários e Permissões no Linux</div>
+                    <div class="week-subtitle">
+                        Gerenciamento de usuários e grupos, permissões rwx, sudo, ACLs
+                    </div>
+                    <div class="week-links">
+                        <a href="semana06.html" class="week-link link-content">📄 Conteúdo</a>
+                        <a href="semana06_guia.html" class="week-link link-guide">📚 Guia</a>
+                    </div>
+                </div>
+
+                <div class="week-card">
+                    <div class="week-number">07</div>
+                    <div class="week-title">Configuração de Rede no Linux</div>
+                    <div class="week-subtitle">
+                        Interfaces de rede, endereçamento IP, roteamento, servidor DHCP
+                    </div>
+                    <div class="week-links">
+                        <a href="semana07.html" class="week-link link-content">📄 Conteúdo</a>
+                        <a href="semana07_guia.html" class="week-link link-guide">📚 Guia</a>
+                    </div>
+                </div>
+
+                <div class="week-card">
+                    <div class="week-number">08</div>
+                    <div class="week-title">Servidor DNS com BIND9</div>
+                    <div class="week-subtitle">
+                        Instalação BIND9, criação de zonas, registros DNS (A, CNAME, MX, PTR)
+                    </div>
+                    <div class="week-links">
+                        <a href="semana08.html" class="week-link link-content">📄 Conteúdo</a>
+                        <a href="semana08_guia.html" class="week-link link-guide">📚 Guia</a>
+                    </div>
+                </div>
+
+                <div class="week-card">
+                    <div class="week-number">09</div>
+                    <div class="week-title">Servidor de Arquivos Samba</div>
+                    <div class="week-subtitle">
+                        Instalação Samba, compartilhamentos públicos e privados, integração Windows
+                    </div>
+                    <div class="week-links">
+                        <a href="semana09.html" class="week-link link-content">📄 Conteúdo</a>
+                        <a href="semana09_guia.html" class="week-link link-guide">📚 Guia</a>
+                    </div>
+                </div>
+
+                <div class="week-card">
+                    <div class="week-number">10</div>
+                    <div class="week-title">Introdução a Shell Script</div>
+                    <div class="week-subtitle">
+                        Fundamentos de script, variáveis, estruturas de controle, automação
+                    </div>
+                    <div class="week-links">
+                        <a href="semana10.html" class="week-link link-content">📄 Conteúdo</a>
+                        <a href="semana10_guia.html" class="week-link link-guide">📚 Guia</a>
+                    </div>
+                </div>
+
+                <div class="week-card">
+                    <div class="week-number">11</div>
+                    <div class="week-title">Scripts Avançados e Cron</div>
+                    <div class="week-subtitle">
+                        Scripts complexos, debugging, agendamento com cron, projeto integrado Linux
+                    </div>
+                    <div class="week-links">
+                        <a href="semana11.html" class="week-link link-content">📄 Conteúdo</a>
+                        <a href="semana11_guia.html" class="week-link link-guide">📚 Guia</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MÓDULO 3: WINDOWS SERVER -->
+        <div class="section">
+            <div class="module-separator">
+                <h3>🪟 MÓDULO 3: Administração de Windows Server (Semanas 12-19)</h3>
+            </div>
+
+            <div class="weeks-grid">
+                <!-- Semanas 12-19 -->
+                <div class="week-card">
+                    <div class="week-number">12</div>
+                    <div class="week-title">Instalação do Windows Server</div>
+                    <div class="week-subtitle">
+                        Planejamento, instalação Windows Server 2019/2022, Server Manager
+                    </div>
+                    <div class="week-links">
+                        <a href="semana12.html" class="week-link link-content">📄 Conteúdo</a>
+                        <a href="semana12_guia.html" class="week-link link-guide">📚 Guia</a>
+                    </div>
+                </div>
+
+                <div class="week-card">
+                    <div class="week-number">13</div>
+                    <div class="week-title">Active Directory Domain Services</div>
+                    <div class="week-subtitle">
+                        Conceitos de domínio, instalação de DC, estrutura do AD, OUs
+                    </div>
+                    <div class="week-links">
+                        <a href="semana13.html" class="week-link link-content">📄 Conteúdo</a>
+                        <a href="semana13_guia.html" class="week-link link-guide">📚 Guia</a>
+                    </div>
+                </div>
+
+                <div class="week-card">
+                    <div class="week-number">14</div>
+                    <div class="week-title">Usuários e Grupos no AD</div>
+                    <div class="week-subtitle">
+                        Criação de usuários, grupos de segurança, delegação de controle
+                    </div>
+                    <div class="week-links">
+                        <a href="semana14.html" class="week-link link-content">📄 Conteúdo</a>
+                        <a href="semana14_guia.html" class="week-link link-guide">📚 Guia</a>
+                    </div>
+                </div>
+
+                <div class="week-card">
+                    <div class="week-number">15</div>
+                    <div class="week-title">Group Policy Objects (GPO)</div>
+                    <div class="week-subtitle">
+                        Criação de GPOs, políticas de grupo, preferências, troubleshooting
+                    </div>
+                    <div class="week-links">
+                        <a href="semana15.html" class="week-link link-content">📄 Conteúdo</a>
+                        <a href="semana15_guia.html" class="week-link link-guide">📚 Guia</a>
+                    </div>
+                </div>
+
+                <div class="week-card">
+                    <div class="week-number">16</div>
+                    <div class="week-title">Serviços DHCP e DNS</div>
+                    <div class="week-subtitle">
+                        Instalação DHCP e DNS no Windows, integração com AD, DNS dinâmico
+                    </div>
+                    <div class="week-links">
+                        <a href="semana16.html" class="week-link link-content">📄 Conteúdo</a>
+                        <a href="semana16_guia.html" class="week-link link-guide">📚 Guia</a>
+                    </div>
+                </div>
+
+                <div class="week-card">
+                    <div class="week-number">17</div>
+                    <div class="week-title">Servidor de Arquivos e Impressão</div>
+                    <div class="week-subtitle">
+                        File Server, DFS, permissões NTFS, servidor de impressão, auditoria
+                    </div>
+                    <div class="week-links">
+                        <a href="semana17.html" class="week-link link-content">📄 Conteúdo</a>
+                        <a href="semana17_guia.html" class="week-link link-guide">📚 Guia</a>
+                    </div>
+                </div>
+
+                <div class="week-card">
+                    <div class="week-number">18</div>
+                    <div class="week-title">PowerShell para Administração</div>
+                    <div class="week-subtitle">
+                        Cmdlets essenciais, scripts PowerShell, automação de tarefas administrativas
+                    </div>
+                    <div class="week-links">
+                        <a href="semana18.html" class="week-link link-content">📄 Conteúdo</a>
+                        <a href="semana18_guia.html" class="week-link link-guide">📚 Guia</a>
+                    </div>
+                </div>
+
+                <div class="week-card">
+                    <div class="week-number">19</div>
+                    <div class="week-title">Monitoramento, Backup e Recuperação</div>
+                    <div class="week-subtitle">
+                        Ferramentas de monitoramento, estratégias de backup, disaster recovery
+                    </div>
+                    <div class="week-links">
+                        <a href="semana19.html" class="week-link link-content">📄 Conteúdo</a>
+                        <a href="semana19_guia.html" class="week-link link-guide">📚 Guia</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MÓDULO 4: PROJETO FINAL -->
+        <div class="section">
+            <div class="module-separator">
+                <h3>🎯 MÓDULO 4: Integração e Projeto Final (Semana 20)</h3>
+            </div>
+
+            <div class="weeks-grid">
+                <div class="week-card">
+                    <div class="week-number">20</div>
+                    <div class="week-title">Troubleshooting e Projeto Final</div>
+                    <div class="week-subtitle">
+                        Metodologia de resolução de problemas, projeto integrado, apresentação
+                    </div>
+                    <div class="week-links">
+                        <a href="semana20.html" class="week-link link-content">📄 Conteúdo</a>
+                        <a href="semana20_guia.html" class="week-link link-guide">📚 Guia</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            <p><strong>FATEC Ourinhos - Faculdade de Tecnologia de Ourinhos</strong></p>
+            <p>Curso Superior de Tecnologia em Segurança da Informação</p>
+            <p>Disciplina: Laboratório de Administração de Sistemas Operacionais de Redes (ISO-103)</p>
+            <p style="margin-top: 10px; color: #999;">© 2025 - Todos os direitos reservados</p>
+        </div>
+    </div>
+</body>
+</html>

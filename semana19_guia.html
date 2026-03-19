@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia de Estudo - Semana 19</title>
+    <style>* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .header h1 {
+            color: #6a11cb;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+
+        .header .week-info {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .nav-btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(106, 17, 203, 0.4);
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .section h2 {
+            color: #6a11cb;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #2575fc;
+        }
+
+        .exercise-block {
+            background: #f8f9fa;
+            border-left: 5px solid #6a11cb;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+
+        .exercise-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .exercise-number {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+
+        .exercise-title {
+            flex: 1;
+            color: #6a11cb;
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+
+        .rubric-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .rubric-table th {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .rubric-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .rubric-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .rubric-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .criterion {
+            font-weight: bold;
+            color: #6a11cb;
+        }
+
+        .solution-box {
+            background: linear-gradient(to right, #e8f5e9, #f1f8e9);
+            border-left: 5px solid #4caf50;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .solution-box h3 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .example-box {
+            background: #fff3e0;
+            border-left: 5px solid #ff9800;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .example-box h4 {
+            color: #e65100;
+            margin-bottom: 10px;
+        }
+
+        .tip-box {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .tip-box strong {
+            color: #1976d2;
+        }
+
+        .command-box {
+            background: #263238;
+            color: #4caf50;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+
+        ul, ol {
+            margin-left: 20px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .highlight {
+            background: #fff9c4;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #d32f2f;
+        }</style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Guia de Estudo - Semana 19</h1>
+            <p class="week-info">Monitoramento, Backup e Recuperação</p>
+            <div class="nav-buttons">
+                <a href="index.html" class="nav-btn">⬅️ Voltar ao Índice</a>
+                <a href="semana19.html" class="nav-btn">📄 Ver Conteúdo da Semana</a>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>✏️ Exercício 1: Análise de Performance</h2>
+            
+            <div class="exercise-block">
+                <div class="exercise-header">
+                    <div class="exercise-number">1</div>
+                    <div class="exercise-title">Análise de Performance</div>
+                </div>
+
+                <p><strong>📋 Objetivo:</strong> Monitorar recursos do sistema</p>
+                <p><strong>⏱️ Duração:</strong> 20 minutos</p>
+                <p><strong>📄 Descrição:</strong> Identificar gargalos, analisar logs</p>
+
+                <h3 style="color: #6a11cb; margin-top: 25px; margin-bottom: 15px;">📊 Rubrica de Avaliação</h3>
+                
+                <table class="rubric-table">
+                    <thead>
+                        <tr>
+                            <th>Critério</th>
+                            <th>Insuficiente (0-5)</th>
+                            <th>Básico (6-7)</th>
+                            <th>Proficiente (8-9)</th>
+                            <th>Excelente (10)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="criterion">Execução dos Comandos</td>
+                            <td>Comandos incorretos ou não funcionam</td>
+                            <td>Comandos executados com erros</td>
+                            <td>Comandos executados corretamente</td>
+                            <td>Comandos perfeitos com validação</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Compreensão</td>
+                            <td>Não compreende o que está fazendo</td>
+                            <td>Compreensão básica</td>
+                            <td>Boa compreensão dos conceitos</td>
+                            <td>Domínio completo com explicações</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Documentação</td>
+                            <td>Sem documentação</td>
+                            <td>Documentação mínima</td>
+                            <td>Documentação adequada</td>
+                            <td>Documentação completa com prints</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Testes e Validação</td>
+                            <td>Não realiza testes</td>
+                            <td>Testes básicos</td>
+                            <td>Testes adequados</td>
+                            <td>Testes completos com casos edge</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="solution-box">
+                    <h3>💡 Solução Detalhada do Exercício 1</h3>
+                    
+                    <p><strong>Explicação:</strong> Ferramentas de análise de performance</p>
+                    
+                    <h4 style="color: #2e7d32; margin-top: 20px;">📝 Comandos Passo a Passo</h4>
+                    
+                    <div class="command-box">
+# Linux:
+top -bn1 | head -20
+htop
+free -h
+df -h
+iostat -x 1 5
+sar -u 1 10
+# Windows PowerShell:
+Get-Counter '\Processor(_Total)\% Processor Time'
+Get-Counter '\Memory\Available MBytes'
+Get-WmiObject Win32_PerfFormattedData_PerfOS_Processor | Select-Object Name, PercentProcessorTime
+                    </div>
+                    
+                    <div class="tip-box">
+                        <strong>💡 DICA:</strong> Sempre verifique os resultados de cada comando antes de prosseguir para o próximo passo. Use comandos de verificação como <code>id usuário</code>, <code>groups usuário</code>, <code>ls -la</code> para confirmar as alterações.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>✏️ Exercício 2: Backup do Linux</h2>
+            
+            <div class="exercise-block">
+                <div class="exercise-header">
+                    <div class="exercise-number">2</div>
+                    <div class="exercise-title">Backup do Linux</div>
+                </div>
+
+                <p><strong>📋 Objetivo:</strong> Implementar backup automatizado</p>
+                <p><strong>⏱️ Duração:</strong> 25 minutos</p>
+                <p><strong>📄 Descrição:</strong> Script de backup com rsync, agendamento</p>
+
+                <h3 style="color: #6a11cb; margin-top: 25px; margin-bottom: 15px;">📊 Rubrica de Avaliação</h3>
+                
+                <table class="rubric-table">
+                    <thead>
+                        <tr>
+                            <th>Critério</th>
+                            <th>Insuficiente (0-5)</th>
+                            <th>Básico (6-7)</th>
+                            <th>Proficiente (8-9)</th>
+                            <th>Excelente (10)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="criterion">Execução dos Comandos</td>
+                            <td>Comandos incorretos ou não funcionam</td>
+                            <td>Comandos executados com erros</td>
+                            <td>Comandos executados corretamente</td>
+                            <td>Comandos perfeitos com validação</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Compreensão</td>
+                            <td>Não compreende o que está fazendo</td>
+                            <td>Compreensão básica</td>
+                            <td>Boa compreensão dos conceitos</td>
+                            <td>Domínio completo com explicações</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Documentação</td>
+                            <td>Sem documentação</td>
+                            <td>Documentação mínima</td>
+                            <td>Documentação adequada</td>
+                            <td>Documentação completa com prints</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Testes e Validação</td>
+                            <td>Não realiza testes</td>
+                            <td>Testes básicos</td>
+                            <td>Testes adequados</td>
+                            <td>Testes completos com casos edge</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="solution-box">
+                    <h3>💡 Solução Detalhada do Exercício 2</h3>
+                    
+                    <p><strong>Explicação:</strong> Backup automatizado com rsync</p>
+                    
+                    <h4 style="color: #2e7d32; margin-top: 20px;">📝 Comandos Passo a Passo</h4>
+                    
+                    <div class="command-box">
+#!/bin/bash
+# backup_completo.sh
+ORIGEM="/home /etc /var/www"
+DESTINO="/backup/$(hostname)"
+DATA=$(date +%Y%m%d)
+LOG="/var/log/backup.log"
+mkdir -p $DESTINO
+echo "[$(date)] Iniciando backup" >> $LOG
+rsync -avz --delete $ORIGEM $DESTINO/$DATA/ 2>&1 | tee -a $LOG
+find $DESTINO -type d -mtime +30 -exec rm -rf {} \; 2>/dev/null
+echo "[$(date)] Backup concluído" >> $LOG
+# Adicionar ao crontab:
+# 0 3 * * * /usr/local/bin/backup_completo.sh
+                    </div>
+                    
+                    <div class="tip-box">
+                        <strong>💡 DICA:</strong> Sempre verifique os resultados de cada comando antes de prosseguir para o próximo passo. Use comandos de verificação como <code>id usuário</code>, <code>groups usuário</code>, <code>ls -la</code> para confirmar as alterações.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>✏️ Exercício 3: Backup do Windows</h2>
+            
+            <div class="exercise-block">
+                <div class="exercise-header">
+                    <div class="exercise-number">3</div>
+                    <div class="exercise-title">Backup do Windows</div>
+                </div>
+
+                <p><strong>📋 Objetivo:</strong> Configurar Windows Server Backup</p>
+                <p><strong>⏱️ Duração:</strong> 25 minutos</p>
+                <p><strong>📄 Descrição:</strong> Backup agendado, incluindo System State</p>
+
+                <h3 style="color: #6a11cb; margin-top: 25px; margin-bottom: 15px;">📊 Rubrica de Avaliação</h3>
+                
+                <table class="rubric-table">
+                    <thead>
+                        <tr>
+                            <th>Critério</th>
+                            <th>Insuficiente (0-5)</th>
+                            <th>Básico (6-7)</th>
+                            <th>Proficiente (8-9)</th>
+                            <th>Excelente (10)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="criterion">Execução dos Comandos</td>
+                            <td>Comandos incorretos ou não funcionam</td>
+                            <td>Comandos executados com erros</td>
+                            <td>Comandos executados corretamente</td>
+                            <td>Comandos perfeitos com validação</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Compreensão</td>
+                            <td>Não compreende o que está fazendo</td>
+                            <td>Compreensão básica</td>
+                            <td>Boa compreensão dos conceitos</td>
+                            <td>Domínio completo com explicações</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Documentação</td>
+                            <td>Sem documentação</td>
+                            <td>Documentação mínima</td>
+                            <td>Documentação adequada</td>
+                            <td>Documentação completa com prints</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Testes e Validação</td>
+                            <td>Não realiza testes</td>
+                            <td>Testes básicos</td>
+                            <td>Testes adequados</td>
+                            <td>Testes completos com casos edge</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="solution-box">
+                    <h3>💡 Solução Detalhada do Exercício 3</h3>
+                    
+                    <p><strong>Explicação:</strong> Configuração completa de backup do Windows</p>
+                    
+                    <h4 style="color: #2e7d32; margin-top: 20px;">📝 Comandos Passo a Passo</h4>
+                    
+                    <div class="command-box">
+# PowerShell:
+Install-WindowsFeature Windows-Server-Backup
+$Policy = New-WBPolicy
+$Volume = Get-WBVolume -VolumePath C:
+Add-WBVolume -Policy $Policy -Volume $Volume
+$SystemState = New-WBSystemState
+Add-WBSystemState -Policy $Policy
+$BackupLocation = New-WBBackupTarget -VolumePath E:
+Add-WBBackupTarget -Policy $Policy -Target $BackupLocation
+$Schedule = New-WBSchedule -DaysOfWeek Sunday,Wednesday -TimesOfDay 02:00
+Set-WBSchedule -Policy $Policy -Schedule $Schedule
+Set-WBPolicy -Policy $Policy
+Start-WBBackup -Policy $Policy
+                    </div>
+                    
+                    <div class="tip-box">
+                        <strong>💡 DICA:</strong> Sempre verifique os resultados de cada comando antes de prosseguir para o próximo passo. Use comandos de verificação como <code>id usuário</code>, <code>groups usuário</code>, <code>ls -la</code> para confirmar as alterações.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>✏️ Exercício 4: Teste de Restore</h2>
+            
+            <div class="exercise-block">
+                <div class="exercise-header">
+                    <div class="exercise-number">4</div>
+                    <div class="exercise-title">Teste de Restore</div>
+                </div>
+
+                <p><strong>📋 Objetivo:</strong> Verificar recuperação</p>
+                <p><strong>⏱️ Duração:</strong> 10 minutos</p>
+                <p><strong>📄 Descrição:</strong> Restaurar arquivo específico</p>
+
+                <h3 style="color: #6a11cb; margin-top: 25px; margin-bottom: 15px;">📊 Rubrica de Avaliação</h3>
+                
+                <table class="rubric-table">
+                    <thead>
+                        <tr>
+                            <th>Critério</th>
+                            <th>Insuficiente (0-5)</th>
+                            <th>Básico (6-7)</th>
+                            <th>Proficiente (8-9)</th>
+                            <th>Excelente (10)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="criterion">Execução dos Comandos</td>
+                            <td>Comandos incorretos ou não funcionam</td>
+                            <td>Comandos executados com erros</td>
+                            <td>Comandos executados corretamente</td>
+                            <td>Comandos perfeitos com validação</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Compreensão</td>
+                            <td>Não compreende o que está fazendo</td>
+                            <td>Compreensão básica</td>
+                            <td>Boa compreensão dos conceitos</td>
+                            <td>Domínio completo com explicações</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Documentação</td>
+                            <td>Sem documentação</td>
+                            <td>Documentação mínima</td>
+                            <td>Documentação adequada</td>
+                            <td>Documentação completa com prints</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Testes e Validação</td>
+                            <td>Não realiza testes</td>
+                            <td>Testes básicos</td>
+                            <td>Testes adequados</td>
+                            <td>Testes completos com casos edge</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="solution-box">
+                    <h3>💡 Solução Detalhada do Exercício 4</h3>
+                    
+                    <p><strong>Explicação:</strong> Testes de restauração de backups</p>
+                    
+                    <h4 style="color: #2e7d32; margin-top: 20px;">📝 Comandos Passo a Passo</h4>
+                    
+                    <div class="command-box">
+# Linux (rsync):
+rsync -avz /backup/servidor/20250213/home/usuario/arquivo.txt /home/usuario/
+# Windows PowerShell:
+$Backup = Get-WBBackupSet | Sort-Object BackupTime -Descending | Select-Object -First 1
+$Items = Get-WBBackupVolumeBrowsePath -BackupSet $Backup -VolumeInBackup (Get-WBVolume -VolumePath C:)
+Start-WBFileRecovery -BackupSet $Backup -SourcePath "C:\Dados\arquivo.txt" -TargetPath "C:\Restaurados\" -Async
+# Verificar:
+Get-WBJob
+                    </div>
+                    
+                    <div class="tip-box">
+                        <strong>💡 DICA:</strong> Sempre verifique os resultados de cada comando antes de prosseguir para o próximo passo. Use comandos de verificação como <code>id usuário</code>, <code>groups usuário</code>, <code>ls -la</code> para confirmar as alterações.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-buttons" style="margin-top: 30px; background: white; border-radius: 12px; padding: 20px;">
+            <a href="index.html" class="nav-btn">⬅️ Voltar ao Índice</a>
+            <a href="semana19.html" class="nav-btn">📄 Ver Conteúdo da Semana</a>
+        </div>
+    </div>
+</body>
+</html>

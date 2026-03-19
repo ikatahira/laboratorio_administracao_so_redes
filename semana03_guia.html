@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia de Estudo - Semana 03</title>
+    <style>* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .header h1 {
+            color: #6a11cb;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+
+        .header .week-info {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .nav-btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(106, 17, 203, 0.4);
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .section h2 {
+            color: #6a11cb;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #2575fc;
+        }
+
+        .exercise-block {
+            background: #f8f9fa;
+            border-left: 5px solid #6a11cb;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+
+        .exercise-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .exercise-number {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+
+        .exercise-title {
+            flex: 1;
+            color: #6a11cb;
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+
+        .rubric-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .rubric-table th {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .rubric-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .rubric-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .criterion {
+            font-weight: bold;
+            color: #6a11cb;
+        }
+
+        .solution-box {
+            background: linear-gradient(to right, #e8f5e9, #f1f8e9);
+            border-left: 5px solid #4caf50;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .solution-box h3 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .example-box {
+            background: #fff3e0;
+            border-left: 5px solid #ff9800;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .tip-box {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .danger-box {
+            background: #f8d7da;
+            border-left: 5px solid #dc3545;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .success-box {
+            background: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .command-box {
+            background: #263238;
+            color: #4caf50;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+
+        .step-by-step {
+            counter-reset: step;
+        }
+
+        .step {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            position: relative;
+            padding-left: 60px;
+        }
+
+        .step::before {
+            counter-increment: step;
+            content: counter(step);
+            position: absolute;
+            left: 15px;
+            top: 15px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        ul, ol {
+            margin-left: 20px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Guia de Estudo - Semana 03</h1>
+            <p class="week-info">Patch Panels e Organização de Racks</p>
+            <div class="nav-buttons">
+                <a href="index.html" class="nav-btn">⬅️ Voltar ao Índice</a>
+                <a href="semana03.html" class="nav-btn">📄 Ver Conteúdo da Semana</a>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎯 Visão Geral da Semana</h2>
+            <p>Esta semana você aprenderá a trabalhar com patch panels, usar o alicate punch down e organizar racks de forma profissional. Essas habilidades são fundamentais para criar uma infraestrutura de rede organizada, funcional e de fácil manutenção.</p>
+            
+            <div class="tip-box">
+                <strong>💡 Meta da Semana:</strong> Ao final desta aula, você deve ser capaz de conectar cabos em patch panels usando o alicate punch down e organizar um rack completo seguindo padrões profissionais.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>✏️ Atividade 1: Demonstração de Patch Panel</h2>
+            
+            <div class="exercise-block">
+                <div class="exercise-header">
+                    <div class="exercise-number">1</div>
+                    <div class="exercise-title">Compreendendo o Patch Panel</div>
+                </div>
+
+                <p><strong>📋 Objetivo:</strong> Compreender a estrutura interna do patch panel</p>
+                <p><strong>⏱️ Duração:</strong> 20 minutos</p>
+                <p><strong>📄 Descrição:</strong> Examinar patch panel desmontado, identificar blocos 110 e código de cores</p>
+
+                <div class="solution-box">
+                    <h3>✅ O que é um Patch Panel?</h3>
+                    
+                    <p>O patch panel é um painel de conexões que serve como ponto centralizado para organizar o cabeamento horizontal de uma rede. Ele conecta os cabos vindos das tomadas (fixos na parede) com os patch cords que vão até os switches.</p>
+
+                    <h4 style="color: #2e7d32; margin-top: 20px;">🔧 Componentes Principais</h4>
+                    
+                    <div class="example-box">
+                        <h4>Blocos 110 (IDC - Insulation Displacement Contact)</h4>
+                        <ul>
+                            <li><strong>Face frontal:</strong> Portas RJ-45 fêmeas numeradas</li>
+                            <li><strong>Face traseira:</strong> Blocos 110 com slots para inserção dos fios</li>
+                            <li><strong>Código de cores:</strong> Impresso no bloco (geralmente T568B)</li>
+                            <li><strong>Função:</strong> Conecta fios sem necessidade de solda ou conectores</li>
+                        </ul>
+                    </div>
+
+                    <div class="example-box">
+                        <h4>📏 Configurações Comuns</h4>
+                        <ul>
+                            <li><strong>12 portas:</strong> Pequenos escritórios, redes residenciais</li>
+                            <li><strong>24 portas:</strong> Mais comum, ideal para salas de equipamentos</li>
+                            <li><strong>48 portas:</strong> Data centers, grandes instalações</li>
+                        </ul>
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>💡 Vantagens do Patch Panel:</strong>
+                        <ul>
+                            <li>Facilita manutenção e mudanças</li>
+                            <li>Protege os cabos permanentes</li>
+                            <li>Permite identificação clara de conexões</li>
+                            <li>Organização profissional</li>
+                            <li>Flexibilidade na configuração da rede</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <strong>⚠️ Categorias de Patch Panels:</strong>
+                    <ul>
+                        <li><strong>Cat5e:</strong> 100 MHz - Redes até 1 Gbps</li>
+                        <li><strong>Cat6:</strong> 250 MHz - Redes até 10 Gbps (55m)</li>
+                        <li><strong>Cat6a:</strong> 500 MHz - Redes 10 Gbps (100m)</li>
+                        <li>⚠️ Sempre use patch panel da mesma categoria do cabeamento!</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>✏️ Atividade 2: Prática com Alicate Punch Down</h2>
+            
+            <div class="exercise-block">
+                <div class="exercise-header">
+                    <div class="exercise-number">2</div>
+                    <div class="exercise-title">Dominando o Alicate Punch Down</div>
+                </div>
+
+                <p><strong>📋 Objetivo:</strong> Desenvolver habilidade no uso da ferramenta</p>
+                <p><strong>⏱️ Duração:</strong> 40 minutos</p>
+                <p><strong>📄 Especificações:</strong> Conectar 4 cabos em patch panel de prática usando padrão T568B</p>
+
+                <h3 style="color: #6a11cb; margin-top: 25px; margin-bottom: 15px;">📊 Rubrica de Avaliação</h3>
+                
+                <table class="rubric-table">
+                    <tr>
+                        <th>Critério</th>
+                        <th>Pontuação</th>
+                        <th>Descrição</th>
+                    </tr>
+                    <tr>
+                        <td class="criterion">Ordem das Cores</td>
+                        <td>30%</td>
+                        <td>Fios conectados na sequência correta T568B</td>
+                    </tr>
+                    <tr>
+                        <td class="criterion">Técnica de Inserção</td>
+                        <td>25%</td>
+                        <td>Uso correto do alicate (ângulo e pressão)</td>
+                    </tr>
+                    <tr>
+                        <td class="criterion">Qualidade da Conexão</td>
+                        <td>25%</td>
+                        <td>Fios bem inseridos, sem folgas</td>
+                    </tr>
+                    <tr>
+                        <td class="criterion">Destrançamento</td>
+                        <td>10%</td>
+                        <td>Destrançamento mínimo (máx 1,3cm)</td>
+                    </tr>
+                    <tr>
+                        <td class="criterion">Fixação do Cabo</td>
+                        <td>10%</td>
+                        <td>Capa externa presa no suporte</td>
+                    </tr>
+                </table>
+
+                <div class="solution-box">
+                    <h3>✅ Passo a Passo Detalhado</h3>
+                    
+                    <div class="step-by-step">
+                        <div class="step">
+                            <h4 style="color: #2e7d32; margin-bottom: 10px;">Preparação do Cabo</h4>
+                            <p>Remova 7-10cm da capa externa do cabo UTP. <strong>Não destrance os pares ainda!</strong> Identifique qual porta do patch panel receberá este cabo.</p>
+                            <div class="tip-box" style="margin-top: 10px;">
+                                <strong>💡 Dica:</strong> Numere ou etiquete o cabo antes de começar para facilitar a identificação.
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <h4 style="color: #2e7d32; margin-bottom: 10px;">Identificação e Anilha</h4>
+                            <p>Coloque a anilha de identificação no cabo ANTES de conectá-lo. Organize os cabos de forma que fiquem alinhados e sem cruzamentos desnecessários.</p>
+                            <div class="example-box" style="margin-top: 10px;">
+                                <h4>🏷️ Sistema de Numeração</h4>
+                                <p>Use anilhas sequenciais: 1, 2, 3... correspondendo às portas do patch panel.</p>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <h4 style="color: #2e7d32; margin-bottom: 10px;">Destrançamento Mínimo</h4>
+                            <p>Destrance apenas o necessário para alcançar os terminais. <strong>Manter os pares trançados o máximo possível preserva a qualidade do sinal!</strong></p>
+                            <div class="warning-box" style="margin-top: 10px;">
+                                <strong>⚠️ Importante:</strong> Destrançamento excessivo causa crosstalk e degradação do sinal. Máximo de 1,3cm!
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <h4 style="color: #2e7d32; margin-bottom: 10px;">Posicionamento dos Fios</h4>
+                            <p>Coloque cada fio no slot correspondente seguindo o código de cores impresso no patch panel (normalmente T568B). <strong>Verifique DUAS vezes antes de conectar!</strong></p>
+                            <div class="command-box" style="margin-top: 10px;">
+Padrão T568B (mais comum em patch panels):
+1-2: Branco-Laranja, Laranja
+3-6: Branco-Verde, Verde
+4-5: Branco-Azul, Azul
+7-8: Branco-Marrom, Marrom
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <h4 style="color: #2e7d32; margin-bottom: 10px;">Uso do Alicate Punch Down</h4>
+                            <p>Posicione o alicate sobre o fio. <strong>Ângulo correto: geralmente 90 graus em relação ao bloco.</strong> Pressione firmemente até ouvir o "click". A lâmina cortará a sobra automaticamente.</p>
+                            <div class="tip-box" style="margin-top: 10px;">
+                                <strong>💡 Técnica:</strong> Mantenha o alicate perpendicular ao bloco. A pressão deve ser firme e decisiva, não lenta e gradual.
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <h4 style="color: #2e7d32; margin-bottom: 10px;">Verificação Visual</h4>
+                            <p>Inspecione todas as conexões. Os fios devem estar:</p>
+                            <ul>
+                                <li>✓ Firmemente inseridos no slot</li>
+                                <li>✓ Cortados uniformemente</li>
+                                <li>✓ Sem sobras soltas</li>
+                                <li>✓ Sem fios cruzados</li>
+                            </ul>
+                        </div>
+
+                        <div class="step">
+                            <h4 style="color: #2e7d32; margin-bottom: 10px;">Fixação do Cabo</h4>
+                            <p>Prenda a capa externa do cabo na estrutura do patch panel usando o suporte apropriado ou abraçadeira. <strong>Isso evita tensão nas conexões!</strong></p>
+                        </div>
+
+                        <div class="step">
+                            <h4 style="color: #2e7d32; margin-bottom: 10px;">Teste de Certificação</h4>
+                            <p>Utilize testador de cabo conectando um patch cord da porta do patch panel até o testador. Verifique continuidade, mapeamento correto e ausência de problemas. Documente os resultados.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="danger-box">
+                    <h4>🚨 Erros Comuns com Alicate Punch Down</h4>
+                    <ol>
+                        <li><strong>Ângulo errado:</strong> Alicate inclinado pode não fazer boa conexão</li>
+                        <li><strong>Pressão insuficiente:</strong> Fio fica mal conectado</li>
+                        <li><strong>Pressão excessiva:</strong> Pode danificar o bloco ou quebrar o fio</li>
+                        <li><strong>Fio no slot errado:</strong> Sempre confira o código de cores!</li>
+                        <li><strong>Destrançamento excessivo:</strong> Compromete qualidade do sinal</li>
+                        <li><strong>Lâmina gasta:</strong> Não corta a sobra corretamente, verifique a lâmina</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>✏️ Atividade 3: Organização de Rack Completo</h2>
+            
+            <div class="exercise-block">
+                <div class="exercise-header">
+                    <div class="exercise-number">3</div>
+                    <div class="exercise-title">Montagem de Rack Profissional</div>
+                </div>
+
+                <p><strong>📋 Objetivo:</strong> Montar rack organizado seguindo padrões profissionais</p>
+                <p><strong>⏱️ Duração:</strong> 45 minutos</p>
+                <p><strong>📄 Componentes:</strong> Patch panel 24p, Switch 24p, Gerenciador 1U, 12 Patch cords</p>
+
+                <h3 style="color: #6a11cb; margin-top: 25px; margin-bottom: 15px;">📊 Rubrica de Avaliação</h3>
+                
+                <table class="rubric-table">
+                    <tr>
+                        <th>Critério</th>
+                        <th>Pontuação</th>
+                        <th>Descrição</th>
+                    </tr>
+                    <tr>
+                        <td class="criterion">Alinhamento</td>
+                        <td>20%</td>
+                        <td>Equipamentos nivelados e bem fixados</td>
+                    </tr>
+                    <tr>
+                        <td class="criterion">Organização de Cabos</td>
+                        <td>30%</td>
+                        <td>Cabos organizados, sem cruzamentos desnecessários</td>
+                    </tr>
+                    <tr>
+                        <td class="criterion">Raio de Curvatura</td>
+                        <td>15%</td>
+                        <td>Respeitado raio mínimo de 4x o diâmetro do cabo</td>
+                    </tr>
+                    <tr>
+                        <td class="criterion">Identificação</td>
+                        <td>20%</td>
+                        <td>Todos os cabos e portas identificados claramente</td>
+                    </tr>
+                    <tr>
+                        <td class="criterion">Estética</td>
+                        <td>15%</td>
+                        <td>Aparência profissional e limpa</td>
+                    </tr>
+                </table>
+
+                <div class="solution-box">
+                    <h3>✅ Guia de Organização Profissional</h3>
+                    
+                    <h4 style="color: #2e7d32; margin-top: 20px;">📐 Layout do Rack (de cima para baixo)</h4>
+                    
+                    <div class="example-box">
+                        <h4>Disposição Recomendada:</h4>
+                        <ol>
+                            <li><strong>1U:</strong> Gerenciador Horizontal (guia de cabos)</li>
+                            <li><strong>1U:</strong> Patch Panel 24 portas</li>
+                            <li><strong>1U:</strong> Gerenciador Horizontal</li>
+                            <li><strong>1U:</strong> Switch 24 portas</li>
+                            <li><strong>1U:</strong> Gerenciador Horizontal</li>
+                            <li><strong>Laterais:</strong> Gerenciadores Verticais</li>
+                        </ol>
+                    </div>
+
+                    <h4 style="color: #2e7d32; margin-top: 20px;">🔧 Técnicas de Organização</h4>
+                    
+                    <div class="tip-box">
+                        <strong>📏 Raio de Curvatura:</strong>
+                        <ul>
+                            <li>Raio mínimo = 4x o diâmetro do cabo</li>
+                            <li>Para cabo Cat6: aproximadamente 2,5cm de raio mínimo</li>
+                            <li>Nunca dobre cabos em ângulo de 90° abrupto!</li>
+                            <li>Use os gerenciadores para criar curvas suaves</li>
+                        </ul>
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>🎨 Código de Cores (Opcional mas Recomendado):</strong>
+                        <ul>
+                            <li><strong>Azul:</strong> Rede corporativa/administrativa</li>
+                            <li><strong>Amarelo:</strong> Rede de convidados/DMZ</li>
+                            <li><strong>Vermelho:</strong> Uplinks/conexões críticas</li>
+                            <li><strong>Verde:</strong> VoIP/Telefonia</li>
+                            <li><strong>Branco/Cinza:</strong> Uso geral</li>
+                        </ul>
+                    </div>
+
+                    <div class="example-box">
+                        <h4>🔗 Conexões Patch Panel ↔ Switch</h4>
+                        <p>Padrão recomendado:</p>
+                        <ul>
+                            <li>Patch Panel porta 1 → Switch porta 1</li>
+                            <li>Patch Panel porta 2 → Switch porta 2</li>
+                            <li>E assim sucessivamente...</li>
+                            <li>Use patch cords do mesmo comprimento (geralmente 50cm ou 1m)</li>
+                        </ul>
+                    </div>
+
+                    <h4 style="color: #2e7d32; margin-top: 20px;">🏷️ Sistema de Identificação</h4>
+                    
+                    <div class="success-box">
+                        <h4>Identificação Completa:</h4>
+                        <ol>
+                            <li><strong>Anilhas no Patch Panel:</strong> Número correspondente à sala/tomada</li>
+                            <li><strong>Etiquetas no Patch Panel:</strong> Descrição (ex: "Sala 101 - Tomada 1")</li>
+                            <li><strong>Etiquetas no Switch:</strong> VLAN ou função da porta</li>
+                            <li><strong>Patch Cords:</strong> Se possível, anotar origem-destino</li>
+                        </ol>
+                    </div>
+
+                    <div class="warning-box">
+                        <strong>⚠️ Gestão de Cabos:</strong>
+                        <ul>
+                            <li><strong>Velcro:</strong> Use para cabos que mudam frequentemente</li>
+                            <li><strong>Abraçadeiras:</strong> Use apenas para cabos permanentes</li>
+                            <li><strong>Nunca aperte demais:</strong> Pode danificar os cabos!</li>
+                            <li><strong>Folga de serviço:</strong> Deixe 10-15cm extras para manutenção</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>✏️ Atividade 4: Documentação da Infraestrutura</h2>
+            
+            <div class="exercise-block">
+                <div class="exercise-header">
+                    <div class="exercise-number">4</div>
+                    <div class="exercise-title">Documentação Profissional</div>
+                </div>
+
+                <p><strong>📋 Objetivo:</strong> Criar documentação profissional do rack montado</p>
+                <p><strong>⏱️ Duração:</strong> 15 minutos</p>
+
+                <div class="solution-box">
+                    <h3>✅ Itens a Documentar</h3>
+                    
+                    <div class="example-box">
+                        <h4>1. Diagrama de Rack (Visão Frontal)</h4>
+                        <ul>
+                            <li>Desenho mostrando cada equipamento em escala</li>
+                            <li>Unidades (U) numeradas</li>
+                            <li>Identificação de cada equipamento</li>
+                            <li>Modelo e número de série dos equipamentos</li>
+                        </ul>
+                    </div>
+
+                    <div class="example-box">
+                        <h4>2. Mapeamento de Portas do Patch Panel</h4>
+                        <table class="rubric-table" style="margin-top: 10px;">
+                            <tr>
+                                <th>Porta</th>
+                                <th>Local</th>
+                                <th>Anilha</th>
+                                <th>Observações</th>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Sala 101 - Tomada A</td>
+                                <td>001</td>
+                                <td>Ativo</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Sala 101 - Tomada B</td>
+                                <td>002</td>
+                                <td>Ativo</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="example-box">
+                        <h4>3. Lista de Materiais Utilizados</h4>
+                        <ul>
+                            <li>Patch Panel 24 portas Cat6 - Marca/Modelo</li>
+                            <li>Switch 24 portas Gigabit - Marca/Modelo</li>
+                            <li>Gerenciadores horizontais 1U (3x)</li>
+                            <li>Patch cords Cat6 50cm (12x)</li>
+                            <li>Anilhas numéricas sequenciais</li>
+                            <li>Abraçadeiras Velcro</li>
+                        </ul>
+                    </div>
+
+                    <div class="example-box">
+                        <h4>4. Fotos</h4>
+                        <ul>
+                            <li>Foto frontal do rack completo</li>
+                            <li>Foto traseira mostrando conexões</li>
+                            <li>Close-up das conexões do patch panel</li>
+                            <li>Foto do sistema de identificação</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <strong>💡 Ferramentas de Documentação:</strong>
+                    <ul>
+                        <li><strong>Microsoft Visio:</strong> Diagramas profissionais</li>
+                        <li><strong>Draw.io:</strong> Alternativa gratuita online</li>
+                        <li><strong>Excel/Google Sheets:</strong> Tabelas de mapeamento</li>
+                        <li><strong>Software de gestão:</strong> Netbox, RackTables, etc.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📝 Checklist da Semana 3</h2>
+            
+            <div class="success-box">
+                <h3>✅ Você deve ser capaz de:</h3>
+                <ul>
+                    <li>✓ Explicar a função de um patch panel</li>
+                    <li>✓ Identificar blocos 110 e código de cores</li>
+                    <li>✓ Usar corretamente o alicate punch down</li>
+                    <li>✓ Conectar cabos em patch panel com qualidade profissional</li>
+                    <li>✓ Organizar um rack completo seguindo boas práticas</li>
+                    <li>✓ Respeitar raio de curvatura mínimo dos cabos</li>
+                    <li>✓ Implementar sistema de identificação eficiente</li>
+                    <li>✓ Documentar adequadamente uma instalação</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <strong>⚠️ Cuidados Importantes:</strong>
+                <ul>
+                    <li>Não force o alicate punch down além do necessário</li>
+                    <li>Mantenha o destrançamento mínimo (máximo 1,3cm)</li>
+                    <li>Verifique a orientação correta do alicate</li>
+                    <li>Não dobre os cabos além do raio mínimo</li>
+                    <li>Use EPI apropriado (óculos de proteção)</li>
+                    <li>Organize antes de fixar definitivamente</li>
+                </ul>
+            </div>
+
+            <div class="tip-box">
+                <strong>💡 Para a próxima aula:</strong>
+                <ul>
+                    <li>Estudar sobre switches gerenciáveis e VLANs</li>
+                    <li>Revisar comandos básicos de configuração</li>
+                    <li>Assistir vídeos sobre configuração de equipamentos</li>
+                    <li>Ler sobre segurança em equipamentos de rede</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="header" style="margin-top: 30px;">
+            <h2 style="color: #6a11cb; margin-bottom: 15px;">🎯 Recursos Adicionais</h2>
+            <ul style="margin-left: 20px;">
+                <li><a href="https://www.youtube.com/watch?v=example1" target="_blank" style="color: #2575fc;">Vídeo: Instalação de Patch Panel Completo</a></li>
+                <li><a href="https://www.youtube.com/watch?v=example2" target="_blank" style="color: #2575fc;">Vídeo: Como Usar Alicate Punch Down</a></li>
+                <li><a href="https://www.youtube.com/watch?v=example3" target="_blank" style="color: #2575fc;">Vídeo: Organização de Rack Profissional</a></li>
+                <li><a href="https://www.youtube.com/watch?v=example4" target="_blank" style="color: #2575fc;">Vídeo: Sistema de Identificação de Cabos</a></li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
