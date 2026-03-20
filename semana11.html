@@ -1,195 +1,840 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Semana 11 - Laboratório de Administração de Sistemas Operacionais de Redes</title>
-    <style>* { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; background-color: #f0f2f5; }
-        .header { background: linear-gradient(135deg, #003366 0%, #0066cc 100%); color: white; padding: 20px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.2); position: sticky; top: 0; z-index: 1000; }
-        .header-content { max-width: 1400px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; gap: 20px; }
-        .header-content img { width: 60px; height: 60px; border-radius: 50%; border: 3px solid white; object-fit: cover; }
-        .header-text h1 { font-size: 1.5em; margin-bottom: 5px; }
-        .header-text p { font-size: 0.9em; opacity: 0.95; }
-        .container { max-width: 1400px; margin: 20px auto; padding: 0 20px; display: flex; gap: 20px; }
-        .sidebar { width: 280px; background: white; border-radius: 10px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); height: fit-content; position: sticky; top: 120px; }
-        .sidebar h2 { color: #003366; font-size: 1.2em; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #0066cc; }
-        .week-menu { list-style: none; }
-        .week-menu li { margin-bottom: 8px; }
-        .week-menu a { display: block; padding: 12px 15px; background: #f8f9fa; color: #003366; text-decoration: none; border-radius: 5px; transition: all 0.3s; border-left: 3px solid transparent; }
-        .week-menu a:hover { background: #e3f2fd; border-left-color: #0066cc; transform: translateX(5px); }
-        .week-menu a.active { background: #003366; color: white; border-left-color: #0066cc; }
-        .week-badge { background: #0066cc; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.85em; margin-right: 8px; }
-        .content { flex: 1; background: white; border-radius: 10px; padding: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .week-title { color: #003366; font-size: 2em; margin-bottom: 10px; display: flex; align-items: center; gap: 15px; }
-        .week-number { background: linear-gradient(135deg, #003366 0%, #0066cc 100%); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5em; font-weight: bold; }
-        .week-subtitle { color: #666; font-size: 1.1em; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px solid #e0e0e0; }
-        .section { margin-bottom: 30px; }
-        .section h2 { color: #0066cc; font-size: 1.5em; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
-        .section h3 { color: #003366; font-size: 1.2em; margin-top: 20px; margin-bottom: 10px; }
-        .objectives-list, .topics-list { background: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #0066cc; }
-        .objectives-list li, .topics-list li { margin-bottom: 10px; padding-left: 10px; }
-        .video-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
-        .video-card { background: #f8f9fa; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: transform 0.3s; }
-        .video-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
-        .video-thumbnail { width: 100%; aspect-ratio: 16/9; background: linear-gradient(135deg, #003366 0%, #0066cc 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 3em; }
-        .video-info { padding: 15px; }
-        .video-info h4 { color: #003366; margin-bottom: 8px; }
-        .video-link { display: inline-block; margin-top: 10px; padding: 8px 15px; background: #0066cc; color: white; text-decoration: none; border-radius: 5px; font-size: 0.9em; }
-        .info-box { background: #e3f2fd; border-left: 4px solid #0066cc; padding: 15px; border-radius: 5px; margin: 20px 0; }
-        .warning-box { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 5px; margin: 20px 0; }
-        .success-box { background: #d4edda; border-left: 4px solid #28a745; padding: 15px; border-radius: 5px; margin: 20px 0; }
-        .activity-card { background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 10px; padding: 20px; margin: 20px 0; border: 2px solid #0066cc; }
-        .activity-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
-        .activity-number { background: #0066cc; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
-        .activity-title { color: #003366; font-size: 1.3em; font-weight: bold; }
-        .bibliography { background: #f8f9fa; padding: 20px; border-radius: 8px; margin-top: 20px; }
-        .bibliography-item { padding: 15px; background: white; margin-bottom: 10px; border-radius: 5px; border-left: 3px solid #0066cc; }
-        .navigation { display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 2px solid #e0e0e0; }
-        .nav-button { padding: 12px 25px; background: #0066cc; color: white; text-decoration: none; border-radius: 5px; transition: all 0.3s; display: flex; align-items: center; gap: 10px; }
-        .nav-button:hover { background: #003366; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
-        @media (max-width: 968px) { .container { flex-direction: column; } .sidebar { width: 100%; position: static; } }</style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚡ Scripts Avançados & Cron — Semana 11 | ISO-103</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+--ACC1-placeholder: #ffcc00;
+--ACC1-rgb-placeholder: 255,204,0;
+
+:root {
+  --bg:#050d1a;--bg2:#091424;--card:#0d1f35;--card2:#0f2540;
+  --cyan:#00d4ff;--cyan2:#00a8cc;--purple:#b44aff;--purple2:#8b2fe0;
+  --green:#00ff88;--green2:#00cc6a;--yellow:#ffcc00;--orange:#ff8c00;
+  --red:#ff4466;--text:#e0f0ff;--muted:#5a7a99;--border:rgba(0,212,255,0.15);
+  --glow-cyan:0 0 20px rgba(0,212,255,0.4);--glow-purple:0 0 20px rgba(180,74,255,0.4);--glow-green:0 0 20px rgba(0,255,136,0.4);
+}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+body{font-family:'Exo 2',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 20% 20%,rgba(180,74,255,0.05) 0%,transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(0,212,255,0.05) 0%,transparent 50%);pointer-events:none;z-index:0}
+.tux-bg{position:fixed;top:40px;right:-40px;font-size:18em;opacity:0.04;pointer-events:none;z-index:0;animation:tuxFloat 6s ease-in-out infinite}
+@keyframes tuxFloat{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-20px) rotate(5deg)}}
+.header{position:sticky;top:0;z-index:100;background:rgba(5,13,26,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 0}
+.header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#ffcc00,var(--ACC2),transparent)}
+.header-inner{max-width:1300px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px}
+.header-logo{font-family:'Orbitron',monospace;font-size:0.75em;font-weight:700;color:#ffcc00;letter-spacing:2px}
+.header-title{font-family:'Orbitron',monospace;font-size:1em;font-weight:900;color:var(--text)}
+.header-title span{color:#ffcc00}
+.back-btn{background:rgba(255,204,0,0.1);border:1px solid rgba(255,204,0,0.2);color:#ffcc00;padding:6px 14px;border-radius:6px;font-family:'Exo 2',sans-serif;font-size:0.8em;font-weight:700;cursor:pointer;text-decoration:none;transition:all 0.2s;display:flex;align-items:center;gap:6px}
+.hud{margin-left:auto;display:flex;align-items:center;gap:10px}
+.hud-pill{border-radius:8px;padding:6px 14px;text-align:center;border:1px solid rgba(255,204,0,0.2);background:rgba(255,204,0,0.08)}
+.hud-pill .v{font-family:'Orbitron',monospace;font-size:1.2em;font-weight:700;color:#ffcc00;display:block;line-height:1}
+.hud-pill .l{font-size:0.58em;color:var(--muted);text-transform:uppercase;letter-spacing:1px;display:block;margin-top:2px}
+.hud-xp-wrap{border-radius:8px;padding:7px 14px;min-width:150px;border:1px solid rgba(255,204,0,0.2);background:rgba(255,204,0,0.08)}
+.hud-xp-label{display:flex;justify-content:space-between;font-size:0.6em;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
+.hud-bar-bg{background:rgba(0,0,0,0.4);border-radius:100px;height:6px;overflow:hidden}
+.hud-bar{height:100%;border-radius:100px;transition:width 0.8s ease;width:0%}
+.layout{max-width:1300px;margin:0 auto;padding:28px 24px;display:grid;grid-template-columns:260px 1fr;gap:24px;position:relative;z-index:1}
+.sidebar{display:flex;flex-direction:column;gap:16px}
+.scard{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px}
+.scard-title{font-family:'Orbitron',monospace;font-size:0.72em;font-weight:700;color:#ffcc00;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px}
+.nav-link{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;text-decoration:none;color:var(--muted);font-size:0.85em;font-weight:600;transition:all 0.2s;margin-bottom:4px;border:1px solid transparent}
+.nav-link:hover{color:#ffcc00;background:rgba(255,204,0,0.06);border-color:rgba(255,204,0,0.15)}
+.nav-link.active{color:#ffcc00;background:rgba(255,204,0,0.12);border-color:rgba(255,204,0,0.3);box-shadow:inset 3px 0 0 #ffcc00}
+.nav-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.nd-g{background:var(--green);box-shadow:0 0 8px var(--green)}
+.nd-c{background:var(--cyan)}.nd-p{background:var(--purple)}.nd-o{background:var(--orange)}.nd-a{background:#ffcc00}
+.prog-block{margin-bottom:12px}
+.prog-label{display:flex;justify-content:space-between;font-size:0.75em;color:var(--muted);font-weight:600;margin-bottom:5px}
+.prog-label span:last-child{color:#ffcc00;font-family:'Orbitron',monospace}
+.prog-bg{background:rgba(255,255,255,0.06);border-radius:100px;height:6px;overflow:hidden}
+.prog-fill{height:100%;border-radius:100px;transition:width 0.8s ease}
+.pf-a{background:linear-gradient(90deg,rgba(255,204,0,0.7),#ffcc00);box-shadow:0 0 8px rgba(255,204,0,0.4)}
+.pf-c{background:linear-gradient(90deg,var(--cyan2),var(--cyan));box-shadow:0 0 8px rgba(0,212,255,0.4)}
+.pf-g{background:linear-gradient(90deg,var(--green2),var(--green));box-shadow:0 0 8px rgba(0,255,136,0.4)}
+.pf-o{background:linear-gradient(90deg,#cc5500,var(--orange))}
+.badge-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.badge-item{aspect-ratio:1;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.2em;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);filter:grayscale(1) opacity(0.3);transition:all 0.4s;cursor:default;position:relative}
+.badge-item.unlocked{filter:none;background:rgba(255,204,0,0.1);border-color:rgba(255,204,0,0.4);box-shadow:0 0 16px rgba(255,204,0,0.3);animation:badgePop 0.5s ease}
+@keyframes badgePop{0%{transform:scale(0.5);opacity:0}70%{transform:scale(1.2)}100%{transform:scale(1);opacity:1}}
+.badge-item[title]:hover::after{content:attr(title);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--card2);color:#ffcc00;border:1px solid var(--border);font-family:'Exo 2',sans-serif;font-size:0.6em;padding:4px 8px;border-radius:5px;white-space:nowrap;z-index:100}
+.main{display:flex;flex-direction:column;gap:22px}
+.hero{background:var(--card);border:1px solid rgba(255,204,0,0.2);border-radius:16px;padding:36px 40px;position:relative;overflow:hidden;box-shadow:0 0 40px rgba(255,204,0,0.06)}
+.hero-icon{position:absolute;right:30px;top:50%;transform:translateY(-50%);font-size:8em;opacity:0.07}
+.hero-tag{font-family:'Orbitron',monospace;font-size:0.65em;letter-spacing:3px;font-weight:700;color:#ffcc00;text-transform:uppercase;margin-bottom:10px;opacity:0.8}
+.hero h1{font-family:'Orbitron',monospace;font-size:2em;font-weight:900;color:var(--text);line-height:1.2;margin-bottom:8px}
+.hero h1 span{color:#ffcc00}
+.hero-sub{color:var(--muted);font-size:1em;margin-bottom:20px}
+.hero-chips{display:flex;gap:10px;flex-wrap:wrap}
+.chip{border-radius:100px;padding:5px 14px;font-size:0.78em;font-weight:700;display:flex;align-items:center;gap:5px;background:rgba(255,204,0,0.08);border:1px solid rgba(255,204,0,0.2);color:#ffcc00}
+.chip.c{background:rgba(0,212,255,0.08);border-color:rgba(0,212,255,0.2);color:var(--cyan)}
+.chip.g{background:rgba(0,255,136,0.08);border-color:rgba(0,255,136,0.2);color:var(--green)}
+.chip.o{background:rgba(255,140,0,0.08);border-color:rgba(255,140,0,0.2);color:var(--orange)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.card-head{padding:16px 22px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);background:rgba(255,204,0,0.02)}
+.card-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.1em;flex-shrink:0}
+.ci-a{background:rgba(255,204,0,0.15);border:1px solid rgba(255,204,0,0.3)}
+.ci-c{background:rgba(0,212,255,0.15);border:1px solid rgba(0,212,255,0.3)}
+.ci-g{background:rgba(0,255,136,0.15);border:1px solid rgba(0,255,136,0.3)}
+.ci-o{background:rgba(255,140,0,0.15);border:1px solid rgba(255,140,0,0.3)}
+.card-title{font-family:'Orbitron',monospace;font-size:0.85em;font-weight:700;color:var(--text);letter-spacing:1px}
+.xp-tag{margin-left:auto;padding:3px 12px;border-radius:100px;font-size:0.72em;font-weight:700;font-family:'Orbitron',monospace;background:rgba(255,204,0,0.1);border:1px solid rgba(255,204,0,0.3);color:#ffcc00}
+.xp-tag.c{background:rgba(0,212,255,0.1);border-color:rgba(0,212,255,0.3);color:var(--cyan)}
+.xp-tag.g{background:rgba(0,255,136,0.1);border-color:rgba(0,255,136,0.3);color:var(--green)}
+.card-body{padding:22px}
+.obj-list{list-style:none;display:flex;flex-direction:column;gap:8px}
+.obj-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:9px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);cursor:pointer;transition:all 0.2s;font-size:0.9em;font-weight:600}
+.obj-item:hover{background:rgba(255,204,0,0.06);border-color:rgba(255,204,0,0.2)}
+.obj-item.checked{background:rgba(0,255,136,0.06);border-color:rgba(0,255,136,0.2);color:var(--muted);text-decoration:line-through}
+.obj-circle{width:24px;height:24px;border-radius:50%;flex-shrink:0;border:2px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:0.8em;transition:all 0.3s}
+.obj-item.checked .obj-circle{background:var(--green);border-color:var(--green);color:#000;box-shadow:0 0 12px rgba(0,255,136,0.5)}
+.concept-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:20px}
+.concept-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:16px;border-top:3px solid #ffcc00;transition:all 0.2s}
+.concept-card:hover{background:rgba(255,204,0,0.04)}
+.concept-card.c{border-top-color:var(--cyan)}.concept-card.c:hover{background:rgba(0,212,255,0.04)}
+.concept-card.g{border-top-color:var(--green)}.concept-card.g:hover{background:rgba(0,255,136,0.04)}
+.concept-card.o{border-top-color:var(--orange)}.concept-card.o:hover{background:rgba(255,140,0,0.04)}
+.concept-title{font-size:0.82em;font-weight:800;color:#ffcc00;margin-bottom:8px}
+.concept-card.c .concept-title{color:var(--cyan)}.concept-card.g .concept-title{color:var(--green)}.concept-card.o .concept-title{color:var(--orange)}
+.tag{display:inline-flex;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:4px;padding:2px 8px;font-size:0.72em;font-weight:600;color:var(--muted);margin:2px;transition:all 0.15s}
+.tag:hover{color:#ffcc00;border-color:rgba(255,204,0,0.2)}
+.gloss-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.gloss-item{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:9px;padding:12px 14px;transition:all 0.2s}
+.gloss-item:hover{border-color:rgba(255,204,0,0.2);background:rgba(255,204,0,0.03)}
+.gloss-term{font-family:'JetBrains Mono',monospace;font-size:0.8em;font-weight:600;color:#ffcc00;margin-bottom:4px}
+.gloss-def{font-size:0.78em;color:var(--muted);line-height:1.4}
+.video-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.video-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden;transition:all 0.2s}
+.video-card:hover{border-color:rgba(255,204,0,0.3);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.3)}
+.video-thumb{height:100px;display:flex;align-items:center;justify-content:center}
+.vt-a{background:linear-gradient(135deg,rgba(255,204,0,0.2),rgba(255,204,0,0.05))}
+.vt-c{background:linear-gradient(135deg,#0d1f35,#0d2535)}
+.vt-g{background:linear-gradient(135deg,#0d2a1f,#0d3520)}
+.vt-o{background:linear-gradient(135deg,#2a1a0d,#351a0d)}
+.play-btn{width:48px;height:48px;border-radius:50%;background:rgba(255,204,0,0.3);border:2px solid #ffcc00;display:flex;align-items:center;justify-content:center;color:#ffcc00;font-size:1.2em;transition:all 0.2s;cursor:pointer}
+.play-btn:hover{background:rgba(255,204,0,0.5);transform:scale(1.1)}
+.video-info{padding:12px 14px}
+.video-info h4{font-size:0.82em;font-weight:700;color:var(--text);margin-bottom:4px}
+.video-info p{font-size:0.72em;color:var(--muted);margin-bottom:8px}
+.video-link{font-size:0.72em;font-weight:700;color:#ffcc00;text-decoration:none;display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border:1px solid rgba(255,204,0,0.3);border-radius:4px;transition:all 0.2s}
+.video-link:hover{background:rgba(255,204,0,0.1)}
+.mission{border:1px solid rgba(255,255,255,0.06);border-radius:12px;overflow:hidden;transition:all 0.2s;margin-bottom:12px}
+.mission:hover{border-color:rgba(255,204,0,0.2)}
+.mission.done{border-color:rgba(0,255,136,0.3)}
+.mission-head{padding:14px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;background:rgba(255,255,255,0.02);user-select:none;transition:background 0.2s}
+.mission.done .mission-head{background:rgba(0,255,136,0.04)}
+.mission-head:hover{background:rgba(255,204,0,0.05)}
+.mission-num{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-size:0.9em;font-weight:700;flex-shrink:0;color:#000;background:linear-gradient(135deg,rgba(255,204,0,0.8),#ffcc00)}
+.mission.done .mission-num{background:linear-gradient(135deg,#00aa55,var(--green))}
+.mn-c{background:linear-gradient(135deg,var(--cyan2),var(--cyan))!important}
+.mn-g{background:linear-gradient(135deg,var(--green2),var(--green))!important}
+.mn-o{background:linear-gradient(135deg,#cc5500,var(--orange))!important}
+.mission-info{flex:1}
+.mission-title{font-weight:800;font-size:0.92em;color:var(--text)}
+.mission.done .mission-title{color:var(--green)}
+.mission-meta{font-size:0.73em;color:var(--muted);font-weight:600;margin-top:2px}
+.mission-xp{padding:3px 11px;border-radius:100px;font-size:0.72em;font-weight:700;font-family:'Orbitron',monospace;background:rgba(255,204,0,0.1);border:1px solid rgba(255,204,0,0.2);color:#ffcc00}
+.mission.done .mission-xp{background:rgba(0,255,136,0.15);border-color:rgba(0,255,136,0.4);color:var(--green)}
+.mission-toggle{color:var(--muted);font-size:0.8em;transition:transform 0.3s}
+.mission.open .mission-toggle{transform:rotate(180deg)}
+.mission-body{max-height:0;overflow:hidden;transition:max-height 0.4s ease,padding 0.3s;padding:0 18px}
+.mission.open .mission-body{max-height:2000px;padding:4px 18px 18px}
+.mission-desc{font-size:0.85em;color:var(--muted);font-weight:600;margin-bottom:14px;padding:10px 14px;background:rgba(255,204,0,0.03);border-radius:8px;border-left:3px solid #ffcc00}
+.step{display:flex;gap:12px;margin-bottom:10px;align-items:flex-start}
+.step-num{width:26px;height:26px;border-radius:50%;flex-shrink:0;background:rgba(255,204,0,0.15);border:1px solid rgba(255,204,0,0.3);color:#ffcc00;display:flex;align-items:center;justify-content:center;font-size:0.72em;font-weight:700;font-family:'Orbitron',monospace;margin-top:2px}
+.step p{font-size:0.86em;line-height:1.5;color:var(--text)}
+.step code{font-family:'JetBrains Mono',monospace;background:rgba(255,204,0,0.1);color:#ffcc00;padding:1px 6px;border-radius:4px;font-size:0.9em}
+.cmd-block{background:#020a14;border:1px solid rgba(255,204,0,0.15);border-radius:9px;padding:14px 16px;font-family:'JetBrains Mono',monospace;font-size:0.78em;line-height:1.7;margin:10px 0;box-shadow:inset 0 0 20px rgba(0,0,0,0.3);overflow-x:auto}
+.pr{color:#ffcc00}.cm{color:#e0e0e0}.co{color:#445566}.ou{color:var(--cyan)}.va{color:var(--yellow)}.wa{color:var(--orange)}.gd{color:var(--green)}
+.complete-btn{width:100%;margin-top:14px;padding:13px;border:none;border-radius:9px;cursor:pointer;font-family:'Exo 2',sans-serif;font-size:0.9em;font-weight:800;background:linear-gradient(135deg,rgba(255,204,0,0.15),rgba(255,204,0,0.08));border:1px solid rgba(255,204,0,0.3);color:#ffcc00;transition:all 0.3s;letter-spacing:1px}
+.complete-btn:hover:not(:disabled){background:linear-gradient(135deg,rgba(255,204,0,0.25),rgba(255,204,0,0.15));box-shadow:0 0 20px rgba(255,204,0,0.3);transform:translateY(-1px)}
+.complete-btn:disabled{opacity:0.7;cursor:default;transform:none}
+.info-box{background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.2);border-left:4px solid var(--cyan);border-radius:9px;padding:14px 16px;font-size:0.86em;color:var(--muted);margin:10px 0;line-height:1.5}
+.warn-box{background:rgba(255,140,0,0.05);border:1px solid rgba(255,140,0,0.2);border-left:4px solid var(--orange);border-radius:9px;padding:14px 16px;font-size:0.86em;color:var(--muted);margin:10px 0;line-height:1.5}
+.success-box{background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.2);border-left:4px solid var(--green);border-radius:9px;padding:14px 16px;font-size:0.86em;color:var(--muted);margin:10px 0;line-height:1.5}
+.quiz-prog-wrap{margin-bottom:16px}
+.quiz-prog-label{font-size:0.75em;color:var(--muted);margin-bottom:5px;display:flex;justify-content:space-between}
+.quiz-prog-bg{background:rgba(255,255,255,0.06);border-radius:100px;height:5px;overflow:hidden}
+.quiz-prog-fill{height:100%;width:0%;border-radius:100px;transition:width 0.5s ease}
+.qcard{display:none}.qcard.active{display:block}
+.qcard h4{font-size:0.95em;font-weight:700;color:var(--text);margin-bottom:14px;line-height:1.4}
+.qopts{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.qopt{padding:11px 16px;border-radius:8px;cursor:pointer;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);color:var(--text);font-family:'Exo 2',sans-serif;font-size:0.86em;font-weight:600;text-align:left;transition:all 0.2s}
+.qopt:hover:not(:disabled){background:rgba(255,204,0,0.08);border-color:rgba(255,204,0,0.25);color:#ffcc00}
+.qopt.correct{background:rgba(0,255,136,0.12);border-color:rgba(0,255,136,0.4);color:var(--green)}
+.qopt.wrong{background:rgba(255,68,102,0.12);border-color:rgba(255,68,102,0.4);color:var(--red)}
+.qopt:disabled{cursor:default}
+.qfb{display:none;padding:10px 14px;border-radius:8px;font-size:0.82em;line-height:1.4;margin:8px 0}
+.qfb.show{display:block}.qfb.ok{background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.2);color:var(--green)}.qfb.fail{background:rgba(255,68,102,0.08);border:1px solid rgba(255,68,102,0.2);color:var(--red)}
+.qnx{display:none}.qnx.show{display:flex;justify-content:flex-end}
+.qnx-btn{padding:8px 18px;border:1px solid rgba(255,204,0,0.3);background:rgba(255,204,0,0.1);color:#ffcc00;border-radius:6px;cursor:pointer;font-size:0.82em;font-weight:700;font-family:'Exo 2',sans-serif;transition:all 0.2s}
+.qnx-btn:hover{background:rgba(255,204,0,0.2)}
+.q-result{display:none;text-align:center;padding:28px 0}.q-result.show{display:block}
+.q-score{font-family:'Orbitron',monospace;font-size:3em;font-weight:900;color:#ffcc00;display:block;margin-bottom:8px}
+.q-msg{color:var(--muted);margin-bottom:16px;font-size:0.9em}
+.q-xp{color:#ffcc00;font-weight:700;font-size:0.85em;margin-bottom:16px}
+.restart-btn{padding:10px 24px;border:1px solid rgba(255,204,0,0.3);background:rgba(255,204,0,0.1);color:#ffcc00;border-radius:8px;cursor:pointer;font-size:0.85em;font-weight:700;font-family:'Exo 2',sans-serif;transition:all 0.2s}
+.restart-btn:hover{background:rgba(255,204,0,0.2)}
+.ach-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.ach-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:14px 12px;text-align:center;filter:grayscale(1) opacity(0.3);transition:all 0.4s}
+.ach-card.unlocked{filter:none;background:rgba(255,204,0,0.06);border-color:rgba(255,204,0,0.3);box-shadow:0 0 20px rgba(255,204,0,0.15)}
+.ach-icon{font-size:1.8em;display:block;margin-bottom:6px}
+.ach-name{font-size:0.68em;font-weight:700;color:var(--muted);line-height:1.2}
+.ach-card.unlocked .ach-name{color:#ffcc00}
+.bib-item{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-left:3px solid var(--cyan);border-radius:8px;padding:12px 16px;font-size:0.82em;color:var(--muted);margin-bottom:8px;line-height:1.5}
+.toast{position:fixed;bottom:28px;right:28px;z-index:9999;background:var(--card2);border:1px solid rgba(255,204,0,0.3);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:12px;box-shadow:0 8px 32px rgba(0,0,0,0.4);transform:translateX(120%);transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);min-width:280px;max-width:360px}
+.toast.show{transform:translateX(0)}
+.toast-icon{font-size:1.6em;flex-shrink:0}
+.toast-title{font-family:'Orbitron',monospace;font-size:0.8em;font-weight:700;color:#ffcc00}
+.toast-msg{font-size:0.78em;color:var(--muted);margin-top:2px}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.sidebar{order:2}.main{order:1}.ach-grid{grid-template-columns:repeat(3,1fr)}}
+
+</style>
 </head>
 <body>
-    <header class="header">
-        <div class="header-content">
-            <img src="foto_professor.png" alt="Professor">
-            <div class="header-text">
-                <h1>Laboratório de Administração de Sistemas Operacionais de Redes</h1>
-                <p>ISO-103 | 3º Semestre | Curso Superior de Tecnologia em Segurança da Informação</p>
-            </div>
-        </div>
-    </header>
-    <div class="container">
-        <aside class="sidebar">
-            <h2>📅 Cronograma</h2>
-            <ul class="week-menu">
-                <li><a href="semana01.html"><span class="week-badge">S1</span>Semana 1</a></li>
-                <li><a href="semana02.html"><span class="week-badge">S2</span>Semana 2</a></li>
-                <li><a href="semana03.html"><span class="week-badge">S3</span>Semana 3</a></li>
-                <li><a href="semana04.html"><span class="week-badge">S4</span>Semana 4</a></li>
-                <li><a href="semana05.html"><span class="week-badge">S5</span>Semana 5</a></li>
-                <li><a href="semana06.html"><span class="week-badge">S6</span>Semana 6</a></li>
-                <li><a href="semana07.html"><span class="week-badge">S7</span>Semana 7</a></li>
-                <li><a href="semana08.html"><span class="week-badge">S8</span>Semana 8</a></li>
-                <li><a href="semana09.html"><span class="week-badge">S9</span>Semana 9</a></li>
-                <li><a href="semana10.html"><span class="week-badge">S10</span>Semana 10</a></li>
-                <li><a href="semana11.html" class="active"><span class="week-badge">S11</span>Semana 11</a></li>
-                <li><a href="semana12.html"><span class="week-badge">S12</span>Semana 12</a></li>
-                <li><a href="semana13.html"><span class="week-badge">S13</span>Semana 13</a></li>
-                <li><a href="semana14.html"><span class="week-badge">S14</span>Semana 14</a></li>
-                <li><a href="semana15.html"><span class="week-badge">S15</span>Semana 15</a></li>
-                <li><a href="semana16.html"><span class="week-badge">S16</span>Semana 16</a></li>
-                <li><a href="semana17.html"><span class="week-badge">S17</span>Semana 17</a></li>
-                <li><a href="semana18.html"><span class="week-badge">S18</span>Semana 18</a></li>
-                <li><a href="semana19.html"><span class="week-badge">S19</span>Semana 19</a></li>
-                <li><a href="semana20.html"><span class="week-badge">S20</span>Semana 20</a></li>
-
-            </ul>
-        </aside>
-        <main class="content">
-            <div class="week-title">
-                <div class="week-number">11</div>
-                <div><h1>Semana 11</h1><p style="color: #666; font-size: 0.5em; margin: 0;">Scripts Avançados e Agendamento com Cron</p></div>
-            </div>
-            <p class="week-subtitle">Scripts complexos, debugging, agendamento de tarefas com cron e at</p>
-            <div class="info-box"><strong>🎯 Carga Horária:</strong> 2 horas/aula<br><strong>📍 Local:</strong> Laboratório de Redes</div>
-            <section class="section">
-                <h2>🎯 Objetivos de Aprendizagem</h2>
-                <ul class="objectives-list">                    <li>Criar scripts complexos e modulares</li>
-                    <li>Implementar tratamento de erros</li>
-                    <li>Utilizar expressões regulares em scripts</li>
-                    <li>Configurar cron para tarefas agendadas</li>
-                    <li>Usar at para tarefas únicas</li>
-                    <li>Automatizar manutenção do sistema</li></ul>
-            </section>
-            <section class="section">
-                <h2>📚 Conteúdo Programático</h2>
-                <h3>Scripts Avançados</h3>
-                <ul class="topics-list">
-                    <li>Arrays</li>
-                    <li>Expressões regulares</li>
-                    <li>Tratamento de erros</li>
-                    <li>Logging</li>
-                </ul>
-                <h3>Cron</h3>
-                <ul class="topics-list">
-                    <li>Crontab syntax</li>
-                    <li>Cron system-wide</li>
-                    <li>Anacron</li>
-                    <li>Exemplos práticos</li>
-                </ul>
-                <h3>Automação</h3>
-                <ul class="topics-list">
-                    <li>Scripts de backup</li>
-                    <li>Monitoramento</li>
-                    <li>Limpeza de logs</li>
-                    <li>Relatórios</li>
-                </ul>
-
-            </section>
-            <section class="section">
-                <h2>🎬 Vídeos Recomendados</h2>
-                <div class="video-container">                    <div class="video-card">
-                        <div class="video-thumbnail">▶️</div>
-                        <div class="video-info">
-                            <h4>Crontab - Agendamento no Linux</h4>
-                            <p>Tutorial completo</p>
-                            <a href="https://www.youtube.com/watch?v=example" target="_blank" class="video-link">Assistir no YouTube</a>
-                        </div>
-                    </div>
-                    <div class="video-card">
-                        <div class="video-thumbnail">▶️</div>
-                        <div class="video-info">
-                            <h4>Scripts Bash Avançados</h4>
-                            <p>Técnicas profissionais</p>
-                            <a href="https://www.youtube.com/watch?v=example" target="_blank" class="video-link">Assistir no YouTube</a>
-                        </div>
-                    </div>
-</div>
-            </section>
-            <section class="section">
-                <h2>✏️ Atividades Práticas</h2>
-                <div class="activity-card">
-                    <div class="activity-header">
-                        <div class="activity-number">1</div>
-                        <div class="activity-title">Script de Backup Completo</div>
-                    </div>
-                    <p><strong>Objetivo:</strong> Backup automatizado robusto</p>
-                    <p><strong>Duração:</strong> 35 minutos</p>
-                    <p>Backup com rotação, logs, notificações</p>
-                </div>
-                <div class="activity-card">
-                    <div class="activity-header">
-                        <div class="activity-number">2</div>
-                        <div class="activity-title">Agendamento com Cron</div>
-                    </div>
-                    <p><strong>Objetivo:</strong> Automatizar execução</p>
-                    <p><strong>Duração:</strong> 20 minutos</p>
-                    <p>Configurar crontab para backup diário</p>
-                </div>
-                <div class="activity-card">
-                    <div class="activity-header">
-                        <div class="activity-number">3</div>
-                        <div class="activity-title">Script de Monitoramento</div>
-                    </div>
-                    <p><strong>Objetivo:</strong> Verificar saúde do sistema</p>
-                    <p><strong>Duração:</strong> 25 minutos</p>
-                    <p>CPU, memória, disco, alertas</p>
-                </div>
-
-            </section>
-            <section class="section">
-                <h2>📚 Bibliografia da Semana</h2>
-                <div class="bibliography">                    <div class="bibliography-item">JARGAS, Aurélio Marinho. Shell Script Profissional. Novatec, 2008. Capítulos Avançados</div>
-                    <div class="bibliography-item">NEMETH, Evi et al. Manual completo do Linux. Prentice Hall, 2007. Capítulo 9: Scripting and Automation</div>
-</div>
-            </section>
-            <div class="navigation">
-                <a href="semana10.html" class="nav-button">⬅️ Semana Anterior</a>
-                <a href="semana12.html" class="nav-button">Próxima Semana ➡️</a>
-            </div>
-        </main>
+<div class="tux-bg">⚡</div>
+<div class="toast" id="toast"><div class="toast-icon" id="toast-icon">⚡</div><div><div class="toast-title" id="toast-title">+XP</div><div class="toast-msg" id="toast-msg"></div></div></div>
+<header class="header">
+  <div class="header-inner">
+    <div class="header-logo">ISO-103</div>
+    <div class="header-title">SEMANA <span>11</span></div>
+    <a href="index.html" class="back-btn">← Início</a>
+    <div class="hud">
+      <div class="hud-pill"><span class="v" id="hud-xp">0</span><span class="l">XP</span></div>
+      <div class="hud-pill"><span class="v" id="hud-streak">0</span><span class="l">Streak</span></div>
+      <div class="hud-pill"><span class="v" id="hud-badges">0</span><span class="l">Badges</span></div>
+      <div class="hud-xp-wrap">
+        <div class="hud-xp-label"><span id="hud-level">Iniciante</span><span id="hud-pct">0%</span></div>
+        <div class="hud-bar-bg"><div class="hud-bar" id="hud-bar" style="background:linear-gradient(90deg,#ffcc00,ffcc00aa)"></div></div>
+      </div>
     </div>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="scard">
+      <div class="scard-title">📅 Navegação</div>
+      <a href="semana10.html" class="nav-link"><div class="nav-dot nd-g"></div>Semana 10 — Shell Script</a>
+      <a href="semana11.html" class="nav-link active"><div class="nav-dot nd-a"></div>Semana 11 — Scripts Avançados & Cron</a>
+      <a href="semana12.html" class="nav-link"><div class="nav-dot nd-c"></div>Semana 12 — Segurança & Firewall</a>
+    </div>
+    <div class="scard">
+      <div class="scard-title">📊 Progresso</div>
+      <div class="prog-block"><div class="prog-label"><span>Objetivos</span><span id="obj-pct">0%</span></div><div class="prog-bg"><div class="prog-fill pf-a" id="obj-bar" style="width:0%"></div></div></div>
+      <div class="prog-block"><div class="prog-label"><span>Missões</span><span id="mis-pct">0%</span></div><div class="prog-bg"><div class="prog-fill pf-c" id="mis-bar" style="width:0%"></div></div></div>
+      <div class="prog-block"><div class="prog-label"><span>Quiz</span><span id="quiz-pct">0%</span></div><div class="prog-bg"><div class="prog-fill pf-g" id="quiz-bar" style="width:0%"></div></div></div>
+      <div class="prog-block"><div class="prog-label"><span>Conquistas</span><span id="ach-pct">0/12</span></div><div class="prog-bg"><div class="prog-fill pf-o" id="ach-bar" style="width:0%"></div></div></div>
+    </div>
+    <div class="scard">
+      <div class="scard-title">🏅 Badges</div>
+      <div class="badge-grid">
+        <div class="badge-item" id="bm-start" title="Módulo iniciado">🚀</div>
+        <div class="badge-item" id="bm-obj" title="Todos objetivos">🎯</div>
+        <div class="badge-item" id="bm-arrays" title="Arrays Dominados">📊</div>
+<div class="badge-item" id="bm-erros" title="Error Handler">🛡️</div>
+<div class="badge-item" id="bm-cron" title="Cron Master">📅</div>
+<div class="badge-item" id="bm-monitor" title="Sys Monitor">🔍</div>
+<div class="badge-item" id="bm-regex" title="Regex Expert">🔤</div>
+<div class="badge-item" id="bm-prod" title="Prod Ready">🏭</div>
+
+        <div class="badge-item" id="bm-video" title="Vídeos assistidos">🎬</div>
+        <div class="badge-item" id="bm-quiz" title="4+ no quiz">⭐</div>
+        <div class="badge-item" id="bm-perfect" title="Quiz perfeito">💎</div>
+        <div class="badge-item" id="bm-all" title="Tudo concluído">🏆</div>
+      </div>
+    </div>
+  </aside>
+  <main class="main">
+    <div class="hero">
+      <div class="hero-icon">⚡</div>
+      <div class="hero-tag">ISO-103 · 3º Semestre · Semana 11</div>
+      <h1>⚡ <span>Scripts Avançados & Cron</span></h1>
+      <p class="hero-sub">Arrays, expressões regulares, tratamento de erros, agendamento com crontab e anacron, automação de tarefas administrativas</p>
+      <div class="hero-chips"><div class="chip chip-y">⚡ Scripts Avançados</div>
+<div class="chip chip-y">📅 Cron / Anacron</div>
+<div class="chip chip-c">🔤 Regex</div>
+<div class="chip chip-p">🛡️ Tratamento de Erros</div>
+<div class="chip chip-g">⏱️ 2h/aula</div>
+</div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-icon ci-a">🎯</div><div class="card-title">OBJETIVOS DE APRENDIZAGEM</div><div class="xp-tag">+5 XP cada</div></div>
+      <div class="card-body">
+        <p style="font-size:0.84em;color:var(--muted);margin-bottom:14px;">✅ Clique em cada objetivo conforme você for aprendendo e completando cada item!</p>
+        <ul class="obj-list"><li class="obj-item" onclick="toggleObj(this,0)"><div class="obj-circle">✓</div>Usar arrays e arrays associativos em Bash para estruturar dados</li>
+<li class="obj-item" onclick="toggleObj(this,1)"><div class="obj-circle">✓</div>Aplicar expressões regulares com grep, sed e awk para processar texto</li>
+<li class="obj-item" onclick="toggleObj(this,2)"><div class="obj-circle">✓</div>Implementar tratamento de erros com trap, set -e e funções de log</li>
+<li class="obj-item" onclick="toggleObj(this,3)"><div class="obj-circle">✓</div>Configurar tarefas agendadas com crontab e compreender a sintaxe cron</li>
+<li class="obj-item" onclick="toggleObj(this,4)"><div class="obj-circle">✓</div>Usar anacron para tarefas em sistemas que não ficam ligados 24/7</li>
+<li class="obj-item" onclick="toggleObj(this,5)"><div class="obj-circle">✓</div>Construir sistema de monitoramento e alertas automatizado</li>
+</ul>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-icon ci-c">📚</div><div class="card-title">CONTEÚDO PROGRAMÁTICO</div><div class="xp-tag c">Referência</div></div>
+      <div class="card-body">
+        <div class="concept-grid"><div class="concept-card cc-y">
+<div class="concept-title">📊 Arrays Bash</div>
+<span class="tag">arr=(a b c)</span><span class="tag">${arr[0]}</span><span class="tag">${arr[@]}</span><span class="tag">${#arr[@]}</span><span class="tag">arr+=('novo')</span><span class="tag">unset arr[2]</span><span class="tag">declare -A assoc</span>
+</div>
+<div class="concept-card cc-c">
+<div class="concept-title">🔤 Regex & Text Tools</div>
+<span class="tag">grep -E</span><span class="tag">sed 's/old/new/g'</span><span class="tag">awk '{print $1}'</span><span class="tag">cut -d: -f1</span><span class="tag">sort | uniq</span><span class="tag">tr 'a-z' 'A-Z'</span>
+</div>
+<div class="concept-card cc-p">
+<div class="concept-title">🚨 Tratamento de Erros</div>
+<span class="tag">set -euo pipefail</span><span class="tag">trap 'cmd' ERR</span><span class="tag">trap 'cmd' EXIT</span><span class="tag">$?</span><span class="tag">|| { echo erro; exit 1; }</span>
+</div>
+<div class="concept-card cc-y">
+<div class="concept-title">📅 Agendamento</div>
+<span class="tag">crontab -e</span><span class="tag">crontab -l</span><span class="tag">/etc/cron.d/</span><span class="tag">anacron</span><span class="tag">/etc/anacrontab</span><span class="tag">at now +1h</span><span class="tag">systemd timer</span>
+</div>
+</div>
+        <div style="font-family:'Orbitron',monospace;font-size:0.75em;font-weight:700;margin-bottom:10px;letter-spacing:2px;color:#ffcc00">📖 GLOSSÁRIO TÉCNICO</div>
+        <div class="gloss-grid"><div class="gloss-item"><div class="gloss-term">cron</div><div class="gloss-def">Daemon que executa tarefas agendadas baseadas em expressões de tempo (minuto hora dia mês dia_semana)</div></div>
+<div class="gloss-item"><div class="gloss-term">anacron</div><div class="gloss-def">Complemento ao cron para sistemas que ficam desligados — executa tarefas perdidas na próxima inicialização</div></div>
+<div class="gloss-item"><div class="gloss-term">crontab</div><div class="gloss-def">Arquivo de tabela de tarefas cron — um por usuário em /var/spool/cron/crontabs/</div></div>
+<div class="gloss-item"><div class="gloss-term">trap</div><div class="gloss-def">Comando Bash que captura sinais e eventos (ERR, EXIT, INT) para tratamento de erros</div></div>
+<div class="gloss-item"><div class="gloss-term">awk</div><div class="gloss-def">Linguagem de processamento de texto por campos — poderosa para extrair e transformar dados</div></div>
+<div class="gloss-item"><div class="gloss-term">heredoc</div><div class="gloss-def">Sintaxe << EOF ... EOF para passar blocos de texto multilinha como entrada</div></div>
+</div>
+        
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-icon ci-a">🎬</div><div class="card-title">VÍDEOS RECOMENDADOS</div><div class="xp-tag">+10 XP cada</div></div>
+      <div class="card-body"><div class="video-grid"><div class="video-card"><div class="video-thumb vt-a"><div class="play-btn" onclick="watchVideo(this)">▶</div></div>
+<div class="video-info"><h4>Crontab — Agendamento Linux</h4><p>Sintaxe completa e exemplos práticos</p><a href="https://www.youtube.com/results?search_query=crontab+linux+tutorial+portugues" target="_blank" class="video-link">▶ YouTube</a></div></div>
+<div class="video-card"><div class="video-thumb vt-c"><div class="play-btn" onclick="watchVideo(this)">▶</div></div>
+<div class="video-info"><h4>AWK e SED na Prática</h4><p>Processamento de texto avançado</p><a href="https://www.youtube.com/results?search_query=awk+sed+linux+tutorial" target="_blank" class="video-link">▶ YouTube</a></div></div>
+<div class="video-card"><div class="video-thumb vt-a"><div class="play-btn" onclick="watchVideo(this)">▶</div></div>
+<div class="video-info"><h4>Shell Script Avançado</h4><p>Arrays, erros, boas práticas</p><a href="https://www.youtube.com/results?search_query=bash+script+avancado+arrays+erros" target="_blank" class="video-link">▶ YouTube</a></div></div>
+</div></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-icon ci-a">⚔️</div><div class="card-title">MISSÕES PRÁTICAS</div><div class="xp-tag">+50 XP cada</div></div>
+      <div class="card-body"><div class="mission" id="m1" onclick="toggleMission('m1')">
+<div class="mission-head">
+<div class="mission-num mn-y">01</div>
+<div class="mission-info"><div class="mission-title">Arrays e Processamento de Texto</div><div class="mission-meta">⏱️ 25 min · Dificuldade: ⭐⭐⭐</div></div>
+<div class="mission-xp">+65 XP</div>
+<div class="mission-toggle">▼</div>
+</div>
+<div class="mission-body">
+<div class="mission-desc">🎯 Usar arrays e ferramentas awk/sed/grep para processar dados do sistema</div>
+
+<div class="code-block">
+<div class="code-label">📊 ARRAYS EM BASH</div>
+<pre><span class="value">#!/bin/bash
+# Arrays indexados
+SERVICOS=("ssh" "apache2" "mysql" "nginx" "cron")
+
+echo "Total de serviços: ${#SERVICOS[@]}"
+echo "Primeiro: ${SERVICOS[0]}"
+echo "Último  : ${SERVICOS[-1]}"
+
+# Iterar array
+echo "=== Status dos Serviços ==="
+for SVC in "${SERVICOS[@]}"; do
+    STATUS=$(systemctl is-active "$SVC" 2>/dev/null || echo "não instalado")
+    printf "  %-12s → %s
+" "$SVC" "$STATUS"
+done
+
+# Arrays associativos (dicionários)
+declare -A PORTAS
+PORTAS["ssh"]=22
+PORTAS["http"]=80
+PORTAS["https"]=443
+PORTAS["mysql"]=3306
+
+echo ""
+echo "=== Portas dos Serviços ==="
+for SVC in "${!PORTAS[@]}"; do    # ${!arr} = chaves
+    printf "  %-8s → porta %d
+" "$SVC" "${PORTAS[$SVC]}"
+done</span></pre>
+</div>
+<div class="code-block">
+<div class="code-label">🔤 AWK, SED E GREP NA PRÁTICA</div>
+<pre><span class="comment"># AWK — extrair campos específicos</span>
+<span class="prompt">$</span> <span class="cmd">df -h | awk 'NR>1 {print $1, $5}'</span>
+<span class="comment"># NR>1 pula o cabeçalho  $1=filesystem $5=uso%</span>
+
+<span class="prompt">$</span> <span class="cmd">ps aux | awk '$3 > 50 {print "CPU alta:", $1, $3"%", $11}'</span>
+<span class="comment"># Processos com CPU > 50%</span>
+
+<span class="comment"># SED — substituição e filtragem</span>
+<span class="prompt">$</span> <span class="cmd">sed 's/root/ADMIN/g' /etc/passwd | head -3</span>
+<span class="prompt">$</span> <span class="cmd">sed -n '/^www/p' /etc/passwd</span>
+<span class="comment"># -n suprime output  /padrão/p imprime só o que bate</span>
+
+<span class="comment"># GREP com regex extendida</span>
+<span class="prompt">$</span> <span class="cmd">grep -E "^[a-z]+:[x]:[0-9]{1,4}:" /etc/passwd</span>
+<span class="comment"># Usuários com UID até 4 dígitos</span>
+
+<span class="prompt">$</span> <span class="cmd">grep -c "Failed password" /var/log/auth.log</span>
+<span class="comment"># -c conta ocorrências de tentativas SSH falhas</span></pre>
+</div>
+
+<button class="complete-btn" id="btn-m1" onclick="completeM('m1','btn-m1','ach-arrays','bm-arrays','Arrays e texto dominados!','sh_arrays',65)">✅ MISSÃO CONCLUÍDA — +65 XP</button>
+</div>
+</div>
+<div class="mission" id="m2" onclick="toggleMission('m2')">
+<div class="mission-head">
+<div class="mission-num mn-y">02</div>
+<div class="mission-info"><div class="mission-title">Tratamento de Erros e Logging Profissional</div><div class="mission-meta">⏱️ 25 min · Dificuldade: ⭐⭐⭐</div></div>
+<div class="mission-xp">+70 XP</div>
+<div class="mission-toggle">▼</div>
+</div>
+<div class="mission-body">
+<div class="mission-desc">🎯 Criar scripts robustos com tratamento de erros, trap e sistema de log</div>
+
+<div class="code-block">
+<div class="code-label">🚨 SCRIPT ROBUSTO COM TRATAMENTO DE ERROS</div>
+<pre><span class="value">#!/bin/bash
+# script_robusto.sh
+set -euo pipefail
+# set -e  → sai ao primeiro erro
+# set -u  → sai se variável indefinida usada
+# set -o pipefail → sai se qualquer pipe falhar
+
+# ── Sistema de Log ─────────────────────────
+readonly LOG_FILE="/var/log/meu_script.log"
+readonly SCRIPT_NAME=$(basename "$0")
+
+log()  { echo "[$(date '+%Y-%m-%d %H:%M:%S')] [INFO]  $*" | tee -a "$LOG_FILE"; }
+warn() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] [WARN]  $*" | tee -a "$LOG_FILE" >&2; }
+erro() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] [ERRO]  $*" | tee -a "$LOG_FILE" >&2; }
+
+# ── Trap: executar na saída/erro ─────────────
+cleanup() {
+    local EXIT_CODE=$?
+    if [ $EXIT_CODE -ne 0 ]; then
+        erro "Script falhou com código $EXIT_CODE na linha $BASH_LINENO"
+    else
+        log "Script concluído com sucesso"
+    fi
+}
+trap cleanup EXIT    # Sempre executa ao sair
+
+trap_erro() {
+    erro "Erro na linha $1 do script"
+    exit 1
+}
+trap 'trap_erro $LINENO' ERR    # Executa em qualquer erro
+
+# ── Validação de entrada ──────────────────
+validar_dir() {
+    local DIR="$1"
+    if [ ! -d "$DIR" ]; then
+        erro "Diretório não existe: $DIR"
+        return 1
+    fi
+    if [ ! -w "$DIR" ]; then
+        erro "Sem permissão de escrita: $DIR"
+        return 1
+    fi
+    return 0
+}
+
+# ── Execução ──────────────────────────────
+log "=== Iniciando $SCRIPT_NAME ==="
+
+ALVO="${1:?ERRO: Forneça o diretório alvo como argumento}"
+validar_dir "$ALVO"
+
+log "Processando: $ALVO"
+# ... resto do script ...</span></pre>
+</div>
+<div class="warn-box">⚠️ <strong>BASH_LINENO:</strong> Variável especial que contém o número da linha atual. Junto com <code>trap ... ERR</code>, permite identificar exatamente onde o script falhou — essencial em scripts de produção.</div>
+
+<button class="complete-btn" id="btn-m2" onclick="completeM('m2','btn-m2','ach-erros','bm-erros','Scripts à prova de erros!','sh_erros',70)">✅ MISSÃO CONCLUÍDA — +70 XP</button>
+</div>
+</div>
+<div class="mission" id="m3" onclick="toggleMission('m3')">
+<div class="mission-head">
+<div class="mission-num mn-y">03</div>
+<div class="mission-info"><div class="mission-title">Crontab — Agendamento de Tarefas</div><div class="mission-meta">⏱️ 30 min · Dificuldade: ⭐⭐⭐</div></div>
+<div class="mission-xp">+70 XP</div>
+<div class="mission-toggle">▼</div>
+</div>
+<div class="mission-body">
+<div class="mission-desc">🎯 Configurar crontab do usuário e do sistema para executar tarefas automaticamente</div>
+
+<div class="code-block">
+<div class="code-label">📅 SINTAXE DO CRONTAB</div>
+<pre><span class="comment"># ┌─── Minuto (0-59)
+# │ ┌─── Hora (0-23)
+# │ │ ┌─── Dia do mês (1-31)
+# │ │ │ ┌─── Mês (1-12)
+# │ │ │ │ ┌─── Dia da semana (0=Dom, 1=Seg ... 6=Sáb)
+# │ │ │ │ │
+# * * * * *   comando</span>
+
+<span class="comment"># Exemplos:</span>
+<span class="value">0 * * * *       /script.sh</span>   <span class="comment"># Todo início de hora</span>
+<span class="value">0 6 * * *       /backup.sh</span>   <span class="comment"># 06:00 todos os dias</span>
+<span class="value">0 6 * * 1       /relatorio.sh</span> <span class="comment"># 06:00 toda segunda</span>
+<span class="value">0 0 1 * *       /mensal.sh</span>   <span class="comment"># Meia-noite dia 1 de cada mês</span>
+<span class="value">*/5 * * * *     /monitor.sh</span>  <span class="comment"># A cada 5 minutos</span>
+<span class="value">30 2 * * 0,6    /manutencao.sh</span><span class="comment"># 02:30 sábados e domingos</span>
+
+<span class="comment"># Atalhos especiais:</span>
+<span class="value">@reboot  /inicializacao.sh</span>  <span class="comment"># Na inicialização do sistema</span>
+<span class="value">@daily   /diario.sh</span>          <span class="comment"># Uma vez por dia (meia-noite)</span>
+<span class="value">@weekly  /semanal.sh</span>         <span class="comment"># Uma vez por semana (dom, meia-noite)</span>
+<span class="value">@monthly /mensal.sh</span>          <span class="comment"># Uma vez por mês</span></pre>
+</div>
+<div class="code-block">
+<div class="code-label">⚙️ GERENCIANDO CRONTAB</div>
+<pre><span class="comment"># Editar crontab do usuário atual</span>
+<span class="prompt">$</span> <span class="cmd">crontab -e</span>
+
+<span class="comment"># Listar tarefas do usuário atual</span>
+<span class="prompt">$</span> <span class="cmd">crontab -l</span>
+
+<span class="comment"># Crontab do root (via sudo)</span>
+<span class="prompt">$</span> <span class="cmd">sudo crontab -e</span>
+<span class="prompt">$</span> <span class="cmd">sudo crontab -l -u root</span>
+
+<span class="comment"># Exemplo prático: backup diário às 02:00</span>
+<span class="prompt">$</span> <span class="cmd">crontab -e</span>
+<span class="comment"># Adicionar a linha:</span>
+<span class="value">0 2 * * * /usr/local/bin/backup.sh >> /var/log/backup_cron.log 2>&amp;1</span>
+<span class="comment"># >> = append ao log  2>&1 = stderr junto com stdout</span>
+
+<span class="comment"># Crontab do sistema (com usuário especificado)</span>
+<span class="prompt">$</span> <span class="cmd">sudo nano /etc/cron.d/meu-agendamento</span>
+<span class="value">SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+# m  h  dom mon dow  user     command
+0 3 * * *  root  /usr/local/bin/limpeza.sh</span></pre>
+</div>
+<div class="code-block">
+<div class="code-label">🔄 ANACRON — PARA SISTEMAS QUE FICAM DESLIGADOS</div>
+<pre><span class="prompt">$</span> <span class="cmd">cat /etc/anacrontab</span>
+<span class="value"># period  delay  job-identifier  command
+1         5      cron.daily      run-parts /etc/cron.daily
+7         10     cron.weekly     run-parts /etc/cron.weekly
+@monthly  15     cron.monthly    run-parts /etc/cron.monthly</span>
+<span class="comment"># period  = frequência em dias (1=diário, 7=semanal)
+# delay   = atraso em minutos após ligar antes de executar
+# Garante que tarefas "perdidas" sejam executadas</span></pre>
+</div>
+<div class="warn-box">⚠️ <strong>PATH no cron:</strong> O cron usa um PATH mínimo. Sempre use caminhos absolutos nos scripts agendados: <code>/usr/bin/python3</code> em vez de <code>python3</code>.</div>
+
+<button class="complete-btn" id="btn-m3" onclick="completeM('m3','btn-m3','ach-cron','bm-cron','Tarefas agendadas com sucesso!','sh_cron',70)">✅ MISSÃO CONCLUÍDA — +70 XP</button>
+</div>
+</div>
+<div class="mission" id="m4" onclick="toggleMission('m4')">
+<div class="mission-head">
+<div class="mission-num mn-y">04</div>
+<div class="mission-info"><div class="mission-title">Sistema de Monitoramento Automatizado</div><div class="mission-meta">⏱️ 30 min · Dificuldade: ⭐⭐⭐⭐</div></div>
+<div class="mission-xp">+75 XP</div>
+<div class="mission-toggle">▼</div>
+</div>
+<div class="mission-body">
+<div class="mission-desc">🎯 Criar script completo de monitoramento com alertas, log e agendamento via cron</div>
+
+<div class="code-block">
+<div class="code-label">📊 SCRIPT DE MONITORAMENTO COMPLETO</div>
+<pre><span class="value">#!/bin/bash
+# monitoramento.sh — Verifica saúde do sistema
+# Agendar: */5 * * * * /usr/local/bin/monitoramento.sh
+
+set -uo pipefail
+
+LOG="/var/log/monitoramento.log"
+ALERTA_LOG="/var/log/alertas.log"
+
+# Limites de alerta
+LIMITE_CPU=80
+LIMITE_MEM=85
+LIMITE_DISCO=90
+
+log()   { echo "[$(date '+%Y-%m-%d %H:%M:%S')] [OK]    $*" >> "$LOG"; }
+alerta(){ echo "[$(date '+%Y-%m-%d %H:%M:%S')] [ALERTA] $*" | tee -a "$LOG" "$ALERTA_LOG"; }
+
+# ── CPU ──────────────────────────────────────
+CPU_IDLE=$(top -bn1 | grep "Cpu(s)" | awk '{print $8}' | tr -d '%')
+CPU_USO=$(echo "100 - $CPU_IDLE" | bc | cut -d. -f1)
+if [ "$CPU_USO" -ge "$LIMITE_CPU" ]; then
+    alerta "CPU em ${CPU_USO}% (limite: ${LIMITE_CPU}%)"
+    # Top 3 processos consumindo CPU
+    ps aux --sort=-%cpu | awk 'NR>1 && NR<=4 {print "  ",$1,$3"%",$11}' >> "$ALERTA_LOG"
+else
+    log "CPU: ${CPU_USO}%"
+fi
+
+# ── Memória ───────────────────────────────────
+MEM_TOTAL=$(free -m | awk 'NR==2{print $2}')
+MEM_USADA=$(free -m | awk 'NR==2{print $3}')
+MEM_PCT=$(echo "scale=0; $MEM_USADA*100/$MEM_TOTAL" | bc)
+if [ "$MEM_PCT" -ge "$LIMITE_MEM" ]; then
+    alerta "Memória em ${MEM_PCT}% (${MEM_USADA}MB/${MEM_TOTAL}MB)"
+else
+    log "Memória: ${MEM_PCT}% (${MEM_USADA}MB)"
+fi
+
+# ── Disco ─────────────────────────────────────
+while IFS= read -r linha; do
+    USO=$(echo "$linha" | awk '{print $5}' | tr -d '%')
+    MOUNT=$(echo "$linha" | awk '{print $6}')
+    if [ "$USO" -ge "$LIMITE_DISCO" ]; then
+        alerta "Disco $MOUNT em ${USO}%!"
+    fi
+done < <(df -h | grep "^/dev")
+
+# ── Serviços críticos ─────────────────────────
+SERVICOS_CRITICOS=("ssh" "cron")
+for SVC in "${SERVICOS_CRITICOS[@]}"; do
+    if ! systemctl is-active --quiet "$SVC"; then
+        alerta "SERVIÇO DOWN: $SVC — tentando reiniciar..."
+        systemctl restart "$SVC" 2>> "$LOG" && log "$SVC reiniciado"
+    fi
+done</span>
+
+<span class="comment"># Agendar a cada 5 minutos:</span>
+<span class="prompt">$</span> <span class="cmd">sudo cp monitoramento.sh /usr/local/bin/</span>
+<span class="prompt">$</span> <span class="cmd">sudo chmod +x /usr/local/bin/monitoramento.sh</span>
+<span class="prompt">$</span> <span class="cmd">sudo crontab -e</span>
+<span class="comment"># Adicionar: */5 * * * * /usr/local/bin/monitoramento.sh</span></pre>
+</div>
+<div class="success-box">✅ <strong>Checklist final:</strong> set -euo pipefail ativo · trap configurado · log com timestamps · variáveis validadas · crontab agendado · monitoramento funcionando · alertas em arquivo separado</div>
+
+<button class="complete-btn" id="btn-m4" onclick="completeM('m4','btn-m4','ach-monitor','bm-monitor','Sistema de monitoramento ativo!','sh_monitor',75)">✅ MISSÃO CONCLUÍDA — +75 XP</button>
+</div>
+</div>
+</div>
+    </div>
+    
+    <div class="card">
+      <div class="card-head"><div class="card-icon ci-a">🧠</div><div class="card-title">QUIZ — SCRIPTS AVANÇADOS & CRON</div><div class="xp-tag">+10 a +20 XP</div></div>
+      <div class="card-body">
+        <div class="quiz-prog-wrap">
+          <div class="quiz-prog-label"><span>Progresso</span><span id="q-cnt">0/6</span></div>
+          <div class="quiz-prog-bg"><div class="quiz-prog-fill" id="q-prog" style="background:linear-gradient(90deg,#ffcc00,ffcc0088)"></div></div>
+        </div>
+        <div class="qcard active" id="qc0">
+<h4>Qual expressão cron executa um script todos os dias às 03:30?</h4>
+<div class="qopts"><button class="qopt" onclick="ansQ(0,0,0)">30 3 * * *</button>
+<button class="qopt" onclick="ansQ(0,1,0)">3 30 * * *</button>
+<button class="qopt" onclick="ansQ(0,2,0)">* * 3 30 *</button>
+<button class="qopt" onclick="ansQ(0,3,0)">30 * 3 * *</button>
+</div>
+<div class="qfb" id="qfb0"></div>
+<div class="qnx" id="qnx0"><button class="qnx-btn" onclick="nextQ(1)">Próxima →</button></div>
+</div>
+<div class="qcard " id="qc1">
+<h4>Qual opção do set faz o script sair quando uma variável indefinida é usada?</h4>
+<div class="qopts"><button class="qopt" onclick="ansQ(1,0,1)">set -e</button>
+<button class="qopt" onclick="ansQ(1,1,1)">set -u</button>
+<button class="qopt" onclick="ansQ(1,2,1)">set -x</button>
+<button class="qopt" onclick="ansQ(1,3,1)">set -v</button>
+</div>
+<div class="qfb" id="qfb1"></div>
+<div class="qnx" id="qnx1"><button class="qnx-btn" onclick="nextQ(2)">Próxima →</button></div>
+</div>
+<div class="qcard " id="qc2">
+<h4>O que faz ${#array[@]} em Bash?</h4>
+<div class="qopts"><button class="qopt" onclick="ansQ(2,0,1)">Deleta o array</button>
+<button class="qopt" onclick="ansQ(2,1,1)">Retorna o número de elementos do array</button>
+<button class="qopt" onclick="ansQ(2,2,1)">Cria um novo elemento</button>
+<button class="qopt" onclick="ansQ(2,3,1)">Retorna o último elemento</button>
+</div>
+<div class="qfb" id="qfb2"></div>
+<div class="qnx" id="qnx2"><button class="qnx-btn" onclick="nextQ(3)">Próxima →</button></div>
+</div>
+<div class="qcard " id="qc3">
+<h4>Qual atalho do crontab executa um script na inicialização do sistema?</h4>
+<div class="qopts"><button class="qopt" onclick="ansQ(3,0,2)">@startup</button>
+<button class="qopt" onclick="ansQ(3,1,2)">@boot</button>
+<button class="qopt" onclick="ansQ(3,2,2)">@reboot</button>
+<button class="qopt" onclick="ansQ(3,3,2)">@init</button>
+</div>
+<div class="qfb" id="qfb3"></div>
+<div class="qnx" id="qnx3"><button class="qnx-btn" onclick="nextQ(4)">Próxima →</button></div>
+</div>
+<div class="qcard " id="qc4">
+<h4>Qual comando do awk imprime apenas o terceiro campo de cada linha?</h4>
+<div class="qopts"><button class="qopt" onclick="ansQ(4,0,0)">awk '{print $3}'</button>
+<button class="qopt" onclick="ansQ(4,1,0)">awk 'field=3'</button>
+<button class="qopt" onclick="ansQ(4,2,0)">awk -f 3 '{print}'</button>
+<button class="qopt" onclick="ansQ(4,3,0)">awk '{echo $3}'</button>
+</div>
+<div class="qfb" id="qfb4"></div>
+<div class="qnx" id="qnx4"><button class="qnx-btn" onclick="nextQ(5)">Próxima →</button></div>
+</div>
+<div class="qcard " id="qc5">
+<h4>Qual é a diferença principal entre cron e anacron?</h4>
+<div class="qopts"><button class="qopt" onclick="ansQ(5,0,1)">Anacron é mais rápido</button>
+<button class="qopt" onclick="ansQ(5,1,1)">Anacron executa tarefas perdidas quando o sistema é religado</button>
+<button class="qopt" onclick="ansQ(5,2,1)">Cron suporta segundos, anacron não</button>
+<button class="qopt" onclick="ansQ(5,3,1)">Não há diferença</button>
+</div>
+<div class="qfb" id="qfb5"></div>
+<div class="qnx" id="qnx5"><button class="qnx-btn" onclick="showResult()">Ver Resultado 🏆</button></div>
+</div>
+
+        <div class="q-result" id="q-result">
+          <span class="q-score" id="q-score">0/6</span>
+          <p class="q-msg" id="q-msg">Resultado</p>
+          <p class="q-xp" id="q-xp-earned"></p>
+          <button class="restart-btn" onclick="restartQuiz()">↺ Tentar Novamente</button>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-icon ci-g">🏆</div><div class="card-title">CONQUISTAS</div><div class="xp-tag g">12 Badges</div></div>
+      <div class="card-body"><div class="ach-grid"><div class="ach-card" id="ach-start"><span class="ach-icon">🚀</span><div class="ach-name">Script Iniciado</div></div>
+<div class="ach-card" id="ach-obj"><span class="ach-icon">🎯</span><div class="ach-name">Objetivos OK</div></div>
+<div class="ach-card" id="ach-arrays"><span class="ach-icon">📊</span><div class="ach-name">Arrays Dominados</div></div>
+<div class="ach-card" id="ach-erros"><span class="ach-icon">🛡️</span><div class="ach-name">Error Handler</div></div>
+<div class="ach-card" id="ach-cron"><span class="ach-icon">📅</span><div class="ach-name">Cron Master</div></div>
+<div class="ach-card" id="ach-monitor"><span class="ach-icon">🔍</span><div class="ach-name">Sys Monitor</div></div>
+<div class="ach-card" id="ach-video"><span class="ach-icon">🎬</span><div class="ach-name">Vídeos Assistidos</div></div>
+<div class="ach-card" id="ach-quiz"><span class="ach-icon">⭐</span><div class="ach-name">Quiz 4+/6</div></div>
+<div class="ach-card" id="ach-perfect"><span class="ach-icon">💎</span><div class="ach-name">Quiz Perfeito</div></div>
+<div class="ach-card" id="ach-all"><span class="ach-icon">🏆</span><div class="ach-name">Automation Master</div></div>
+<div class="ach-card" id="ach-regex"><span class="ach-icon">🔤</span><div class="ach-name">Regex Expert</div></div>
+<div class="ach-card" id="ach-prod"><span class="ach-icon">🏭</span><div class="ach-name">Prod Ready</div></div>
+</div></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-icon ci-c">📖</div><div class="card-title">BIBLIOGRAFIA</div></div>
+      <div class="card-body"><div class="bib-item">SHOTTS, William E. <strong>The Linux Command Line</strong>. 2.ed. No Starch Press, 2019. Cap. 24-36: Shell Scripting.</div>
+<div class="bib-item">COOPER, Mendel. <strong>Advanced Bash-Scripting Guide</strong>. <a href='https://tldp.org/LDP/abs/html/' target='_blank'>tldp.org/LDP/abs/html</a></div>
+<div class="bib-item">NEMETH, Evi et al. <strong>Manual completo do Linux</strong>. Prentice Hall, 2007. Cap. 8: Gerenciamento de processos.</div>
+<div class="bib-item">Crontab.guru — Editor visual de expressões cron. <a href='https://crontab.guru' target='_blank'>crontab.guru</a></div>
+</div>
+    </div>
+    <div style="display:flex;justify-content:space-between;gap:12px;margin-top:4px;">
+      <a href="semana10.html" style="padding:13px 24px;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.3);color:var(--cyan);text-decoration:none;border-radius:9px;font-weight:700;font-size:0.9em;transition:all 0.2s" onmouseover="this.style.background='rgba(0,212,255,0.2)'" onmouseout="this.style.background='rgba(0,212,255,0.1)'">← Semana 10 — Shell Script</a>
+      <a href="semana12.html" style="padding:13px 24px;background:rgba(255,204,0,0.1);border:1px solid rgba(255,204,0,0.3);color:#ffcc00;text-decoration:none;border-radius:9px;font-weight:700;font-size:0.9em;transition:all 0.2s" onmouseover="this.style.background='rgba(255,204,0,0.2)'" onmouseout="this.style.background='rgba(255,204,0,0.1)'">Semana 12 — Segurança & Firewall →</a>
+    </div>
+  </main>
+</div>
+<script>
+const TOTAL_XP=360;
+const OBJ_COUNT=6;
+const MIS_COUNT=4;
+const QUIZ_COUNT=6;
+const QFB=[
+{ok:"'30 3 * * *' = minuto 30, hora 3, qualquer dia/mês/dia_semana = 03:30 todos os dias."},
+{ok:'set -u (ou set -o nounset) faz o script sair com erro ao usar variáveis não definidas — ajuda a detectar erros de digitação em nomes de variáveis.'},
+{ok:'${#array[@]} retorna o tamanho (número de elementos) do array. ${array[@]} retorna todos os elementos.'},
+{ok:'@reboot é o atalho cron para executar na inicialização. É equivalente à entrada no rc.local mas mais elegante.'},
+{ok:"awk '{print $3}' imprime o terceiro campo (separado por espaço por padrão) de cada linha."},
+{ok:'Anacron é complementar ao cron: se o sistema estiver desligado quando uma tarefa deveria executar, ele a executa na próxima vez que o sistema ligar.'}
+];
+
+const QXPS=[20,15,15,20,15,15];
+
+
+let xp=0,streak=0,badges=0;
+const objChecked=Array(OBJ_COUNT).fill(false);
+const missionsDone={};
+let videosWatched=0,qCorrect=0;
+const qAnswers={};
+setTimeout(()=>unlock('a-start','bm-start','Módulo iniciado! 🚀'),800);
+function updateHUD(){
+  document.getElementById('hud-xp').textContent=xp;
+  document.getElementById('hud-streak').textContent=streak;
+  document.getElementById('hud-badges').textContent=badges;
+  const pct=Math.min(Math.round(xp/TOTAL_XP*100),100);
+  document.getElementById('hud-bar').style.width=pct+'%';
+  document.getElementById('hud-pct').textContent=pct+'%';
+  const lvls=[[0,'Iniciante'],[50,'Operador'],[120,'Técnico'],[200,'Administrador'],[300,'Expert']];
+  let lv=lvls[0][1];
+  for(const[t,n]of lvls){if(xp>=t)lv=n;}
+  document.getElementById('hud-level').textContent=lv;
+  const od=objChecked.filter(Boolean).length;
+  setBar('obj-bar','obj-pct',od/OBJ_COUNT*100,Math.round(od/OBJ_COUNT*100)+'%');
+  const md=Object.keys(missionsDone).length;
+  setBar('mis-bar','mis-pct',md/MIS_COUNT*100,Math.round(md/MIS_COUNT*100)+'%');
+  setBar('quiz-bar','quiz-pct',Math.min(qCorrect/QUIZ_COUNT*100,100),Math.round(qCorrect/QUIZ_COUNT*100)+'%');
+  setBar('ach-bar','ach-pct',badges/12*100,badges+'/12');
+}
+function setBar(bid,lid,pct,txt){document.getElementById(bid).style.width=Math.min(pct,100)+'%';document.getElementById(lid).textContent=txt;}
+function addXP(a,m,ic){xp+=a;updateHUD();toast(ic||'⚡','+'+a+' XP',m);}
+function toast(icon,title,msg){
+  document.getElementById('toast-icon').textContent=icon;
+  document.getElementById('toast-title').textContent=title;
+  document.getElementById('toast-msg').textContent=msg;
+  const t=document.getElementById('toast');t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3200);
+}
+function unlock(achId,badgeId,msg){
+  const a=document.getElementById(achId);const b=document.getElementById(badgeId);
+  if(a&&!a.classList.contains('unlocked')){a.classList.add('unlocked');if(b)b.classList.add('unlocked');badges++;updateHUD();toast('🏆','Badge desbloqueado!',msg);}
+}
+function toggleObj(el,idx){
+  el.classList.toggle('checked');objChecked[idx]=el.classList.contains('checked');
+  if(objChecked[idx]){addXP(5,'Objetivo marcado!','✅');streak++;}else streak=Math.max(0,streak-1);
+  const done=objChecked.filter(Boolean).length;
+  if(done===OBJ_COUNT){addXP(25,'Todos objetivos marcados!','🎯');unlock('a-obj','bm-obj','Foco Total!');}
+  updateHUD();
+}
+function toggleMission(id){document.getElementById(id).classList.toggle('open');}
+function completeM(mId,btnId,achId,badgeId,msg,key,xpAmt){
+  event.stopPropagation();if(missionsDone[key])return;
+  missionsDone[key]=true;
+  const btn=document.getElementById(btnId);btn.disabled=true;btn.textContent='✅ Missão Concluída!';
+  document.getElementById(mId).classList.add('done');
+  addXP(xpAmt||50,msg,'⚔️');unlock(achId,badgeId,msg);streak++;updateHUD();
+  if(Object.keys(missionsDone).length===MIS_COUNT){
+    setTimeout(()=>{addXP(50,'TODAS AS MISSÕES CONCLUÍDAS!','🏆');unlock('a-all','bm-all','Tudo concluído! Semana completa!');},500);
+  }
+}
+function watchVideo(el){
+  if(!el.dataset.counted){el.dataset.counted='1';videosWatched++;addXP(10,'Vídeo assistido!','🎬');
+    if(videosWatched>=3)unlock('a-video','bm-video','Aprendiz dedicado! 🎬');}
+}
+function ansQ(qi,chosen,correct){
+  const card=document.getElementById('qc'+qi);const opts=card.querySelectorAll('.qopt');
+  opts.forEach(o=>o.disabled=true);opts[chosen].classList.add(chosen===correct?'correct':'wrong');
+  if(chosen!==correct)opts[correct].classList.add('correct');
+  const fb=document.getElementById('qfb'+qi);const nx=document.getElementById('qnx'+qi);
+  const ok=chosen===correct;
+  fb.innerHTML=ok?QFB[qi].ok:'❌ Errado. '+QFB[qi].ok;
+  fb.className='qfb show '+(ok?'ok':'fail');nx.classList.add('show');
+  if(ok){qCorrect++;addXP(QXPS[qi],'Resposta correta!','🎯');streak++;}else streak=0;
+  qAnswers[qi]=ok;
+  document.getElementById('q-prog').style.width=((qi+1)/QUIZ_COUNT*100)+'%';
+  document.getElementById('q-cnt').textContent=(qi+1)+'/'+QUIZ_COUNT;
+  updateHUD();
+}
+function nextQ(n){document.getElementById('qc'+(n-1)).classList.remove('active');document.getElementById('qc'+n).classList.add('active');}
+function showResult(){
+  document.getElementById('qc'+(QUIZ_COUNT-1)).classList.remove('active');
+  const r=document.getElementById('q-result');r.classList.add('show');
+  document.getElementById('q-score').textContent=qCorrect+'/'+QUIZ_COUNT;
+  const msgs=['Continue estudando!','Progredindo bem!','Bom trabalho, quase lá!','Ótimo resultado!','💎 Perfeito!','💎 Perfeito!'];
+  document.getElementById('q-msg').textContent=msgs[Math.min(qCorrect,5)];
+  const earned=Object.keys(qAnswers).filter(k=>qAnswers[k]).reduce((a,k)=>a+QXPS[+k],0);
+  document.getElementById('q-xp-earned').textContent='+'+earned+' XP conquistados no quiz';
+  document.getElementById('q-prog').style.width='100%';
+  document.getElementById('q-cnt').textContent=QUIZ_COUNT+'/'+QUIZ_COUNT;
+  if(qCorrect>=4)unlock('a-quiz','bm-quiz','Sinal Forte — 4+ acertos!');
+  if(qCorrect===QUIZ_COUNT)unlock('a-perfect','bm-perfect','Quiz Perfeito! 💎');
+  updateHUD();
+}
+function restartQuiz(){
+  qCorrect=0;document.getElementById('q-result').classList.remove('show');
+  document.getElementById('q-prog').style.width='0%';document.getElementById('q-cnt').textContent='0/'+QUIZ_COUNT;
+  for(let i=0;i<QUIZ_COUNT;i++){
+    const c=document.getElementById('qc'+i);c.classList.toggle('active',i===0);
+    c.querySelectorAll('.qopt').forEach(o=>{o.disabled=false;o.classList.remove('correct','wrong');});
+    const fb=c.querySelector('.qfb');if(fb){fb.className='qfb';fb.innerHTML='';}
+    const nx=c.querySelector('.qnx');if(nx)nx.classList.remove('show');
+  }
+  updateHUD();
+}
+
+
+</script>
 </body>
 </html>

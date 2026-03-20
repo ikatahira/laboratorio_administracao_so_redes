@@ -1,222 +1,799 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Semana 8 - Laboratório de Administração de Sistemas Operacionais de Redes</title>
-    <style>* { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; background-color: #f0f2f5; }
-        .header { background: linear-gradient(135deg, #003366 0%, #0066cc 100%); color: white; padding: 20px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.2); position: sticky; top: 0; z-index: 1000; }
-        .header-content { max-width: 1400px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; gap: 20px; }
-        .header-content img { width: 60px; height: 60px; border-radius: 50%; border: 3px solid white; object-fit: cover; }
-        .header-text h1 { font-size: 1.5em; margin-bottom: 5px; }
-        .header-text p { font-size: 0.9em; opacity: 0.95; }
-        .container { max-width: 1400px; margin: 20px auto; padding: 0 20px; display: flex; gap: 20px; }
-        .sidebar { width: 280px; background: white; border-radius: 10px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); height: fit-content; position: sticky; top: 120px; }
-        .sidebar h2 { color: #003366; font-size: 1.2em; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #0066cc; }
-        .week-menu { list-style: none; }
-        .week-menu li { margin-bottom: 8px; }
-        .week-menu a { display: block; padding: 12px 15px; background: #f8f9fa; color: #003366; text-decoration: none; border-radius: 5px; transition: all 0.3s; border-left: 3px solid transparent; }
-        .week-menu a:hover { background: #e3f2fd; border-left-color: #0066cc; transform: translateX(5px); }
-        .week-menu a.active { background: #003366; color: white; border-left-color: #0066cc; }
-        .week-badge { background: #0066cc; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.85em; margin-right: 8px; }
-        .content { flex: 1; background: white; border-radius: 10px; padding: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .week-title { color: #003366; font-size: 2em; margin-bottom: 10px; display: flex; align-items: center; gap: 15px; }
-        .week-number { background: linear-gradient(135deg, #003366 0%, #0066cc 100%); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5em; font-weight: bold; }
-        .week-subtitle { color: #666; font-size: 1.1em; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px solid #e0e0e0; }
-        .section { margin-bottom: 30px; }
-        .section h2 { color: #0066cc; font-size: 1.5em; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
-        .section h3 { color: #003366; font-size: 1.2em; margin-top: 20px; margin-bottom: 10px; }
-        .objectives-list, .topics-list { background: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #0066cc; }
-        .objectives-list li, .topics-list li { margin-bottom: 10px; padding-left: 10px; }
-        .video-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
-        .video-card { background: #f8f9fa; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: transform 0.3s; }
-        .video-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
-        .video-thumbnail { width: 100%; aspect-ratio: 16/9; background: linear-gradient(135deg, #003366 0%, #0066cc 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 3em; }
-        .video-info { padding: 15px; }
-        .video-info h4 { color: #003366; margin-bottom: 8px; }
-        .video-link { display: inline-block; margin-top: 10px; padding: 8px 15px; background: #0066cc; color: white; text-decoration: none; border-radius: 5px; font-size: 0.9em; }
-        .info-box { background: #e3f2fd; border-left: 4px solid #0066cc; padding: 15px; border-radius: 5px; margin: 20px 0; }
-        .warning-box { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 5px; margin: 20px 0; }
-        .success-box { background: #d4edda; border-left: 4px solid #28a745; padding: 15px; border-radius: 5px; margin: 20px 0; }
-        .activity-card { background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 10px; padding: 20px; margin: 20px 0; border: 2px solid #0066cc; }
-        .activity-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
-        .activity-number { background: #0066cc; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
-        .activity-title { color: #003366; font-size: 1.3em; font-weight: bold; }
-        .bibliography { background: #f8f9fa; padding: 20px; border-radius: 8px; margin-top: 20px; }
-        .bibliography-item { padding: 15px; background: white; margin-bottom: 10px; border-radius: 5px; border-left: 3px solid #0066cc; }
-        .navigation { display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 2px solid #e0e0e0; }
-        .nav-button { padding: 12px 25px; background: #0066cc; color: white; text-decoration: none; border-radius: 5px; transition: all 0.3s; display: flex; align-items: center; gap: 10px; }
-        .nav-button:hover { background: #003366; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
-        @media (max-width: 968px) { .container { flex-direction: column; } .sidebar { width: 100%; position: static; } }</style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌐 Servidor DNS BIND9 — Semana 8 | ISO-103</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+--ACC1-placeholder: #b44aff;
+--ACC1-rgb-placeholder: 180,74,255;
+
+:root {
+  --bg:#050d1a;--bg2:#091424;--card:#0d1f35;--card2:#0f2540;
+  --cyan:#00d4ff;--cyan2:#00a8cc;--purple:#b44aff;--purple2:#8b2fe0;
+  --green:#00ff88;--green2:#00cc6a;--yellow:#ffcc00;--orange:#ff8c00;
+  --red:#ff4466;--text:#e0f0ff;--muted:#5a7a99;--border:rgba(0,212,255,0.15);
+  --glow-cyan:0 0 20px rgba(0,212,255,0.4);--glow-purple:0 0 20px rgba(180,74,255,0.4);--glow-green:0 0 20px rgba(0,255,136,0.4);
+}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+body{font-family:'Exo 2',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 20% 20%,rgba(180,74,255,0.05) 0%,transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(0,212,255,0.05) 0%,transparent 50%);pointer-events:none;z-index:0}
+.tux-bg{position:fixed;top:40px;right:-40px;font-size:18em;opacity:0.04;pointer-events:none;z-index:0;animation:tuxFloat 6s ease-in-out infinite}
+@keyframes tuxFloat{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-20px) rotate(5deg)}}
+.header{position:sticky;top:0;z-index:100;background:rgba(5,13,26,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 0}
+.header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#b44aff,var(--ACC2),transparent)}
+.header-inner{max-width:1300px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px}
+.header-logo{font-family:'Orbitron',monospace;font-size:0.75em;font-weight:700;color:#b44aff;letter-spacing:2px}
+.header-title{font-family:'Orbitron',monospace;font-size:1em;font-weight:900;color:var(--text)}
+.header-title span{color:#b44aff}
+.back-btn{background:rgba(180,74,255,0.1);border:1px solid rgba(180,74,255,0.2);color:#b44aff;padding:6px 14px;border-radius:6px;font-family:'Exo 2',sans-serif;font-size:0.8em;font-weight:700;cursor:pointer;text-decoration:none;transition:all 0.2s;display:flex;align-items:center;gap:6px}
+.hud{margin-left:auto;display:flex;align-items:center;gap:10px}
+.hud-pill{border-radius:8px;padding:6px 14px;text-align:center;border:1px solid rgba(180,74,255,0.2);background:rgba(180,74,255,0.08)}
+.hud-pill .v{font-family:'Orbitron',monospace;font-size:1.2em;font-weight:700;color:#b44aff;display:block;line-height:1}
+.hud-pill .l{font-size:0.58em;color:var(--muted);text-transform:uppercase;letter-spacing:1px;display:block;margin-top:2px}
+.hud-xp-wrap{border-radius:8px;padding:7px 14px;min-width:150px;border:1px solid rgba(180,74,255,0.2);background:rgba(180,74,255,0.08)}
+.hud-xp-label{display:flex;justify-content:space-between;font-size:0.6em;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
+.hud-bar-bg{background:rgba(0,0,0,0.4);border-radius:100px;height:6px;overflow:hidden}
+.hud-bar{height:100%;border-radius:100px;transition:width 0.8s ease;width:0%}
+.layout{max-width:1300px;margin:0 auto;padding:28px 24px;display:grid;grid-template-columns:260px 1fr;gap:24px;position:relative;z-index:1}
+.sidebar{display:flex;flex-direction:column;gap:16px}
+.scard{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px}
+.scard-title{font-family:'Orbitron',monospace;font-size:0.72em;font-weight:700;color:#b44aff;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px}
+.nav-link{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;text-decoration:none;color:var(--muted);font-size:0.85em;font-weight:600;transition:all 0.2s;margin-bottom:4px;border:1px solid transparent}
+.nav-link:hover{color:#b44aff;background:rgba(180,74,255,0.06);border-color:rgba(180,74,255,0.15)}
+.nav-link.active{color:#b44aff;background:rgba(180,74,255,0.12);border-color:rgba(180,74,255,0.3);box-shadow:inset 3px 0 0 #b44aff}
+.nav-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.nd-g{background:var(--green);box-shadow:0 0 8px var(--green)}
+.nd-c{background:var(--cyan)}.nd-p{background:var(--purple)}.nd-o{background:var(--orange)}.nd-a{background:#b44aff}
+.prog-block{margin-bottom:12px}
+.prog-label{display:flex;justify-content:space-between;font-size:0.75em;color:var(--muted);font-weight:600;margin-bottom:5px}
+.prog-label span:last-child{color:#b44aff;font-family:'Orbitron',monospace}
+.prog-bg{background:rgba(255,255,255,0.06);border-radius:100px;height:6px;overflow:hidden}
+.prog-fill{height:100%;border-radius:100px;transition:width 0.8s ease}
+.pf-a{background:linear-gradient(90deg,rgba(180,74,255,0.7),#b44aff);box-shadow:0 0 8px rgba(180,74,255,0.4)}
+.pf-c{background:linear-gradient(90deg,var(--cyan2),var(--cyan));box-shadow:0 0 8px rgba(0,212,255,0.4)}
+.pf-g{background:linear-gradient(90deg,var(--green2),var(--green));box-shadow:0 0 8px rgba(0,255,136,0.4)}
+.pf-o{background:linear-gradient(90deg,#cc5500,var(--orange))}
+.badge-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.badge-item{aspect-ratio:1;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.2em;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);filter:grayscale(1) opacity(0.3);transition:all 0.4s;cursor:default;position:relative}
+.badge-item.unlocked{filter:none;background:rgba(180,74,255,0.1);border-color:rgba(180,74,255,0.4);box-shadow:0 0 16px rgba(180,74,255,0.3);animation:badgePop 0.5s ease}
+@keyframes badgePop{0%{transform:scale(0.5);opacity:0}70%{transform:scale(1.2)}100%{transform:scale(1);opacity:1}}
+.badge-item[title]:hover::after{content:attr(title);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--card2);color:#b44aff;border:1px solid var(--border);font-family:'Exo 2',sans-serif;font-size:0.6em;padding:4px 8px;border-radius:5px;white-space:nowrap;z-index:100}
+.main{display:flex;flex-direction:column;gap:22px}
+.hero{background:var(--card);border:1px solid rgba(180,74,255,0.2);border-radius:16px;padding:36px 40px;position:relative;overflow:hidden;box-shadow:0 0 40px rgba(180,74,255,0.06)}
+.hero-icon{position:absolute;right:30px;top:50%;transform:translateY(-50%);font-size:8em;opacity:0.07}
+.hero-tag{font-family:'Orbitron',monospace;font-size:0.65em;letter-spacing:3px;font-weight:700;color:#b44aff;text-transform:uppercase;margin-bottom:10px;opacity:0.8}
+.hero h1{font-family:'Orbitron',monospace;font-size:2em;font-weight:900;color:var(--text);line-height:1.2;margin-bottom:8px}
+.hero h1 span{color:#b44aff}
+.hero-sub{color:var(--muted);font-size:1em;margin-bottom:20px}
+.hero-chips{display:flex;gap:10px;flex-wrap:wrap}
+.chip{border-radius:100px;padding:5px 14px;font-size:0.78em;font-weight:700;display:flex;align-items:center;gap:5px;background:rgba(180,74,255,0.08);border:1px solid rgba(180,74,255,0.2);color:#b44aff}
+.chip.c{background:rgba(0,212,255,0.08);border-color:rgba(0,212,255,0.2);color:var(--cyan)}
+.chip.g{background:rgba(0,255,136,0.08);border-color:rgba(0,255,136,0.2);color:var(--green)}
+.chip.o{background:rgba(255,140,0,0.08);border-color:rgba(255,140,0,0.2);color:var(--orange)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.card-head{padding:16px 22px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);background:rgba(180,74,255,0.02)}
+.card-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.1em;flex-shrink:0}
+.ci-a{background:rgba(180,74,255,0.15);border:1px solid rgba(180,74,255,0.3)}
+.ci-c{background:rgba(0,212,255,0.15);border:1px solid rgba(0,212,255,0.3)}
+.ci-g{background:rgba(0,255,136,0.15);border:1px solid rgba(0,255,136,0.3)}
+.ci-o{background:rgba(255,140,0,0.15);border:1px solid rgba(255,140,0,0.3)}
+.card-title{font-family:'Orbitron',monospace;font-size:0.85em;font-weight:700;color:var(--text);letter-spacing:1px}
+.xp-tag{margin-left:auto;padding:3px 12px;border-radius:100px;font-size:0.72em;font-weight:700;font-family:'Orbitron',monospace;background:rgba(180,74,255,0.1);border:1px solid rgba(180,74,255,0.3);color:#b44aff}
+.xp-tag.c{background:rgba(0,212,255,0.1);border-color:rgba(0,212,255,0.3);color:var(--cyan)}
+.xp-tag.g{background:rgba(0,255,136,0.1);border-color:rgba(0,255,136,0.3);color:var(--green)}
+.card-body{padding:22px}
+.obj-list{list-style:none;display:flex;flex-direction:column;gap:8px}
+.obj-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:9px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);cursor:pointer;transition:all 0.2s;font-size:0.9em;font-weight:600}
+.obj-item:hover{background:rgba(180,74,255,0.06);border-color:rgba(180,74,255,0.2)}
+.obj-item.checked{background:rgba(0,255,136,0.06);border-color:rgba(0,255,136,0.2);color:var(--muted);text-decoration:line-through}
+.obj-circle{width:24px;height:24px;border-radius:50%;flex-shrink:0;border:2px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:0.8em;transition:all 0.3s}
+.obj-item.checked .obj-circle{background:var(--green);border-color:var(--green);color:#000;box-shadow:0 0 12px rgba(0,255,136,0.5)}
+.concept-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:20px}
+.concept-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:16px;border-top:3px solid #b44aff;transition:all 0.2s}
+.concept-card:hover{background:rgba(180,74,255,0.04)}
+.concept-card.c{border-top-color:var(--cyan)}.concept-card.c:hover{background:rgba(0,212,255,0.04)}
+.concept-card.g{border-top-color:var(--green)}.concept-card.g:hover{background:rgba(0,255,136,0.04)}
+.concept-card.o{border-top-color:var(--orange)}.concept-card.o:hover{background:rgba(255,140,0,0.04)}
+.concept-title{font-size:0.82em;font-weight:800;color:#b44aff;margin-bottom:8px}
+.concept-card.c .concept-title{color:var(--cyan)}.concept-card.g .concept-title{color:var(--green)}.concept-card.o .concept-title{color:var(--orange)}
+.tag{display:inline-flex;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:4px;padding:2px 8px;font-size:0.72em;font-weight:600;color:var(--muted);margin:2px;transition:all 0.15s}
+.tag:hover{color:#b44aff;border-color:rgba(180,74,255,0.2)}
+.gloss-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.gloss-item{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:9px;padding:12px 14px;transition:all 0.2s}
+.gloss-item:hover{border-color:rgba(180,74,255,0.2);background:rgba(180,74,255,0.03)}
+.gloss-term{font-family:'JetBrains Mono',monospace;font-size:0.8em;font-weight:600;color:#b44aff;margin-bottom:4px}
+.gloss-def{font-size:0.78em;color:var(--muted);line-height:1.4}
+.video-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.video-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;overflow:hidden;transition:all 0.2s}
+.video-card:hover{border-color:rgba(180,74,255,0.3);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.3)}
+.video-thumb{height:100px;display:flex;align-items:center;justify-content:center}
+.vt-a{background:linear-gradient(135deg,rgba(180,74,255,0.2),rgba(180,74,255,0.05))}
+.vt-c{background:linear-gradient(135deg,#0d1f35,#0d2535)}
+.vt-g{background:linear-gradient(135deg,#0d2a1f,#0d3520)}
+.vt-o{background:linear-gradient(135deg,#2a1a0d,#351a0d)}
+.play-btn{width:48px;height:48px;border-radius:50%;background:rgba(180,74,255,0.3);border:2px solid #b44aff;display:flex;align-items:center;justify-content:center;color:#b44aff;font-size:1.2em;transition:all 0.2s;cursor:pointer}
+.play-btn:hover{background:rgba(180,74,255,0.5);transform:scale(1.1)}
+.video-info{padding:12px 14px}
+.video-info h4{font-size:0.82em;font-weight:700;color:var(--text);margin-bottom:4px}
+.video-info p{font-size:0.72em;color:var(--muted);margin-bottom:8px}
+.video-link{font-size:0.72em;font-weight:700;color:#b44aff;text-decoration:none;display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border:1px solid rgba(180,74,255,0.3);border-radius:4px;transition:all 0.2s}
+.video-link:hover{background:rgba(180,74,255,0.1)}
+.mission{border:1px solid rgba(255,255,255,0.06);border-radius:12px;overflow:hidden;transition:all 0.2s;margin-bottom:12px}
+.mission:hover{border-color:rgba(180,74,255,0.2)}
+.mission.done{border-color:rgba(0,255,136,0.3)}
+.mission-head{padding:14px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;background:rgba(255,255,255,0.02);user-select:none;transition:background 0.2s}
+.mission.done .mission-head{background:rgba(0,255,136,0.04)}
+.mission-head:hover{background:rgba(180,74,255,0.05)}
+.mission-num{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-size:0.9em;font-weight:700;flex-shrink:0;color:#000;background:linear-gradient(135deg,rgba(180,74,255,0.8),#b44aff)}
+.mission.done .mission-num{background:linear-gradient(135deg,#00aa55,var(--green))}
+.mn-c{background:linear-gradient(135deg,var(--cyan2),var(--cyan))!important}
+.mn-g{background:linear-gradient(135deg,var(--green2),var(--green))!important}
+.mn-o{background:linear-gradient(135deg,#cc5500,var(--orange))!important}
+.mission-info{flex:1}
+.mission-title{font-weight:800;font-size:0.92em;color:var(--text)}
+.mission.done .mission-title{color:var(--green)}
+.mission-meta{font-size:0.73em;color:var(--muted);font-weight:600;margin-top:2px}
+.mission-xp{padding:3px 11px;border-radius:100px;font-size:0.72em;font-weight:700;font-family:'Orbitron',monospace;background:rgba(180,74,255,0.1);border:1px solid rgba(180,74,255,0.2);color:#b44aff}
+.mission.done .mission-xp{background:rgba(0,255,136,0.15);border-color:rgba(0,255,136,0.4);color:var(--green)}
+.mission-toggle{color:var(--muted);font-size:0.8em;transition:transform 0.3s}
+.mission.open .mission-toggle{transform:rotate(180deg)}
+.mission-body{max-height:0;overflow:hidden;transition:max-height 0.4s ease,padding 0.3s;padding:0 18px}
+.mission.open .mission-body{max-height:2000px;padding:4px 18px 18px}
+.mission-desc{font-size:0.85em;color:var(--muted);font-weight:600;margin-bottom:14px;padding:10px 14px;background:rgba(180,74,255,0.03);border-radius:8px;border-left:3px solid #b44aff}
+.step{display:flex;gap:12px;margin-bottom:10px;align-items:flex-start}
+.step-num{width:26px;height:26px;border-radius:50%;flex-shrink:0;background:rgba(180,74,255,0.15);border:1px solid rgba(180,74,255,0.3);color:#b44aff;display:flex;align-items:center;justify-content:center;font-size:0.72em;font-weight:700;font-family:'Orbitron',monospace;margin-top:2px}
+.step p{font-size:0.86em;line-height:1.5;color:var(--text)}
+.step code{font-family:'JetBrains Mono',monospace;background:rgba(180,74,255,0.1);color:#b44aff;padding:1px 6px;border-radius:4px;font-size:0.9em}
+.cmd-block{background:#020a14;border:1px solid rgba(180,74,255,0.15);border-radius:9px;padding:14px 16px;font-family:'JetBrains Mono',monospace;font-size:0.78em;line-height:1.7;margin:10px 0;box-shadow:inset 0 0 20px rgba(0,0,0,0.3);overflow-x:auto}
+.pr{color:#b44aff}.cm{color:#e0e0e0}.co{color:#445566}.ou{color:var(--cyan)}.va{color:var(--yellow)}.wa{color:var(--orange)}.gd{color:var(--green)}
+.complete-btn{width:100%;margin-top:14px;padding:13px;border:none;border-radius:9px;cursor:pointer;font-family:'Exo 2',sans-serif;font-size:0.9em;font-weight:800;background:linear-gradient(135deg,rgba(180,74,255,0.15),rgba(180,74,255,0.08));border:1px solid rgba(180,74,255,0.3);color:#b44aff;transition:all 0.3s;letter-spacing:1px}
+.complete-btn:hover:not(:disabled){background:linear-gradient(135deg,rgba(180,74,255,0.25),rgba(180,74,255,0.15));box-shadow:0 0 20px rgba(180,74,255,0.3);transform:translateY(-1px)}
+.complete-btn:disabled{opacity:0.7;cursor:default;transform:none}
+.info-box{background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.2);border-left:4px solid var(--cyan);border-radius:9px;padding:14px 16px;font-size:0.86em;color:var(--muted);margin:10px 0;line-height:1.5}
+.warn-box{background:rgba(255,140,0,0.05);border:1px solid rgba(255,140,0,0.2);border-left:4px solid var(--orange);border-radius:9px;padding:14px 16px;font-size:0.86em;color:var(--muted);margin:10px 0;line-height:1.5}
+.success-box{background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.2);border-left:4px solid var(--green);border-radius:9px;padding:14px 16px;font-size:0.86em;color:var(--muted);margin:10px 0;line-height:1.5}
+.quiz-prog-wrap{margin-bottom:16px}
+.quiz-prog-label{font-size:0.75em;color:var(--muted);margin-bottom:5px;display:flex;justify-content:space-between}
+.quiz-prog-bg{background:rgba(255,255,255,0.06);border-radius:100px;height:5px;overflow:hidden}
+.quiz-prog-fill{height:100%;width:0%;border-radius:100px;transition:width 0.5s ease}
+.qcard{display:none}.qcard.active{display:block}
+.qcard h4{font-size:0.95em;font-weight:700;color:var(--text);margin-bottom:14px;line-height:1.4}
+.qopts{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.qopt{padding:11px 16px;border-radius:8px;cursor:pointer;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);color:var(--text);font-family:'Exo 2',sans-serif;font-size:0.86em;font-weight:600;text-align:left;transition:all 0.2s}
+.qopt:hover:not(:disabled){background:rgba(180,74,255,0.08);border-color:rgba(180,74,255,0.25);color:#b44aff}
+.qopt.correct{background:rgba(0,255,136,0.12);border-color:rgba(0,255,136,0.4);color:var(--green)}
+.qopt.wrong{background:rgba(255,68,102,0.12);border-color:rgba(255,68,102,0.4);color:var(--red)}
+.qopt:disabled{cursor:default}
+.qfb{display:none;padding:10px 14px;border-radius:8px;font-size:0.82em;line-height:1.4;margin:8px 0}
+.qfb.show{display:block}.qfb.ok{background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.2);color:var(--green)}.qfb.fail{background:rgba(255,68,102,0.08);border:1px solid rgba(255,68,102,0.2);color:var(--red)}
+.qnx{display:none}.qnx.show{display:flex;justify-content:flex-end}
+.qnx-btn{padding:8px 18px;border:1px solid rgba(180,74,255,0.3);background:rgba(180,74,255,0.1);color:#b44aff;border-radius:6px;cursor:pointer;font-size:0.82em;font-weight:700;font-family:'Exo 2',sans-serif;transition:all 0.2s}
+.qnx-btn:hover{background:rgba(180,74,255,0.2)}
+.q-result{display:none;text-align:center;padding:28px 0}.q-result.show{display:block}
+.q-score{font-family:'Orbitron',monospace;font-size:3em;font-weight:900;color:#b44aff;display:block;margin-bottom:8px}
+.q-msg{color:var(--muted);margin-bottom:16px;font-size:0.9em}
+.q-xp{color:#b44aff;font-weight:700;font-size:0.85em;margin-bottom:16px}
+.restart-btn{padding:10px 24px;border:1px solid rgba(180,74,255,0.3);background:rgba(180,74,255,0.1);color:#b44aff;border-radius:8px;cursor:pointer;font-size:0.85em;font-weight:700;font-family:'Exo 2',sans-serif;transition:all 0.2s}
+.restart-btn:hover{background:rgba(180,74,255,0.2)}
+.ach-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.ach-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:14px 12px;text-align:center;filter:grayscale(1) opacity(0.3);transition:all 0.4s}
+.ach-card.unlocked{filter:none;background:rgba(180,74,255,0.06);border-color:rgba(180,74,255,0.3);box-shadow:0 0 20px rgba(180,74,255,0.15)}
+.ach-icon{font-size:1.8em;display:block;margin-bottom:6px}
+.ach-name{font-size:0.68em;font-weight:700;color:var(--muted);line-height:1.2}
+.ach-card.unlocked .ach-name{color:#b44aff}
+.bib-item{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-left:3px solid var(--cyan);border-radius:8px;padding:12px 16px;font-size:0.82em;color:var(--muted);margin-bottom:8px;line-height:1.5}
+.toast{position:fixed;bottom:28px;right:28px;z-index:9999;background:var(--card2);border:1px solid rgba(180,74,255,0.3);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:12px;box-shadow:0 8px 32px rgba(0,0,0,0.4);transform:translateX(120%);transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);min-width:280px;max-width:360px}
+.toast.show{transform:translateX(0)}
+.toast-icon{font-size:1.6em;flex-shrink:0}
+.toast-title{font-family:'Orbitron',monospace;font-size:0.8em;font-weight:700;color:#b44aff}
+.toast-msg{font-size:0.78em;color:var(--muted);margin-top:2px}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.sidebar{order:2}.main{order:1}.ach-grid{grid-template-columns:repeat(3,1fr)}}
+
+</style>
 </head>
 <body>
-    <header class="header">
-        <div class="header-content">
-            <img src="foto_professor.png" alt="Professor">
-            <div class="header-text">
-                <h1>Laboratório de Administração de Sistemas Operacionais de Redes</h1>
-                <p>ISO-103 | 3º Semestre | Curso Superior de Tecnologia em Segurança da Informação</p>
-            </div>
-        </div>
-    </header>
-    <div class="container">
-        <aside class="sidebar">
-            <h2>📅 Cronograma</h2>
-            <ul class="week-menu">
-                <li><a href="semana01.html"><span class="week-badge">S1</span>Semana 1</a></li>
-                <li><a href="semana02.html"><span class="week-badge">S2</span>Semana 2</a></li>
-                <li><a href="semana03.html"><span class="week-badge">S3</span>Semana 3</a></li>
-                <li><a href="semana04.html"><span class="week-badge">S4</span>Semana 4</a></li>
-                <li><a href="semana05.html"><span class="week-badge">S5</span>Semana 5</a></li>
-                <li><a href="semana06.html"><span class="week-badge">S6</span>Semana 6</a></li>
-                <li><a href="semana07.html"><span class="week-badge">S7</span>Semana 7</a></li>
-                <li><a href="semana08.html" class="active"><span class="week-badge">S8</span>Semana 8</a></li>
-                <li><a href="semana09.html"><span class="week-badge">S9</span>Semana 9</a></li>
-                <li><a href="semana10.html"><span class="week-badge">S10</span>Semana 10</a></li>
-                <li><a href="semana11.html"><span class="week-badge">S11</span>Semana 11</a></li>
-                <li><a href="semana12.html"><span class="week-badge">S12</span>Semana 12</a></li>
-                <li><a href="semana13.html"><span class="week-badge">S13</span>Semana 13</a></li>
-                <li><a href="semana14.html"><span class="week-badge">S14</span>Semana 14</a></li>
-                <li><a href="semana15.html"><span class="week-badge">S15</span>Semana 15</a></li>
-                <li><a href="semana16.html"><span class="week-badge">S16</span>Semana 16</a></li>
-                <li><a href="semana17.html"><span class="week-badge">S17</span>Semana 17</a></li>
-                <li><a href="semana18.html"><span class="week-badge">S18</span>Semana 18</a></li>
-                <li><a href="semana19.html"><span class="week-badge">S19</span>Semana 19</a></li>
-                <li><a href="semana20.html"><span class="week-badge">S20</span>Semana 20</a></li>
-
-            </ul>
-        </aside>
-        <main class="content">
-            <div class="week-title">
-                <div class="week-number">08</div>
-                <div><h1>Semana 8</h1><p style="color: #666; font-size: 0.5em; margin: 0;">Servidor DNS com BIND9</p></div>
-            </div>
-            <p class="week-subtitle">Instalação e configuração do servidor DNS BIND9, criação de zonas, resolução de nomes</p>
-            <div class="info-box"><strong>🎯 Carga Horária:</strong> 2 horas/aula<br><strong>📍 Local:</strong> Laboratório de Redes</div>
-            <section class="section">
-                <h2>🎯 Objetivos de Aprendizagem</h2>
-                <ul class="objectives-list">                    <li>Compreender o funcionamento do DNS</li>
-                    <li>Instalar e configurar BIND9</li>
-                    <li>Criar zonas diretas e reversas</li>
-                    <li>Configurar registros DNS (A, AAAA, CNAME, MX, etc)</li>
-                    <li>Implementar DNS secundário</li>
-                    <li>Realizar troubleshooting de DNS</li></ul>
-            </section>
-            <section class="section">
-                <h2>📚 Conteúdo Programático</h2>
-                <h3>Fundamentos DNS</h3>
-                <ul class="topics-list">
-                    <li>Hierarquia DNS</li>
-                    <li>Tipos de servidores DNS</li>
-                    <li>Processo de resolução</li>
-                    <li>Cache DNS</li>
-                </ul>
-                <h3>BIND9</h3>
-                <ul class="topics-list">
-                    <li>Instalação do BIND9</li>
-                    <li>Arquivos de configuração</li>
-                    <li>named.conf</li>
-                    <li>Zonas e arquivos de zona</li>
-                </ul>
-                <h3>Registros DNS</h3>
-                <ul class="topics-list">
-                    <li>A e AAAA</li>
-                    <li>CNAME</li>
-                    <li>MX</li>
-                    <li>NS</li>
-                    <li>PTR</li>
-                    <li>SOA</li>
-                    <li>TXT</li>
-                </ul>
-                <h3>Segurança</h3>
-                <ul class="topics-list">
-                    <li>DNSSEC</li>
-                    <li>Views</li>
-                    <li>ACLs</li>
-                    <li>Rate limiting</li>
-                </ul>
-
-            </section>
-            <section class="section">
-                <h2>🎬 Vídeos Recomendados</h2>
-                <div class="video-container">                    <div class="video-card">
-                        <div class="video-thumbnail">▶️</div>
-                        <div class="video-info">
-                            <h4>DNS - Como Funciona</h4>
-                            <p>Teoria completa</p>
-                            <a href="https://www.youtube.com/watch?v=example" target="_blank" class="video-link">Assistir no YouTube</a>
-                        </div>
-                    </div>
-                    <div class="video-card">
-                        <div class="video-thumbnail">▶️</div>
-                        <div class="video-info">
-                            <h4>BIND9 no Ubuntu Server</h4>
-                            <p>Configuração prática</p>
-                            <a href="https://www.youtube.com/watch?v=example" target="_blank" class="video-link">Assistir no YouTube</a>
-                        </div>
-                    </div>
-                    <div class="video-card">
-                        <div class="video-thumbnail">▶️</div>
-                        <div class="video-info">
-                            <h4>Criando Zonas DNS</h4>
-                            <p>Passo a passo</p>
-                            <a href="https://www.youtube.com/watch?v=example" target="_blank" class="video-link">Assistir no YouTube</a>
-                        </div>
-                    </div>
-</div>
-            </section>
-            <section class="section">
-                <h2>✏️ Atividades Práticas</h2>
-                <div class="activity-card">
-                    <div class="activity-header">
-                        <div class="activity-number">1</div>
-                        <div class="activity-title">Instalação do BIND9</div>
-                    </div>
-                    <p><strong>Objetivo:</strong> Preparar servidor DNS</p>
-                    <p><strong>Duração:</strong> 15 minutos</p>
-                    <p>Instalar pacotes, verificar serviço</p>
-                </div>
-                <div class="activity-card">
-                    <div class="activity-header">
-                        <div class="activity-number">2</div>
-                        <div class="activity-title">Criação de Zona Direta</div>
-                    </div>
-                    <p><strong>Objetivo:</strong> Configurar zona example.com</p>
-                    <p><strong>Duração:</strong> 30 minutos</p>
-                    <p>Criar arquivo de zona, registros A, CNAME</p>
-                </div>
-                <div class="activity-card">
-                    <div class="activity-header">
-                        <div class="activity-number">3</div>
-                        <div class="activity-title">Criação de Zona Reversa</div>
-                    </div>
-                    <p><strong>Objetivo:</strong> Implementar DNS reverso</p>
-                    <p><strong>Duração:</strong> 25 minutos</p>
-                    <p>Configurar zona PTR</p>
-                </div>
-                <div class="activity-card">
-                    <div class="activity-header">
-                        <div class="activity-number">4</div>
-                        <div class="activity-title">Testes e Validação</div>
-                    </div>
-                    <p><strong>Objetivo:</strong> Verificar funcionamento</p>
-                    <p><strong>Duração:</strong> 10 minutos</p>
-                    <p>nslookup, dig, testes completos</p>
-                </div>
-
-            </section>
-            <section class="section">
-                <h2>📚 Bibliografia da Semana</h2>
-                <div class="bibliography">                    <div class="bibliography-item">LIU, Cricket; ALBITZ, Paul. DNS and BIND. 5.ed. O'Reilly, 2006.</div>
-                    <div class="bibliography-item">NEMETH, Evi et al. Manual completo do Linux. Prentice Hall, 2007. Capítulo 16: DNS</div>
-</div>
-            </section>
-            <div class="navigation">
-                <a href="semana07.html" class="nav-button">⬅️ Semana Anterior</a>
-                <a href="semana09.html" class="nav-button">Próxima Semana ➡️</a>
-            </div>
-        </main>
+<div class="tux-bg">🌐</div>
+<div class="toast" id="toast"><div class="toast-icon" id="toast-icon">🌐</div><div><div class="toast-title" id="toast-title">+XP</div><div class="toast-msg" id="toast-msg"></div></div></div>
+<header class="header">
+  <div class="header-inner">
+    <div class="header-logo">ISO-103</div>
+    <div class="header-title">SEMANA <span>08</span></div>
+    <a href="index.html" class="back-btn">← Início</a>
+    <div class="hud">
+      <div class="hud-pill"><span class="v" id="hud-xp">0</span><span class="l">XP</span></div>
+      <div class="hud-pill"><span class="v" id="hud-streak">0</span><span class="l">Streak</span></div>
+      <div class="hud-pill"><span class="v" id="hud-badges">0</span><span class="l">Badges</span></div>
+      <div class="hud-xp-wrap">
+        <div class="hud-xp-label"><span id="hud-level">Iniciante</span><span id="hud-pct">0%</span></div>
+        <div class="hud-bar-bg"><div class="hud-bar" id="hud-bar" style="background:linear-gradient(90deg,#b44aff,b44affaa)"></div></div>
+      </div>
     </div>
+  </div>
+</header>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="scard">
+      <div class="scard-title">📅 Navegação</div>
+      <a href="semana07.html" class="nav-link"><div class="nav-dot nd-g"></div>Semana 7 — Configuração de Rede</a>
+      <a href="semana08.html" class="nav-link active"><div class="nav-dot nd-a"></div>Semana 8 — Servidor DNS BIND9</a>
+      <a href="semana09.html" class="nav-link"><div class="nav-dot nd-c"></div>Semana 9 — Samba File Server</a>
+    </div>
+    <div class="scard">
+      <div class="scard-title">📊 Progresso</div>
+      <div class="prog-block"><div class="prog-label"><span>Objetivos</span><span id="obj-pct">0%</span></div><div class="prog-bg"><div class="prog-fill pf-a" id="obj-bar" style="width:0%"></div></div></div>
+      <div class="prog-block"><div class="prog-label"><span>Missões</span><span id="mis-pct">0%</span></div><div class="prog-bg"><div class="prog-fill pf-c" id="mis-bar" style="width:0%"></div></div></div>
+      <div class="prog-block"><div class="prog-label"><span>Quiz</span><span id="quiz-pct">0%</span></div><div class="prog-bg"><div class="prog-fill pf-g" id="quiz-bar" style="width:0%"></div></div></div>
+      <div class="prog-block"><div class="prog-label"><span>Conquistas</span><span id="ach-pct">0/12</span></div><div class="prog-bg"><div class="prog-fill pf-o" id="ach-bar" style="width:0%"></div></div></div>
+    </div>
+    <div class="scard">
+      <div class="scard-title">🏅 Badges</div>
+      <div class="badge-grid">
+        <div class="badge-item" id="bm-start" title="Módulo iniciado">🚀</div>
+        <div class="badge-item" id="bm-obj" title="Todos objetivos">🎯</div>
+        <div class="badge-item" id="bm-install" title="BIND9 Instalado">📦</div>
+<div class="badge-item" id="bm-zona" title="Zona Direta">📄</div>
+<div class="badge-item" id="bm-reversa" title="Zona Reversa">🔄</div>
+<div class="badge-item" id="bm-diag" title="DNS Diagnosticado">🔍</div>
+<div class="badge-item" id="bm-bind" title="BIND9 Expert">🌐</div>
+<div class="badge-item" id="bm-dnssec" title="DNSSEC Aware">🔒</div>
+
+        <div class="badge-item" id="bm-video" title="Vídeos assistidos">🎬</div>
+        <div class="badge-item" id="bm-quiz" title="4+ no quiz">⭐</div>
+        <div class="badge-item" id="bm-perfect" title="Quiz perfeito">💎</div>
+        <div class="badge-item" id="bm-all" title="Tudo concluído">🏆</div>
+      </div>
+    </div>
+  </aside>
+  <main class="main">
+    <div class="hero">
+      <div class="hero-icon">🌐</div>
+      <div class="hero-tag">ISO-103 · 3º Semestre · Semana 08</div>
+      <h1>🌐 <span>Servidor DNS BIND9</span></h1>
+      <p class="hero-sub">Instalação e configuração do servidor DNS BIND9, criação de zonas diretas e reversas, registros e troubleshooting</p>
+      <div class="hero-chips"><div class="chip chip-c">🌐 DNS / BIND9</div>
+<div class="chip chip-c">📄 Zonas</div>
+<div class="chip ">🔍 dig / nslookup</div>
+<div class="chip chip-p">🔒 DNSSEC</div>
+<div class="chip chip-g">⚡ 2h/aula</div>
+</div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-icon ci-a">🎯</div><div class="card-title">OBJETIVOS DE APRENDIZAGEM</div><div class="xp-tag">+5 XP cada</div></div>
+      <div class="card-body">
+        <p style="font-size:0.84em;color:var(--muted);margin-bottom:14px;">✅ Clique em cada objetivo conforme você for aprendendo e completando cada item!</p>
+        <ul class="obj-list"><li class="obj-item" onclick="toggleObj(this,0)"><div class="obj-circle">✓</div>Compreender o funcionamento da hierarquia DNS e resolução de nomes</li>
+<li class="obj-item" onclick="toggleObj(this,1)"><div class="obj-circle">✓</div>Instalar e configurar o servidor BIND9 no Ubuntu Server</li>
+<li class="obj-item" onclick="toggleObj(this,2)"><div class="obj-circle">✓</div>Criar zonas diretas com registros A, CNAME, MX, NS e SOA</li>
+<li class="obj-item" onclick="toggleObj(this,3)"><div class="obj-circle">✓</div>Criar zonas reversas com registros PTR</li>
+<li class="obj-item" onclick="toggleObj(this,4)"><div class="obj-circle">✓</div>Testar configuração com dig, nslookup e named-checkconf</li>
+<li class="obj-item" onclick="toggleObj(this,5)"><div class="obj-circle">✓</div>Compreender os fundamentos de DNSSEC e segurança DNS</li>
+</ul>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-icon ci-c">📚</div><div class="card-title">CONTEÚDO PROGRAMÁTICO</div><div class="xp-tag c">Referência</div></div>
+      <div class="card-body">
+        <div class="concept-grid"><div class="concept-card cc-c">
+<div class="concept-title">🌐 Hierarquia DNS</div>
+<span class="tag">Root .</span><span class="tag">TLD .com .br</span><span class="tag">Autoritativo</span><span class="tag">Recursivo</span><span class="tag">Cache</span>
+</div>
+<div class="concept-card cc-p">
+<div class="concept-title">📋 Tipos de Registros</div>
+<span class="tag">A → IPv4</span><span class="tag">AAAA → IPv6</span><span class="tag">CNAME → Alias</span><span class="tag">MX → Mail</span><span class="tag">NS → Nameserver</span><span class="tag">PTR → Reverso</span><span class="tag">SOA → Autoridade</span><span class="tag">TXT → Texto</span>
+</div>
+<div class="concept-card cc-c">
+<div class="concept-title">⚙️ BIND9 Config</div>
+<span class="tag">named.conf</span><span class="tag">named.conf.options</span><span class="tag">named.conf.local</span><span class="tag">db.example.com</span><span class="tag">db.192.168</span>
+</div>
+<div class="concept-card ">
+<div class="concept-title">🔍 Troubleshooting</div>
+<span class="tag">named-checkconf</span><span class="tag">named-checkzone</span><span class="tag">dig @localhost</span><span class="tag">nslookup</span><span class="tag">journalctl -u named</span>
+</div>
+</div>
+        <div style="font-family:'Orbitron',monospace;font-size:0.75em;font-weight:700;margin-bottom:10px;letter-spacing:2px;color:#b44aff">📖 GLOSSÁRIO TÉCNICO</div>
+        <div class="gloss-grid"><div class="gloss-item"><div class="gloss-term">Zona</div><div class="gloss-def">Porção do espaço de nomes DNS administrada por um servidor autoritativo</div></div>
+<div class="gloss-item"><div class="gloss-term">SOA</div><div class="gloss-def">Start of Authority — registro inicial que define parâmetros da zona</div></div>
+<div class="gloss-item"><div class="gloss-term">TTL</div><div class="gloss-def">Time To Live — tempo em segundos que um registro pode ficar em cache</div></div>
+<div class="gloss-item"><div class="gloss-term">Forwarder</div><div class="gloss-def">Servidor DNS para onde encaminhamos queries que não conseguimos responder</div></div>
+<div class="gloss-item"><div class="gloss-term">Recursão</div><div class="gloss-def">Capacidade do servidor de buscar a resposta completa por conta do cliente</div></div>
+<div class="gloss-item"><div class="gloss-term">DNSSEC</div><div class="gloss-def">DNS Security Extensions — adiciona assinatura digital aos registros DNS</div></div>
+</div>
+        
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-icon ci-a">🎬</div><div class="card-title">VÍDEOS RECOMENDADOS</div><div class="xp-tag">+10 XP cada</div></div>
+      <div class="card-body"><div class="video-grid"><div class="video-card"><div class="video-thumb vt-c"><div class="play-btn" onclick="watchVideo(this)">▶</div></div>
+<div class="video-info"><h4>DNS — Como Funciona</h4><p>Teoria completa da resolução de nomes</p><a href="https://www.youtube.com/results?search_query=DNS+como+funciona+portugues" target="_blank" class="video-link">▶ YouTube</a></div></div>
+<div class="video-card"><div class="video-thumb vt-c"><div class="play-btn" onclick="watchVideo(this)">▶</div></div>
+<div class="video-info"><h4>BIND9 no Ubuntu Server</h4><p>Instalação e configuração prática</p><a href="https://www.youtube.com/results?search_query=BIND9+ubuntu+server+configuracao" target="_blank" class="video-link">▶ YouTube</a></div></div>
+<div class="video-card"><div class="video-thumb vt-a"><div class="play-btn" onclick="watchVideo(this)">▶</div></div>
+<div class="video-info"><h4>Zonas DNS — Passo a Passo</h4><p>Criando zonas direta e reversa</p><a href="https://www.youtube.com/results?search_query=zona+DNS+BIND9+direta+reversa" target="_blank" class="video-link">▶ YouTube</a></div></div>
+</div></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-icon ci-a">⚔️</div><div class="card-title">MISSÕES PRÁTICAS</div><div class="xp-tag">+50 XP cada</div></div>
+      <div class="card-body"><div class="mission" id="m1" onclick="toggleMission('m1')">
+<div class="mission-head">
+<div class="mission-num mn-c">01</div>
+<div class="mission-info"><div class="mission-title">Instalação e Configuração Base do BIND9</div><div class="mission-meta">⏱️ 20 min · Dificuldade: ⭐⭐</div></div>
+<div class="mission-xp">+60 XP</div>
+<div class="mission-toggle">▼</div>
+</div>
+<div class="mission-body">
+<div class="mission-desc">🎯 Instalar BIND9, verificar serviço e configurar opções básicas</div>
+
+<div class="code-block">
+<div class="code-label">📦 INSTALAÇÃO</div>
+<pre><span class="prompt">$</span> <span class="cmd">sudo apt update && sudo apt install -y bind9 bind9utils bind9-doc</span>
+<span class="comment"># bind9 = servidor DNS  bind9utils = ferramentas  bind9-doc = documentação</span>
+
+<span class="prompt">$</span> <span class="cmd">sudo systemctl enable --now named</span>
+<span class="comment"># Habilita e inicia o serviço (named = nome do daemon BIND9)</span>
+
+<span class="prompt">$</span> <span class="cmd">sudo systemctl status named</span>
+<span class="output">● named.service - BIND Domain Name Server
+   Loaded: loaded (/lib/systemd/system/named.service; enabled)
+   Active: <span class="value">active (running)</span> since ...</span>
+
+<span class="prompt">$</span> <span class="cmd">sudo named-checkconf</span>
+<span class="comment"># Verifica sintaxe da configuração — silêncio = OK</span></pre>
+</div>
+<div class="code-block">
+<div class="code-label">⚙️ /etc/bind/named.conf.options — CONFIGURAR FORWARDERS</div>
+<pre><span class="comment"># Editar o arquivo de opções globais:</span>
+<span class="prompt">$</span> <span class="cmd">sudo nano /etc/bind/named.conf.options</span>
+
+<span class="value">options {
+    directory "/var/cache/bind";
+
+    forwarders {
+        8.8.8.8;    // Google DNS primário
+        8.8.4.4;    // Google DNS secundário
+        1.1.1.1;    // Cloudflare
+    };
+
+    dnssec-validation auto;
+    listen-on { any; };
+    allow-query { any; };
+    recursion yes;
+};</span>
+
+<span class="prompt">$</span> <span class="cmd">sudo named-checkconf && sudo systemctl restart named</span>
+<span class="comment"># Verifica e reinicia após cada alteração</span></pre>
+</div>
+<div class="warn-box">⚠️ <strong>Firewall:</strong> Libere a porta 53 UDP e TCP: <code>sudo ufw allow 53</code></div>
+<div class="success-box">✅ Teste rápido: <code>dig @localhost google.com</code> — deve retornar resposta com status NOERROR</div>
+
+<button class="complete-btn" id="btn-m1" onclick="completeM('m1','btn-m1','ach-install','bm-install','BIND9 instalado e rodando!','dns_install',60)">✅ MISSÃO CONCLUÍDA — +60 XP</button>
+</div>
+</div>
+<div class="mission" id="m2" onclick="toggleMission('m2')">
+<div class="mission-head">
+<div class="mission-num mn-c">02</div>
+<div class="mission-info"><div class="mission-title">Criando Zona Direta (example.com)</div><div class="mission-meta">⏱️ 30 min · Dificuldade: ⭐⭐⭐</div></div>
+<div class="mission-xp">+70 XP</div>
+<div class="mission-toggle">▼</div>
+</div>
+<div class="mission-body">
+<div class="mission-desc">🎯 Criar zona autoritativa para example.com com múltiplos registros</div>
+
+<div class="code-block">
+<div class="code-label">📝 PASSO 1 — Declarar zona em named.conf.local</div>
+<pre><span class="prompt">$</span> <span class="cmd">sudo nano /etc/bind/named.conf.local</span>
+
+<span class="value">zone "example.com" {
+    type master;
+    file "/etc/bind/db.example.com";
+    allow-transfer { none; };    // Segurança: negar transferência de zona
+};</span></pre>
+</div>
+<div class="code-block">
+<div class="code-label">📄 PASSO 2 — Criar arquivo de zona /etc/bind/db.example.com</div>
+<pre><span class="prompt">$</span> <span class="cmd">sudo cp /etc/bind/db.local /etc/bind/db.example.com</span>
+<span class="prompt">$</span> <span class="cmd">sudo nano /etc/bind/db.example.com</span>
+
+<span class="value">; Arquivo de zona para example.com
+; Última modificação: 2024-01-15
+$TTL    604800       ; TTL padrão: 7 dias
+
+@    IN    SOA    ns1.example.com. admin.example.com. (
+                  2024011501    ; Serial (ANO+MÊS+DIA+REVISÃO)
+                  3600          ; Refresh (1h)
+                  900           ; Retry (15min)
+                  604800        ; Expire (7 dias)
+                  86400 )       ; Negative TTL (1 dia)
+
+; Nameservers
+@    IN    NS    ns1.example.com.
+@    IN    NS    ns2.example.com.
+
+; Registros A (Host → IPv4)
+@              IN    A       192.168.1.10
+ns1            IN    A       192.168.1.10
+ns2            IN    A       192.168.1.11
+www            IN    A       192.168.1.10
+mail           IN    A       192.168.1.20
+ftp            IN    A       192.168.1.30
+
+; Registros CNAME (Alias)
+webmail        IN    CNAME   mail.example.com.
+smtp           IN    CNAME   mail.example.com.
+
+; Registro MX (Servidor de E-mail)
+@    IN    MX    10    mail.example.com.
+
+; Registro TXT (SPF e outros)
+@    IN    TXT   "v=spf1 mx a ~all"</span></pre>
+</div>
+<div class="code-block">
+<div class="code-label">✅ PASSO 3 — Verificar e reiniciar</div>
+<pre><span class="prompt">$</span> <span class="cmd">sudo named-checkzone example.com /etc/bind/db.example.com</span>
+<span class="output">zone example.com/IN: loaded serial 2024011501
+<span class="value">OK</span></span>
+
+<span class="prompt">$</span> <span class="cmd">sudo systemctl restart named</span>
+<span class="prompt">$</span> <span class="cmd">dig @localhost www.example.com</span>
+<span class="output">...
+;; ANSWER SECTION:
+www.example.com.    604800    IN    A    <span class="value">192.168.1.10</span></span>
+
+<span class="prompt">$</span> <span class="cmd">dig @localhost mail.example.com MX</span>
+<span class="comment"># Deve mostrar o registro MX com prioridade 10</span></pre>
+</div>
+<div class="warn-box">⚠️ <strong>Serial:</strong> Sempre incremente o serial (2024011501 → 2024011502) ao modificar a zona, caso contrário servidores secundários não sincronizam.</div>
+
+<button class="complete-btn" id="btn-m2" onclick="completeM('m2','btn-m2','ach-zona','bm-zona','Zona direta configurada!','dns_zona',70)">✅ MISSÃO CONCLUÍDA — +70 XP</button>
+</div>
+</div>
+<div class="mission" id="m3" onclick="toggleMission('m3')">
+<div class="mission-head">
+<div class="mission-num mn-c">03</div>
+<div class="mission-info"><div class="mission-title">Criando Zona Reversa (PTR)</div><div class="mission-meta">⏱️ 25 min · Dificuldade: ⭐⭐⭐</div></div>
+<div class="mission-xp">+65 XP</div>
+<div class="mission-toggle">▼</div>
+</div>
+<div class="mission-body">
+<div class="mission-desc">🎯 Configurar resolução reversa: IP → hostname via registros PTR</div>
+
+<div class="code-block">
+<div class="code-label">📝 PASSO 1 — Declarar zona reversa em named.conf.local</div>
+<pre><span class="comment"># Zona reversa para a rede 192.168.1.0/24
+# Nome = rede invertida + .in-addr.arpa</span>
+<span class="value">zone "1.168.192.in-addr.arpa" {
+    type master;
+    file "/etc/bind/db.192.168.1";
+};</span></pre>
+</div>
+<div class="code-block">
+<div class="code-label">📄 PASSO 2 — Criar arquivo de zona reversa</div>
+<pre><span class="prompt">$</span> <span class="cmd">sudo nano /etc/bind/db.192.168.1</span>
+
+<span class="value">$TTL    604800
+@    IN    SOA    ns1.example.com. admin.example.com. (
+                  2024011501 3600 900 604800 86400 )
+
+@    IN    NS    ns1.example.com.
+
+; Registros PTR (IP final → hostname completo com ponto final!)
+10   IN    PTR   ns1.example.com.
+11   IN    PTR   ns2.example.com.
+20   IN    PTR   mail.example.com.
+30   IN    PTR   ftp.example.com.</span></pre>
+</div>
+<div class="code-block">
+<div class="code-label">🔍 PASSO 3 — Testar resolução reversa</div>
+<pre><span class="prompt">$</span> <span class="cmd">sudo named-checkzone 1.168.192.in-addr.arpa /etc/bind/db.192.168.1</span>
+<span class="output">zone 1.168.192.in-addr.arpa/IN: loaded serial 2024011501
+<span class="value">OK</span></span>
+
+<span class="prompt">$</span> <span class="cmd">sudo systemctl restart named</span>
+
+<span class="comment"># Resolução reversa: -x = reverse lookup</span>
+<span class="prompt">$</span> <span class="cmd">dig @localhost -x 192.168.1.10</span>
+<span class="output">;; ANSWER SECTION:
+10.1.168.192.in-addr.arpa.  604800  IN  PTR  <span class="value">ns1.example.com.</span></span>
+
+<span class="prompt">$</span> <span class="cmd">nslookup 192.168.1.20 localhost</span>
+<span class="output">Server: localhost
+Address: 127.0.0.1#53
+<span class="value">20.1.168.192.in-addr.arpa  name = mail.example.com.</span></span></pre>
+</div>
+<div class="warn-box">⚠️ Os hostnames nos registros PTR <strong>devem terminar com ponto final</strong> (ex: <code>mail.example.com.</code>) — sem o ponto, o BIND adiciona o nome da zona, criando FQDNs incorretos.</div>
+
+<button class="complete-btn" id="btn-m3" onclick="completeM('m3','btn-m3','ach-reversa','bm-reversa','DNS reverso configurado!','dns_reversa',65)">✅ MISSÃO CONCLUÍDA — +65 XP</button>
+</div>
+</div>
+<div class="mission" id="m4" onclick="toggleMission('m4')">
+<div class="mission-head">
+<div class="mission-num mn-c">04</div>
+<div class="mission-info"><div class="mission-title">Testes, dig Avançado e Troubleshooting</div><div class="mission-meta">⏱️ 20 min · Dificuldade: ⭐⭐</div></div>
+<div class="mission-xp">+55 XP</div>
+<div class="mission-toggle">▼</div>
+</div>
+<div class="mission-body">
+<div class="mission-desc">🎯 Dominar as ferramentas dig e nslookup para validar e diagnosticar DNS</div>
+
+<div class="code-block">
+<div class="code-label">🔍 DIG — CONSULTAS AVANÇADAS</div>
+<pre><span class="comment"># Consulta básica (registro A)</span>
+<span class="prompt">$</span> <span class="cmd">dig @192.168.1.10 www.example.com</span>
+
+<span class="comment"># Consulta específica por tipo</span>
+<span class="prompt">$</span> <span class="cmd">dig @localhost example.com MX</span>
+<span class="prompt">$</span> <span class="cmd">dig @localhost example.com NS</span>
+<span class="prompt">$</span> <span class="cmd">dig @localhost example.com TXT</span>
+<span class="prompt">$</span> <span class="cmd">dig @localhost example.com SOA</span>
+
+<span class="comment"># Output curto (apenas a resposta)</span>
+<span class="prompt">$</span> <span class="cmd">dig @localhost www.example.com +short</span>
+<span class="output"><span class="value">192.168.1.10</span></span>
+
+<span class="comment"># AXFR — transferência de zona (debug)</span>
+<span class="prompt">$</span> <span class="cmd">dig @localhost example.com AXFR</span>
+
+<span class="comment"># Verificar propagação de TTL</span>
+<span class="prompt">$</span> <span class="cmd">dig @8.8.8.8 example.com +ttl</span></pre>
+</div>
+<div class="code-block">
+<div class="code-label">🚨 TROUBLESHOOTING COMUM</div>
+<pre><span class="comment"># Verificar logs do BIND9</span>
+<span class="prompt">$</span> <span class="cmd">sudo journalctl -u named -n 50 --no-pager</span>
+<span class="prompt">$</span> <span class="cmd">sudo tail -f /var/log/syslog | grep named</span>
+
+<span class="comment"># Sintaxe de configuração</span>
+<span class="prompt">$</span> <span class="cmd">sudo named-checkconf -z</span>
+<span class="comment"># -z = também verifica todos os arquivos de zona</span>
+
+<span class="comment"># Teste de conectividade na porta 53</span>
+<span class="prompt">$</span> <span class="cmd">ss -tulnp | grep :53</span>
+<span class="output">udp   UNCONN  0  0  0.0.0.0:53  0.0.0.0:*  users:(("named",...))</span>
+
+<span class="comment"># Flush do cache DNS</span>
+<span class="prompt">$</span> <span class="cmd">sudo rndc flush</span>
+<span class="prompt">$</span> <span class="cmd">sudo rndc reload</span>
+<span class="comment"># rndc = remote name daemon control</span>
+
+<span class="comment"># Problemas comuns:</span>
+<span class="warn">SERVFAIL   → erro na zona ou forwarder inacessível</span>
+<span class="warn">NXDOMAIN   → nome não existe na zona</span>
+<span class="warn">REFUSED    → ACL bloqueando a query</span>
+<span class="err">connection refused → named não está rodando na porta 53</span></pre>
+</div>
+<div class="success-box">✅ <strong>Checklist final DNS:</strong> named status = active · named-checkconf sem erros · dig @localhost retorna NOERROR · resolução direta e reversa funcionando · porta 53 UDP+TCP aberta</div>
+
+<button class="complete-btn" id="btn-m4" onclick="completeM('m4','btn-m4','ach-diag','bm-diag','Expert em diagnóstico DNS!','dns_diag',55)">✅ MISSÃO CONCLUÍDA — +55 XP</button>
+</div>
+</div>
+</div>
+    </div>
+    
+    <div class="card">
+      <div class="card-head"><div class="card-icon ci-a">🧠</div><div class="card-title">QUIZ — SERVIDOR DNS BIND9</div><div class="xp-tag">+10 a +20 XP</div></div>
+      <div class="card-body">
+        <div class="quiz-prog-wrap">
+          <div class="quiz-prog-label"><span>Progresso</span><span id="q-cnt">0/6</span></div>
+          <div class="quiz-prog-bg"><div class="quiz-prog-fill" id="q-prog" style="background:linear-gradient(90deg,#b44aff,b44aff88)"></div></div>
+        </div>
+        <div class="qcard active" id="qc0">
+<h4>Qual comando verifica a sintaxe do arquivo named.conf?</h4>
+<div class="qopts"><button class="qopt" onclick="ansQ(0,0,1)">named-test</button>
+<button class="qopt" onclick="ansQ(0,1,1)">named-checkconf</button>
+<button class="qopt" onclick="ansQ(0,2,1)">bind9-verify</button>
+<button class="qopt" onclick="ansQ(0,3,1)">dig --check</button>
+</div>
+<div class="qfb" id="qfb0"></div>
+<div class="qnx" id="qnx0"><button class="qnx-btn" onclick="nextQ(1)">Próxima →</button></div>
+</div>
+<div class="qcard " id="qc1">
+<h4>Qual tipo de registro DNS mapeia um nome para um endereço IPv4?</h4>
+<div class="qopts"><button class="qopt" onclick="ansQ(1,0,2)">PTR</button>
+<button class="qopt" onclick="ansQ(1,1,2)">MX</button>
+<button class="qopt" onclick="ansQ(1,2,2)">A</button>
+<button class="qopt" onclick="ansQ(1,3,2)">CNAME</button>
+</div>
+<div class="qfb" id="qfb1"></div>
+<div class="qnx" id="qnx1"><button class="qnx-btn" onclick="nextQ(2)">Próxima →</button></div>
+</div>
+<div class="qcard " id="qc2">
+<h4>O que representa o ponto final em 'mail.example.com.' em um arquivo de zona?</h4>
+<div class="qopts"><button class="qopt" onclick="ansQ(2,0,1)">Erro de digitação</button>
+<button class="qopt" onclick="ansQ(2,1,1)">Indica FQDN completo (sem adicionar nome da zona)</button>
+<button class="qopt" onclick="ansQ(2,2,1)">Fim do arquivo</button>
+<button class="qopt" onclick="ansQ(2,3,1)">Comentário</button>
+</div>
+<div class="qfb" id="qfb2"></div>
+<div class="qnx" id="qnx2"><button class="qnx-btn" onclick="nextQ(3)">Próxima →</button></div>
+</div>
+<div class="qcard " id="qc3">
+<h4>Qual registro DNS é responsável pela resolução reversa (IP → hostname)?</h4>
+<div class="qopts"><button class="qopt" onclick="ansQ(3,0,3)">CNAME</button>
+<button class="qopt" onclick="ansQ(3,1,3)">NS</button>
+<button class="qopt" onclick="ansQ(3,2,3)">MX</button>
+<button class="qopt" onclick="ansQ(3,3,3)">PTR</button>
+</div>
+<div class="qfb" id="qfb3"></div>
+<div class="qnx" id="qnx3"><button class="qnx-btn" onclick="nextQ(4)">Próxima →</button></div>
+</div>
+<div class="qcard " id="qc4">
+<h4>O que acontece se você não incrementar o serial ao modificar uma zona?</h4>
+<div class="qopts"><button class="qopt" onclick="ansQ(4,0,1)">A zona é apagada</button>
+<button class="qopt" onclick="ansQ(4,1,1)">Servidores secundários não sincronizam</button>
+<button class="qopt" onclick="ansQ(4,2,1)">O BIND reinicia automaticamente</button>
+<button class="qopt" onclick="ansQ(4,3,1)">Nada — o serial é opcional</button>
+</div>
+<div class="qfb" id="qfb4"></div>
+<div class="qnx" id="qnx4"><button class="qnx-btn" onclick="nextQ(5)">Próxima →</button></div>
+</div>
+<div class="qcard " id="qc5">
+<h4>Qual comando faz uma consulta DNS diretamente no servidor localhost?</h4>
+<div class="qopts"><button class="qopt" onclick="ansQ(5,0,1)">dig localhost</button>
+<button class="qopt" onclick="ansQ(5,1,1)">dig @localhost</button>
+<button class="qopt" onclick="ansQ(5,2,1)">nslookup --server=localhost</button>
+<button class="qopt" onclick="ansQ(5,3,1)">dns-query localhost</button>
+</div>
+<div class="qfb" id="qfb5"></div>
+<div class="qnx" id="qnx5"><button class="qnx-btn" onclick="showResult()">Ver Resultado 🏆</button></div>
+</div>
+
+        <div class="q-result" id="q-result">
+          <span class="q-score" id="q-score">0/6</span>
+          <p class="q-msg" id="q-msg">Resultado</p>
+          <p class="q-xp" id="q-xp-earned"></p>
+          <button class="restart-btn" onclick="restartQuiz()">↺ Tentar Novamente</button>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-icon ci-g">🏆</div><div class="card-title">CONQUISTAS</div><div class="xp-tag g">12 Badges</div></div>
+      <div class="card-body"><div class="ach-grid"><div class="ach-card" id="ach-start"><span class="ach-icon">🚀</span><div class="ach-name">DNS Iniciado</div></div>
+<div class="ach-card" id="ach-obj"><span class="ach-icon">🎯</span><div class="ach-name">Objetivos OK</div></div>
+<div class="ach-card" id="ach-install"><span class="ach-icon">📦</span><div class="ach-name">BIND9 Instalado</div></div>
+<div class="ach-card" id="ach-zona"><span class="ach-icon">📄</span><div class="ach-name">Zona Direta</div></div>
+<div class="ach-card" id="ach-reversa"><span class="ach-icon">🔄</span><div class="ach-name">Zona Reversa</div></div>
+<div class="ach-card" id="ach-diag"><span class="ach-icon">🔍</span><div class="ach-name">DNS Diagnosticado</div></div>
+<div class="ach-card" id="ach-video"><span class="ach-icon">🎬</span><div class="ach-name">Vídeos Assistidos</div></div>
+<div class="ach-card" id="ach-quiz"><span class="ach-icon">⭐</span><div class="ach-name">Quiz 4+/6</div></div>
+<div class="ach-card" id="ach-perfect"><span class="ach-icon">💎</span><div class="ach-name">Quiz Perfeito</div></div>
+<div class="ach-card" id="ach-all"><span class="ach-icon">🏆</span><div class="ach-name">DNS Master</div></div>
+<div class="ach-card" id="ach-bind"><span class="ach-icon">🌐</span><div class="ach-name">BIND9 Expert</div></div>
+<div class="ach-card" id="ach-dnssec"><span class="ach-icon">🔒</span><div class="ach-name">DNSSEC Aware</div></div>
+</div></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-icon ci-c">📖</div><div class="card-title">BIBLIOGRAFIA</div></div>
+      <div class="card-body"><div class="bib-item">LIU, Cricket; ALBITZ, Paul. <strong>DNS and BIND</strong>. 5.ed. O'Reilly Media, 2006.</div>
+<div class="bib-item">NEMETH, Evi et al. <strong>Manual completo do Linux: Guia do Administrador</strong>. Prentice Hall, 2007. Cap. 16: DNS.</div>
+<div class="bib-item">BIND9 Administrator Reference Manual. <a href='https://bind9.readthedocs.io/' target='_blank'>bind9.readthedocs.io</a></div>
+<div class="bib-item">Ubuntu Server Guide — DNS. <a href='https://ubuntu.com/server/docs/service-domain-name-service-dns' target='_blank'>ubuntu.com/server/docs</a></div>
+</div>
+    </div>
+    <div style="display:flex;justify-content:space-between;gap:12px;margin-top:4px;">
+      <a href="semana07.html" style="padding:13px 24px;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.3);color:var(--cyan);text-decoration:none;border-radius:9px;font-weight:700;font-size:0.9em;transition:all 0.2s" onmouseover="this.style.background='rgba(0,212,255,0.2)'" onmouseout="this.style.background='rgba(0,212,255,0.1)'">← Semana 7 — Configuração de Rede</a>
+      <a href="semana09.html" style="padding:13px 24px;background:rgba(180,74,255,0.1);border:1px solid rgba(180,74,255,0.3);color:#b44aff;text-decoration:none;border-radius:9px;font-weight:700;font-size:0.9em;transition:all 0.2s" onmouseover="this.style.background='rgba(180,74,255,0.2)'" onmouseout="this.style.background='rgba(180,74,255,0.1)'">Semana 9 — Samba File Server →</a>
+    </div>
+  </main>
+</div>
+<script>
+const TOTAL_XP=360;
+const OBJ_COUNT=6;
+const MIS_COUNT=4;
+const QUIZ_COUNT=6;
+const QFB=[
+{ok:'named-checkconf valida a sintaxe de todos os arquivos de configuração do BIND9. Silêncio = OK.'},
+{ok:'Registro A (Address) mapeia um nome para IPv4. AAAA mapeia para IPv6.'},
+{ok:'O ponto final indica FQDN — Fully Qualified Domain Name. Sem ele, o BIND adiciona o nome da zona ao final.'},
+{ok:'PTR (Pointer) é o registro de resolução reversa, definido em zonas .in-addr.arpa.'},
+{ok:'O serial controla a sincronização com servidores secundários. Sem incremento, eles ignoram a atualização.'},
+{ok:'dig @servidor usa o @ para especificar qual servidor DNS consultar diretamente.'}
+];
+
+const QXPS=[15,15,20,15,20,15];
+
+
+let xp=0,streak=0,badges=0;
+const objChecked=Array(OBJ_COUNT).fill(false);
+const missionsDone={};
+let videosWatched=0,qCorrect=0;
+const qAnswers={};
+setTimeout(()=>unlock('a-start','bm-start','Módulo iniciado! 🚀'),800);
+function updateHUD(){
+  document.getElementById('hud-xp').textContent=xp;
+  document.getElementById('hud-streak').textContent=streak;
+  document.getElementById('hud-badges').textContent=badges;
+  const pct=Math.min(Math.round(xp/TOTAL_XP*100),100);
+  document.getElementById('hud-bar').style.width=pct+'%';
+  document.getElementById('hud-pct').textContent=pct+'%';
+  const lvls=[[0,'Iniciante'],[50,'Operador'],[120,'Técnico'],[200,'Administrador'],[300,'Expert']];
+  let lv=lvls[0][1];
+  for(const[t,n]of lvls){if(xp>=t)lv=n;}
+  document.getElementById('hud-level').textContent=lv;
+  const od=objChecked.filter(Boolean).length;
+  setBar('obj-bar','obj-pct',od/OBJ_COUNT*100,Math.round(od/OBJ_COUNT*100)+'%');
+  const md=Object.keys(missionsDone).length;
+  setBar('mis-bar','mis-pct',md/MIS_COUNT*100,Math.round(md/MIS_COUNT*100)+'%');
+  setBar('quiz-bar','quiz-pct',Math.min(qCorrect/QUIZ_COUNT*100,100),Math.round(qCorrect/QUIZ_COUNT*100)+'%');
+  setBar('ach-bar','ach-pct',badges/12*100,badges+'/12');
+}
+function setBar(bid,lid,pct,txt){document.getElementById(bid).style.width=Math.min(pct,100)+'%';document.getElementById(lid).textContent=txt;}
+function addXP(a,m,ic){xp+=a;updateHUD();toast(ic||'⚡','+'+a+' XP',m);}
+function toast(icon,title,msg){
+  document.getElementById('toast-icon').textContent=icon;
+  document.getElementById('toast-title').textContent=title;
+  document.getElementById('toast-msg').textContent=msg;
+  const t=document.getElementById('toast');t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3200);
+}
+function unlock(achId,badgeId,msg){
+  const a=document.getElementById(achId);const b=document.getElementById(badgeId);
+  if(a&&!a.classList.contains('unlocked')){a.classList.add('unlocked');if(b)b.classList.add('unlocked');badges++;updateHUD();toast('🏆','Badge desbloqueado!',msg);}
+}
+function toggleObj(el,idx){
+  el.classList.toggle('checked');objChecked[idx]=el.classList.contains('checked');
+  if(objChecked[idx]){addXP(5,'Objetivo marcado!','✅');streak++;}else streak=Math.max(0,streak-1);
+  const done=objChecked.filter(Boolean).length;
+  if(done===OBJ_COUNT){addXP(25,'Todos objetivos marcados!','🎯');unlock('a-obj','bm-obj','Foco Total!');}
+  updateHUD();
+}
+function toggleMission(id){document.getElementById(id).classList.toggle('open');}
+function completeM(mId,btnId,achId,badgeId,msg,key,xpAmt){
+  event.stopPropagation();if(missionsDone[key])return;
+  missionsDone[key]=true;
+  const btn=document.getElementById(btnId);btn.disabled=true;btn.textContent='✅ Missão Concluída!';
+  document.getElementById(mId).classList.add('done');
+  addXP(xpAmt||50,msg,'⚔️');unlock(achId,badgeId,msg);streak++;updateHUD();
+  if(Object.keys(missionsDone).length===MIS_COUNT){
+    setTimeout(()=>{addXP(50,'TODAS AS MISSÕES CONCLUÍDAS!','🏆');unlock('a-all','bm-all','Tudo concluído! Semana completa!');},500);
+  }
+}
+function watchVideo(el){
+  if(!el.dataset.counted){el.dataset.counted='1';videosWatched++;addXP(10,'Vídeo assistido!','🎬');
+    if(videosWatched>=3)unlock('a-video','bm-video','Aprendiz dedicado! 🎬');}
+}
+function ansQ(qi,chosen,correct){
+  const card=document.getElementById('qc'+qi);const opts=card.querySelectorAll('.qopt');
+  opts.forEach(o=>o.disabled=true);opts[chosen].classList.add(chosen===correct?'correct':'wrong');
+  if(chosen!==correct)opts[correct].classList.add('correct');
+  const fb=document.getElementById('qfb'+qi);const nx=document.getElementById('qnx'+qi);
+  const ok=chosen===correct;
+  fb.innerHTML=ok?QFB[qi].ok:'❌ Errado. '+QFB[qi].ok;
+  fb.className='qfb show '+(ok?'ok':'fail');nx.classList.add('show');
+  if(ok){qCorrect++;addXP(QXPS[qi],'Resposta correta!','🎯');streak++;}else streak=0;
+  qAnswers[qi]=ok;
+  document.getElementById('q-prog').style.width=((qi+1)/QUIZ_COUNT*100)+'%';
+  document.getElementById('q-cnt').textContent=(qi+1)+'/'+QUIZ_COUNT;
+  updateHUD();
+}
+function nextQ(n){document.getElementById('qc'+(n-1)).classList.remove('active');document.getElementById('qc'+n).classList.add('active');}
+function showResult(){
+  document.getElementById('qc'+(QUIZ_COUNT-1)).classList.remove('active');
+  const r=document.getElementById('q-result');r.classList.add('show');
+  document.getElementById('q-score').textContent=qCorrect+'/'+QUIZ_COUNT;
+  const msgs=['Continue estudando!','Progredindo bem!','Bom trabalho, quase lá!','Ótimo resultado!','💎 Perfeito!','💎 Perfeito!'];
+  document.getElementById('q-msg').textContent=msgs[Math.min(qCorrect,5)];
+  const earned=Object.keys(qAnswers).filter(k=>qAnswers[k]).reduce((a,k)=>a+QXPS[+k],0);
+  document.getElementById('q-xp-earned').textContent='+'+earned+' XP conquistados no quiz';
+  document.getElementById('q-prog').style.width='100%';
+  document.getElementById('q-cnt').textContent=QUIZ_COUNT+'/'+QUIZ_COUNT;
+  if(qCorrect>=4)unlock('a-quiz','bm-quiz','Sinal Forte — 4+ acertos!');
+  if(qCorrect===QUIZ_COUNT)unlock('a-perfect','bm-perfect','Quiz Perfeito! 💎');
+  updateHUD();
+}
+function restartQuiz(){
+  qCorrect=0;document.getElementById('q-result').classList.remove('show');
+  document.getElementById('q-prog').style.width='0%';document.getElementById('q-cnt').textContent='0/'+QUIZ_COUNT;
+  for(let i=0;i<QUIZ_COUNT;i++){
+    const c=document.getElementById('qc'+i);c.classList.toggle('active',i===0);
+    c.querySelectorAll('.qopt').forEach(o=>{o.disabled=false;o.classList.remove('correct','wrong');});
+    const fb=c.querySelector('.qfb');if(fb){fb.className='qfb';fb.innerHTML='';}
+    const nx=c.querySelector('.qnx');if(nx)nx.classList.remove('show');
+  }
+  updateHUD();
+}
+
+
+</script>
 </body>
 </html>
