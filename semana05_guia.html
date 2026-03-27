@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia de Estudo - Semana 05</title>
+    <style>* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .header h1 {
+            color: #6a11cb;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+
+        .header .week-info {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .nav-btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(106, 17, 203, 0.4);
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .section h2 {
+            color: #6a11cb;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #2575fc;
+        }
+
+        .exercise-block {
+            background: #f8f9fa;
+            border-left: 5px solid #6a11cb;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+
+        .exercise-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .exercise-number {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+
+        .exercise-title {
+            flex: 1;
+            color: #6a11cb;
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+
+        .rubric-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .rubric-table th {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .rubric-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .rubric-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .rubric-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .criterion {
+            font-weight: bold;
+            color: #6a11cb;
+        }
+
+        .solution-box {
+            background: linear-gradient(to right, #e8f5e9, #f1f8e9);
+            border-left: 5px solid #4caf50;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .solution-box h3 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .example-box {
+            background: #fff3e0;
+            border-left: 5px solid #ff9800;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .example-box h4 {
+            color: #e65100;
+            margin-bottom: 10px;
+        }
+
+        .tip-box {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .tip-box strong {
+            color: #1976d2;
+        }
+
+        .command-box {
+            background: #263238;
+            color: #4caf50;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+
+        .command-box .comment {
+            color: #78909c;
+        }
+
+        .command-box .url {
+            color: #80cbc4;
+            text-decoration: underline;
+        }
+
+        ul, ol {
+            margin-left: 20px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .highlight {
+            background: #fff9c4;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #d32f2f;
+        }
+
+        .video-ref-box {
+            background: linear-gradient(to right, #ede7f6, #f3e5f5);
+            border-left: 5px solid #7b1fa2;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .video-ref-box h4 {
+            color: #4a148c;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .video-ref-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: rgba(255,255,255,0.6);
+            border-radius: 6px;
+        }
+
+        .video-ref-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .video-icon {
+            font-size: 1.4em;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .video-ref-item a {
+            color: #6a11cb;
+            font-weight: bold;
+            text-decoration: none;
+            word-break: break-all;
+        }
+
+        .video-ref-item a:hover {
+            text-decoration: underline;
+        }
+
+        .video-ref-item p {
+            font-size: 0.9em;
+            color: #555;
+            margin-top: 3px;
+        }
+
+        .note-tag {
+            display: inline-block;
+            background: #7b1fa2;
+            color: white;
+            font-size: 0.75em;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Guia de Estudo - Semana 05</h1>
+            <p class="week-info">Instalação e Configuração do Ubuntu — Desktop, Server e Firewall UFW</p>
+            <div class="nav-buttons">
+                <a href="index.html" class="nav-btn">⬅️ Voltar ao Índice</a>
+                <a href="semana05.html" class="nav-btn">📄 Ver Conteúdo da Semana</a>
+            </div>
+        </div>
+
+        <!-- VÍDEOS DE REFERÊNCIA -->
+        <div class="section">
+            <h2>🎬 Vídeos de Referência</h2>
+            <div class="video-ref-box">
+                <h4>📹 Tutoriais em Vídeo para esta Semana</h4>
+
+                <div class="video-ref-item">
+                    <span class="video-icon">▶️</span>
+                    <div>
+                        <strong>Instalação do Ubuntu Server</strong>
+                        <span class="note-tag">mesmo procedimento para o Ubuntu Firewall</span>
+                        <p>Acompanhe o tutorial completo de instalação — o mesmo processo se aplica tanto para a VM de servidor quanto para a VM de firewall.</p>
+                        <a href="https://youtu.be/HIfgTVoDn6I" target="_blank">https://youtu.be/HIfgTVoDn6I</a>
+                    </div>
+                </div>
+
+                <div class="video-ref-item">
+                    <span class="video-icon">▶️</span>
+                    <div>
+                        <strong>Instalação do Ubuntu Desktop Completo</strong>
+                        <p>Tutorial passo a passo da instalação do Ubuntu Desktop 22.04 LTS no VirtualBox.</p>
+                        <a href="https://youtu.be/UXq193Ol33g" target="_blank">https://youtu.be/UXq193Ol33g</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="command-box">
+<span class="comment"># Instalação do UbuntuServer é o mesmo procedimento para o UbuntuFirewall</span>
+<span class="url">https://youtu.be/HIfgTVoDn6I</span>
+
+<span class="comment"># Instalação do Ubuntu desktop completo</span>
+<span class="url">https://youtu.be/UXq193Ol33g</span>
+            </div>
+        </div>
+
+        <!-- EXERCÍCIO 1 -->
+        <div class="section">
+            <h2>✏️ Exercício 1: Instalação do Ubuntu Desktop no VirtualBox</h2>
+
+            <div class="exercise-block">
+                <div class="exercise-header">
+                    <div class="exercise-number">1</div>
+                    <div class="exercise-title">Instalação do Ubuntu Desktop no VirtualBox</div>
+                </div>
+
+                <p><strong>📋 Objetivo:</strong> Criar e configurar uma VM com Ubuntu Desktop 22.04 LTS</p>
+                <p><strong>⏱️ Duração:</strong> 45 minutos</p>
+                <p><strong>📄 Descrição:</strong> Criar VM no VirtualBox, instalar Ubuntu Desktop com idioma pt-BR, configurar usuário e executar pós-instalação</p>
+
+                <h3 style="color: #6a11cb; margin-top: 25px; margin-bottom: 15px;">📊 Rubrica de Avaliação</h3>
+
+                <table class="rubric-table">
+                    <thead>
+                        <tr>
+                            <th>Critério</th>
+                            <th>Insuficiente (0-5)</th>
+                            <th>Básico (6-7)</th>
+                            <th>Proficiente (8-9)</th>
+                            <th>Excelente (10)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="criterion">Execução dos Comandos</td>
+                            <td>Comandos incorretos ou não funcionam</td>
+                            <td>Comandos executados com erros</td>
+                            <td>Comandos executados corretamente</td>
+                            <td>Comandos perfeitos com validação</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Compreensão</td>
+                            <td>Não compreende o que está fazendo</td>
+                            <td>Compreensão básica</td>
+                            <td>Boa compreensão dos conceitos</td>
+                            <td>Domínio completo com explicações</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Documentação</td>
+                            <td>Sem documentação</td>
+                            <td>Documentação mínima</td>
+                            <td>Documentação adequada</td>
+                            <td>Documentação completa com prints</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Testes e Validação</td>
+                            <td>Não realiza testes</td>
+                            <td>Testes básicos</td>
+                            <td>Testes adequados</td>
+                            <td>Testes completos com casos edge</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="solution-box">
+                    <h3>💡 Solução Detalhada do Exercício 1</h3>
+
+                    <p><strong>Explicação:</strong> Instalação passo a passo do Ubuntu Desktop 22.04 LTS no VirtualBox</p>
+                    <p style="margin-top: 8px;">📹 <strong>Referência em vídeo:</strong> <a href="https://youtu.be/UXq193Ol33g" target="_blank" style="color:#6a11cb;">https://youtu.be/UXq193Ol33g</a></p>
+
+                    <h4 style="color: #2e7d32; margin-top: 20px;">📝 Configuração da VM no VirtualBox</h4>
+
+                    <div class="command-box">
+<span class="comment"># Parâmetros recomendados para a VM do Ubuntu Desktop</span>
+Nome: Ubuntu-Desktop-22
+Tipo: Linux | Versão: Ubuntu (64-bit)
+RAM: 4096 MB (mínimo 2048 MB)
+Disco: 25 GB VDI dinâmico
+Rede: Adaptador 1 → NAT
+                    </div>
+
+                    <h4 style="color: #2e7d32; margin-top: 20px;">📝 Pós-Instalação</h4>
+
+                    <div class="command-box">
+<span class="comment"># Atualizar o sistema após instalação</span>
+sudo apt update && sudo apt upgrade -y
+
+<span class="comment"># Instalar utilitários básicos</span>
+sudo apt install net-tools curl wget htop -y
+
+<span class="comment"># Verificar versão instalada</span>
+lsb_release -a
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>💡 DICA:</strong> Após a instalação e o update, tire um <strong>Snapshot</strong> no VirtualBox (Máquina → Tirar Snapshot) para salvar o estado limpo da VM. Isso permite reverter facilmente em caso de problemas.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- EXERCÍCIO 2 -->
+        <div class="section">
+            <h2>✏️ Exercício 2: Instalação do Ubuntu Server — Instalação Mínima</h2>
+
+            <div class="exercise-block">
+                <div class="exercise-header">
+                    <div class="exercise-number">2</div>
+                    <div class="exercise-title">Instalação do Ubuntu Server — Modalidade Mínima (CLI)</div>
+                </div>
+
+                <p><strong>📋 Objetivo:</strong> Instalar Ubuntu Server 22.04 LTS sem interface gráfica, com LVM e OpenSSH</p>
+                <p><strong>⏱️ Duração:</strong> 40 minutos</p>
+                <p><strong>📄 Descrição:</strong> Criar VM separada, instalar Ubuntu Server minimized, configurar LVM e habilitar SSH</p>
+
+                <h3 style="color: #6a11cb; margin-top: 25px; margin-bottom: 15px;">📊 Rubrica de Avaliação</h3>
+
+                <table class="rubric-table">
+                    <thead>
+                        <tr>
+                            <th>Critério</th>
+                            <th>Insuficiente (0-5)</th>
+                            <th>Básico (6-7)</th>
+                            <th>Proficiente (8-9)</th>
+                            <th>Excelente (10)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="criterion">Execução dos Comandos</td>
+                            <td>Comandos incorretos ou não funcionam</td>
+                            <td>Comandos executados com erros</td>
+                            <td>Comandos executados corretamente</td>
+                            <td>Comandos perfeitos com validação</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Compreensão</td>
+                            <td>Não compreende o que está fazendo</td>
+                            <td>Compreensão básica</td>
+                            <td>Boa compreensão dos conceitos</td>
+                            <td>Domínio completo com explicações</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Documentação</td>
+                            <td>Sem documentação</td>
+                            <td>Documentação mínima</td>
+                            <td>Documentação adequada</td>
+                            <td>Documentação completa com prints</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Testes e Validação</td>
+                            <td>Não realiza testes</td>
+                            <td>Testes básicos</td>
+                            <td>Testes adequados</td>
+                            <td>Testes completos com casos edge</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="solution-box">
+                    <h3>💡 Solução Detalhada do Exercício 2</h3>
+
+                    <p><strong>Explicação:</strong> Instalação do Ubuntu Server 22.04 LTS na modalidade mínima — somente CLI, sem interface gráfica</p>
+                    <p style="margin-top: 8px;">📹 <strong>Referência em vídeo:</strong> <a href="https://youtu.be/HIfgTVoDn6I" target="_blank" style="color:#6a11cb;">https://youtu.be/HIfgTVoDn6I</a></p>
+
+                    <h4 style="color: #2e7d32; margin-top: 20px;">📝 Configuração da VM no VirtualBox</h4>
+
+                    <div class="command-box">
+<span class="comment"># Parâmetros recomendados para a VM do Ubuntu Server</span>
+Nome: Ubuntu-Server-22
+Tipo: Linux | Versão: Ubuntu (64-bit)
+RAM: 1024 MB (servidor não precisa de GUI)
+Disco: 20 GB VDI dinâmico
+Rede: Adaptador 1 → NAT | Adaptador 2 → Rede Interna (intnet)
+                    </div>
+
+                    <h4 style="color: #2e7d32; margin-top: 20px;">📝 Verificação do LVM após instalação</h4>
+
+                    <div class="command-box">
+<span class="comment"># Verificar volumes LVM criados pelo instalador</span>
+sudo pvs
+sudo vgs
+sudo lvs
+
+<span class="comment"># Expandir LV para usar todo o espaço disponível no VG</span>
+sudo lvextend -l +100%FREE /dev/ubuntu-vg/ubuntu-lv
+sudo resize2fs /dev/ubuntu-vg/ubuntu-lv
+
+<span class="comment"># Verificar status do SSH</span>
+sudo systemctl status ssh
+
+<span class="comment"># Verificar IP da VM para acesso remoto</span>
+ip addr show | grep inet
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>💡 DICA:</strong> Na tela de tipo de instalação, selecione <strong>Ubuntu Server (minimized)</strong> — não a opção padrão. Isso garante o menor conjunto de pacotes, reduzindo a superfície de ataque. Use comandos de verificação como <code>sudo lvs</code>, <code>df -h</code> e <code>systemctl status ssh</code> para confirmar as configurações.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- EXERCÍCIO 3 -->
+        <div class="section">
+            <h2>✏️ Exercício 3: Configuração do Firewall UFW como Gateway</h2>
+
+            <div class="exercise-block">
+                <div class="exercise-header">
+                    <div class="exercise-number">3</div>
+                    <div class="exercise-title">VM Firewall — Ubuntu Server + UFW como Gateway</div>
+                </div>
+
+                <p><strong>📋 Objetivo:</strong> Configurar VM dedicada com Ubuntu Server como firewall/gateway da rede interna</p>
+                <p><strong>⏱️ Duração:</strong> 45 minutos</p>
+                <p><strong>📄 Descrição:</strong> Criar VM com 2 NICs, habilitar IP forwarding, masquerading e aplicar regras UFW</p>
+
+                <h3 style="color: #6a11cb; margin-top: 25px; margin-bottom: 15px;">📊 Rubrica de Avaliação</h3>
+
+                <table class="rubric-table">
+                    <thead>
+                        <tr>
+                            <th>Critério</th>
+                            <th>Insuficiente (0-5)</th>
+                            <th>Básico (6-7)</th>
+                            <th>Proficiente (8-9)</th>
+                            <th>Excelente (10)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="criterion">Execução dos Comandos</td>
+                            <td>Comandos incorretos ou não funcionam</td>
+                            <td>Comandos executados com erros</td>
+                            <td>Comandos executados corretamente</td>
+                            <td>Comandos perfeitos com validação</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Compreensão</td>
+                            <td>Não compreende o que está fazendo</td>
+                            <td>Compreensão básica</td>
+                            <td>Boa compreensão dos conceitos</td>
+                            <td>Domínio completo com explicações</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Documentação</td>
+                            <td>Sem documentação</td>
+                            <td>Documentação mínima</td>
+                            <td>Documentação adequada</td>
+                            <td>Documentação completa com prints</td>
+                        </tr>
+                        <tr>
+                            <td class="criterion">Testes e Validação</td>
+                            <td>Não realiza testes</td>
+                            <td>Testes básicos</td>
+                            <td>Testes adequados</td>
+                            <td>Testes completos com casos edge</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="solution-box">
+                    <h3>💡 Solução Detalhada do Exercício 3</h3>
+
+                    <p><strong>Explicação:</strong> A instalação da VM Firewall segue o mesmo procedimento do Ubuntu Server — use o mesmo vídeo como referência</p>
+                    <p style="margin-top: 8px;">📹 <strong>Referência em vídeo (instalação):</strong> <a href="https://youtu.be/HIfgTVoDn6I" target="_blank" style="color:#6a11cb;">https://youtu.be/HIfgTVoDn6I</a> — mesmo procedimento do Server</p>
+
+                    <h4 style="color: #2e7d32; margin-top: 20px;">📝 IP Forwarding e Masquerading</h4>
+
+                    <div class="command-box">
+<span class="comment"># Habilitar IP forwarding permanentemente</span>
+sudo nano /etc/sysctl.conf
+<span class="comment"># Descomentar a linha: net.ipv4.ip_forward=1</span>
+sudo sysctl -p
+
+<span class="comment"># Verificar que está ativo (deve retornar 1)</span>
+cat /proc/sys/net/ipv4/ip_forward
+                    </div>
+
+                    <h4 style="color: #2e7d32; margin-top: 20px;">📝 Regras UFW</h4>
+
+                    <div class="command-box">
+<span class="comment"># SEMPRE libere SSH antes de ativar o UFW</span>
+sudo ufw allow 22/tcp
+
+<span class="comment"># Ativar o firewall</span>
+sudo ufw enable
+
+<span class="comment"># Definir políticas padrão</span>
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw default allow routed
+
+<span class="comment"># Regras para serviços permitidos</span>
+sudo ufw allow 80/tcp    # HTTP
+sudo ufw allow 443/tcp   # HTTPS
+
+<span class="comment"># Bloquear serviços inseguros</span>
+sudo ufw deny 23/tcp     # Telnet
+sudo ufw deny 21/tcp     # FTP
+
+<span class="comment"># Verificar status</span>
+sudo ufw status verbose
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>💡 DICA:</strong> Sempre verifique os resultados de cada comando antes de prosseguir. Use <code>sudo ufw status verbose</code>, <code>ip route show</code> e <code>ping -c 3 8.8.8.8</code> nas outras VMs para confirmar que o masquerading e o IP forwarding estão funcionando corretamente.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-buttons" style="margin-top: 30px; background: white; border-radius: 12px; padding: 20px;">
+            <a href="index.html" class="nav-btn">⬅️ Voltar ao Índice</a>
+            <a href="semana05.html" class="nav-btn">📄 Ver Conteúdo da Semana</a>
+        </div>
+    </div>
+</body>
+</html>
