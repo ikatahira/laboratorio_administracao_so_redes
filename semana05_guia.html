@@ -366,46 +366,7 @@
                     <p><strong>Explicação:</strong> Instalação passo a passo do Ubuntu Desktop 22.04 LTS no VirtualBox</p>
                     <p style="margin-top: 8px;">📹 <strong>Referência em vídeo:</strong> <a href="https://youtu.be/UXq193Ol33g" target="_blank" style="color:#6a11cb;">https://youtu.be/UXq193Ol33g</a></p>
 
-                    <h4 style="color: #2e7d32; margin-top: 20px;">📝 Pós-Instalação — Verificação</h4>
-
-                    <div class="command-box">
-<span class="comment"># Verificar versão instalada</span>
-lsb_release -a
                     </div>
-
-                    <h4 style="color: #2e7d32; margin-top: 20px;">📝 Configurar IP via Terminal (Netplan)</h4>
-
-                    <div class="command-box">
-<span class="comment"># Verificar o nome da interface de rede</span>
-ip link show
-
-<span class="comment"># Editar o arquivo de configuração do Netplan</span>
-<span class="comment"># (o nome do arquivo pode variar, ex: 00-installer-config.yaml)</span>
-sudo nano /etc/netplan/00-installer-config.yaml
-
-<span class="comment"># Exemplo de configuração com IP estático:</span>
-<span class="comment"># network:</span>
-<span class="comment">#   version: 2</span>
-<span class="comment">#   ethernets:</span>
-<span class="comment">#     enp0s3:                        # substitua pelo nome da sua interface</span>
-<span class="comment">#       dhcp4: no</span>
-<span class="comment">#       addresses: [192.168.1.10/24]</span>
-<span class="comment">#       gateway4: 192.168.1.1</span>
-<span class="comment">#       nameservers:</span>
-<span class="comment">#         addresses: [8.8.8.8, 8.8.4.4]</span>
-
-<span class="comment"># Aplicar as configurações</span>
-sudo netplan apply
-
-<span class="comment"># Verificar se o IP foi aplicado corretamente</span>
-ip addr show
-ip route show
-                    </div>
-
-                    <div class="tip-box">
-                        <strong>💡 DICA:</strong> O arquivo YAML é sensível a indentação — use <strong>espaços</strong>, nunca TAB. Após editar, salve com <code>Ctrl+O</code> e saia com <code>Ctrl+X</code>. Se houver erro no <code>netplan apply</code>, revise o espaçamento do arquivo. Tire um <strong>Snapshot</strong> após configurar (Máquina → Tirar Snapshot) para salvar o estado limpo da VM.
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -451,57 +412,7 @@ ip route show
                         </ol>
                     </div>
 
-                    <h4 style="color: #2e7d32; margin-top: 20px;">📝 Verificação do LVM após instalação</h4>
-
-                    <div class="command-box">
-<span class="comment"># Verificar volumes LVM criados pelo instalador</span>
-sudo pvs
-sudo vgs
-sudo lvs
-
-<span class="comment"># Expandir LV para usar todo o espaço disponível no VG</span>
-sudo lvextend -l +100%FREE /dev/ubuntu-vg/ubuntu-lv
-sudo resize2fs /dev/ubuntu-vg/ubuntu-lv
-
-<span class="comment"># Verificar status do SSH</span>
-sudo systemctl status ssh
-
-<span class="comment"># Verificar IP da VM para acesso remoto</span>
-ip addr show | grep inet
                     </div>
-
-                    <h4 style="color: #2e7d32; margin-top: 20px;">📝 Configurar IP via Terminal (Netplan)</h4>
-
-                    <div class="command-box">
-<span class="comment"># Verificar o nome da interface de rede</span>
-ip link show
-
-<span class="comment"># Editar o arquivo de configuração do Netplan</span>
-sudo nano /etc/netplan/00-installer-config.yaml
-
-<span class="comment"># Exemplo de configuração com IP estático:</span>
-<span class="comment"># network:</span>
-<span class="comment">#   version: 2</span>
-<span class="comment">#   ethernets:</span>
-<span class="comment">#     enp0s3:                        # substitua pelo nome da sua interface</span>
-<span class="comment">#       dhcp4: no</span>
-<span class="comment">#       addresses: [192.168.1.10/24]</span>
-<span class="comment">#       gateway4: 192.168.1.1</span>
-<span class="comment">#       nameservers:</span>
-<span class="comment">#         addresses: [8.8.8.8, 8.8.4.4]</span>
-
-<span class="comment"># Aplicar as configurações</span>
-sudo netplan apply
-
-<span class="comment"># Confirmar IP aplicado</span>
-ip addr show
-ip route show
-                    </div>
-
-                    <div class="tip-box">
-                        <strong>💡 DICA:</strong> Siga o vídeo de referência para escolher as opções corretas durante a instalação. <strong>Não selecione a opção "Ubuntu Server (minimized)"</strong> — use a instalação padrão conforme demonstrado. Use comandos de verificação como <code>sudo lvs</code>, <code>df -h</code> e <code>systemctl status ssh</code> para confirmar as configurações.
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -529,26 +440,7 @@ ip route show
 
                 
 
-                <div class="solution-box">
-                    <h3>💡 Solução Detalhada do Exercício 3</h3>
-
-                    <p><strong>Explicação:</strong> A instalação da VM Firewall segue o mesmo procedimento do Ubuntu Server — use o mesmo vídeo como referência. <strong>A instalação não é mais na modalidade mínima (minimized)</strong>; realize-a conforme demonstrado no vídeo.</p>
-                    <p style="margin-top: 8px;">📹 <strong>Referência em vídeo (instalação):</strong> <a href="https://youtu.be/HIfgTVoDn6I" target="_blank" style="color:#6a11cb;">https://youtu.be/HIfgTVoDn6I</a> — mesmo procedimento do Server</p>
-
-                    <!-- AVISO REINSTALAÇÃO -->
-                    <div style="background: linear-gradient(to right, #fce4ec, #ffeeff); border-left: 5px solid #e91e63; padding: 18px 20px; margin: 20px 0; border-radius: 8px;">
-                        <strong style="color: #880e4f; font-size: 1.05em;">🔄 Precisa reinstalar? Siga este passo a passo:</strong>
-                        <ol style="margin-top: 12px; margin-left: 20px; color: #4a0030; line-height: 2;">
-                            <li>Abra o <strong>VirtualBox</strong> e selecione a máquina desejada</li>
-                            <li>No menu superior, clique em <strong>Dispositivos → Discos Ópticos → Escolher um arquivo em disco</strong></li>
-                            <li>Navegue até a <strong>unidade Z:</strong> (Prof. Isaque) e selecione a ISO do Ubuntu Server</li>
-                            <li>No menu superior, clique em <strong>Máquina → Reinicializar</strong> (ou pressione <code>Host+R</code>)</li>
-                            <li>A VM irá reiniciar e bootar pelo instalador da ISO — prossiga com a instalação conforme o vídeo</li>
-                        </ol>
-                    </div>
-
-                    
-                    <!-- CONFIGURAÇÃO DE REDE NO VIRTUALBOX -->
+                                    <!-- CONFIGURAÇÃO DE REDE NO VIRTUALBOX -->
                     <div style="background: linear-gradient(to right, #e8eaf6, #ede7f6); border-left: 5px solid #3f51b5; padding: 20px; margin: 20px 0; border-radius: 8px;">
                         <h4 style="color: #1a237e; margin-bottom: 15px; font-size: 1.1em;">⚙️ Pré-requisito: Configuração de Rede no VirtualBox</h4>
                         <p style="color: #283593; margin-bottom: 15px;">Antes de instalar o Ubuntu Firewall, é necessário configurar corretamente os adaptadores de rede da VM no VirtualBox:</p>
@@ -572,76 +464,26 @@ ip route show
                         </div>
                     </div>
 
-<h4 style="color: #2e7d32; margin-top: 20px;">📝 Configurar IP via Terminal (Netplan)</h4>
+                <div class="solution-box">
+                    <h3>💡 Solução Detalhada do Exercício 3</h3>
 
-                    <div class="command-box">
-<span class="comment"># Verificar o nome das interfaces de rede (deve haver 2: NAT + Rede Interna)</span>
-ip link show
+                    <p><strong>Explicação:</strong> A instalação da VM Firewall segue o mesmo procedimento do Ubuntu Server — use o mesmo vídeo como referência. <strong>A instalação não é mais na modalidade mínima (minimized)</strong>; realize-a conforme demonstrado no vídeo.</p>
+                    <p style="margin-top: 8px;">📹 <strong>Referência em vídeo (instalação):</strong> <a href="https://youtu.be/HIfgTVoDn6I" target="_blank" style="color:#6a11cb;">https://youtu.be/HIfgTVoDn6I</a> — mesmo procedimento do Server</p>
 
-<span class="comment"># Editar o arquivo de configuração do Netplan</span>
-sudo nano /etc/netplan/00-installer-config.yaml
-
-<span class="comment"># Exemplo com 2 interfaces (enp0s3 = NAT / enp0s8 = Rede Interna):</span>
-<span class="comment"># network:</span>
-<span class="comment">#   version: 2</span>
-<span class="comment">#   ethernets:</span>
-<span class="comment">#     enp0s3:                        # interface WAN (NAT)</span>
-<span class="comment">#       dhcp4: yes</span>
-<span class="comment">#     enp0s8:                        # interface LAN (Rede Interna)</span>
-<span class="comment">#       dhcp4: no</span>
-<span class="comment">#       addresses: [192.168.100.1/24]</span>
-
-<span class="comment"># Aplicar as configurações</span>
-sudo netplan apply
-
-<span class="comment"># Confirmar IPs aplicados</span>
-ip addr show
-ip route show
+                    <!-- AVISO REINSTALAÇÃO -->
+                    <div style="background: linear-gradient(to right, #fce4ec, #ffeeff); border-left: 5px solid #e91e63; padding: 18px 20px; margin: 20px 0; border-radius: 8px;">
+                        <strong style="color: #880e4f; font-size: 1.05em;">🔄 Precisa reinstalar? Siga este passo a passo:</strong>
+                        <ol style="margin-top: 12px; margin-left: 20px; color: #4a0030; line-height: 2;">
+                            <li>Abra o <strong>VirtualBox</strong> e selecione a máquina desejada</li>
+                            <li>No menu superior, clique em <strong>Dispositivos → Discos Ópticos → Escolher um arquivo em disco</strong></li>
+                            <li>Navegue até a <strong>unidade Z:</strong> (Prof. Isaque) e selecione a ISO do Ubuntu Server</li>
+                            <li>No menu superior, clique em <strong>Máquina → Reinicializar</strong> (ou pressione <code>Host+R</code>)</li>
+                            <li>A VM irá reiniciar e bootar pelo instalador da ISO — prossiga com a instalação conforme o vídeo</li>
+                        </ol>
                     </div>
 
-                    <h4 style="color: #2e7d32; margin-top: 20px;">📝 IP Forwarding e Masquerading</h4>
-
-                    <div class="command-box">
-<span class="comment"># Habilitar IP forwarding permanentemente</span>
-sudo nano /etc/sysctl.conf
-<span class="comment"># Descomentar a linha: net.ipv4.ip_forward=1</span>
-sudo sysctl -p
-
-<span class="comment"># Verificar que está ativo (deve retornar 1)</span>
-cat /proc/sys/net/ipv4/ip_forward
-                    </div>
-
-                    <h4 style="color: #2e7d32; margin-top: 20px;">📝 Regras UFW</h4>
-
-                    <div class="command-box">
-<span class="comment"># SEMPRE libere SSH antes de ativar o UFW</span>
-sudo ufw allow 22/tcp
-
-<span class="comment"># Ativar o firewall</span>
-sudo ufw enable
-
-<span class="comment"># Definir políticas padrão</span>
-sudo ufw default deny incoming
-sudo ufw default allow outgoing
-sudo ufw default allow routed
-
-<span class="comment"># Regras para serviços permitidos</span>
-sudo ufw allow 80/tcp    # HTTP
-sudo ufw allow 443/tcp   # HTTPS
-
-<span class="comment"># Bloquear serviços inseguros</span>
-sudo ufw deny 23/tcp     # Telnet
-sudo ufw deny 21/tcp     # FTP
-
-<span class="comment"># Verificar status</span>
-sudo ufw status verbose
-                    </div>
-
-                    <div class="tip-box">
-                        <strong>💡 DICA:</strong> Sempre verifique os resultados de cada comando antes de prosseguir. Use <code>sudo ufw status verbose</code>, <code>ip route show</code> e <code>ping -c 3 8.8.8.8</code> nas outras VMs para confirmar que o masquerading e o IP forwarding estão funcionando corretamente.
-                    </div>
-
-                    <!-- TROUBLESHOOTING DE REDE -->
+                    
+<!-- TROUBLESHOOTING DE REDE -->
                     <div style="background: linear-gradient(to right, #fff8e1, #fffde7); border-left: 5px solid #f9a825; padding: 20px; margin: 20px 0; border-radius: 8px;">
                         <h4 style="color: #e65100; margin-bottom: 15px; font-size: 1.1em;">🔧 A placa de rede não funcionou após a instalação? Siga estes passos:</h4>
 
