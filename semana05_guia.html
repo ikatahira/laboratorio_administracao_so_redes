@@ -640,6 +640,35 @@ sudo ufw status verbose
                     <div class="tip-box">
                         <strong>💡 DICA:</strong> Sempre verifique os resultados de cada comando antes de prosseguir. Use <code>sudo ufw status verbose</code>, <code>ip route show</code> e <code>ping -c 3 8.8.8.8</code> nas outras VMs para confirmar que o masquerading e o IP forwarding estão funcionando corretamente.
                     </div>
+
+                    <!-- TROUBLESHOOTING DE REDE -->
+                    <div style="background: linear-gradient(to right, #fff8e1, #fffde7); border-left: 5px solid #f9a825; padding: 20px; margin: 20px 0; border-radius: 8px;">
+                        <h4 style="color: #e65100; margin-bottom: 15px; font-size: 1.1em;">🔧 A placa de rede não funcionou após a instalação? Siga estes passos:</h4>
+
+                        <div style="margin-bottom: 16px;">
+                            <p style="font-weight: bold; color: #2e7d32; margin-bottom: 6px;">✅ 1. Ativar a interface manualmente</p>
+                            <p style="color: #555; margin-bottom: 8px;">Se a interface de rede estiver inativa, ative-a com:</p>
+                            <div class="command-box">sudo ip link set enp0s3 up</div>
+                        </div>
+
+                        <div style="margin-bottom: 16px;">
+                            <p style="font-weight: bold; color: #2e7d32; margin-bottom: 6px;">✅ 2. Solicitar IP via DHCP</p>
+                            <p style="color: #555; margin-bottom: 8px;">Após ativar a interface, solicite um endereço IP automaticamente:</p>
+                            <div class="command-box">sudo dhclient enp0s3</div>
+                        </div>
+
+                        <div style="margin-bottom: 8px;">
+                            <p style="font-weight: bold; color: #1565c0; margin-bottom: 6px;">🧪 3. Testar a conectividade</p>
+                            <p style="color: #555; margin-bottom: 8px;">Verifique se há conexão com a internet:</p>
+                            <div class="command-box">ping -c 4 8.8.8.8</div>
+                            <p style="color: #555; margin: 10px 0 8px;">Se responder, teste também a resolução de nomes (DNS):</p>
+                            <div class="command-box">ping -c 4 google.com</div>
+                        </div>
+
+                        <div style="background: rgba(255,255,255,0.6); border-radius: 6px; padding: 12px; margin-top: 14px;">
+                            <strong style="color: #e65100;">⚠️ Atenção:</strong> <span style="color: #5d4037;">Substitua <code>enp0s3</code> pelo nome real da sua interface, caso seja diferente. Use <code>ip link show</code> para verificar o nome correto.</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
