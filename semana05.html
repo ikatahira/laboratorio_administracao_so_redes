@@ -1131,7 +1131,7 @@ body::before {
             <div class="video-info">
               <h4>Ubuntu Server 22.04 — Instalação</h4>
               <p>Mesmo procedimento para Ubuntu Server e Ubuntu Firewall</p>
-              <a href="https://youtu.be/HIfgTVoDn6I" target="_blank" class="video-link">▶ YouTube</a>
+              <a href="https://youtu.be/BZ4yuTQmxdo" target="_blank" class="video-link">▶ YouTube</a>
             </div>
           </div>
           <div class="video-card">
@@ -1211,14 +1211,14 @@ body::before {
               <div class="step"><div class="step-num">2</div><p>Idioma: <strong>Português do Brasil</strong> → Layout do teclado: <strong>Português (Brasil)</strong></p></div>
               <div class="step"><div class="step-num">3</div><p>Instalação: <strong>Instalação Normal</strong> → marque as opções de atualizações e software de terceiros</p></div>
               <div class="step"><div class="step-num">4</div><p>Particionamento: selecione <strong>Apagar disco e instalar Ubuntu</strong> para automático, ou <strong>Outro</strong> para manual</p></div>
-              <div class="step"><div class="step-num">5</div><p>Fuso horário: <strong>São Paulo</strong> → crie usuário: nome, nome da máquina (ex: <code>lab-desktop</code>), senha forte</p></div>
+              <div class="step"><div class="step-num">5</div><p>Fuso horário: <strong>São Paulo</strong> → crie usuário: nome, nome da máquina: <code>seunomecliente</code>, senha: <code>Fatec2025@</code></p></div>
               <div class="step"><div class="step-num">6</div><p>Aguarde instalação (~15 min) → clique <strong>Reiniciar agora</strong> → remova a ISO quando solicitado</p></div>
             </div>
 
             <div id="m1-panel-pos" class="os-panel">
               <div class="cmd-block">
-<span class="comment"># Atualizar o sistema após instalação</span>
-<span class="prompt">$</span> <span class="cmd">sudo apt update && sudo apt upgrade -y</span>
+<span class="comment"># Atualizar lista de pacotes</span>
+<span class="prompt">$</span> <span class="cmd">sudo apt update</span>
 
 <span class="comment"># Instalar Guest Additions (melhora resolução e integração)</span>
 <span class="prompt">$</span> <span class="cmd">sudo apt install virtualbox-guest-additions-iso</span>
@@ -1287,13 +1287,13 @@ body::before {
             </div>
 
             <div id="m2-panel-install" class="os-panel">
-              <div class="info-box">📹 <strong>Referência em vídeo:</strong> <a href="https://youtu.be/HIfgTVoDn6I" target="_blank" style="color:var(--cyan)">https://youtu.be/HIfgTVoDn6I</a> — siga exatamente o passo a passo demonstrado.</div>
+              <div class="info-box">📹 <strong>Referência em vídeo:</strong> <a href="https://youtu.be/BZ4yuTQmxdo" target="_blank" style="color:var(--cyan)">https://youtu.be/BZ4yuTQmxdo</a> — siga exatamente o passo a passo demonstrado.</div>
               <div class="step"><div class="step-num">1</div><p>Boot da ISO → selecione <strong>Install Ubuntu Server</strong></p></div>
               <div class="step"><div class="step-num">2</div><p>Idioma: <strong>Português</strong> · Layout: <strong>Portuguese (Brazil)</strong></p></div>
               <div class="step"><div class="step-num">3</div><p>Tipo de instalação: siga o vídeo de referência — realize a instalação conforme demonstrado</p></div>
               <div class="step"><div class="step-num">4</div><p>Configuração de rede: aceite o DHCP por padrão; vamos configurar IP estático depois via <code>netplan</code></p></div>
               <div class="step"><div class="step-num">5</div><p>Particionamento: escolha <strong>Use an entire disk and set up this disk as an LVM group</strong> para LVM automático</p></div>
-              <div class="step"><div class="step-num">6</div><p>Perfil: nome completo, nome da máquina (<code>lab-server</code>), usuário (<code>admin</code>), senha forte</p></div>
+              <div class="step"><div class="step-num">6</div><p>Perfil: nome completo, nome da máquina: <code>seunomeserver</code>, usuário: <code>seunomeserver</code>, senha: <code>Fatec2026@</code></p></div>
               <div class="step"><div class="step-num">7</div><p>Na tela <em>Featured Server Snaps</em>: <strong>não selecione nada</strong> — instalação não precisa de snaps adicionais</p></div>
               <div class="step"><div class="step-num">8</div><p>Marque obrigatoriamente: <strong>Install OpenSSH server</strong> → única adição necessária neste passo</p></div>
               <div class="step"><div class="step-num">9</div><p>Aguarde instalação (~10 min) → <strong>Reboot Now</strong> → remova ISO → faça login com o usuário criado</p></div>
@@ -1308,23 +1308,23 @@ body::before {
             <div id="m2-panel-lvm" class="os-panel">
               <div class="cmd-block">
 <span class="comment"># Verificar volumes LVM criados</span>
-<span class="prompt">admin@lab-server:~$</span> <span class="cmd">sudo pvs</span>
+<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">sudo pvs</span>
 <span class="output">  PV         VG        Fmt  Attr PSize  PFree</span>
 <span class="output">  /dev/sda3  ubuntu-vg lvm2 a--  18.50g    0 </span>
 
-<span class="prompt">admin@lab-server:~$</span> <span class="cmd">sudo vgs</span>
+<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">sudo vgs</span>
 <span class="output">  VG        #PV #LV  SSize  SFree</span>
 <span class="output">  ubuntu-vg   1   1  18.50g    0 </span>
 
-<span class="prompt">admin@lab-server:~$</span> <span class="cmd">sudo lvs</span>
+<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">sudo lvs</span>
 <span class="output">  LV        VG        Attr       LSize  </span>
 <span class="output">  ubuntu-lv ubuntu-vg -wi-ao---- 18.50g </span>
 
 <span class="comment"># Expandir LV para usar todo o VG (se necessário)</span>
-<span class="prompt">admin@lab-server:~$</span> <span class="cmd">sudo lvextend -l +100%FREE /dev/ubuntu-vg/ubuntu-lv</span>
-<span class="prompt">admin@lab-server:~$</span> <span class="cmd">sudo resize2fs /dev/ubuntu-vg/ubuntu-lv</span>
+<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">sudo lvextend -l +100%FREE /dev/ubuntu-vg/ubuntu-lv</span>
+<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">sudo resize2fs /dev/ubuntu-vg/ubuntu-lv</span>
               </div>
-              <div class="warn-box">⚠️ Dica para acessar o servidor por SSH da máquina real: configure a rede do VirtualBox como <strong>Bridge</strong> e use <code>ssh admin@IP_DA_VM</code></div>
+              <div class="warn-box">⚠️ Dica para acessar o servidor por SSH da máquina real: configure a rede do VirtualBox como <strong>Bridge</strong> e use <code>ssh seunomeserver@IP_DA_VM</code></div>
               <button class="complete-btn" id="btn-m2" onclick="completeM('m2','btn-m2','a-server','bm-server','Ubuntu Server instalado! 🖧','server')">✅ MISSÃO CONCLUÍDA — Ubuntu Server Instalado!</button>
             </div>
           </div>
@@ -1401,7 +1401,7 @@ body::before {
 
             <!-- ABA 1 — VirtualBox -->
             <div id="m4-panel-vbox" class="os-panel active-panel">
-              <div class="info-box">💡 Use a mesma ISO do Ubuntu Server 22.04 disponível na <strong>unidade Z: (Prof. Isaque)</strong> — realize a instalação conforme o vídeo: <a href="https://youtu.be/HIfgTVoDn6I" target="_blank" style="color:var(--cyan)">https://youtu.be/HIfgTVoDn6I</a></div>
+              <div class="info-box">💡 Use a mesma ISO do Ubuntu Server 22.04 disponível na <strong>unidade Z: (Prof. Isaque)</strong> — realize a instalação conforme o vídeo: <a href="https://youtu.be/BZ4yuTQmxdo" target="_blank" style="color:var(--cyan)">https://youtu.be/BZ4yuTQmxdo</a></div>
 
               <div class="fatec-box">
                 🏫 <strong>No laboratório da Fatec a VM já está criada</strong> — vá direto para a aba <strong>💿 Instalação</strong> e siga os passos a partir do boot da ISO.<br><br>
@@ -1431,7 +1431,7 @@ body::before {
               <div class="step"><div class="step-num">2</div><p>RAM: <code>1024 MB</code> · Disco: <code>15 GB</code> VDI dinâmico — firewall não precisa de muito espaço</p></div>
               <div class="step"><div class="step-num">3</div><p>Configurações → Rede → <strong>Adaptador 1</strong>: <code>Rede Interna</code> → nome: <code>Intranet</code></p></div>
               <div class="step"><div class="step-num">4</div><p>Configurações → Rede → <strong>Adaptador 2</strong>: <strong>desabilite</strong> a placa (desmarque "Habilitar Placa de Rede")</p></div>
-              <div class="step"><div class="step-num">5</div><p>Instale o Ubuntu Server conforme o vídeo de referência, nome da máquina: <code>lab-firewall</code>, usuário: <code>admin</code></p></div>
+              <div class="step"><div class="step-num">5</div><p>Instale o Ubuntu Server conforme o vídeo de referência, nome da máquina: <code>seunomefirewall</code>, usuário: <code>seunomefirewall</code>, senha: <code>Fatec2026@</code></p></div>
 
               <div class="warn-box" style="border-left-color:#e91e63; background:rgba(233,30,99,0.05); margin-top:12px;">
                 🔄 <strong>Precisa reinstalar?</strong> VirtualBox → selecione a máquina → menu <strong>Dispositivos → Discos Ópticos → Escolher um arquivo em disco</strong> → navegue até a <strong>unidade Z:</strong> (Prof. Isaque) e selecione a ISO → menu <strong>Máquina → Reinicializar</strong> (ou pressione <code>Host+R</code>) → prossiga conforme o vídeo.
@@ -1466,14 +1466,14 @@ body::before {
               <div class="step"><div class="step-num">1</div><p>Identifique os nomes das interfaces de rede:</p></div>
               <div class="cmd-block">
 <span class="comment"># Ver todas as interfaces e seus nomes</span>
-<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">ip link show</span>
+<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">ip link show</span>
 <span class="output">1: lo: &lt;LOOPBACK&gt; ...
 2: enp0s3: &lt;BROADCAST&gt; ...   ← Adaptador 1 (NAT / internet)
 3: enp0s8: &lt;BROADCAST&gt; ...   ← Adaptador 2 (Rede Interna / LAN)</span>
               </div>
               <div class="step"><div class="step-num">2</div><p>Edite o arquivo de configuração do netplan:</p></div>
               <div class="cmd-block">
-<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo nano /etc/netplan/00-installer-config.yaml</span>
+<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo nano /etc/netplan/00-installer-config.yaml</span>
               </div>
               <div class="step"><div class="step-num">3</div><p>Substitua o conteúdo pelo seguinte (atenção à <strong>indentação com espaços</strong> — YAML não aceita tabs):</p></div>
               <div class="cmd-block">
@@ -1492,8 +1492,8 @@ body::before {
               </div>
               <div class="step"><div class="step-num">4</div><p>Aplique as configurações e verifique:</p></div>
               <div class="cmd-block">
-<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo netplan apply</span>
-<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">ip addr show enp0s8</span>
+<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo netplan apply</span>
+<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">ip addr show enp0s8</span>
 <span class="output">3: enp0s8: &lt;BROADCAST,MULTICAST,UP&gt;
     inet <span style="color:var(--green)">192.168.56.1/24</span> brd 192.168.56.255 scope global enp0s8</span>
               </div>
@@ -1506,23 +1506,23 @@ body::before {
               <div class="step"><div class="step-num">1</div><p>Habilitar IP forwarding permanentemente no kernel:</p></div>
               <div class="cmd-block">
 <span class="comment"># Editar o arquivo de configuração do kernel</span>
-<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo nano /etc/sysctl.conf</span>
+<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo nano /etc/sysctl.conf</span>
 
 <span class="comment"># Encontrar e descomentar (remover o #) a linha:</span>
 <span class="value">net.ipv4.ip_forward=1</span>
 
 <span class="comment"># Aplicar sem reiniciar</span>
-<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo sysctl -p</span>
+<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo sysctl -p</span>
 <span class="output">net.ipv4.ip_forward = 1</span>
 
 <span class="comment"># Confirmar que está ativo (deve retornar 1)</span>
-<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">cat /proc/sys/net/ipv4/ip_forward</span>
+<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">cat /proc/sys/net/ipv4/ip_forward</span>
 <span class="output">1</span>
               </div>
               <div class="step"><div class="step-num">2</div><p>Configurar o <strong>masquerading</strong> (NAT) no UFW para que as VMs da LAN acessem a internet usando o IP do firewall:</p></div>
               <div class="cmd-block">
 <span class="comment"># Editar as regras brutas do UFW (antes do *filter)</span>
-<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo nano /etc/ufw/before.rules</span>
+<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo nano /etc/ufw/before.rules</span>
 
 <span class="comment"># Adicionar no INÍCIO do arquivo, antes de *filter:</span>
 <span class="value"># NAT — masquerading para saída pela interface enp0s3 (internet)
@@ -1533,7 +1533,7 @@ COMMIT</span>
               </div>
               <div class="step"><div class="step-num">3</div><p>Permitir o encaminhamento (forwarding) no arquivo de configuração do UFW:</p></div>
               <div class="cmd-block">
-<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo nano /etc/default/ufw</span>
+<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo nano /etc/default/ufw</span>
 
 <span class="comment"># Alterar a linha DEFAULT_FORWARD_POLICY:</span>
 <span class="value">DEFAULT_FORWARD_POLICY="ACCEPT"</span>
@@ -1546,45 +1546,45 @@ COMMIT</span>
 
               <div class="cmd-block">
 <span class="comment">## PASSO 1 — Liberar SSH e ativar UFW</span>
-<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo ufw allow 22/tcp</span>
+<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo ufw allow 22/tcp</span>
 <span class="output">Rules updated</span>
 
-<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo ufw enable</span>
+<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo ufw enable</span>
 <span class="warn">Command may disrupt existing ssh connections. Proceed with operation (y|n)? y</span>
 <span class="output">Firewall is active and enabled on system startup</span>
               </div>
 
               <div class="cmd-block">
 <span class="comment">## PASSO 2 — Políticas padrão (negar tudo, permitir saída)</span>
-<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo ufw default deny incoming</span>
+<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo ufw default deny incoming</span>
 <span class="output">Default incoming policy changed to 'deny'</span>
 
-<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo ufw default allow outgoing</span>
+<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo ufw default allow outgoing</span>
 <span class="output">Default outgoing policy changed to 'allow'</span>
 
-<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo ufw default allow routed</span>
+<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo ufw default allow routed</span>
 <span class="output">Default routed policy changed to 'allow'</span>
 <span class="comment">                                  # ↑ essencial para o masquerading funcionar</span>
               </div>
 
               <div class="cmd-block">
 <span class="comment">## PASSO 3 — Regras para serviços permitidos</span>
-<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo ufw allow 22/tcp</span>    <span class="comment">  # SSH (já liberado, reforçando)</span>
-<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo ufw allow 80/tcp</span>    <span class="comment">  # HTTP</span>
-<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo ufw allow 443/tcp</span>   <span class="comment">  # HTTPS</span>
+<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo ufw allow 22/tcp</span>    <span class="comment">  # SSH (já liberado, reforçando)</span>
+<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo ufw allow 80/tcp</span>    <span class="comment">  # HTTP</span>
+<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo ufw allow 443/tcp</span>   <span class="comment">  # HTTPS</span>
 
 <span class="comment">## PASSO 4 — Bloquear serviços inseguros explicitamente</span>
-<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo ufw deny 23/tcp</span>     <span class="comment">  # Telnet — protocolo sem criptografia</span>
-<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo ufw deny 21/tcp</span>     <span class="comment">  # FTP — senhas em texto claro</span>
-<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo ufw deny 3389/tcp</span>   <span class="comment">  # RDP — alvo frequente de ataques</span>
+<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo ufw deny 23/tcp</span>     <span class="comment">  # Telnet — protocolo sem criptografia</span>
+<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo ufw deny 21/tcp</span>     <span class="comment">  # FTP — senhas em texto claro</span>
+<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo ufw deny 3389/tcp</span>   <span class="comment">  # RDP — alvo frequente de ataques</span>
               </div>
 
               <div class="cmd-block">
 <span class="comment">## PASSO 5 — Recarregar e verificar status completo</span>
-<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo ufw reload</span>
+<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo ufw reload</span>
 <span class="output">Firewall reloaded</span>
 
-<span class="prompt">admin@lab-firewall:~$</span> <span class="cmd">sudo ufw status verbose</span>
+<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo ufw status verbose</span>
 <span class="output">Status: active
 Logging: on (low)
 Default: deny (incoming), allow (outgoing), allow (routed)
@@ -1602,11 +1602,11 @@ To             Action      From
               <div class="cmd-block">
 <span class="comment">## PASSO 6 — Testar conectividade (nas VMs Desktop/Server)</span>
 <span class="comment"># Nas outras VMs, confirmar que o gateway está correto</span>
-<span class="prompt">admin@lab-desktop:~$</span> <span class="cmd">ip route show</span>
+<span class="prompt">seunomecliente@seunomecliente:~$</span> <span class="cmd">ip route show</span>
 <span class="output">default via <span style="color:var(--green)">192.168.56.1</span> dev enp0s8    ← tráfego passa pelo firewall</span>
 
 <span class="comment"># Testar que a internet funciona através do firewall</span>
-<span class="prompt">admin@lab-desktop:~$</span> <span class="cmd">ping -c 3 8.8.8.8</span>
+<span class="prompt">seunomecliente@seunomecliente:~$</span> <span class="cmd">ping -c 3 8.8.8.8</span>
 <span class="output">3 packets transmitted, 3 received, 0% packet loss</span>
               </div>
 
@@ -1632,9 +1632,6 @@ To             Action      From
             <div class="cmd-block">
 <span class="comment"># Atualizar lista de repositórios</span>
 <span class="prompt">$</span> <span class="cmd">sudo apt update</span>
-
-<span class="comment"># Aplicar todas as atualizações disponíveis</span>
-<span class="prompt">$</span> <span class="cmd">sudo apt upgrade -y</span>
 
 <span class="comment"># Instalar utilitários essenciais</span>
 <span class="prompt">$</span> <span class="cmd">sudo apt install -y net-tools curl wget htop nmap tree</span>
