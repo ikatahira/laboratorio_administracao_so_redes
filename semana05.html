@@ -886,10 +886,16 @@ body::before {
         <div class="xp-tag cyan">Referência</div>
       </div>
       <div class="card-body">
+        <p style="font-size:0.85em;color:var(--muted);margin-bottom:10px;line-height:1.7;">
+          Neste laboratório você vai criar <strong style="color:var(--text)">3 máquinas virtuais</strong> dentro do VirtualBox, todas rodando na mesma máquina física (o computador da Fatec ou o seu notebook). Cada VM tem <strong style="color:var(--cyan)">dois adaptadores de rede</strong>:
+        </p>
+        <div style="background:rgba(0,0,0,0.2); border-radius:9px; padding:14px 18px; margin-bottom:14px; font-size:0.84em; line-height:2; color:var(--muted);">
+          📶 <strong style="color:var(--green)">Adaptador 1 — NAT:</strong> conecta a VM à internet através do computador host. O VirtualBox faz o papel de roteador. Todas as VMs têm esse adaptador.<br>
+          🔗 <strong style="color:var(--cyan)">Adaptador 2 — Rede Interna (nome: <code>Intranet</code>):</strong> conecta as VMs entre si numa rede privada virtual <code>192.168.56.0/24</code>. Esse é o "cabo de rede" entre elas dentro do VirtualBox.<br>
+          🔥 <strong style="color:var(--orange)">Firewall UFW (192.168.56.1):</strong> atua como <strong>gateway</strong> — todo tráfego da rede interna que quiser sair para a internet passa por ele primeiro. Ele decide o que deixa passar usando as regras UFW.
+        </div>
         <p style="font-size:0.85em;color:var(--muted);margin-bottom:16px;line-height:1.6;">
-          As três VMs são criadas dentro do VirtualBox e se comunicam por meio de uma <strong style="color:var(--cyan)">rede interna (Host-Only / Rede Interna)</strong>.
-          O Firewall UFW roda no Ubuntu Server que atua como <strong style="color:var(--orange)">gateway</strong> da rede interna, filtrando o tráfego entre as máquinas.
-          Todas as VMs também possuem um <strong style="color:var(--green)">Adaptador NAT</strong> para acessar a internet via o host físico.
+          <strong style="color:var(--yellow)">🗺️ Como ler o diagrama abaixo:</strong> as setas verdes tracejadas mostram a conexão NAT (internet). As setas azuis mostram a rede interna entre as VMs através do switch virtual. A seta roxa tracejada mostra a conexão SSH do Desktop para o Server.
         </p>
 
         <!-- TOPOLOGIA SVG -->
@@ -992,9 +998,11 @@ body::before {
         </div>
 
         <div class="info-box" style="margin-top:14px;">
-          💡 <strong style="color:var(--cyan)">Como configurar no VirtualBox:</strong> cada VM precisa de <strong>dois adaptadores de rede</strong>.
-          Adaptador 1 = <code>NAT</code> (acesso à internet). Adaptador 2 = <code>Rede Interna</code> ou <code>Host-Only</code> (comunicação entre VMs).
-          O Firewall deve ter o Adaptador 2 configurado com IP fixo <code>192.168.56.1</code> para servir como gateway.
+          💡 <strong style="color:var(--cyan)">Como configurar os adaptadores no VirtualBox:</strong> em cada VM, acesse <strong>Configurações → Rede</strong>.
+          <strong>Adaptador 1</strong> = <code>NAT</code> (acesso à internet — padrão do VirtualBox).
+          <strong>Adaptador 2</strong> = <code>Rede Interna</code>, nome: <code>Intranet</code> (comunicação entre as 3 VMs).
+          O nome <code>Intranet</code> deve ser <strong>igual em todas as VMs</strong> — é o "switch virtual" que as conecta.
+          O Firewall deve ter o Adaptador 2 com IP fixo <code>192.168.56.1</code> para servir como gateway.
         </div>
       </div>
     </div>
@@ -1207,12 +1215,17 @@ body::before {
             </div>
 
             <div id="m1-panel-install" class="os-panel">
-              <div class="step"><div class="step-num">1</div><p>Inicie a VM → selecione <strong>Try or Install Ubuntu</strong> na tela de boot GRUB</p></div>
-              <div class="step"><div class="step-num">2</div><p>Idioma: <strong>Português do Brasil</strong> → Layout do teclado: <strong>Português (Brasil)</strong></p></div>
-              <div class="step"><div class="step-num">3</div><p>Instalação: <strong>Instalação Normal</strong> → marque as opções de atualizações e software de terceiros</p></div>
-              <div class="step"><div class="step-num">4</div><p>Particionamento: selecione <strong>Apagar disco e instalar Ubuntu</strong> para automático, ou <strong>Outro</strong> para manual</p></div>
-              <div class="step"><div class="step-num">5</div><p>Fuso horário: <strong>São Paulo</strong> → crie usuário: nome, nome da máquina: <code>seunomecliente</code>, senha: <code>Fatec2025@</code></p></div>
-              <div class="step"><div class="step-num">6</div><p>Aguarde instalação (~15 min) → clique <strong>Reiniciar agora</strong> → remova a ISO quando solicitado</p></div>
+              <div class="info-box">📹 <strong>Referência em vídeo:</strong> <a href="https://youtu.be/UXq193Ol33g" target="_blank" style="color:var(--cyan)">https://youtu.be/UXq193Ol33g</a> — siga o passo a passo demonstrado.</div>
+              <div class="step"><div class="step-num">1</div><p>No VirtualBox, selecione a VM <code>Ubuntu-Desktop-22</code> e clique em <strong>Iniciar</strong>. A VM vai bootar pela ISO e exibir uma tela roxa com o logo Ubuntu.</p></div>
+              <div class="step"><div class="step-num">2</div><p>Na tela GRUB, selecione <strong>Try or Install Ubuntu</strong> e pressione Enter. Aguarde o sistema carregar (~1 min).</p></div>
+              <div class="step"><div class="step-num">3</div><p>Na janela do instalador, escolha o idioma <strong>Português do Brasil</strong> → clique em <strong>Instalar o Ubuntu</strong>.</p></div>
+              <div class="step"><div class="step-num">4</div><p>Layout do teclado: <strong>Português (Brasil)</strong> → clique em <strong>Continuar</strong>.</p></div>
+              <div class="step"><div class="step-num">5</div><p>Tipo de instalação: selecione <strong>Instalação Normal</strong> (instala o sistema completo com GNOME e aplicativos básicos). Marque também <strong>"Baixar atualizações ao instalar"</strong> se tiver internet disponível.</p></div>
+              <div class="step"><div class="step-num">6</div><p>Particionamento: selecione <strong>Apagar disco e instalar Ubuntu</strong> → clique em <strong>Instalar agora</strong> → confirme com <strong>Continuar</strong>.</p></div>
+              <div class="step"><div class="step-num">7</div><p>Fuso horário: clique no mapa em <strong>São Paulo</strong> (Brasil) → clique em <strong>Continuar</strong>.</p></div>
+              <div class="step"><div class="step-num">8</div><p>Criar usuário: preencha seu nome, nome da máquina: <code>seunomecliente</code>, usuário: seu nome, senha: <code>Fatec2025@</code> → marque <strong>"Exigir senha para entrar"</strong> → clique em <strong>Continuar</strong>.</p></div>
+              <div class="step"><div class="step-num">9</div><p>Aguarde a instalação (~15 min). Ao finalizar, clique em <strong>Reiniciar agora</strong>. Quando aparecer a mensagem para remover o disco, pressione <strong>Enter</strong>.</p></div>
+              <div class="step"><div class="step-num">10</div><p>Após o reboot, faça login com o usuário e senha criados. A área de trabalho GNOME vai aparecer — isso confirma que a instalação foi bem-sucedida! ✅</p></div>
             </div>
 
             <div id="m1-panel-pos" class="os-panel">
@@ -1287,22 +1300,22 @@ body::before {
             </div>
 
             <div id="m2-panel-install" class="os-panel">
-              <div class="info-box">📹 <strong>Referência em vídeo:</strong> <a href="https://youtu.be/BZ4yuTQmxdo" target="_blank" style="color:var(--cyan)">https://youtu.be/BZ4yuTQmxdo</a> — siga exatamente o passo a passo demonstrado.</div>
-              <div class="step"><div class="step-num">1</div><p>Boot da ISO → selecione <strong>Install Ubuntu Server</strong></p></div>
-              <div class="step"><div class="step-num">2</div><p>Idioma: <strong>Português</strong> · Layout: <strong>Portuguese (Brazil)</strong></p></div>
-              <div class="step"><div class="step-num">3</div><p>Tipo de instalação: siga o vídeo de referência — realize a instalação conforme demonstrado</p></div>
-              <div class="step"><div class="step-num">4</div><p>Configuração de rede: aceite o DHCP por padrão; vamos configurar IP estático depois via <code>netplan</code></p></div>
-              <div class="step"><div class="step-num">5</div><p>Particionamento: escolha <strong>Use an entire disk and set up this disk as an LVM group</strong> para LVM automático</p></div>
-              <div class="step"><div class="step-num">6</div><p>Perfil: nome completo, nome da máquina: <code>seunomeserver</code>, usuário: <code>seunomeserver</code>, senha: <code>Fatec2026@</code></p></div>
-              <div class="step"><div class="step-num">7</div><p>Na tela <em>Featured Server Snaps</em>: <strong>não selecione nada</strong> — instalação não precisa de snaps adicionais</p></div>
-              <div class="step"><div class="step-num">8</div><p>Marque obrigatoriamente: <strong>Install OpenSSH server</strong> → única adição necessária neste passo</p></div>
-              <div class="step"><div class="step-num">9</div><p>Aguarde instalação (~10 min) → <strong>Reboot Now</strong> → remova ISO → faça login com o usuário criado</p></div>
-
+              <div class="info-box">📹 <strong>Referência em vídeo:</strong> <a href="https://youtu.be/BZ4yuTQmxdo" target="_blank" style="color:var(--cyan)">https://youtu.be/BZ4yuTQmxdo</a> — siga o passo a passo demonstrado.</div>
+              <div class="step"><div class="step-num">1</div><p>No VirtualBox, selecione a VM <code>Ubuntu-Server-22</code> e clique em <strong>Iniciar</strong>. A tela preta do GRUB vai aparecer. Selecione <strong>Install Ubuntu Server</strong> e pressione Enter.</p></div>
+              <div class="step"><div class="step-num">2</div><p>Idioma do instalador: use as setas para selecionar <strong>Português</strong> → pressione Enter. Layout do teclado: selecione <strong>Portuguese (Brazil)</strong> → <strong>Done</strong>.</p></div>
+              <div class="step"><div class="step-num">3</div><p>Tipo de instalação: deixe selecionado <strong>Ubuntu Server</strong> (primeira opção, já vem marcada) → pressione Enter em <strong>Done</strong>.</p></div>
+              <div class="step"><div class="step-num">4</div><p>Configuração de rede: o instalador vai detectar a interface <code>enp0s3</code> e obter IP via DHCP automaticamente. Apenas confirme com <strong>Done</strong>.</p></div>
+              <div class="step"><div class="step-num">5</div><p>Proxy: deixe em branco → <strong>Done</strong>. Mirror de repositório: deixe o padrão → <strong>Done</strong>.</p></div>
+              <div class="step"><div class="step-num">6</div><p>Particionamento: selecione <strong>Use an entire disk and set up this disk as an LVM group</strong> → <strong>Done</strong> → confirme com <strong>Continue</strong> na tela de confirmação.</p></div>
+              <div class="step"><div class="step-num">7</div><p>Perfil do servidor: preencha — Nome completo: seu nome, Nome da máquina: <code>seunomeserver</code>, Usuário: <code>seunomeserver</code>, Senha: <code>Fatec2026@</code> → <strong>Done</strong>.</p></div>
+              <div class="step"><div class="step-num">8</div><p>Ubuntu Pro: selecione <strong>Skip for now</strong> → <strong>Continue</strong>.</p></div>
+              <div class="step"><div class="step-num">9</div><p>SSH Setup: marque obrigatoriamente <strong>Install OpenSSH server</strong> (pressione Espaço para marcar) → <strong>Done</strong>.</p></div>
+              <div class="step"><div class="step-num">10</div><p>Featured Snaps: <strong>não selecione nada</strong> → <strong>Done</strong>. Aguarde a instalação (~10 min).</p></div>
+              <div class="step"><div class="step-num">11</div><p>Ao finalizar, selecione <strong>Reboot Now</strong>. Quando pedir para remover o disco, pressione Enter. Após o reboot, faça login com <code>seunomeserver</code> e senha <code>Fatec2026@</code>.</p></div>
+              <div class="success-box" style="margin-top:12px;">✅ Ao fazer login, você verá apenas o prompt de terminal — <strong style="color:var(--green)">isso é o esperado!</strong> Sem janelas, sem ícones. O prompt será: <code>seunomeserver@seunomeserver:~$</code> — bem-vindo ao servidor Linux!</div>
               <div class="warn-box" style="border-left-color:#e91e63; background:rgba(233,30,99,0.05); margin-top:12px;">
                 🔄 <strong>Precisa reinstalar?</strong> Abra o VirtualBox → selecione a máquina → menu <strong>Dispositivos → Discos Ópticos → Escolher um arquivo em disco</strong> → navegue até a <strong>unidade Z:</strong> (Prof. Isaque) e selecione a ISO do Ubuntu Server → menu <strong>Máquina → Reinicializar</strong> (ou pressione <code>Host+R</code>) → prossiga com a instalação conforme o vídeo.
               </div>
-
-              <div class="success-box" style="margin-top:12px;">✅ Ao fazer login, você verá apenas o prompt de terminal — <strong style="color:var(--green)">isso é o esperado!</strong> Sem janelas, sem ícones. Bem-vindo ao servidor Linux.</div>
             </div>
 
             <div id="m2-panel-lvm" class="os-panel">
@@ -1342,40 +1355,271 @@ body::before {
             <div class="mission-toggle">▼</div>
           </div>
           <div class="mission-body">
-            <div class="mission-desc">🎯 Verificar o status do SSH, personalizar o banner de login e testar a conexão remota à VM do Ubuntu Server.</div>
+            <div class="mission-desc">🎯 Verificar o status do SSH no Ubuntu Server, personalizar o banner de login e testar a conexão remota a partir do Desktop.</div>
+            <div class="info-box">💡 O SSH (Secure Shell) foi instalado durante a configuração do Ubuntu Server. Ele permite que você acesse o servidor remotamente — como se estivesse digitando diretamente nele, mas a partir de outra máquina. A porta padrão é a <strong>22/tcp</strong>.</div>
             <div class="cmd-block">
-<span class="comment"># Verificar status do SSH</span>
-<span class="prompt">$</span> <span class="cmd">sudo systemctl status ssh</span>
-<span class="output">● ssh.service - OpenBSD Secure Shell server</span>
-<span class="output">     Loaded: loaded (/lib/systemd/system/ssh.service)</span>
-<span class="output">     Active: <span style="color:var(--green)">active (running)</span></span>
+<span class="comment"># Execute no Ubuntu Server — verificar se o SSH está rodando</span>
+<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">sudo systemctl status ssh</span>
+<span class="output">● ssh.service - OpenBSD Secure Shell server
+     Loaded: loaded (/lib/systemd/system/ssh.service)
+     Active: <span style="color:var(--green)">active (running)</span> since ...
+     Main PID: 1234 (sshd)</span>
 
-<span class="comment"># Verificar IP da VM</span>
-<span class="prompt">$</span> <span class="cmd">ip addr show | grep inet</span>
-<span class="output">    inet 10.0.2.15/24 brd 10.0.2.255 scope global dynamic enp0s3</span>
+<span class="comment"># Se aparecer "inactive" ou "failed", iniciar o serviço:</span>
+<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">sudo systemctl start ssh</span>
+<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">sudo systemctl enable ssh</span>
+<span class="comment">                              # ↑ garante que inicia automaticamente no boot</span>
 
-<span class="comment"># Permitir SSH no firewall (será feito na próxima missão)</span>
-<span class="prompt">$</span> <span class="cmd">sudo ufw allow OpenSSH</span>
+<span class="comment"># Descobrir o IP do servidor na rede interna</span>
+<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">ip addr show enp0s8 | grep inet</span>
+<span class="output">    inet <span style="color:var(--green)">192.168.56.20</span>/24 brd 192.168.56.255 scope global enp0s8</span>
+
+<span class="comment"># Liberar SSH no firewall local do Server (porta 22)</span>
+<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">sudo ufw allow OpenSSH</span>
 <span class="output">Rules updated</span>
 
-<span class="comment"># Criar banner de login personalizado</span>
-<span class="prompt">$</span> <span class="cmd">sudo nano /etc/motd</span>
-<span class="value">═══════════════════════════════════════
-  LAB-SERVER | ISO-103 | 3º Semestre
-  Acesso Autorizado Apenas para Alunos
-═══════════════════════════════════════</span>
+<span class="comment"># Criar banner de boas-vindas que aparece no login SSH</span>
+<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">sudo nano /etc/motd</span>
+<span class="value">═══════════════════════════════════════════
+  ISO-103 | 3º Semestre — Fatec
+  Servidor: seunomeserver
+  Acesso autorizado apenas para alunos
+═══════════════════════════════════════════</span>
 
-<span class="comment"># Reiniciar SSH após alterações</span>
-<span class="prompt">$</span> <span class="cmd">sudo systemctl restart ssh</span>
+<span class="comment"># Reiniciar o SSH para aplicar as alterações</span>
+<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">sudo systemctl restart ssh</span>
             </div>
+
+            <div style="font-family:'Orbitron',monospace; font-size:0.72em; color:var(--purple); font-weight:700; margin:14px 0 8px; letter-spacing:2px;">🔑 TESTAR ACESSO SSH A PARTIR DO DESKTOP</div>
+            <div class="info-box">💡 Agora acesse o <strong>Ubuntu Desktop</strong> e abra um terminal (<strong>Ctrl+Alt+T</strong>). Você vai se conectar ao Server como se fosse um administrador remoto.</div>
+            <div class="cmd-block">
+<span class="comment"># No Ubuntu Desktop — conectar ao Server via SSH</span>
+<span class="prompt">seunomecliente@seunomecliente:~$</span> <span class="cmd">ssh seunomeserver@192.168.56.20</span>
+<span class="output">The authenticity of host '192.168.56.20' can't be established.
+Are you sure you want to continue connecting (yes/no)? </span><span class="value">yes</span>
+<span class="output">═══════════════════════════════════════════
+  ISO-103 | 3º Semestre — Fatec
+  Servidor: seunomeserver
+  Acesso autorizado apenas para alunos
+═══════════════════════════════════════════
+seunomeserver@seunomeserver:~$</span>
+<span class="comment">                    # ↑ Você está DENTRO do servidor agora!</span>
+
+<span class="comment"># Para sair da sessão SSH e voltar ao Desktop:</span>
+<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">exit</span>
+            </div>
+            <div class="success-box">✅ Se o banner apareceu e o prompt mudou para <code>seunomeserver@seunomeserver:~$</code>, o SSH está funcionando perfeitamente!</div>
             <button class="complete-btn" id="btn-m3" onclick="completeM('m3','btn-m3','a-ssh','bm-ssh','SSH configurado e operacional! 🔑','ssh')">✅ MISSÃO CONCLUÍDA — SSH Ativo!</button>
           </div>
         </div>
 
-        <!-- MISSÃO 4 — FIREWALL UFW -->
+        <!-- MISSÃO 4 — CONFIGURAÇÃO DE REDE VIA TERMINAL -->
+        <div class="mission" id="m-net" onclick="toggleMission('m-net')">
+          <div class="mission-head">
+            <div class="mission-num" style="background:linear-gradient(135deg,#00acc1,#00d4ff);">04</div>
+            <div class="mission-info">
+              <div class="mission-title">🌐 Configurar Rede via Terminal — IP, Interfaces e Conectividade</div>
+              <div class="mission-meta">⏱️ 20 min · Dificuldade: ⭐⭐ · Todas as VMs · ip · netplan · ping</div>
+            </div>
+            <div class="mission-xp">+40 XP</div>
+            <div class="mission-toggle">▼</div>
+          </div>
+          <div class="mission-body">
+            <div class="mission-desc">🎯 Verificar placas de rede ativas, identificar interfaces, configurar IPv4 estático via terminal e testar conectividade entre as VMs.</div>
+
+            <div class="os-tabs">
+              <button class="os-tab active-tab tab-cyan" onclick="switchOSMNet('interfaces',this)">🔌 Interfaces</button>
+              <button class="os-tab" onclick="switchOSMNet('ipv4',this)">📡 Configurar IPv4</button>
+              <button class="os-tab tab-orange" onclick="switchOSMNet('teste',this)">🧪 Testar Conexão</button>
+            </div>
+
+            <!-- ABA 1 — Interfaces -->
+            <div id="mnet-panel-interfaces" class="os-panel active-panel">
+              <div class="info-box">💡 Antes de configurar qualquer IP, o primeiro passo é sempre <strong>identificar as interfaces de rede disponíveis</strong> e verificar se estão ativas (UP) ou inativas (DOWN).</div>
+
+              <div style="font-family:'Orbitron',monospace; font-size:0.72em; color:var(--cyan); font-weight:700; margin:14px 0 8px; letter-spacing:2px;">📋 LISTAR TODAS AS INTERFACES</div>
+              <div class="cmd-block">
+<span class="comment"># Mostra todas as interfaces com estado e endereço MAC</span>
+<span class="prompt">$</span> <span class="cmd">ip link show</span>
+<span class="output">1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536
+    link/loopback 00:00:00:00:00:00
+2: enp0s3: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500
+    link/ether 08:00:27:ab:cd:ef       ← Adaptador 1 (NAT)
+3: enp0s8: &lt;BROADCAST,MULTICAST&gt; mtu 1500
+    link/ether 08:00:27:12:34:56       ← Adaptador 2 (Rede Interna)</span>
+              </div>
+
+              <div class="warn-box">⚠️ Interfaces com <strong style="color:var(--green)">UP,LOWER_UP</strong> estão ativas. Sem o <code>UP</code> no estado = interface desligada. O nome pode variar: <code>enp0s3</code>, <code>enp0s8</code>, <code>eth0</code>, <code>ens33</code> — use sempre o nome real que aparecer na sua máquina.</div>
+
+              <div style="font-family:'Orbitron',monospace; font-size:0.72em; color:var(--cyan); font-weight:700; margin:14px 0 8px; letter-spacing:2px;">📋 VER IPs ATRIBUÍDOS ÀS INTERFACES</div>
+              <div class="cmd-block">
+<span class="comment"># Exibe IP, máscara e estado de todas as interfaces</span>
+<span class="prompt">$</span> <span class="cmd">ip addr show</span>
+<span class="output">2: enp0s3: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt;
+    inet <span style="color:var(--green)">10.0.2.15/24</span> brd 10.0.2.255 scope global dynamic enp0s3
+3: enp0s8: &lt;BROADCAST,MULTICAST&gt;
+    <span style="color:var(--red)">(sem endereço — interface inativa ou sem IP)</span></span>
+
+<span class="comment"># Versão resumida — mostra só as linhas com IP</span>
+<span class="prompt">$</span> <span class="cmd">ip addr show | grep inet</span>
+
+<span class="comment"># Ver apenas uma interface específica</span>
+<span class="prompt">$</span> <span class="cmd">ip addr show enp0s3</span>
+              </div>
+
+              <div style="font-family:'Orbitron',monospace; font-size:0.72em; color:var(--cyan); font-weight:700; margin:14px 0 8px; letter-spacing:2px;">🔌 ATIVAR / DESATIVAR INTERFACE</div>
+              <div class="cmd-block">
+<span class="comment"># Ativar uma interface que está DOWN</span>
+<span class="prompt">$</span> <span class="cmd">sudo ip link set enp0s8 up</span>
+
+<span class="comment"># Desativar uma interface</span>
+<span class="prompt">$</span> <span class="cmd">sudo ip link set enp0s8 down</span>
+
+<span class="comment"># Confirmar que ficou UP</span>
+<span class="prompt">$</span> <span class="cmd">ip link show enp0s8</span>
+<span class="output">3: enp0s8: &lt;BROADCAST,MULTICAST,<span style="color:var(--green)">UP,LOWER_UP</span>&gt; mtu 1500</span>
+              </div>
+
+              <div style="font-family:'Orbitron',monospace; font-size:0.72em; color:var(--cyan); font-weight:700; margin:14px 0 8px; letter-spacing:2px;">🗺️ VER TABELA DE ROTAS</div>
+              <div class="cmd-block">
+<span class="comment"># Exibe as rotas de rede — gateway padrão e rotas locais</span>
+<span class="prompt">$</span> <span class="cmd">ip route show</span>
+<span class="output">default via 10.0.2.2 dev enp0s3 proto dhcp    ← Gateway padrão (internet)
+10.0.2.0/24 dev enp0s3 proto kernel           ← Rede local do NAT
+192.168.56.0/24 dev enp0s8 proto kernel       ← Rede interna das VMs</span>
+              </div>
+
+              <div class="success-box">✅ <strong>Resumo dos comandos essenciais:</strong> <code>ip link show</code> = ver interfaces · <code>ip addr show</code> = ver IPs · <code>ip route show</code> = ver rotas · <code>ip link set &lt;iface&gt; up</code> = ativar placa</div>
+            </div>
+
+            <!-- ABA 2 — Configurar IPv4 -->
+            <div id="mnet-panel-ipv4" class="os-panel">
+              <div class="info-box">💡 No Ubuntu Server, a configuração de rede é feita via <strong>netplan</strong> — arquivos YAML em <code>/etc/netplan/</code>. A configuração é persistente (sobrevive ao reboot), diferente do <code>ip addr add</code> que é temporário.</div>
+
+              <div style="font-family:'Orbitron',monospace; font-size:0.72em; color:var(--cyan); font-weight:700; margin:14px 0 8px; letter-spacing:2px;">⚡ IP TEMPORÁRIO (sem reboot — só para testes)</div>
+              <div class="cmd-block">
+<span class="comment"># Atribuir IP temporário a uma interface (some após reboot)</span>
+<span class="prompt">$</span> <span class="cmd">sudo ip addr add 192.168.56.10/24 dev enp0s8</span>
+
+<span class="comment"># Remover IP de uma interface</span>
+<span class="prompt">$</span> <span class="cmd">sudo ip addr del 192.168.56.10/24 dev enp0s8</span>
+
+<span class="comment"># Solicitar IP via DHCP manualmente</span>
+<span class="prompt">$</span> <span class="cmd">sudo dhclient enp0s3</span>
+              </div>
+
+              <div style="font-family:'Orbitron',monospace; font-size:0.72em; color:var(--green); font-weight:700; margin:14px 0 8px; letter-spacing:2px;">💾 IP PERMANENTE VIA NETPLAN (recomendado)</div>
+
+              <div class="step"><div class="step-num">1</div><p>Descobrir o nome do arquivo de configuração netplan:</p></div>
+              <div class="cmd-block">
+<span class="prompt">$</span> <span class="cmd">ls /etc/netplan/</span>
+<span class="output">00-installer-config.yaml</span>
+              </div>
+
+              <div class="step"><div class="step-num">2</div><p>Editar o arquivo com o nano:</p></div>
+              <div class="cmd-block">
+<span class="prompt">$</span> <span class="cmd">sudo nano /etc/netplan/00-installer-config.yaml</span>
+              </div>
+
+              <div class="step"><div class="step-num">3</div><p>Configurar IP estático na interface interna (<code>enp0s8</code>) — exemplo para o <strong>Ubuntu Server</strong>:</p></div>
+              <div class="cmd-block">
+<span class="comment"># Atenção: use ESPAÇOS, nunca TAB no YAML</span>
+<span class="value">network:
+  version: 2
+  ethernets:
+    enp0s3:
+      dhcp4: true             </span><span class="comment"># Adaptador 1 — NAT (internet via VirtualBox)</span>
+<span class="value">    enp0s8:
+      dhcp4: false            </span><span class="comment"># Adaptador 2 — Rede Interna (IP fixo)</span>
+<span class="value">      addresses:
+        - 192.168.56.20/24   </span><span class="comment"># IP do Ubuntu Server na rede interna</span>
+<span class="value">      routes:
+        - to: default
+          via: 192.168.56.1  </span><span class="comment"># Gateway = IP do Firewall</span>
+<span class="value">      nameservers:
+        addresses: [8.8.8.8, 1.1.1.1]</span>
+              </div>
+
+              <div class="step"><div class="step-num">4</div><p>Aplicar as configurações:</p></div>
+              <div class="cmd-block">
+<span class="comment"># Aplicar sem reiniciar</span>
+<span class="prompt">$</span> <span class="cmd">sudo netplan apply</span>
+
+<span class="comment"># Verificar se o IP foi atribuído corretamente</span>
+<span class="prompt">$</span> <span class="cmd">ip addr show enp0s8</span>
+<span class="output">3: enp0s8: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt;
+    inet <span style="color:var(--green)">192.168.56.20/24</span> brd 192.168.56.255 scope global enp0s8</span>
+              </div>
+
+              <div class="warn-box">⚠️ Se aparecer erro ao aplicar o netplan, verifique a indentação — o YAML é sensível a espaços. Use <code>sudo netplan try</code> para testar antes de aplicar definitivamente.</div>
+
+              <div style="background:rgba(0,255,136,0.04); border:1px solid rgba(0,255,136,0.2); border-radius:9px; padding:14px; margin-top:12px; font-size:0.83em; line-height:1.8; color:var(--muted);">
+                <strong style="color:var(--green);">📌 IPs padrão do laboratório:</strong><br>
+                🔥 <code style="color:var(--orange)">192.168.56.1</code> — Firewall UFW (gateway da rede interna)<br>
+                🖧 <code style="color:var(--cyan)">192.168.56.20</code> — Ubuntu Server<br>
+                🖥️ <code style="color:var(--green)">192.168.56.10</code> — Ubuntu Desktop (cliente)
+              </div>
+            </div>
+
+            <!-- ABA 3 — Testar Conexão -->
+            <div id="mnet-panel-teste" class="os-panel">
+              <div class="info-box">💡 Após configurar os IPs, sempre teste a conectividade entre as VMs antes de avançar para as configurações de firewall.</div>
+
+              <div style="font-family:'Orbitron',monospace; font-size:0.72em; color:var(--orange); font-weight:700; margin:14px 0 8px; letter-spacing:2px;">🧪 TESTES DE CONECTIVIDADE</div>
+              <div class="cmd-block">
+<span class="comment"># Testar conexão com o gateway (Firewall)</span>
+<span class="prompt">$</span> <span class="cmd">ping -c 4 192.168.56.1</span>
+<span class="output">PING 192.168.56.1: 56 data bytes
+64 bytes from 192.168.56.1: icmp_seq=1 ttl=64 time=0.4 ms
+64 bytes from 192.168.56.1: icmp_seq=2 ttl=64 time=0.3 ms
+--- 192.168.56.1 ping statistics ---
+<span style="color:var(--green)">4 packets transmitted, 4 received, 0% packet loss</span></span>
+
+<span class="comment"># Testar conexão com o Ubuntu Server</span>
+<span class="prompt">$</span> <span class="cmd">ping -c 4 192.168.56.20</span>
+
+<span class="comment"># Testar acesso à internet (via gateway Firewall)</span>
+<span class="prompt">$</span> <span class="cmd">ping -c 4 8.8.8.8</span>
+
+<span class="comment"># Testar resolução de nomes (DNS)</span>
+<span class="prompt">$</span> <span class="cmd">ping -c 4 google.com</span>
+<span class="output">PING google.com (142.250.79.46): 56 data bytes
+64 bytes from 142.250.79.46: icmp_seq=1 ttl=55 time=12.1 ms</span>
+              </div>
+
+              <div style="font-family:'Orbitron',monospace; font-size:0.72em; color:var(--orange); font-weight:700; margin:14px 0 8px; letter-spacing:2px;">🔍 DIAGNÓSTICO — SE O PING NÃO FUNCIONAR</div>
+              <div class="cmd-block">
+<span class="comment"># 1. Verificar se a interface está UP e com IP</span>
+<span class="prompt">$</span> <span class="cmd">ip addr show</span>
+
+<span class="comment"># 2. Verificar se há rota para o destino</span>
+<span class="prompt">$</span> <span class="cmd">ip route show</span>
+
+<span class="comment"># 3. Verificar se o cabo virtual está conectado no VirtualBox</span>
+<span class="comment">#    (Configurações da VM → Rede → "Cabo Conectado" marcado)</span>
+
+<span class="comment"># 4. Verificar se o firewall está bloqueando o ICMP</span>
+<span class="prompt">$</span> <span class="cmd">sudo ufw status</span>
+
+<span class="comment"># 5. Testar com traceroute para ver onde o pacote para</span>
+<span class="prompt">$</span> <span class="cmd">traceroute 8.8.8.8</span>
+<span class="output">traceroute to 8.8.8.8, 30 hops max
+ 1  192.168.56.1  0.5 ms   ← Firewall (gateway OK)
+ 2  10.0.2.2     1.2 ms   ← VirtualBox NAT
+ 3  *            *        ← ...</span>
+              </div>
+
+              <div class="success-box">✅ Se o <code>ping 8.8.8.8</code> funcionar mas o <code>ping google.com</code> não, o problema é no <strong>DNS</strong> — verifique o campo <code>nameservers</code> no netplan. Se nenhum ping funcionar, verifique a rota padrão e se o IP Forwarding está ativo no Firewall.</div>
+
+              <button class="complete-btn" id="btn-mnet" onclick="completeM('m-net','btn-mnet','a-ssh','bm-ssh','Rede configurada e testada! 🌐','net')">✅ MISSÃO CONCLUÍDA — Rede Configurada!</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- MISSÃO 5 — FIREWALL UFW -->
         <div class="mission" id="m4" onclick="toggleMission('m4')">
           <div class="mission-head">
-            <div class="mission-num orange-num">04</div>
+            <div class="mission-num orange-num">05</div>
             <div class="mission-info">
               <div class="mission-title">🔥 Configurar VM Firewall — Ubuntu Server + UFW como Gateway</div>
               <div class="mission-meta">⏱️ 45 min · Dificuldade: ⭐⭐⭐⭐ · 2 NICs · IP Forwarding · NAT · Regras UFW</div>
@@ -1384,7 +1628,7 @@ body::before {
             <div class="mission-toggle">▼</div>
           </div>
           <div class="mission-body">
-            <div class="mission-desc">🎯 Criar uma VM dedicada com Ubuntu Server 22.04 mínimo, configurar duas interfaces de rede, habilitar IP forwarding e masquerading, e aplicar regras UFW para atuar como firewall/gateway da rede interna.</div>
+            <div class="mission-desc">🎯 Instalar o Ubuntu Server 22.04 em uma VM dedicada, configurar duas interfaces de rede, habilitar IP forwarding e masquerading, e aplicar regras UFW para atuar como firewall/gateway da rede interna.</div>
 
             <!-- NOTA PEDAGÓGICA -->
             <div style="background:rgba(255,140,0,0.06); border:1px solid rgba(255,140,0,0.25); border-left:4px solid var(--orange); border-radius:9px; padding:14px 16px; margin-bottom:16px; font-size:0.85em; line-height:1.6; color:var(--muted);">
@@ -1416,21 +1660,21 @@ body::before {
 
               <!-- CONFIGURAÇÃO DE REDE NO VIRTUALBOX -->
               <div style="background:rgba(63,81,181,0.08); border:1px solid rgba(63,81,181,0.35); border-left:4px solid #3f51b5; border-radius:9px; padding:16px; margin:12px 0; font-size:0.85em; line-height:1.6; color:var(--muted);">
-                <strong style="color:#7986cb; font-size:1em;">⚙️ Pré-requisito: Configuração de Rede no VirtualBox</strong>
-                <p style="margin-top:10px; color:#9fa8da;">Antes de instalar o Ubuntu Firewall, configure os adaptadores de rede da VM <strong style="color:var(--text)">UbuntuFirewall</strong>:</p>
-                <ol style="margin:10px 0 0 20px; line-height:2.2;">
-                  <li>Acesse as <strong>Configurações</strong> da VM <strong>UbuntuFirewall</strong> no VirtualBox</li>
-                  <li>Vá em <strong>Rede → Adaptador 1</strong></li>
-                  <li>Defina <strong>"Conectado a"</strong> como <strong>Rede Interna</strong> e o nome como <strong>Intranet</strong></li>
-                  <li>Clique na aba <strong>Adaptador 2</strong> e <strong>desabilite</strong> a placa de rede (desmarque "Habilitar Placa de Rede")</li>
+                <strong style="color:#7986cb; font-size:1em;">⚙️ Pré-requisito: Configuração dos Adaptadores de Rede no VirtualBox</strong>
+                <p style="margin-top:10px; color:#9fa8da;">A VM do Firewall é especial — ela precisa de <strong style="color:var(--text)">dois adaptadores ativos</strong>: um para a internet (NAT) e outro para a rede interna das VMs:</p>
+                <ol style="margin:10px 0 0 20px; line-height:2.4;">
+                  <li>Acesse as <strong>Configurações</strong> da VM <strong>Ubuntu-Firewall-22</strong> no VirtualBox</li>
+                  <li>Vá em <strong>Rede → Adaptador 1</strong> → marque "Habilitar Placa de Rede" → Conectado a: <strong>NAT</strong></li>
+                  <li>Vá em <strong>Rede → Adaptador 2</strong> → marque "Habilitar Placa de Rede" → Conectado a: <strong>Rede Interna</strong> → Nome: <code>Intranet</code></li>
                   <li>Clique em <strong>OK</strong> para salvar</li>
                 </ol>
+                <p style="margin-top:10px; color:#ffa000;">⚠️ O nome <code>Intranet</code> deve ser <strong>exatamente igual</strong> ao configurado nas outras VMs — é o que conecta todas elas ao mesmo switch virtual.</p>
               </div>
 
               <div class="step"><div class="step-num">1</div><p>VirtualBox → Novo → Nome: <code>Ubuntu-Firewall-22</code> → Tipo: Linux → Versão: Ubuntu (64-bit)</p></div>
               <div class="step"><div class="step-num">2</div><p>RAM: <code>1024 MB</code> · Disco: <code>15 GB</code> VDI dinâmico — firewall não precisa de muito espaço</p></div>
-              <div class="step"><div class="step-num">3</div><p>Configurações → Rede → <strong>Adaptador 1</strong>: <code>Rede Interna</code> → nome: <code>Intranet</code></p></div>
-              <div class="step"><div class="step-num">4</div><p>Configurações → Rede → <strong>Adaptador 2</strong>: <strong>desabilite</strong> a placa (desmarque "Habilitar Placa de Rede")</p></div>
+              <div class="step"><div class="step-num">3</div><p>Configurações → Rede → <strong>Adaptador 1</strong>: Conectado a <code>NAT</code> (para acesso à internet)</p></div>
+              <div class="step"><div class="step-num">4</div><p>Configurações → Rede → <strong>Adaptador 2</strong>: habilite → Conectado a <code>Rede Interna</code> → Nome: <code>Intranet</code></p></div>
               <div class="step"><div class="step-num">5</div><p>Instale o Ubuntu Server conforme o vídeo de referência, nome da máquina: <code>seunomefirewall</code>, usuário: <code>seunomefirewall</code>, senha: <code>Fatec2026@</code></p></div>
 
               <div class="warn-box" style="border-left-color:#e91e63; background:rgba(233,30,99,0.05); margin-top:12px;">
@@ -1619,7 +1863,7 @@ To             Action      From
         <!-- MISSÃO 5 — Gerenciamento de Pacotes -->
         <div class="mission" id="m5" onclick="toggleMission('m5')">
           <div class="mission-head">
-            <div class="mission-num" style="background:linear-gradient(135deg,var(--purple2),var(--purple));">05</div>
+            <div class="mission-num" style="background:linear-gradient(135deg,var(--purple2),var(--purple));">06</div>
             <div class="mission-info">
               <div class="mission-title">📦 Gerenciar Pacotes com APT</div>
               <div class="mission-meta">⏱️ 15 min · Instalar, remover e atualizar software</div>
@@ -1628,27 +1872,43 @@ To             Action      From
             <div class="mission-toggle">▼</div>
           </div>
           <div class="mission-body">
-            <div class="mission-desc">🎯 Dominar o apt para instalar utilitários essenciais, verificar dependências e manter o sistema atualizado.</div>
+            <div class="mission-desc">🎯 Dominar o apt para instalar utilitários essenciais, verificar informações de pacotes e remover software no Ubuntu Server.</div>
+            <div class="info-box">💡 O <strong>apt</strong> (Advanced Package Tool) é o gerenciador de pacotes do Ubuntu. Com ele você instala, remove e atualiza software a partir dos repositórios oficiais. Execute esses comandos no <strong>Ubuntu Server</strong> após configurar a rede.</div>
             <div class="cmd-block">
-<span class="comment"># Atualizar lista de repositórios</span>
-<span class="prompt">$</span> <span class="cmd">sudo apt update</span>
+<span class="comment"># Atualizar lista de repositórios (sempre fazer antes de instalar)</span>
+<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">sudo apt update</span>
+<span class="output">Hit:1 http://br.archive.ubuntu.com/ubuntu jammy InRelease
+Reading package lists... Done
+Building dependency tree... Done</span>
 
-<span class="comment"># Instalar utilitários essenciais</span>
-<span class="prompt">$</span> <span class="cmd">sudo apt install -y net-tools curl wget htop nmap tree</span>
+<span class="comment"># Instalar utilitários essenciais de rede e diagnóstico</span>
+<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">sudo apt install -y net-tools curl wget htop nmap tree</span>
+<span class="output">Reading package lists... Done
+The following NEW packages will be installed: net-tools curl wget htop nmap tree
+0 upgraded, 6 newly installed ...
+Do you want to continue? [Y/n]</span> <span class="value">y</span>
 
-<span class="comment"># Verificar informações de um pacote</span>
-<span class="prompt">$</span> <span class="cmd">apt show nmap</span>
+<span class="comment"># net-tools = ifconfig/netstat  |  curl/wget = download  |  htop = monitor de processos</span>
+<span class="comment"># nmap = scanner de portas  |  tree = ver estrutura de pastas</span>
+
+<span class="comment"># Verificar informações de um pacote antes de instalar</span>
+<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">apt show nmap</span>
 <span class="output">Package: nmap
-Version: 7.80+dfsg1-2build2</span>
+Version: 7.80+dfsg1-2build2
+Description: The Network Mapper — scanner de portas e redes</span>
 
-<span class="comment"># Remover pacote (mantendo configs)</span>
-<span class="prompt">$</span> <span class="cmd">sudo apt remove nmap</span>
+<span class="comment"># Remover pacote (mantendo arquivos de configuração)</span>
+<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">sudo apt remove nmap</span>
 
-<span class="comment"># Remover pacote + configs + dependências órfãs</span>
-<span class="prompt">$</span> <span class="cmd">sudo apt purge nmap && sudo apt autoremove -y</span>
+<span class="comment"># Remover pacote + configs + dependências que não são mais necessárias</span>
+<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">sudo apt purge nmap && sudo apt autoremove -y</span>
 
-<span class="comment"># Listar pacotes instalados</span>
-<span class="prompt">$</span> <span class="cmd">dpkg --list | grep "^ii" | less</span>
+<span class="comment"># Listar todos os pacotes instalados no sistema</span>
+<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">dpkg --list | grep "^ii" | less</span>
+<span class="comment">                                         # pressione Q para sair do less</span>
+
+<span class="comment"># Buscar um pacote por nome</span>
+<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">apt search apache2</span>
             </div>
             <button class="complete-btn" id="btn-m5" onclick="completeM('m5','btn-m5','a-apt','bm-vbox','APT dominado! Pacotes sob controle! 📦','apt')">✅ MISSÃO CONCLUÍDA — APT Dominado!</button>
           </div>
@@ -1926,6 +2186,15 @@ function switchOSM2(tab, btn) {
   btn.classList.add('active-tab');
   if (tab === 'lvm') { addXP(5,'LVM estudado!','💾'); unlock('a-lvm','bm-lvm','LVM Configurado!'); }
 }
+function switchOSMNet(tab, btn) {
+  document.querySelectorAll('[id^="mnet-panel-"]').forEach(p => p.classList.remove('active-panel'));
+  document.getElementById('mnet-panel-'+tab).classList.add('active-panel');
+  event.stopPropagation();
+  btn.closest('.os-tabs').querySelectorAll('.os-tab').forEach(t => t.classList.remove('active-tab'));
+  btn.classList.add('active-tab');
+  if (tab === 'ipv4') { addXP(5,'IPv4 via netplan estudado!','📡'); }
+  if (tab === 'teste') { addXP(5,'Testes de rede estudados!','🧪'); }
+}
 function switchOSM4(tab, btn) {
   document.querySelectorAll('[id^="m4-panel-"]').forEach(p => p.classList.remove('active-panel'));
   document.getElementById('m4-panel-'+tab).classList.add('active-panel');
@@ -1954,7 +2223,7 @@ function completeM(mId, btnId, achId, badgeId, msg, key) {
   unlock(achId, badgeId, msg);
   streak++; updateHUD();
   // Check all missions done
-  if (Object.keys(missionsDone).length === 5) {
+  if (Object.keys(missionsDone).length === 6) {
     setTimeout(() => { addXP(50,'TODAS AS MISSÕES CONCLUÍDAS!','🏆'); unlock('a-all','bm-all','Linux Master — Tudo concluído!'); }, 500);
   }
 }
