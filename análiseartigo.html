@@ -1,0 +1,1489 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌐 VirtualBox Inter-Networking — Semana 6 | ISO-103</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #050d1a;
+  --bg2: #091424;
+  --card: #0d1f35;
+  --card2: #0f2540;
+  --cyan: #00d4ff;
+  --cyan2: #00a8cc;
+  --purple: #b44aff;
+  --purple2: #8b2fe0;
+  --green: #00ff88;
+  --green2: #00cc6a;
+  --yellow: #ffcc00;
+  --orange: #ff8c00;
+  --red: #ff4466;
+  --text: #e0f0ff;
+  --muted: #5a7a99;
+  --border: rgba(0,212,255,0.15);
+  --glow-cyan: 0 0 20px rgba(0,212,255,0.4);
+  --glow-purple: 0 0 20px rgba(180,74,255,0.4);
+  --glow-green: 0 0 20px rgba(0,255,136,0.4);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Exo 2',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 15% 15%,rgba(0,212,255,0.05) 0%,transparent 50%),radial-gradient(ellipse at 85% 75%,rgba(180,74,255,0.05) 0%,transparent 50%);pointer-events:none;z-index:0}
+.net-bg{position:fixed;top:40px;right:-40px;font-size:18em;opacity:0.04;pointer-events:none;z-index:0;animation:netFloat 6s ease-in-out infinite}
+@keyframes netFloat{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-20px) rotate(5deg)}}
+
+/* HEADER */
+.header{position:sticky;top:0;z-index:100;background:rgba(5,13,26,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:12px 0}
+.header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),var(--purple),var(--green),transparent)}
+.header-inner{max-width:1300px;margin:0 auto;padding:0 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.header-logo{font-family:'Orbitron',monospace;font-size:0.7em;font-weight:700;color:var(--cyan);letter-spacing:2px}
+.header-title{font-family:'Orbitron',monospace;font-size:0.9em;font-weight:900}
+.header-title span{color:var(--cyan)}
+.back-btn{background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);color:var(--cyan);padding:6px 12px;border-radius:6px;font-family:'Exo 2',sans-serif;font-size:0.78em;font-weight:700;cursor:pointer;text-decoration:none;transition:all .2s;display:flex;align-items:center;gap:5px}
+.back-btn:hover{background:rgba(0,212,255,0.2);box-shadow:var(--glow-cyan)}
+.hud{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.hud-pill{background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);border-radius:8px;padding:5px 12px;text-align:center}
+.hud-pill .v{font-family:'Orbitron',monospace;font-size:1.1em;font-weight:700;color:var(--cyan);display:block;line-height:1}
+.hud-pill .l{font-size:0.55em;color:var(--muted);text-transform:uppercase;letter-spacing:1px;display:block;margin-top:2px}
+.hud-xp-wrap{background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);border-radius:8px;padding:6px 12px;min-width:130px}
+.hud-xp-label{display:flex;justify-content:space-between;font-size:0.58em;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.hud-bar-bg{background:rgba(0,0,0,0.4);border-radius:100px;height:5px;overflow:hidden}
+.hud-bar{height:100%;background:linear-gradient(90deg,var(--cyan),var(--purple));border-radius:100px;transition:width .8s ease;box-shadow:0 0 10px rgba(0,212,255,0.5);width:0%}
+
+/* LAYOUT */
+.layout{max-width:1300px;margin:0 auto;padding:24px 16px;display:grid;grid-template-columns:250px 1fr;gap:20px;position:relative;z-index:1}
+.sidebar{display:flex;flex-direction:column;gap:14px}
+.scard{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px}
+.scard-title{font-family:'Orbitron',monospace;font-size:0.68em;font-weight:700;color:var(--cyan);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px}
+.nav-link{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:7px;text-decoration:none;color:var(--muted);font-size:0.82em;font-weight:600;transition:all .2s;margin-bottom:3px;border:1px solid transparent}
+.nav-link:hover{color:var(--cyan);background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.15)}
+.nav-link.active{color:var(--cyan);background:rgba(0,212,255,0.12);border-color:rgba(0,212,255,0.3);box-shadow:inset 3px 0 0 var(--cyan)}
+.nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.nd-g{background:var(--green);box-shadow:0 0 6px var(--green)}
+.nd-c{background:var(--cyan);box-shadow:0 0 6px var(--cyan)}
+.nd-p{background:var(--purple)}
+.nd-o{background:var(--orange)}
+.prog-block{margin-bottom:10px}
+.prog-label{display:flex;justify-content:space-between;font-size:0.72em;color:var(--muted);font-weight:600;margin-bottom:4px}
+.prog-label span:last-child{color:var(--cyan);font-family:'Orbitron',monospace}
+.prog-bg{background:rgba(255,255,255,0.06);border-radius:100px;height:5px;overflow:hidden}
+.prog-fill{height:100%;border-radius:100px;transition:width .8s ease}
+.pf-c{background:linear-gradient(90deg,var(--cyan2),var(--cyan));box-shadow:0 0 8px rgba(0,212,255,0.4)}
+.pf-g{background:linear-gradient(90deg,var(--green2),var(--green));box-shadow:0 0 8px rgba(0,255,136,0.4)}
+.pf-p{background:linear-gradient(90deg,var(--purple2),var(--purple));box-shadow:0 0 8px rgba(180,74,255,0.4)}
+.pf-o{background:linear-gradient(90deg,#cc5500,var(--orange))}
+.badge-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.badge-item{aspect-ratio:1;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1em;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);filter:grayscale(1) opacity(0.3);transition:all .4s;cursor:default;position:relative}
+.badge-item.unlocked{filter:none;background:rgba(0,212,255,0.1);border-color:rgba(0,212,255,0.4);box-shadow:0 0 14px rgba(0,212,255,0.3);animation:badgePop .5s ease}
+@keyframes badgePop{0%{transform:scale(.5);opacity:0}70%{transform:scale(1.2)}100%{transform:scale(1);opacity:1}}
+.badge-item[title]:hover::after{content:attr(title);position:absolute;bottom:calc(100% + 5px);left:50%;transform:translateX(-50%);background:var(--card2);color:var(--cyan);border:1px solid var(--border);font-family:'Exo 2',sans-serif;font-size:0.58em;padding:3px 7px;border-radius:5px;white-space:nowrap;z-index:100}
+
+/* MAIN */
+.main{display:flex;flex-direction:column;gap:20px}
+
+/* HERO */
+.hero{background:var(--card);border:1px solid rgba(0,212,255,0.25);border-radius:16px;padding:30px 36px;position:relative;overflow:hidden;box-shadow:0 0 40px rgba(0,212,255,0.06)}
+.hero::before{content:'🌐';position:absolute;right:28px;top:50%;transform:translateY(-50%);font-size:7em;opacity:0.06}
+.hero-tag{font-family:'Orbitron',monospace;font-size:0.62em;letter-spacing:3px;font-weight:700;color:var(--cyan);text-transform:uppercase;margin-bottom:8px;opacity:.8}
+.hero h1{font-family:'Orbitron',monospace;font-size:1.8em;font-weight:900;line-height:1.2;margin-bottom:6px}
+.hero h1 span{color:var(--cyan);text-shadow:var(--glow-cyan)}
+.hero-sub{color:var(--muted);font-size:.92em;margin-bottom:16px}
+.hero-chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);border-radius:100px;padding:4px 12px;font-size:.75em;font-weight:700;color:var(--cyan);display:flex;align-items:center;gap:4px}
+.chip.g{background:rgba(0,255,136,0.08);border-color:rgba(0,255,136,0.2);color:var(--green)}
+.chip.p{background:rgba(180,74,255,0.08);border-color:rgba(180,74,255,0.2);color:var(--purple)}
+.chip.o{background:rgba(255,140,0,0.08);border-color:rgba(255,140,0,0.2);color:var(--orange)}
+
+/* CARD */
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.card-head{padding:14px 20px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);background:rgba(0,212,255,0.02)}
+.card-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1em;flex-shrink:0}
+.ci-c{background:rgba(0,212,255,0.15);border:1px solid rgba(0,212,255,0.3)}
+.ci-g{background:rgba(0,255,136,0.15);border:1px solid rgba(0,255,136,0.3)}
+.ci-p{background:rgba(180,74,255,0.15);border:1px solid rgba(180,74,255,0.3)}
+.ci-o{background:rgba(255,140,0,0.15);border:1px solid rgba(255,140,0,0.3)}
+.card-title{font-family:'Orbitron',monospace;font-size:.8em;font-weight:700;color:var(--text);letter-spacing:1px}
+.xp-tag{margin-left:auto;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.3);color:var(--cyan);padding:3px 10px;border-radius:100px;font-size:.68em;font-weight:700;font-family:'Orbitron',monospace}
+.xp-tag.g{background:rgba(0,255,136,0.1);border-color:rgba(0,255,136,0.3);color:var(--green)}
+.xp-tag.p{background:rgba(180,74,255,0.1);border-color:rgba(180,74,255,0.3);color:var(--purple)}
+.card-body{padding:20px}
+
+/* OBJECTIVES */
+.obj-list{list-style:none;display:flex;flex-direction:column;gap:7px}
+.obj-item{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:9px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);cursor:pointer;transition:all .2s;font-size:.87em;font-weight:600}
+.obj-item:hover{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.2)}
+.obj-item.checked{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.2);color:var(--muted);text-decoration:line-through}
+.obj-circle{width:22px;height:22px;border-radius:50%;flex-shrink:0;border:2px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:.75em;transition:all .3s}
+.obj-item.checked .obj-circle{background:var(--cyan);border-color:var(--cyan);color:#000;box-shadow:0 0 10px rgba(0,212,255,0.5)}
+
+/* CONCEPT GRID */
+.concept-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px}
+.concept-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:14px;border-top:3px solid var(--cyan);transition:all .2s}
+.concept-card:hover{background:rgba(0,212,255,0.04);border-color:rgba(0,212,255,0.15)}
+.concept-card.g{border-top-color:var(--green)}.concept-card.g:hover{background:rgba(0,255,136,0.04)}
+.concept-card.p{border-top-color:var(--purple)}.concept-card.p:hover{background:rgba(180,74,255,0.04)}
+.concept-card.o{border-top-color:var(--orange)}.concept-card.o:hover{background:rgba(255,140,0,0.04)}
+.concept-title{font-size:.78em;font-weight:800;color:var(--cyan);margin-bottom:7px}
+.concept-card.g .concept-title{color:var(--green)}
+.concept-card.p .concept-title{color:var(--purple)}
+.concept-card.o .concept-title{color:var(--orange)}
+.concept-card p{font-size:.78em;color:var(--muted);line-height:1.5}
+
+/* INFO BOXES */
+.info-box{background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.2);border-left:4px solid var(--cyan);border-radius:9px;padding:12px 14px;font-size:.83em;color:var(--muted);margin:8px 0;line-height:1.5}
+.warn-box{background:rgba(255,140,0,0.05);border:1px solid rgba(255,140,0,0.2);border-left:4px solid var(--orange);border-radius:9px;padding:12px 14px;font-size:.83em;color:var(--muted);margin:8px 0;line-height:1.5}
+.success-box{background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.2);border-left:4px solid var(--green);border-radius:9px;padding:12px 14px;font-size:.83em;color:var(--muted);margin:8px 0;line-height:1.5}
+
+/* TABLE */
+.net-table{width:100%;border-collapse:collapse;font-size:.8em;margin:12px 0}
+.net-table th{background:rgba(0,212,255,0.12);color:var(--cyan);font-family:'Orbitron',monospace;font-size:.68em;letter-spacing:1px;padding:10px 12px;text-align:left;border-bottom:1px solid rgba(0,212,255,0.2)}
+.net-table td{padding:9px 12px;border-bottom:1px solid rgba(255,255,255,0.05);color:var(--text);vertical-align:middle}
+.net-table tr:hover td{background:rgba(0,212,255,0.03)}
+.net-table .yes{color:var(--green);font-weight:700}
+.net-table .no{color:var(--red)}
+.net-table .pf{color:var(--orange);font-size:.75em}
+
+/* COMPLETE BTN */
+.complete-btn{width:100%;margin-top:12px;padding:12px;border:none;border-radius:9px;cursor:pointer;font-family:'Exo 2',sans-serif;font-size:.88em;font-weight:800;background:linear-gradient(135deg,rgba(0,212,255,0.15),rgba(0,212,255,0.08));border:1px solid rgba(0,212,255,0.3);color:var(--cyan);transition:all .3s;letter-spacing:1px}
+.complete-btn:hover:not(:disabled){background:linear-gradient(135deg,rgba(0,212,255,0.25),rgba(0,212,255,0.15));box-shadow:0 0 20px rgba(0,212,255,0.3);transform:translateY(-1px)}
+.complete-btn:disabled{opacity:.7;cursor:default;transform:none}
+
+/* =================== DRAG & DROP =================== */
+.dnd-section{margin:16px 0}
+.dnd-title{font-family:'Orbitron',monospace;font-size:.72em;font-weight:700;color:var(--cyan);letter-spacing:1px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.dnd-pool{display:flex;gap:8px;flex-wrap:wrap;padding:14px;background:rgba(0,0,0,0.2);border-radius:10px;border:1px solid rgba(255,255,255,0.06);min-height:52px;margin-bottom:10px}
+.dnd-item{padding:8px 14px;border-radius:7px;cursor:grab;font-size:.82em;font-weight:700;user-select:none;transition:all .2s;border:1px solid;touch-action:none}
+.dnd-item:active{cursor:grabbing;opacity:.7}
+.dnd-item.cyan{background:rgba(0,212,255,0.12);border-color:rgba(0,212,255,0.35);color:var(--cyan)}
+.dnd-item.green{background:rgba(0,255,136,0.12);border-color:rgba(0,255,136,0.35);color:var(--green)}
+.dnd-item.purple{background:rgba(180,74,255,0.12);border-color:rgba(180,74,255,0.35);color:var(--purple)}
+.dnd-item.orange{background:rgba(255,140,0,0.12);border-color:rgba(255,140,0,0.35);color:var(--orange)}
+.dnd-item.dragging{opacity:.4;transform:scale(.95)}
+.dnd-zones{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.dnd-zone{background:rgba(0,0,0,0.25);border:2px dashed rgba(0,212,255,0.2);border-radius:10px;padding:12px;min-height:80px;transition:all .2s}
+.dnd-zone.over{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.5)}
+.dnd-zone.correct{border-color:rgba(0,255,136,0.5);background:rgba(0,255,136,0.05)}
+.dnd-zone.wrong{border-color:rgba(255,68,102,0.5);background:rgba(255,68,102,0.05)}
+.dnd-zone-label{font-size:.7em;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.dnd-check-btn{margin-top:12px;padding:9px 20px;border:1px solid rgba(0,212,255,0.3);background:rgba(0,212,255,0.1);color:var(--cyan);border-radius:7px;cursor:pointer;font-size:.82em;font-weight:700;font-family:'Exo 2',sans-serif;transition:all .2s}
+.dnd-check-btn:hover{background:rgba(0,212,255,0.2);box-shadow:var(--glow-cyan)}
+.dnd-feedback{margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82em;display:none}
+.dnd-feedback.show{display:block}
+.dnd-feedback.ok{background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.2);color:var(--green)}
+.dnd-feedback.fail{background:rgba(255,68,102,0.08);border:1px solid rgba(255,68,102,0.2);color:var(--red)}
+
+/* =================== MATCH LINES (Liga Pontos) =================== */
+.match-wrap{position:relative;margin:14px 0}
+.match-cols{display:grid;grid-template-columns:1fr 60px 1fr;gap:0;align-items:start}
+.match-col{display:flex;flex-direction:column;gap:8px}
+.match-item{padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02);font-size:.82em;font-weight:600;cursor:pointer;transition:all .2s;position:relative;user-select:none}
+.match-item.left{border-right:3px solid transparent;text-align:right}
+.match-item.right{border-left:3px solid transparent}
+.match-item.selected{background:rgba(0,212,255,0.12);border-color:rgba(0,212,255,0.4)!important;color:var(--cyan)}
+.match-item.matched{background:rgba(0,255,136,0.08);border-color:rgba(0,255,136,0.35)!important;color:var(--green);cursor:default}
+.match-item.matched.left{border-right-color:var(--green)!important}
+.match-item.matched.right{border-left-color:var(--green)!important}
+.match-item.wrong-flash{animation:wrongFlash .4s ease}
+@keyframes wrongFlash{0%,100%{background:rgba(255,68,102,0.08)}50%{background:rgba(255,68,102,0.2)}}
+.match-svg{width:60px;overflow:visible}
+.match-score{margin-top:10px;font-size:.78em;color:var(--muted);font-weight:600}
+.match-score span{color:var(--green);font-family:'Orbitron',monospace}
+
+/* =================== FILL IN THE BLANK =================== */
+.fill-wrap{margin:14px 0}
+.fill-sentence{font-size:.9em;line-height:2.2;color:var(--text);margin-bottom:6px}
+.fill-blank{display:inline-block;min-width:100px;border-bottom:2px solid var(--cyan);background:rgba(0,212,255,0.05);color:var(--cyan);font-family:'JetBrains Mono',monospace;font-size:.85em;font-weight:700;padding:2px 8px;border-radius:4px;cursor:pointer;text-align:center;vertical-align:middle;transition:all .2s;margin:0 4px;min-height:24px}
+.fill-blank:hover:not(.filled){background:rgba(0,212,255,0.1);box-shadow:0 0 8px rgba(0,212,255,0.2)}
+.fill-blank.filled{background:rgba(0,255,136,0.08);border-bottom-color:var(--green);color:var(--green)}
+.fill-blank.wrong-fill{border-bottom-color:var(--red);background:rgba(255,68,102,0.08);color:var(--red)}
+.fill-words{display:flex;gap:8px;flex-wrap:wrap;padding:10px 14px;background:rgba(0,0,0,0.2);border-radius:8px;border:1px solid rgba(255,255,255,0.06);margin-bottom:8px}
+.fill-word{padding:6px 12px;border-radius:6px;cursor:pointer;font-size:.8em;font-weight:700;transition:all .2s;border:1px solid rgba(0,212,255,0.3);background:rgba(0,212,255,0.1);color:var(--cyan)}
+.fill-word:hover{background:rgba(0,212,255,0.2)}
+.fill-word.used{opacity:.3;cursor:not-allowed;pointer-events:none}
+.fill-check-btn{margin-top:10px;padding:8px 18px;border:1px solid rgba(0,255,136,0.3);background:rgba(0,255,136,0.1);color:var(--green);border-radius:7px;cursor:pointer;font-size:.8em;font-weight:700;font-family:'Exo 2',sans-serif;transition:all .2s}
+.fill-check-btn:hover{background:rgba(0,255,136,0.2)}
+.fill-reset-btn{margin-top:10px;margin-left:8px;padding:8px 16px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.03);color:var(--muted);border-radius:7px;cursor:pointer;font-size:.8em;font-weight:700;font-family:'Exo 2',sans-serif;transition:all .2s}
+.fill-reset-btn:hover{background:rgba(255,255,255,0.06)}
+.fill-result{margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.82em;display:none}
+.fill-result.show{display:block}
+.fill-result.ok{background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.2);color:var(--green)}
+.fill-result.fail{background:rgba(255,68,102,0.08);border:1px solid rgba(255,68,102,0.2);color:var(--red)}
+
+/* =================== NETWORK SIMULATOR =================== */
+.net-sim{background:#020a14;border:1px solid rgba(0,212,255,0.15);border-radius:10px;padding:16px;margin:12px 0}
+.net-sim-title{font-family:'Orbitron',monospace;font-size:.7em;color:var(--cyan);letter-spacing:1px;margin-bottom:10px}
+.vm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:12px}
+.vm-box{background:rgba(13,31,53,.9);border:1px solid rgba(0,212,255,0.25);border-radius:8px;padding:10px;text-align:center;font-size:.75em;transition:all .3s}
+.vm-box.host{border-color:rgba(0,255,136,0.4);background:rgba(0,255,136,0.04)}
+.vm-box.active{box-shadow:0 0 16px rgba(0,212,255,0.3);animation:vmPulse .6s ease}
+@keyframes vmPulse{0%{transform:scale(1)}50%{transform:scale(1.03)}100%{transform:scale(1)}}
+.vm-name{font-family:'Orbitron',monospace;font-size:.8em;font-weight:700;margin-bottom:4px}
+.vm-ip{font-family:'JetBrains Mono',monospace;color:var(--cyan);font-size:.9em;margin-bottom:2px}
+.vm-os{color:var(--muted);font-size:.8em}
+.ping-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+.ping-select{background:rgba(0,0,0,.4);border:1px solid rgba(0,212,255,.2);border-radius:6px;padding:7px 10px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:.78em}
+.ping-btn{padding:7px 16px;border:1px solid rgba(0,212,255,.3);background:rgba(0,212,255,.1);color:var(--cyan);border-radius:6px;cursor:pointer;font-size:.8em;font-weight:700;font-family:'Exo 2',sans-serif;transition:all .2s}
+.ping-btn:hover{background:rgba(0,212,255,.2);box-shadow:var(--glow-cyan)}
+.ping-output{background:#010810;border:1px solid rgba(0,212,255,.1);border-radius:7px;padding:10px;font-family:'JetBrains Mono',monospace;font-size:.75em;min-height:70px;max-height:140px;overflow-y:auto;line-height:1.8}
+.ping-out-line{color:var(--green)}
+.ping-out-line.err{color:var(--red)}
+.ping-out-line.info{color:var(--cyan)}
+.ping-out-line.muted{color:var(--muted)}
+
+/* =================== QUIZ =================== */
+.quiz-prog-wrap{margin-bottom:14px}
+.quiz-prog-label{font-size:.72em;color:var(--muted);margin-bottom:4px;display:flex;justify-content:space-between}
+.quiz-prog-bg{background:rgba(255,255,255,0.06);border-radius:100px;height:5px;overflow:hidden}
+.quiz-prog-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--cyan),var(--purple));border-radius:100px;transition:width .5s ease;box-shadow:0 0 8px rgba(0,212,255,.4)}
+.qcard{display:none}
+.qcard.active{display:block}
+.qcard h4{font-size:.92em;font-weight:700;color:var(--text);margin-bottom:12px;line-height:1.4}
+.qopts{display:flex;flex-direction:column;gap:7px;margin-bottom:8px}
+.qopt{padding:10px 14px;border-radius:8px;cursor:pointer;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);color:var(--text);font-family:'Exo 2',sans-serif;font-size:.84em;font-weight:600;text-align:left;transition:all .2s}
+.qopt:hover:not(:disabled){background:rgba(0,212,255,.08);border-color:rgba(0,212,255,.25);color:var(--cyan)}
+.qopt.correct{background:rgba(0,255,136,.12);border-color:rgba(0,255,136,.4);color:var(--green)}
+.qopt.wrong{background:rgba(255,68,102,.12);border-color:rgba(255,68,102,.4);color:var(--red)}
+.qopt:disabled{cursor:default}
+.qfb{display:none;padding:9px 12px;border-radius:8px;font-size:.8em;line-height:1.4;margin:7px 0}
+.qfb.show{display:block}
+.qfb.ok{background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.2);color:var(--green)}
+.qfb.fail{background:rgba(255,68,102,.08);border:1px solid rgba(255,68,102,.2);color:var(--red)}
+.qnx{display:none}
+.qnx.show{display:flex;justify-content:flex-end}
+.qnx-btn{padding:7px 16px;border:1px solid rgba(0,212,255,.3);background:rgba(0,212,255,.1);color:var(--cyan);border-radius:6px;cursor:pointer;font-size:.8em;font-weight:700;font-family:'Exo 2',sans-serif;transition:all .2s}
+.qnx-btn:hover{background:rgba(0,212,255,.2)}
+.q-result{display:none;text-align:center;padding:24px 0}
+.q-result.show{display:block}
+.q-score{font-family:'Orbitron',monospace;font-size:2.8em;font-weight:900;color:var(--cyan);text-shadow:var(--glow-cyan);display:block;margin-bottom:6px}
+.q-msg{color:var(--muted);margin-bottom:14px;font-size:.88em}
+.q-xp{color:var(--cyan);font-weight:700;font-size:.83em;margin-bottom:14px}
+.restart-btn{padding:9px 22px;border:1px solid rgba(0,212,255,.3);background:rgba(0,212,255,.1);color:var(--cyan);border-radius:7px;cursor:pointer;font-size:.83em;font-weight:700;font-family:'Exo 2',sans-serif;transition:all .2s}
+.restart-btn:hover{background:rgba(0,212,255,.2);box-shadow:var(--glow-cyan)}
+
+/* ACHIEVEMENTS */
+.ach-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.ach-card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:9px;padding:12px 10px;text-align:center;filter:grayscale(1) opacity(.3);transition:all .4s}
+.ach-card.unlocked{filter:none;background:rgba(0,212,255,.06);border-color:rgba(0,212,255,.3);box-shadow:0 0 18px rgba(0,212,255,.15)}
+.ach-icon{font-size:1.7em;display:block;margin-bottom:5px}
+.ach-name{font-size:.65em;font-weight:700;color:var(--muted);line-height:1.2}
+.ach-card.unlocked .ach-name{color:var(--cyan)}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;z-index:9999;background:var(--card2);border:1px solid rgba(0,212,255,.3);border-radius:12px;padding:13px 16px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,.4),0 0 20px rgba(0,212,255,.15);transform:translateX(120%);transition:transform .4s cubic-bezier(0.34,1.56,0.64,1);min-width:260px;max-width:340px}
+.toast.show{transform:translateX(0)}
+.toast-icon{font-size:1.5em;flex-shrink:0}
+.toast-title{font-family:'Orbitron',monospace;font-size:.78em;font-weight:700;color:var(--cyan)}
+.toast-msg{font-size:.76em;color:var(--muted);margin-top:2px}
+
+/* STEP BLOCKS */
+.step{display:flex;gap:12px;margin-bottom:12px}
+.step-num{width:28px;height:28px;border-radius:50%;background:rgba(0,212,255,.15);border:1px solid rgba(0,212,255,.3);display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-size:.75em;font-weight:700;color:var(--cyan);flex-shrink:0}
+.step-content{}
+.step-content h4{font-size:.83em;font-weight:800;color:var(--text);margin-bottom:3px}
+.step p{font-size:.82em;line-height:1.5;color:var(--muted)}
+code{font-family:'JetBrains Mono',monospace;background:rgba(0,212,255,.1);color:var(--cyan);padding:1px 5px;border-radius:4px;font-size:.88em}
+
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{order:2}
+  .main{order:1}
+  .ach-grid{grid-template-columns:repeat(3,1fr)}
+  .match-cols{grid-template-columns:1fr 40px 1fr}
+  .dnd-zones{grid-template-columns:1fr 1fr}
+}
+@media(max-width:500px){
+  .dnd-zones{grid-template-columns:1fr}
+  .ach-grid{grid-template-columns:repeat(3,1fr)}
+  .hud-xp-wrap{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="net-bg">🌐</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-icon" id="toast-icon">🌐</div>
+  <div>
+    <div class="toast-title" id="toast-title">+XP</div>
+    <div class="toast-msg" id="toast-msg"></div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <div class="header-logo">ISO-103</div>
+    <div class="header-title">SEMANA <span>06</span></div>
+    <a href="semana05.html" class="back-btn">← Semana 5</a>
+    <div class="hud">
+      <div class="hud-pill"><span class="v" id="hud-xp">0</span><span class="l">XP</span></div>
+      <div class="hud-pill"><span class="v" id="hud-streak">0</span><span class="l">Streak</span></div>
+      <div class="hud-pill"><span class="v" id="hud-badges">0</span><span class="l">Badges</span></div>
+      <div class="hud-xp-wrap">
+        <div class="hud-xp-label"><span id="hud-level">Iniciante</span><span id="hud-pct">0%</span></div>
+        <div class="hud-bar-bg"><div class="hud-bar" id="hud-bar"></div></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="scard">
+      <div class="scard-title">📅 Navegação</div>
+      <a href="semana05.html" class="nav-link"><div class="nav-dot nd-g"></div>Semana 5 — Linux Install</a>
+      <a href="semana06.html" class="nav-link active"><div class="nav-dot nd-c"></div>Semana 6 — Inter-Networking</a>
+    </div>
+
+    <div class="scard">
+      <div class="scard-title">📊 Progresso</div>
+      <div class="prog-block">
+        <div class="prog-label"><span>Objetivos</span><span id="obj-pct">0%</span></div>
+        <div class="prog-bg"><div class="prog-fill pf-c" id="obj-bar" style="width:0%"></div></div>
+      </div>
+      <div class="prog-block">
+        <div class="prog-label"><span>Atividades</span><span id="act-pct">0%</span></div>
+        <div class="prog-bg"><div class="prog-fill pf-g" id="act-bar" style="width:0%"></div></div>
+      </div>
+      <div class="prog-block">
+        <div class="prog-label"><span>Quiz</span><span id="quiz-pct">0%</span></div>
+        <div class="prog-bg"><div class="prog-fill pf-p" id="quiz-bar" style="width:0%"></div></div>
+      </div>
+      <div class="prog-block">
+        <div class="prog-label"><span>Conquistas</span><span id="ach-pct">0/12</span></div>
+        <div class="prog-bg"><div class="prog-fill pf-o" id="ach-bar" style="width:0%"></div></div>
+      </div>
+    </div>
+
+    <div class="scard">
+      <div class="scard-title">🏅 Badges</div>
+      <div class="badge-grid">
+        <div class="badge-item" id="bm-start" title="Módulo iniciado">🚀</div>
+        <div class="badge-item" id="bm-obj" title="Todos objetivos">🎯</div>
+        <div class="badge-item" id="bm-dnd1" title="Drag & Drop I">🧩</div>
+        <div class="badge-item" id="bm-dnd2" title="Drag & Drop II">🎮</div>
+        <div class="badge-item" id="bm-match" title="Liga Pontos completo">🔗</div>
+        <div class="badge-item" id="bm-fill" title="Lacunas completas">✏️</div>
+        <div class="badge-item" id="bm-sim" title="Simulador de rede">📡</div>
+        <div class="badge-item" id="bm-quiz" title="4+ no quiz">⚡</div>
+        <div class="badge-item" id="bm-perfect" title="Quiz perfeito">💎</div>
+        <div class="badge-item" id="bm-nat" title="NAT Expert">🔄</div>
+        <div class="badge-item" id="bm-host" title="Host-Only Expert">🖥️</div>
+        <div class="badge-item" id="bm-all" title="Tudo concluído">🏆</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-tag">ISO-103 · 3º Semestre · Semana 06</div>
+      <h1>🌐 <span>VirtualBox</span> Inter-Networking</h1>
+      <p class="hero-sub">Implementação de redes NAT, Host-Only e Bridged com máquinas virtuais Oracle® VirtualBox</p>
+      <div class="hero-chips">
+        <div class="chip">🔄 NAT Network</div>
+        <div class="chip g">🖥️ Host-Only</div>
+        <div class="chip p">🌉 Bridged</div>
+        <div class="chip o">📡 DHCP</div>
+      </div>
+    </div>
+
+    <!-- OBJETIVOS -->
+    <div class="card" id="section-obj">
+      <div class="card-head">
+        <div class="card-icon ci-c">🎯</div>
+        <div class="card-title">OBJETIVOS DE APRENDIZAGEM</div>
+        <div class="xp-tag">+5 XP cada</div>
+      </div>
+      <div class="card-body">
+        <ul class="obj-list">
+          <li class="obj-item" onclick="toggleObj(this,0)"><div class="obj-circle">✓</div>Entender os modos de rede do VirtualBox: NAT, Host-Only, Bridge e Internal</li>
+          <li class="obj-item" onclick="toggleObj(this,1)"><div class="obj-circle">✓</div>Criar e configurar uma rede NAT com servidor DHCP via VBoxManage</li>
+          <li class="obj-item" onclick="toggleObj(this,2)"><div class="obj-circle">✓</div>Implementar rede Host-Only para comunicação VM ↔ Host</li>
+          <li class="obj-item" onclick="toggleObj(this,3)"><div class="obj-circle">✓</div>Atribuir endereços IP estáticos em VMs Windows e Linux</li>
+          <li class="obj-item" onclick="toggleObj(this,4)"><div class="obj-circle">✓</div>Testar conectividade com ping entre VMs e com a internet</li>
+          <li class="obj-item" onclick="toggleObj(this,5)"><div class="obj-circle">✓</div>Comparar os modos de rede com base em acesso Host, VM↔VM e LAN/externa</li>
+          <li class="obj-item" onclick="toggleObj(this,6)"><div class="obj-circle">✓</div>Calcular classes IP e sub-redes CIDR para um data center com até 10.000 hosts</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- CONCEITOS -->
+    <div class="card" id="section-conceitos">
+      <div class="card-head">
+        <div class="card-icon ci-c">📖</div>
+        <div class="card-title">CONCEITOS FUNDAMENTAIS</div>
+        <div class="xp-tag">+5 XP</div>
+      </div>
+      <div class="card-body">
+        <div class="concept-grid">
+          <div class="concept-card">
+            <div class="concept-title">🔄 NAT (Network Address Translation)</div>
+            <p>Permite acesso à internet dentro do guest. Funciona como um roteador doméstico — agrupa VMs em rede interna, bloqueia acesso direto externo. Usa TCP/UDP sobre IPv4 e IPv6.</p>
+          </div>
+          <div class="concept-card g">
+            <div class="concept-title">🖥️ Host-Only Network</div>
+            <p>Cria rede entre VMs e o host sem acesso externo. Versão híbrida de Bridge e Internal. Cria interface de loopback virtual no host.</p>
+          </div>
+          <div class="concept-card p">
+            <div class="concept-title">🌉 Bridged Networking</div>
+            <p>VM aparece como dispositivo físico na rede. Usa driver de filtro para interceptar/injetar pacotes. Ideal para servidores e simulações avançadas.</p>
+          </div>
+          <div class="concept-card o">
+            <div class="concept-title">🔒 Internal Network</div>
+            <p>Rede visível somente entre VMs selecionadas. Invisível para o host e para o mundo externo. Ideal para ambientes isolados.</p>
+          </div>
+        </div>
+
+        <div class="info-box">🧠 <strong style="color:var(--cyan)">Lembre-se:</strong> O VirtualBox disponibiliza até <strong>8 placas PCI Ethernet virtuais</strong> por VM. Você pode combinar adaptadores para ter NAT + Host-Only ao mesmo tempo na mesma VM!</div>
+
+        <h4 style="font-family:'Orbitron',monospace;font-size:.75em;color:var(--cyan);margin:14px 0 10px;letter-spacing:1px">TABELA COMPARATIVA DE MODOS</h4>
+        <div style="overflow-x:auto">
+          <table class="net-table">
+            <thead>
+              <tr><th>Modo</th><th>VM → Host</th><th>Host → VM</th><th>VM ↔ VM</th><th>VM → Internet</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>🖥️ Host-Only</td><td class="yes">✔ Sim</td><td class="yes">✔ Sim</td><td class="yes">✔ Sim</td><td class="no">✘ Não</td></tr>
+              <tr><td>🔒 Internal</td><td class="no">✘ Não</td><td class="no">✘ Não</td><td class="yes">✔ Sim</td><td class="no">✘ Não</td></tr>
+              <tr><td>🌉 Bridge</td><td class="yes">✔ Sim</td><td class="yes">✔ Sim</td><td class="yes">✔ Sim</td><td class="yes">✔ Sim</td></tr>
+              <tr><td>🔄 NAT</td><td class="yes">✔ Sim</td><td class="pf">Port Forward</td><td class="no">✘ Não</td><td class="yes">✔ Sim</td></tr>
+              <tr><td>🔄 NAT Service</td><td class="yes">✔ Sim</td><td class="pf">Port Forward</td><td class="yes">✔ Sim</td><td class="yes">✔ Sim</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <button class="complete-btn" id="btn-conceitos" onclick="completeAct('conceitos',this,null,'🧠 Conceitos estudados! +20 XP')">✅ Entendi os Modos de Rede (+20 XP)</button>
+      </div>
+    </div>
+
+    <!-- ATIVIDADE 1: DRAG AND DROP — Modo de Rede -->
+    <div class="card" id="section-dnd1">
+      <div class="card-head">
+        <div class="card-icon ci-p">🧩</div>
+        <div class="card-title">ATIVIDADE 1 — ARRASTA E SOLTA: Modo Certo!</div>
+        <div class="xp-tag p">+30 XP</div>
+      </div>
+      <div class="card-body">
+        <p style="font-size:.86em;color:var(--muted);margin-bottom:14px">Arraste cada <strong style="color:var(--text)">cenário de uso</strong> para o <strong style="color:var(--text)">modo de rede correto</strong> no VirtualBox.</p>
+
+        <div class="dnd-title">📦 Cenários disponíveis:</div>
+        <div class="dnd-pool" id="dnd1-pool">
+          <div class="dnd-item cyan" draggable="true" data-id="A" ontouchstart="touchStart(event,'dnd1')" ontouchmove="touchMove(event)" ontouchend="touchEnd(event,'dnd1')">🌍 Acessar a internet</div>
+          <div class="dnd-item green" draggable="true" data-id="B" ontouchstart="touchStart(event,'dnd1')" ontouchmove="touchMove(event)" ontouchend="touchEnd(event,'dnd1')">🖥️ Falar só com o Host</div>
+          <div class="dnd-item purple" draggable="true" data-id="C" ontouchstart="touchStart(event,'dnd1')" ontouchmove="touchMove(event)" ontouchend="touchEnd(event,'dnd1')">🔬 Isolar VMs do Host</div>
+          <div class="dnd-item orange" draggable="true" data-id="D" ontouchstart="touchStart(event,'dnd1')" ontouchmove="touchMove(event)" ontouchend="touchEnd(event,'dnd1')">📡 VM como dispositivo físico na LAN</div>
+          <div class="dnd-item cyan" draggable="true" data-id="E" ontouchstart="touchStart(event,'dnd1')" ontouchmove="touchMove(event)" ontouchend="touchEnd(event,'dnd1')">🖥️ VMs + Host + sem internet</div>
+        </div>
+
+        <div class="dnd-zones" id="dnd1-zones">
+          <div class="dnd-zone" data-accept="A,E" ondragover="dndOver(event)" ondragleave="dndLeave(event)" ondrop="dndDrop(event,'dnd1')">
+            <div class="dnd-zone-label">🔄 NAT / NAT Service</div>
+          </div>
+          <div class="dnd-zone" data-accept="B,E" ondragover="dndOver(event)" ondragleave="dndLeave(event)" ondrop="dndDrop(event,'dnd1')">
+            <div class="dnd-zone-label">🖥️ Host-Only</div>
+          </div>
+          <div class="dnd-zone" data-accept="C" ondragover="dndOver(event)" ondragleave="dndLeave(event)" ondrop="dndDrop(event,'dnd1')">
+            <div class="dnd-zone-label">🔒 Internal Network</div>
+          </div>
+          <div class="dnd-zone" data-accept="D" ondragover="dndOver(event)" ondragleave="dndLeave(event)" ondrop="dndDrop(event,'dnd1')">
+            <div class="dnd-zone-label">🌉 Bridged</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+          <button class="dnd-check-btn" onclick="checkDnd1()">🔍 Verificar Resposta</button>
+          <button class="dnd-check-btn" style="background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1);color:var(--muted)" onclick="resetDnd1()">↺ Reiniciar</button>
+        </div>
+        <div class="dnd-feedback" id="dnd1-fb"></div>
+      </div>
+    </div>
+
+    <!-- ATIVIDADE 2: LIGA PONTOS — Módulos do Kernel -->
+    <div class="card" id="section-match">
+      <div class="card-head">
+        <div class="card-icon ci-g">🔗</div>
+        <div class="card-title">ATIVIDADE 2 — LIGA PONTOS: Módulos do Kernel VirtualBox</div>
+        <div class="xp-tag g">+40 XP</div>
+      </div>
+      <div class="card-body">
+        <p style="font-size:.86em;color:var(--muted);margin-bottom:14px">Toque/clique em um item da esquerda e depois no correspondente da direita para conectá-los.</p>
+        <div class="match-wrap">
+          <div class="match-cols">
+            <div class="match-col" id="match-left">
+              <div class="match-item left" data-id="1" onclick="matchClick(this,'left')">vboxdrv</div>
+              <div class="match-item left" data-id="2" onclick="matchClick(this,'left')">vboxnetadp</div>
+              <div class="match-item left" data-id="3" onclick="matchClick(this,'left')">vboxnetflt</div>
+              <div class="match-item left" data-id="4" onclick="matchClick(this,'left')">vboxpci</div>
+            </div>
+            <svg class="match-svg" id="match-svg" height="200"></svg>
+            <div class="match-col" id="match-right">
+              <div class="match-item right" data-id="3" onclick="matchClick(this,'right')">Filtro de rede — injeta e filtra pacotes em interface real</div>
+              <div class="match-item right" data-id="1" onclick="matchClick(this,'right')">Controla o sistema host — único módulo obrigatório</div>
+              <div class="match-item right" data-id="4" onclick="matchClick(this,'right')">Passagem de cartão PCI para o convidado</div>
+              <div class="match-item right" data-id="2" onclick="matchClick(this,'right')">Cria vboxnet — switch virtual para modo bridge/host-only</div>
+            </div>
+          </div>
+          <div class="match-score">Pares encontrados: <span id="match-score">0</span>/4</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ATIVIDADE 3: PREENCHER LACUNAS — NAT Network -->
+    <div class="card" id="section-fill">
+      <div class="card-head">
+        <div class="card-icon ci-o">✏️</div>
+        <div class="card-title">ATIVIDADE 3 — COMPLETE A CONFIGURAÇÃO NAT</div>
+        <div class="xp-tag" style="background:rgba(255,140,0,.1);border-color:rgba(255,140,0,.3);color:var(--orange)">+35 XP</div>
+      </div>
+      <div class="card-body">
+        <p style="font-size:.86em;color:var(--muted);margin-bottom:12px">Clique nas palavras abaixo para preenchê-las nas lacunas do comando VBoxManage correto:</p>
+
+        <div class="fill-words" id="fill-words">
+          <div class="fill-word" data-word="natnetwork" onclick="pickWord(this)">natnetwork</div>
+          <div class="fill-word" data-word="add" onclick="pickWord(this)">add</div>
+          <div class="fill-word" data-word="NatNetwork1" onclick="pickWord(this)">NatNetwork1</div>
+          <div class="fill-word" data-word="10.0.2.0/24" onclick="pickWord(this)">10.0.2.0/24</div>
+          <div class="fill-word" data-word="dhcp" onclick="pickWord(this)">dhcp</div>
+          <div class="fill-word" data-word="enable" onclick="pickWord(this)">enable</div>
+          <div class="fill-word" data-word="bridge" onclick="pickWord(this)">bridge</div>
+          <div class="fill-word" data-word="192.168.1.0/24" onclick="pickWord(this)">192.168.1.0/24</div>
+        </div>
+
+        <div class="fill-wrap">
+          <p style="font-size:.78em;color:var(--muted);margin-bottom:8px;font-family:'JetBrains Mono',monospace">C:\VirtualBox&gt; VBoxManage</p>
+          <div class="fill-sentence">
+            <span style="color:var(--cyan);font-family:'JetBrains Mono',monospace">VBoxManage </span>
+            <span class="fill-blank" id="fb-0" onclick="fillBlank(0)" data-answer="natnetwork">___</span>
+            <span style="font-family:'JetBrains Mono',monospace;color:var(--muted)"> </span>
+            <span class="fill-blank" id="fb-1" onclick="fillBlank(1)" data-answer="add">___</span>
+            <span style="font-family:'JetBrains Mono',monospace;color:var(--muted)"> --netname </span>
+            <span class="fill-blank" id="fb-2" onclick="fillBlank(2)" data-answer="NatNetwork1">___</span>
+            <span style="font-family:'JetBrains Mono',monospace;color:var(--muted)"> --network "</span>
+            <span class="fill-blank" id="fb-3" onclick="fillBlank(3)" data-answer="10.0.2.0/24">___</span>
+            <span style="font-family:'JetBrains Mono',monospace;color:var(--muted)">" --enable --</span>
+            <span class="fill-blank" id="fb-4" onclick="fillBlank(4)" data-answer="dhcp">___</span>
+            <span style="font-family:'JetBrains Mono',monospace;color:var(--muted)"> on</span>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:0;flex-wrap:wrap">
+          <button class="fill-check-btn" onclick="checkFill()">✅ Verificar</button>
+          <button class="fill-reset-btn" onclick="resetFill()">↺ Reiniciar</button>
+        </div>
+        <div class="fill-result" id="fill-result"></div>
+      </div>
+    </div>
+
+    <!-- ATIVIDADE 4: DRAG AND DROP — Endereços IP -->
+    <div class="card" id="section-dnd2">
+      <div class="card-head">
+        <div class="card-icon ci-c">🎮</div>
+        <div class="card-title">ATIVIDADE 4 — ARRASTA E SOLTA: Qual IP para Qual VM?</div>
+        <div class="xp-tag">+30 XP</div>
+      </div>
+      <div class="card-body">
+        <p style="font-size:.86em;color:var(--muted);margin-bottom:10px">Segundo o artigo, os endereços foram atribuídos às VMs. Arraste cada IP para a VM correta na rede NAT (10.0.2.0/24).</p>
+        <div class="dnd-title">💻 IPs disponíveis:</div>
+        <div class="dnd-pool" id="dnd2-pool">
+          <div class="dnd-item green" draggable="true" data-id="W10" ontouchstart="touchStart(event,'dnd2')" ontouchmove="touchMove(event)" ontouchend="touchEnd(event,'dnd2')">10.0.2.4</div>
+          <div class="dnd-item cyan" draggable="true" data-id="KALI" ontouchstart="touchStart(event,'dnd2')" ontouchmove="touchMove(event)" ontouchend="touchEnd(event,'dnd2')">10.0.2.6</div>
+          <div class="dnd-item purple" draggable="true" data-id="SRV" ontouchstart="touchStart(event,'dnd2')" ontouchmove="touchMove(event)" ontouchend="touchEnd(event,'dnd2')">10.0.2.8</div>
+          <div class="dnd-item orange" draggable="true" data-id="GW" ontouchstart="touchStart(event,'dnd2')" ontouchmove="touchMove(event)" ontouchend="touchEnd(event,'dnd2')">10.0.2.1</div>
+        </div>
+
+        <div class="dnd-zones" id="dnd2-zones">
+          <div class="dnd-zone" data-accept="GW" ondragover="dndOver(event)" ondragleave="dndLeave(event)" ondrop="dndDrop(event,'dnd2')">
+            <div class="dnd-zone-label">🔄 NAT Gateway</div>
+          </div>
+          <div class="dnd-zone" data-accept="W10" ondragover="dndOver(event)" ondragleave="dndLeave(event)" ondrop="dndDrop(event,'dnd2')">
+            <div class="dnd-zone-label">🪟 Windows 10 Education</div>
+          </div>
+          <div class="dnd-zone" data-accept="KALI" ondragover="dndOver(event)" ondragleave="dndLeave(event)" ondrop="dndDrop(event,'dnd2')">
+            <div class="dnd-zone-label">☠️ Kali Linux 2020.3</div>
+          </div>
+          <div class="dnd-zone" data-accept="SRV" ondragover="dndOver(event)" ondragleave="dndLeave(event)" ondrop="dndDrop(event,'dnd2')">
+            <div class="dnd-zone-label">🗄️ Windows Server 2019</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+          <button class="dnd-check-btn" onclick="checkDnd2()">🔍 Verificar</button>
+          <button class="dnd-check-btn" style="background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1);color:var(--muted)" onclick="resetDnd2()">↺ Reiniciar</button>
+        </div>
+        <div class="dnd-feedback" id="dnd2-fb"></div>
+      </div>
+    </div>
+
+    <!-- ATIVIDADE 5: SIMULADOR DE REDE -->
+    <div class="card" id="section-sim">
+      <div class="card-head">
+        <div class="card-icon ci-g">📡</div>
+        <div class="card-title">ATIVIDADE 5 — SIMULADOR DE PING</div>
+        <div class="xp-tag g">+50 XP</div>
+      </div>
+      <div class="card-body">
+        <p style="font-size:.86em;color:var(--muted);margin-bottom:12px">Simule a conectividade da rede do artigo! Selecione a origem e o destino e veja se o ping funciona.</p>
+
+        <div class="net-sim">
+          <div class="net-sim-title">🗺️ TOPOLOGIA — REDE MESH (NAT + HOST-ONLY)</div>
+          <div class="vm-grid" id="sim-vms">
+            <div class="vm-box host" id="sim-host">
+              <div class="vm-name" style="color:var(--green)">🪟 Windows 10 Host</div>
+              <div class="vm-ip">10.0.0.21 (Host-Only)<br><span style="color:var(--muted);font-size:.85em">10.0.2.1 (NAT)</span></div>
+            </div>
+            <div class="vm-box" id="sim-w10">
+              <div class="vm-name" style="color:var(--cyan)">🪟 Win 10 Guest</div>
+              <div class="vm-ip">10.0.2.4 (NAT)</div>
+              <div class="vm-ip" style="font-size:.85em;color:var(--muted)">10.0.0.40 (H-Only)</div>
+            </div>
+            <div class="vm-box" id="sim-kali">
+              <div class="vm-name" style="color:var(--red)">☠️ Kali Linux</div>
+              <div class="vm-ip">10.0.2.6 (NAT)</div>
+              <div class="vm-ip" style="font-size:.85em;color:var(--muted)">10.0.0.30 (H-Only)</div>
+            </div>
+            <div class="vm-box" id="sim-srv">
+              <div class="vm-name" style="color:var(--purple)">🗄️ Win Server 2019</div>
+              <div class="vm-ip">10.0.2.8 (NAT)</div>
+              <div class="vm-ip" style="font-size:.85em;color:var(--muted)">10.0.0.50 (H-Only)</div>
+            </div>
+            <div class="vm-box" id="sim-inet" style="border-color:rgba(255,140,0,.3)">
+              <div class="vm-name" style="color:var(--orange)">🌍 Internet</div>
+              <div class="vm-ip" style="color:var(--orange)">google.com</div>
+            </div>
+          </div>
+
+          <div class="ping-row">
+            <select class="ping-select" id="ping-from">
+              <option value="host">Host Windows 10</option>
+              <option value="w10">Win 10 Guest</option>
+              <option value="kali">Kali Linux</option>
+              <option value="srv">Win Server 2019</option>
+            </select>
+            <span style="color:var(--muted);font-size:.8em;font-weight:700">→ ping →</span>
+            <select class="ping-select" id="ping-to">
+              <option value="inet">google.com (Internet)</option>
+              <option value="host">Host Windows 10</option>
+              <option value="w10">Win 10 Guest</option>
+              <option value="kali">Kali Linux</option>
+              <option value="srv">Win Server 2019</option>
+            </select>
+            <select class="ping-select" id="ping-mode">
+              <option value="nat">Rede NAT</option>
+              <option value="hostonly">Host-Only</option>
+            </select>
+            <button class="ping-btn" onclick="runPing()">▶ Ping!</button>
+          </div>
+          <div class="ping-output" id="ping-output">
+            <div class="ping-out-line muted">-- Selecione origem, destino e modo, depois clique em Ping! --</div>
+          </div>
+        </div>
+
+        <div class="warn-box">⚠️ <strong>Atenção:</strong> No modo NAT puro, o <strong>Host não consegue comunicar com as VMs</strong> (a menos que use Port Forwarding), pois nenhuma interface do host é associada à rede NAT. Já no Host-Only, o host tem comunicação completa com todas as VMs!</div>
+
+        <button class="complete-btn" id="btn-sim" onclick="completeAct('sim',this,'bm-sim','📡 Simulador de rede dominado! +50 XP')">✅ Simulador Explorado (+50 XP)</button>
+      </div>
+    </div>
+
+    <!-- ATIVIDADE 6: LACUNAS — HOST-ONLY CONFIG -->
+    <div class="card" id="section-fill2">
+      <div class="card-head">
+        <div class="card-icon ci-p">🖊️</div>
+        <div class="card-title">ATIVIDADE 6 — COMPLETE: Configuração Host-Only</div>
+        <div class="xp-tag p">+30 XP</div>
+      </div>
+      <div class="card-body">
+        <p style="font-size:.86em;color:var(--muted);margin-bottom:12px">Clique nas palavras para preencher corretamente os campos de configuração IPv4 do Host-Only usados no artigo:</p>
+
+        <div class="fill-words" id="fill2-words">
+          <div class="fill-word" data-word="10.0.0.21" onclick="pickWord2(this)">10.0.0.21</div>
+          <div class="fill-word" data-word="255.0.0.0" onclick="pickWord2(this)">255.0.0.0</div>
+          <div class="fill-word" data-word="10.255.255.255" onclick="pickWord2(this)">10.255.255.255</div>
+          <div class="fill-word" data-word="192.168.56.1" onclick="pickWord2(this)">192.168.56.1</div>
+          <div class="fill-word" data-word="255.255.255.0" onclick="pickWord2(this)">255.255.255.0</div>
+          <div class="fill-word" data-word="10.0.0.1" onclick="pickWord2(this)">10.0.0.1</div>
+        </div>
+
+        <div class="fill-wrap">
+          <div class="fill-sentence">
+            📍 Endereço IPv4 do Host: <span class="fill-blank" id="fb2-0" onclick="fillBlank2(0)" data-answer="10.0.0.21">___</span>
+          </div>
+          <div class="fill-sentence">
+            🎭 Máscara de Sub-rede: <span class="fill-blank" id="fb2-1" onclick="fillBlank2(1)" data-answer="255.0.0.0">___</span>
+          </div>
+          <div class="fill-sentence">
+            🚪 Gateway Padrão: <span class="fill-blank" id="fb2-2" onclick="fillBlank2(2)" data-answer="10.255.255.255">___</span>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:0;flex-wrap:wrap">
+          <button class="fill-check-btn" onclick="checkFill2()">✅ Verificar</button>
+          <button class="fill-reset-btn" onclick="resetFill2()">↺ Reiniciar</button>
+        </div>
+        <div class="fill-result" id="fill2-result"></div>
+      </div>
+    </div>
+
+    <!-- ATIVIDADE 7: CÁLCULO DE REDES -->
+    <div class="card" id="section-cidr">
+      <div class="card-head">
+        <div class="card-icon ci-o">🔢</div>
+        <div class="card-title">ATIVIDADE 7 — CALCULADORA CIDR INTERATIVA</div>
+        <div class="xp-tag" style="background:rgba(255,140,0,.1);border-color:rgba(255,140,0,.3);color:var(--orange)">+40 XP</div>
+      </div>
+      <div class="card-body">
+        <p style="font-size:.86em;color:var(--muted);margin-bottom:14px">O artigo pergunta: <em style="color:var(--text)">"Qual seria nossa recomendação para configurar redes virtuais com no máximo <strong>10.000 clientes</strong>?"</em></p>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+          <div class="concept-card">
+            <div class="concept-title">📊 Classes IP disponíveis</div>
+            <p>Classe A: 16.777.214 hosts<br>Classe B: 65.534 hosts<br>Classe C: 254 hosts</p>
+            <div class="info-box" style="margin-top:8px;padding:8px 10px;font-size:.76em">Para 10.000 hosts precisamos de Classe B (mínimo)</div>
+          </div>
+          <div class="concept-card g">
+            <div class="concept-title">🎯 Sub-rede recomendada</div>
+            <p>Classe B /18 fornece <strong style="color:var(--green)">16.382 hosts</strong><br>Rede: 172.31.0.0/18<br>Host mín: 172.31.0.1<br>Host máx: 172.31.63.254</p>
+          </div>
+        </div>
+
+        <h4 style="font-family:'Orbitron',monospace;font-size:.72em;color:var(--orange);margin-bottom:10px;letter-spacing:1px">🎮 TESTE SEUS CONHECIMENTOS — RESPONDA:</h4>
+
+        <div id="cidr-q1" style="margin-bottom:14px">
+          <p style="font-size:.86em;font-weight:700;margin-bottom:8px;color:var(--text)">1. Quantos hosts disponíveis fornece uma sub-rede /18?</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="qopt" style="flex:1;min-width:120px" onclick="cidrAns(1,this,false)">8.190</button>
+            <button class="qopt" style="flex:1;min-width:120px" onclick="cidrAns(1,this,true)">16.382</button>
+            <button class="qopt" style="flex:1;min-width:120px" onclick="cidrAns(1,this,false)">32.766</button>
+            <button class="qopt" style="flex:1;min-width:120px" onclick="cidrAns(1,this,false)">65.534</button>
+          </div>
+        </div>
+        <div id="cidr-q2" style="margin-bottom:14px">
+          <p style="font-size:.86em;font-weight:700;margin-bottom:8px;color:var(--text)">2. Qual a máscara de sub-rede para /18?</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="qopt" style="flex:1;min-width:120px" onclick="cidrAns(2,this,false)">255.255.0.0</button>
+            <button class="qopt" style="flex:1;min-width:120px" onclick="cidrAns(2,this,false)">255.255.128.0</button>
+            <button class="qopt" style="flex:1;min-width:120px" onclick="cidrAns(2,this,true)">255.255.192.0</button>
+            <button class="qopt" style="flex:1;min-width:120px" onclick="cidrAns(2,this,false)">255.255.224.0</button>
+          </div>
+        </div>
+        <div id="cidr-q3" style="margin-bottom:10px">
+          <p style="font-size:.86em;font-weight:700;margin-bottom:8px;color:var(--text)">3. Qual é o endereço de broadcast da rede 172.31.0.0/18?</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="qopt" style="flex:1;min-width:120px" onclick="cidrAns(3,this,false)">172.31.63.0</button>
+            <button class="qopt" style="flex:1;min-width:120px" onclick="cidrAns(3,this,true)">172.31.63.255</button>
+            <button class="qopt" style="flex:1;min-width:120px" onclick="cidrAns(3,this,false)">172.31.255.255</button>
+            <button class="qopt" style="flex:1;min-width:120px" onclick="cidrAns(3,this,false)">172.31.0.255</button>
+          </div>
+        </div>
+
+        <div class="success-box" id="cidr-congrats" style="display:none">🎉 <strong>Excelente!</strong> Você dominou o cálculo CIDR! A rede 172.31.0.0/18 tem <strong>16.382 hosts</strong> — suficiente para nosso data center com 10.000 clientes!</div>
+
+        <button class="complete-btn" id="btn-cidr" onclick="completeAct('nat',this,'bm-nat','🔢 Cálculo CIDR dominado! +40 XP')">✅ Completei o Cálculo de Redes (+40 XP)</button>
+      </div>
+    </div>
+
+    <!-- QUIZ FINAL -->
+    <div class="card" id="section-quiz">
+      <div class="card-head">
+        <div class="card-icon ci-p">🧠</div>
+        <div class="card-title">QUIZ FINAL — VirtualBox Inter-Networking</div>
+        <div class="xp-tag p">até +95 XP</div>
+      </div>
+      <div class="card-body">
+        <div class="quiz-prog-wrap">
+          <div class="quiz-prog-label"><span>Progresso do Quiz</span><span id="q-cnt">0/7</span></div>
+          <div class="quiz-prog-bg"><div class="quiz-prog-fill" id="q-prog"></div></div>
+        </div>
+
+        <!-- Q0 -->
+        <div class="qcard active" id="qc0">
+          <h4>1️⃣ Qual modo de rede permite que a VM acesse a internet MAS o host não consegue acessar a VM diretamente (sem port forwarding)?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(0,0,0)">🔄 NAT (modo padrão)</button>
+            <button class="qopt" onclick="ansQ(0,1,0)">🖥️ Host-Only</button>
+            <button class="qopt" onclick="ansQ(0,2,0)">🌉 Bridge</button>
+            <button class="qopt" onclick="ansQ(0,3,0)">🔒 Internal Network</button>
+          </div>
+          <div class="qfb" id="qfb0"></div>
+          <div class="qnx" id="qnx0"><button class="qnx-btn" onclick="nextQ(1)">Próxima →</button></div>
+        </div>
+
+        <!-- Q1 -->
+        <div class="qcard" id="qc1">
+          <h4>2️⃣ No artigo, quantas VMs foram instaladas no VirtualBox para os experimentos?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(1,0,1)">2 VMs</button>
+            <button class="qopt" onclick="ansQ(1,1,1)">3 VMs</button>
+            <button class="qopt" onclick="ansQ(1,2,1)">4 VMs</button>
+            <button class="qopt" onclick="ansQ(1,3,1)">5 VMs</button>
+          </div>
+          <div class="qfb" id="qfb1"></div>
+          <div class="qnx" id="qnx1"><button class="qnx-btn" onclick="nextQ(2)">Próxima →</button></div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="qcard" id="qc2">
+          <h4>3️⃣ Qual é o único módulo de kernel VirtualBox que é OBRIGATÓRIO e controla o sistema host?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(2,0,2)">vboxnetflt</button>
+            <button class="qopt" onclick="ansQ(2,1,2)">vboxnetadp</button>
+            <button class="qopt" onclick="ansQ(2,2,2)">vboxdrv</button>
+            <button class="qopt" onclick="ansQ(2,3,2)">vboxpci</button>
+          </div>
+          <div class="qfb" id="qfb2"></div>
+          <div class="qnx" id="qnx2"><button class="qnx-btn" onclick="nextQ(3)">Próxima →</button></div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="qcard" id="qc3">
+          <h4>4️⃣ No modo Host-Only do artigo, qual endereço IP foi atribuído ao host Windows 10?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(3,0,3)">10.0.2.1</button>
+            <button class="qopt" onclick="ansQ(3,1,3)">192.168.56.1</button>
+            <button class="qopt" onclick="ansQ(3,2,3)">10.0.0.1</button>
+            <button class="qopt" onclick="ansQ(3,3,3)">10.0.0.21</button>
+          </div>
+          <div class="qfb" id="qfb3"></div>
+          <div class="qnx" id="qnx3"><button class="qnx-btn" onclick="nextQ(4)">Próxima →</button></div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="qcard" id="qc4">
+          <h4>5️⃣ Para configurar IP estático no Kali Linux, qual arquivo foi modificado?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(4,0,1)">/etc/hosts</button>
+            <button class="qopt" onclick="ansQ(4,1,1)">/etc/network/interfaces</button>
+            <button class="qopt" onclick="ansQ(4,2,1)">/etc/netplan/config.yaml</button>
+            <button class="qopt" onclick="ansQ(4,3,1)">/etc/resolv.conf</button>
+          </div>
+          <div class="qfb" id="qfb4"></div>
+          <div class="qnx" id="qnx4"><button class="qnx-btn" onclick="nextQ(5)">Próxima →</button></div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="qcard" id="qc5">
+          <h4>6️⃣ O modo de rede Host-Only pode ser descrito como uma versão híbrida de quais dois modos?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(5,0,2)">NAT e Internal</button>
+            <button class="qopt" onclick="ansQ(5,1,2)">Bridge e NAT</button>
+            <button class="qopt" onclick="ansQ(5,2,2)">Bridge e Internal Network</button>
+            <button class="qopt" onclick="ansQ(5,3,2)">Internal e NAT Service</button>
+          </div>
+          <div class="qfb" id="qfb5"></div>
+          <div class="qnx" id="qnx5"><button class="qnx-btn" onclick="nextQ(6)">Próxima →</button></div>
+        </div>
+
+        <!-- Q6 -->
+        <div class="qcard" id="qc6">
+          <h4>7️⃣ Para um data center com 10.000 hosts, qual sub-rede CIDR é a mais eficiente, sem desperdiçar endereços?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(6,0,2)">/16 — 65.534 hosts (desperdício)</button>
+            <button class="qopt" onclick="ansQ(6,1,2)">/17 — 32.766 hosts (excesso)</button>
+            <button class="qopt" onclick="ansQ(6,2,2)">/18 — 16.382 hosts ✓</button>
+            <button class="qopt" onclick="ansQ(6,3,2)">/19 — 8.190 hosts (insuficiente)</button>
+          </div>
+          <div class="qfb" id="qfb6"></div>
+          <div class="qnx" id="qnx6"><button class="qnx-btn" onclick="showResult()">Ver Resultado 🏆</button></div>
+        </div>
+
+        <!-- RESULT -->
+        <div class="q-result" id="q-result">
+          <span class="q-score" id="q-score">0/7</span>
+          <div class="q-msg" id="q-msg"></div>
+          <div class="q-xp" id="q-xp-earned"></div>
+          <button class="restart-btn" onclick="restartQuiz()">↺ Tentar Novamente</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONQUISTAS -->
+    <div class="card" id="section-ach">
+      <div class="card-head">
+        <div class="card-icon ci-c">🏆</div>
+        <div class="card-title">CONQUISTAS</div>
+      </div>
+      <div class="card-body">
+        <div class="ach-grid">
+          <div class="ach-card" id="a-start"><span class="ach-icon">🚀</span><div class="ach-name">Módulo Iniciado</div></div>
+          <div class="ach-card" id="a-obj"><span class="ach-icon">🎯</span><div class="ach-name">Foco Total</div></div>
+          <div class="ach-card" id="a-dnd1"><span class="ach-icon">🧩</span><div class="ach-name">Mestre dos Modos</div></div>
+          <div class="ach-card" id="a-dnd2"><span class="ach-icon">🎮</span><div class="ach-name">IP Correto</div></div>
+          <div class="ach-card" id="a-match"><span class="ach-icon">🔗</span><div class="ach-name">Kernel Expert</div></div>
+          <div class="ach-card" id="a-fill"><span class="ach-icon">✏️</span><div class="ach-name">VBoxManage Pro</div></div>
+          <div class="ach-card" id="a-sim"><span class="ach-icon">📡</span><div class="ach-name">Network Tester</div></div>
+          <div class="ach-card" id="a-nat"><span class="ach-icon">🔄</span><div class="ach-name">NAT Expert</div></div>
+          <div class="ach-card" id="a-host"><span class="ach-icon">🖥️</span><div class="ach-name">Host-Only Master</div></div>
+          <div class="ach-card" id="a-quiz"><span class="ach-icon">⚡</span><div class="ach-name">Sinal Forte</div></div>
+          <div class="ach-card" id="a-perfect"><span class="ach-icon">💎</span><div class="ach-name">Quiz Perfeito</div></div>
+          <div class="ach-card" id="a-all"><span class="ach-icon">🏆</span><div class="ach-name">VirtualBox Master</div></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// =================== STATE ===================
+let xp = 0, streak = 0, badges = 0;
+let objChecked = new Array(7).fill(false);
+let actsDone = {};
+let qCorrect = 0, qAnswers = {};
+let matchSel = null, matchPairs = 0;
+let fillSelected = null;
+let fill2Selected = null;
+let dnd1Correct = false, dnd2Correct = false;
+let matchDone = false, fillDone = false, fill2Done = false;
+let cidrAnswers = {1:false,2:false,3:false};
+let pingsRun = 0;
+let simXpGiven = false;
+
+// DnD state
+let dndDragId = null, dndDragEl = null, dndDragGroup = null;
+// Touch DnD
+let touchDragEl = null, touchDragGroup = null, touchClone = null;
+
+// =================== HUD ===================
+const LEVELS = [
+  [0,'Iniciante'],[100,'Aprendiz'],[200,'Explorador'],[350,'Roteador'],[500,'Engenheiro'],
+  [700,'Especialista'],[900,'Arquiteto'],[1100,'VirtualBox Master']
+];
+function updateHUD() {
+  document.getElementById('hud-xp').textContent = xp;
+  document.getElementById('hud-streak').textContent = streak;
+  document.getElementById('hud-badges').textContent = badges;
+  let lv = LEVELS[0], nx = LEVELS[1];
+  for (let i = 0; i < LEVELS.length; i++) {
+    if (xp >= LEVELS[i][0]) { lv = LEVELS[i]; nx = LEVELS[i+1]||LEVELS[LEVELS.length-1]; }
+  }
+  document.getElementById('hud-level').textContent = lv[1];
+  const pct = nx[0] > lv[0] ? Math.min(((xp-lv[0])/(nx[0]-lv[0]))*100,100) : 100;
+  document.getElementById('hud-pct').textContent = Math.round(pct)+'%';
+  document.getElementById('hud-bar').style.width = pct+'%';
+
+  // Progress bars
+  const objDone = objChecked.filter(Boolean).length;
+  setBar('obj-bar','obj-pct', objDone/7*100, Math.round(objDone/7*100)+'%');
+  const actCount = Object.keys(actsDone).length;
+  setBar('act-bar','act-pct', actCount/3*100, Math.round(actCount/3*100)+'%');
+  setBar('quiz-bar','quiz-pct', Math.min(qCorrect/7*100,100), Math.round(qCorrect/7*100)+'%');
+  setBar('ach-bar','ach-pct', badges/12*100, badges+'/12');
+}
+function setBar(bid,lid,pct,txt) {
+  document.getElementById(bid).style.width = Math.min(pct,100)+'%';
+  document.getElementById(lid).textContent = txt;
+}
+function addXP(amount, msg, icon) {
+  xp += amount; updateHUD();
+  toast(icon||'⚡', '+'+amount+' XP', msg);
+}
+function toast(icon, title, msg) {
+  document.getElementById('toast-icon').textContent = icon;
+  document.getElementById('toast-title').textContent = title;
+  document.getElementById('toast-msg').textContent = msg;
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+function unlock(achId, badgeId, msg) {
+  const a = document.getElementById(achId);
+  const b = badgeId ? document.getElementById(badgeId) : null;
+  if (a && !a.classList.contains('unlocked')) {
+    a.classList.add('unlocked');
+    if (b) b.classList.add('unlocked');
+    badges++; updateHUD();
+    toast('🏆','Badge desbloqueado!', msg);
+  }
+}
+
+// =================== INIT ===================
+window.onload = function() {
+  unlock('a-start','bm-start','Semana 6 iniciada! Bom estudo! 🚀');
+  addXP(10,'Módulo iniciado!','🌐');
+  updateHUD();
+};
+
+// =================== OBJECTIVES ===================
+function toggleObj(el, idx) {
+  el.classList.toggle('checked');
+  objChecked[idx] = el.classList.contains('checked');
+  if (objChecked[idx]) { addXP(5,'Objetivo marcado!','✅'); streak++; }
+  else streak = Math.max(0, streak-1);
+  const done = objChecked.filter(Boolean).length;
+  if (done === 7) { addXP(25,'Todos os objetivos marcados!','🎯'); unlock('a-obj','bm-obj','Foco Total alcançado!'); }
+  updateHUD();
+}
+
+// =================== COMPLETE ACTIVITY ===================
+function completeAct(key, btn, badgeId, msg) {
+  if (actsDone[key]) return;
+  actsDone[key] = true;
+  btn.disabled = true; btn.textContent = '✅ Atividade Concluída!';
+  const xpMap = {conceitos:20, sim:50, nat:40};
+  addXP(xpMap[key]||30, msg, '⚔️');
+  if (document.getElementById('a-'+key)) unlock('a-'+key, badgeId, msg);
+  else if (badgeId) { const b = document.getElementById(badgeId); if(b && !b.classList.contains('unlocked')){ b.classList.add('unlocked'); badges++; updateHUD(); toast('🏆','Badge desbloqueado!', msg); } }
+  streak++; updateHUD();
+  if (Object.keys(actsDone).length >= 3) {
+    setTimeout(()=>{ addXP(60,'TODAS AS ATIVIDADES CONCLUÍDAS!','🏆'); unlock('a-all','bm-all','VirtualBox Master!'); }, 500);
+  }
+}
+
+// =================== DRAG & DROP — Desktop ===================
+document.addEventListener('dragstart', e => {
+  const el = e.target.closest('[data-id]');
+  if (!el) return;
+  dndDragEl = el;
+  dndDragId = el.dataset.id;
+  setTimeout(() => el.classList.add('dragging'), 0);
+});
+document.addEventListener('dragend', e => {
+  if (dndDragEl) dndDragEl.classList.remove('dragging');
+  dndDragEl = null; dndDragId = null;
+});
+function dndOver(e) { e.preventDefault(); e.currentTarget.classList.add('over'); }
+function dndLeave(e) { e.currentTarget.classList.remove('over'); }
+function dndDrop(e, group) {
+  e.preventDefault();
+  const zone = e.currentTarget;
+  zone.classList.remove('over');
+  if (!dndDragEl || !dndDragId) return;
+  // Move item into zone
+  zone.appendChild(dndDragEl);
+  dndDragEl.classList.remove('dragging');
+  dndDragEl = null; dndDragId = null;
+}
+
+// =================== TOUCH DnD ===================
+function touchStart(e, group) {
+  const el = e.currentTarget;
+  touchDragEl = el;
+  touchDragGroup = group;
+  touchClone = el.cloneNode(true);
+  touchClone.style.cssText = 'position:fixed;z-index:9999;opacity:.75;pointer-events:none;';
+  document.body.appendChild(touchClone);
+  const r = el.getBoundingClientRect();
+  touchClone.style.left = r.left+'px'; touchClone.style.top = r.top+'px';
+  touchClone.style.width = r.width+'px';
+}
+function touchMove(e) {
+  if (!touchClone) return;
+  e.preventDefault();
+  const t = e.touches[0];
+  touchClone.style.left = (t.clientX - touchClone.offsetWidth/2)+'px';
+  touchClone.style.top = (t.clientY - touchClone.offsetHeight/2)+'px';
+  // Highlight zones under finger
+  document.querySelectorAll('.dnd-zone').forEach(z => {
+    const r = z.getBoundingClientRect();
+    if (t.clientX >= r.left && t.clientX <= r.right && t.clientY >= r.top && t.clientY <= r.bottom) {
+      z.classList.add('over');
+    } else {
+      z.classList.remove('over');
+    }
+  });
+}
+function touchEnd(e, group) {
+  if (!touchDragEl || !touchClone) return;
+  const t = e.changedTouches[0];
+  document.body.removeChild(touchClone);
+  touchClone = null;
+  document.querySelectorAll('.dnd-zone').forEach(z => {
+    z.classList.remove('over');
+    const r = z.getBoundingClientRect();
+    if (t.clientX >= r.left && t.clientX <= r.right && t.clientY >= r.top && t.clientY <= r.bottom) {
+      z.appendChild(touchDragEl);
+    }
+  });
+  touchDragEl = null;
+}
+
+// =================== DND1 CHECK ===================
+function checkDnd1() {
+  const zones = document.querySelectorAll('#dnd1-zones .dnd-zone');
+  const answers = {
+    'NAT / NAT Service': ['A'],
+    'Host-Only': ['B','E'],
+    'Internal Network': ['C'],
+    'Bridged': ['D']
+  };
+  let correct = 0, total = 4;
+  zones.forEach(z => {
+    const label = z.querySelector('.dnd-zone-label').textContent.trim().replace(/^[^ ]+ /,'');
+    const key = Object.keys(answers).find(k => label.includes(k.split('/')[0].trim()) || label.includes(k));
+    const items = Array.from(z.querySelectorAll('.dnd-item')).map(i=>i.dataset.id);
+    const expected = answers[key] || [];
+    // Count matching
+    const matched = items.filter(i => expected.includes(i)).length;
+    if (matched > 0 && matched === expected.length) { z.classList.add('correct'); z.classList.remove('wrong'); correct++; }
+    else if (items.length > 0) { z.classList.add('wrong'); z.classList.remove('correct'); }
+  });
+  const fb = document.getElementById('dnd1-fb');
+  if (correct >= 3) {
+    fb.className = 'dnd-feedback show ok';
+    fb.innerHTML = '✅ <strong>Muito bem!</strong> Você classificou corretamente os modos de rede! NAT = internet, Host-Only = comunicação com host, Internal = isolamento, Bridge = dispositivo físico.';
+    if (!dnd1Correct) { dnd1Correct = true; addXP(30,'Modos de rede dominados!','🧩'); unlock('a-dnd1','bm-dnd1','Mestre dos Modos de Rede!'); streak++; updateHUD(); }
+  } else {
+    fb.className = 'dnd-feedback show fail';
+    fb.innerHTML = '❌ Alguns erros! Dica: NAT = acesso à internet, Host-Only = fala com o host, Internal = só VMs entre si, Bridge = aparece na LAN física.';
+  }
+}
+function resetDnd1() {
+  const pool = document.getElementById('dnd1-pool');
+  document.querySelectorAll('#dnd1-zones .dnd-item').forEach(i => pool.appendChild(i));
+  document.querySelectorAll('#dnd1-zones .dnd-zone').forEach(z => { z.classList.remove('correct','wrong'); });
+  document.getElementById('dnd1-fb').className = 'dnd-feedback';
+}
+
+// =================== DND2 CHECK ===================
+function checkDnd2() {
+  const zones = document.querySelectorAll('#dnd2-zones .dnd-zone');
+  const answers = {'Gateway':'GW', 'Windows 10 Education':'W10', 'Kali Linux 2020.3':'KALI', 'Windows Server 2019':'SRV'};
+  let correct = 0;
+  zones.forEach(z => {
+    const label = z.querySelector('.dnd-zone-label').textContent;
+    const key = Object.keys(answers).find(k => label.includes(k));
+    const items = Array.from(z.querySelectorAll('.dnd-item')).map(i=>i.dataset.id);
+    if (key && items.includes(answers[key])) { z.classList.add('correct'); z.classList.remove('wrong'); correct++; }
+    else if (items.length > 0) { z.classList.add('wrong'); z.classList.remove('correct'); }
+  });
+  const fb = document.getElementById('dnd2-fb');
+  if (correct === 4) {
+    fb.className = 'dnd-feedback show ok';
+    fb.innerHTML = '✅ <strong>Perfeito!</strong> IPs corretos: Gateway=10.0.2.1, Win10=10.0.2.4, Kali=10.0.2.6, Server=10.0.2.8.';
+    if (!dnd2Correct) { dnd2Correct = true; addXP(30,'IPs mapeados corretamente!','🎮'); unlock('a-dnd2','bm-dnd2','IP Expert!'); streak++; updateHUD(); }
+  } else {
+    fb.className = 'dnd-feedback show fail';
+    fb.innerHTML = '❌ Errado! Lembre: o gateway fica em .1, Win10 recebeu .4, Kali recebeu .6 e o Server recebeu .8 via DHCP.';
+  }
+}
+function resetDnd2() {
+  const pool = document.getElementById('dnd2-pool');
+  document.querySelectorAll('#dnd2-zones .dnd-item').forEach(i => pool.appendChild(i));
+  document.querySelectorAll('#dnd2-zones .dnd-zone').forEach(z => { z.classList.remove('correct','wrong'); });
+  document.getElementById('dnd2-fb').className = 'dnd-feedback';
+}
+
+// =================== MATCH (LIGA PONTOS) ===================
+function matchClick(el, side) {
+  if (el.classList.contains('matched')) return;
+  const allItems = document.querySelectorAll('.match-item');
+  if (matchSel && matchSel.side === side) {
+    allItems.forEach(i => i.classList.remove('selected'));
+    if (matchSel.el === el) { matchSel = null; return; }
+  }
+  if (!matchSel) {
+    allItems.forEach(i => i.classList.remove('selected'));
+    el.classList.add('selected');
+    matchSel = {el, side, id: el.dataset.id};
+    return;
+  }
+  if (matchSel.side === side) {
+    allItems.forEach(i => i.classList.remove('selected'));
+    el.classList.add('selected');
+    matchSel = {el, side, id: el.dataset.id};
+    return;
+  }
+  // Check match
+  const leftEl = side === 'right' ? matchSel.el : el;
+  const rightEl = side === 'right' ? el : matchSel.el;
+  if (leftEl.dataset.id === rightEl.dataset.id) {
+    leftEl.classList.add('matched'); leftEl.classList.remove('selected');
+    rightEl.classList.add('matched'); rightEl.classList.remove('selected');
+    matchPairs++;
+    drawMatchLine(leftEl, rightEl);
+    document.getElementById('match-score').textContent = matchPairs;
+    addXP(10,'Par encontrado!','🔗');
+    if (matchPairs === 4) {
+      if (!matchDone) { matchDone = true; addXP(20,'Todos os pares encontrados!','🔗'); unlock('a-match','bm-match','Kernel Expert!'); streak++; updateHUD(); }
+    }
+  } else {
+    leftEl.classList.add('wrong-flash'); rightEl.classList.add('wrong-flash');
+    setTimeout(()=>{leftEl.classList.remove('wrong-flash','selected');rightEl.classList.remove('wrong-flash','selected');}, 400);
+  }
+  matchSel = null;
+}
+function drawMatchLine(leftEl, rightEl) {
+  const svg = document.getElementById('match-svg');
+  const svgR = svg.getBoundingClientRect();
+  const lR = leftEl.getBoundingClientRect();
+  const rR = rightEl.getBoundingClientRect();
+  const x1 = 0, y1 = lR.top + lR.height/2 - svgR.top;
+  const x2 = 60, y2 = rR.top + rR.height/2 - svgR.top;
+  svg.setAttribute('height', Math.max(200, svgR.height));
+  const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+  line.setAttribute('x1',x1); line.setAttribute('y1',y1);
+  line.setAttribute('x2',x2); line.setAttribute('y2',y2);
+  line.setAttribute('stroke','rgba(0,255,136,0.6)'); line.setAttribute('stroke-width','2');
+  svg.appendChild(line);
+}
+
+// =================== FILL IN BLANK 1 ===================
+let fillCurrent = null;
+function pickWord(el) {
+  if (el.classList.contains('used')) return;
+  document.querySelectorAll('.fill-word').forEach(w => w.style.boxShadow='');
+  el.style.boxShadow = '0 0 12px rgba(0,212,255,0.5)';
+  fillCurrent = el.dataset.word;
+}
+function fillBlank(idx) {
+  if (!fillCurrent) { toast('⚠️','Selecione','Clique em uma palavra primeiro!'); return; }
+  const blank = document.getElementById('fb-'+idx);
+  if (blank.classList.contains('filled')) return;
+  blank.textContent = fillCurrent;
+  blank.classList.add('filled');
+  blank.dataset.filled = fillCurrent;
+  document.querySelectorAll('.fill-word').forEach(w => {
+    if (w.dataset.word === fillCurrent) w.classList.add('used');
+  });
+  fillCurrent = null;
+  document.querySelectorAll('.fill-word').forEach(w => w.style.boxShadow='');
+}
+function checkFill() {
+  let correct = 0;
+  for (let i = 0; i < 5; i++) {
+    const b = document.getElementById('fb-'+i);
+    if (b.dataset.filled === b.dataset.answer) { b.classList.remove('wrong-fill'); b.classList.add('filled'); correct++; }
+    else { b.classList.add('wrong-fill'); }
+  }
+  const res = document.getElementById('fill-result');
+  if (correct === 5) {
+    res.className = 'fill-result show ok';
+    res.innerHTML = '✅ <strong>Perfeito!</strong> Comando correto: <code>VBoxManage natnetwork add --netname NatNetwork1 --network "10.0.2.0/24" --enable --dhcp on</code>';
+    if (!fillDone) { fillDone = true; addXP(35,'Comando VBoxManage correto!','✏️'); unlock('a-fill','bm-fill','VBoxManage Pro!'); streak++; updateHUD(); }
+  } else {
+    res.className = 'fill-result show fail';
+    res.innerHTML = '❌ '+correct+'/5 corretos. Tente de novo! Dica: o subcomando é "natnetwork add", a rede é NatNetwork1, o CIDR é 10.0.2.0/24.';
+  }
+}
+function resetFill() {
+  for (let i = 0; i < 5; i++) {
+    const b = document.getElementById('fb-'+i);
+    b.textContent = '___'; b.classList.remove('filled','wrong-fill'); b.dataset.filled='';
+  }
+  document.querySelectorAll('.fill-word').forEach(w => { w.classList.remove('used'); w.style.boxShadow=''; });
+  document.getElementById('fill-result').className = 'fill-result';
+  fillCurrent = null;
+}
+
+// =================== FILL IN BLANK 2 ===================
+let fill2Current = null;
+function pickWord2(el) {
+  if (el.classList.contains('used')) return;
+  document.querySelectorAll('#fill2-words .fill-word').forEach(w => w.style.boxShadow='');
+  el.style.boxShadow = '0 0 12px rgba(0,212,255,0.5)';
+  fill2Current = el.dataset.word;
+}
+function fillBlank2(idx) {
+  if (!fill2Current) { toast('⚠️','Selecione','Clique em uma palavra primeiro!'); return; }
+  const blank = document.getElementById('fb2-'+idx);
+  if (blank.classList.contains('filled')) return;
+  blank.textContent = fill2Current;
+  blank.classList.add('filled');
+  blank.dataset.filled = fill2Current;
+  document.querySelectorAll('#fill2-words .fill-word').forEach(w => {
+    if (w.dataset.word === fill2Current) w.classList.add('used');
+  });
+  fill2Current = null;
+  document.querySelectorAll('#fill2-words .fill-word').forEach(w => w.style.boxShadow='');
+}
+function checkFill2() {
+  let correct = 0;
+  for (let i = 0; i < 3; i++) {
+    const b = document.getElementById('fb2-'+i);
+    if (b.dataset.filled === b.dataset.answer) { b.classList.remove('wrong-fill'); b.classList.add('filled'); correct++; }
+    else { b.classList.add('wrong-fill'); }
+  }
+  const res = document.getElementById('fill2-result');
+  if (correct === 3) {
+    res.className = 'fill-result show ok';
+    res.innerHTML = '✅ <strong>Excelente!</strong> Host IPv4=10.0.0.21, Máscara=255.0.0.0, Gateway=10.255.255.255. Configuração Host-Only correta!';
+    if (!fill2Done) { fill2Done = true; addXP(30,'Host-Only configurado!','🖥️'); unlock('a-host','bm-host','Host-Only Master!'); streak++; updateHUD(); }
+  } else {
+    res.className = 'fill-result show fail';
+    res.innerHTML = '❌ '+correct+'/3 corretos. Dica: O host recebeu 10.0.0.21 com máscara 255.0.0.0 (classe A) e gateway 10.255.255.255.';
+  }
+}
+function resetFill2() {
+  for (let i = 0; i < 3; i++) {
+    const b = document.getElementById('fb2-'+i);
+    b.textContent = '___'; b.classList.remove('filled','wrong-fill'); b.dataset.filled='';
+  }
+  document.querySelectorAll('#fill2-words .fill-word').forEach(w => { w.classList.remove('used'); w.style.boxShadow=''; });
+  document.getElementById('fill2-result').className = 'fill-result';
+  fill2Current = null;
+}
+
+// =================== PING SIMULATOR ===================
+const pingMap = {
+  // [from][to][mode] = possible | impossible
+  host: {
+    inet: {nat:'ok', hostonly:'fail-hostonly'},
+    w10: {nat:'fail-nat-host', hostonly:'ok'},
+    kali: {nat:'fail-nat-host', hostonly:'ok'},
+    srv: {nat:'fail-nat-host', hostonly:'ok'},
+    host: {nat:'self', hostonly:'self'}
+  },
+  w10: {
+    inet: {nat:'ok', hostonly:'fail-no-inet'},
+    host: {nat:'fail-nat-host', hostonly:'ok'},
+    kali: {nat:'ok', hostonly:'ok'},
+    srv: {nat:'ok', hostonly:'ok'},
+    w10: {nat:'self', hostonly:'self'}
+  },
+  kali: {
+    inet: {nat:'ok', hostonly:'fail-no-inet'},
+    host: {nat:'fail-nat-host', hostonly:'ok'},
+    w10: {nat:'ok', hostonly:'ok'},
+    srv: {nat:'ok', hostonly:'ok'},
+    kali: {nat:'self', hostonly:'self'}
+  },
+  srv: {
+    inet: {nat:'ok', hostonly:'fail-no-inet'},
+    host: {nat:'fail-nat-host', hostonly:'ok'},
+    w10: {nat:'ok', hostonly:'ok'},
+    kali: {nat:'ok', hostonly:'ok'},
+    srv: {nat:'self', hostonly:'self'}
+  }
+};
+const ipMap = {
+  host:{nat:'10.0.2.1', hostonly:'10.0.0.21'},
+  w10:{nat:'10.0.2.4', hostonly:'10.0.0.40'},
+  kali:{nat:'10.0.2.6', hostonly:'10.0.0.30'},
+  srv:{nat:'10.0.2.8', hostonly:'10.0.0.50'},
+  inet:{nat:'216.58.223.68', hostonly:'216.58.223.68'}
+};
+function runPing() {
+  const from = document.getElementById('ping-from').value;
+  const to = document.getElementById('ping-to').value;
+  const mode = document.getElementById('ping-mode').value;
+  const out = document.getElementById('ping-output');
+  if (from === to) { out.innerHTML = '<div class="ping-out-line muted">⚠️ Origem e destino são iguais. Escolha destinos diferentes!</div>'; return; }
+  const result = (pingMap[from]||{})[to]?.[mode] || 'fail-nat-host';
+  const targetIP = ipMap[to]?.[mode] || '10.0.2.x';
+  const fromIP = ipMap[from]?.[mode] || '10.0.x.x';
+  const toLabel = {inet:'google.com', w10:'Win 10 Guest', kali:'Kali Linux', srv:'Win Server 2019', host:'Host Windows 10'}[to];
+  let html = '';
+  html += `<div class="ping-out-line info">Modo: ${mode==='nat'?'NAT Network':'Host-Only'} | ${from} → ${to}</div>`;
+  html += `<div class="ping-out-line muted">Origem: ${fromIP} | Destino: ${targetIP} (${toLabel})</div>`;
+  if (result === 'ok') {
+    html += `<div class="ping-out-line">Disparando ${targetIP} com 32 bytes de dados:</div>`;
+    for (let i=0;i<4;i++) { const ms = Math.floor(Math.random()*5)+1; html += `<div class="ping-out-line">Resposta de ${targetIP}: bytes=32 tempo=${ms}ms TTL=64</div>`; }
+    html += `<div class="ping-out-line">Estatísticas de ping para ${targetIP}: Enviados=4, Recebidos=4, Perdidos=0 (0% de perda)</div>`;
+  } else if (result === 'fail-nat-host') {
+    html += `<div class="ping-out-line err">FALHA: Host não pode comunicar com VMs via NAT!</div>`;
+    html += `<div class="ping-out-line err">Motivo: Nenhuma interface do host está associada à rede NAT.</div>`;
+    html += `<div class="ping-out-line muted">Solução: Use Host-Only para comunicação Host↔VM, ou configure Port Forwarding.</div>`;
+  } else if (result === 'fail-no-inet') {
+    html += `<div class="ping-out-line err">FALHA: Rede Host-Only não tem acesso à internet!</div>`;
+    html += `<div class="ping-out-line err">Esgotado o tempo de espera para ${targetIP}.</div>`;
+    html += `<div class="ping-out-line muted">Solução: Use o adaptador NAT (Adaptador 1) para acessar a internet.</div>`;
+  } else if (result === 'fail-hostonly') {
+    html += `<div class="ping-out-line err">FALHA: Host não pode acessar internet pelo Host-Only!</div>`;
+    html += `<div class="ping-out-line muted">Host-Only é uma rede isolada. Para internet use NAT no adaptador 1.</div>`;
+  } else if (result === 'self') {
+    html += `<div class="ping-out-line err">⚠️ Origem e destino são o mesmo dispositivo!</div>`;
+  }
+  out.innerHTML = html;
+
+  // Highlight active VM
+  const simIds = {host:'sim-host',w10:'sim-w10',kali:'sim-kali',srv:'sim-srv',inet:'sim-inet'};
+  document.querySelectorAll('.vm-box').forEach(v => v.classList.remove('active'));
+  if (simIds[from]) document.getElementById(simIds[from]).classList.add('active');
+  if (simIds[to]) setTimeout(()=>document.getElementById(simIds[to]).classList.add('active'),300);
+
+  pingsRun++;
+  if (pingsRun === 1) addXP(10,'Primeiro ping simulado!','📡');
+  if (pingsRun >= 5 && !simXpGiven) { simXpGiven = true; addXP(15,'5 pings simulados!','📡'); unlock('a-sim','bm-sim','Network Tester!'); }
+  updateHUD();
+}
+
+// =================== CIDR QUIZ ===================
+let cidrXpGiven = false;
+function cidrAns(q, btn, correct) {
+  const allBtns = document.querySelectorAll('#cidr-q'+q+' .qopt');
+  allBtns.forEach(b => b.disabled = true);
+  btn.classList.add(correct ? 'correct' : 'wrong');
+  if (!correct) allBtns.forEach(b => { if (b.textContent.includes('✓') || (q===1&&b.textContent.includes('16.382')) || (q===2&&b.textContent.includes('255.255.192')) || (q===3&&b.textContent.includes('63.255'))) b.classList.add('correct'); });
+  if (correct) { cidrAnswers[q] = true; addXP(10,'Resposta CIDR correta!','🔢'); streak++; }
+  if (cidrAnswers[1] && cidrAnswers[2] && cidrAnswers[3]) {
+    document.getElementById('cidr-congrats').style.display = 'block';
+    if (!cidrXpGiven) { cidrXpGiven = true; addXP(20,'Todos os CIDRs corretos!','🔢'); }
+  }
+  updateHUD();
+}
+
+// =================== QUIZ ===================
+const QFB = [
+  { ok:'✅ Correto! NAT padrão permite que a VM acesse internet, mas o host não pode iniciar conexões com a VM. O NAT Service (rede NAT) resolve isso pois permite VM↔VM também.' },
+  { ok:'✅ Exato! Foram 3 VMs: Kali Linux 2020.3, Windows 10 Education e Windows Server 2019 Standard.' },
+  { ok:'✅ Perfeito! O vboxdrv é o único módulo obrigatório — ele controla o sistema host e gerencia os switches host/guest.' },
+  { ok:'✅ Correto! O host Windows 10 recebeu o IP 10.0.0.21 na interface Host-Only, com máscara 255.0.0.0 e gateway 10.255.255.255.' },
+  { ok:'✅ Exato! O arquivo /etc/network/interfaces foi editado com o IP estático 10.0.0.30, máscara 255.0.0.0 e gateway 10.255.255.255, depois reiniciando com sudo systemctl restart networking.service.' },
+  { ok:'✅ Correto! Host-Only é descrito no artigo como versão híbrida de Bridge (comunicação com host como switch físico) e Internal (sem interface física externa).' },
+  { ok:'✅ Perfeito! /18 fornece 16.382 hosts — suficiente para 10.000 sem desperdiçar como /17 (32.766) faria. A rede recomendada é 172.31.0.0/18.' }
+];
+const QXPS = [10,10,15,15,10,15,20];
+
+function ansQ(qi, chosen, correct) {
+  const card = document.getElementById('qc'+qi);
+  const opts = card.querySelectorAll('.qopt');
+  opts.forEach(o => o.disabled = true);
+  opts[chosen].classList.add(chosen === correct ? 'correct' : 'wrong');
+  if (chosen !== correct) opts[correct].classList.add('correct');
+  const fb = document.getElementById('qfb'+qi);
+  const nx = document.getElementById('qnx'+qi);
+  const ok = chosen === correct;
+  fb.innerHTML = ok ? QFB[qi].ok : '❌ Errado. ' + QFB[qi].ok;
+  fb.className = 'qfb show '+(ok?'ok':'fail');
+  nx.classList.add('show');
+  if (ok) { qCorrect++; addXP(QXPS[qi],'Resposta correta!','🎯'); streak++; }
+  else streak = 0;
+  qAnswers[qi] = ok;
+  document.getElementById('q-prog').style.width = ((qi+1)/7*100)+'%';
+  document.getElementById('q-cnt').textContent = (qi+1)+'/7';
+  updateHUD();
+}
+function nextQ(n) {
+  document.getElementById('qc'+(n-1)).classList.remove('active');
+  document.getElementById('qc'+n).classList.add('active');
+}
+function showResult() {
+  document.getElementById('qc6').classList.remove('active');
+  const r = document.getElementById('q-result');
+  r.classList.add('show');
+  document.getElementById('q-score').textContent = qCorrect+'/7';
+  const msgs = ['Continue estudando!','Progredindo bem!','Bom trabalho!','Ótimo domínio!','Excelente conhecimento!','VirtualBox Expert!','💎 VirtualBox Master! Quiz Perfeito!'];
+  document.getElementById('q-msg').textContent = msgs[Math.min(qCorrect,6)];
+  const earned = Object.keys(qAnswers).filter(k=>qAnswers[k]).reduce((a,k)=>a+QXPS[+k],0);
+  document.getElementById('q-xp-earned').textContent = '+'+earned+' XP conquistados no quiz';
+  document.getElementById('q-prog').style.width = '100%';
+  document.getElementById('q-cnt').textContent = '7/7';
+  if (qCorrect >= 5) unlock('a-quiz','bm-quiz','Sinal Forte — 5+ acertos!');
+  if (qCorrect === 7) unlock('a-perfect','bm-perfect','Quiz VirtualBox Perfeito! 💎');
+  updateHUD();
+}
+function restartQuiz() {
+  qCorrect = 0;
+  qAnswers = {};
+  document.getElementById('q-result').classList.remove('show');
+  document.getElementById('q-prog').style.width = '0%';
+  document.getElementById('q-cnt').textContent = '0/7';
+  for (let i=0;i<7;i++) {
+    const c = document.getElementById('qc'+i);
+    c.classList.toggle('active', i===0);
+    c.querySelectorAll('.qopt').forEach(o=>{o.disabled=false;o.classList.remove('correct','wrong');});
+    const fb=c.querySelector('.qfb'); if(fb){fb.className='qfb';fb.innerHTML='';}
+    const nx=c.querySelector('.qnx'); if(nx) nx.classList.remove('show');
+  }
+  updateHUD();
+}
+</script>
+</body>
+</html>
