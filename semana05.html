@@ -944,7 +944,7 @@ body::before {
             <rect x="243" y="192" width="194" height="22" rx="12" fill="rgba(0,212,255,0.15)"/>
             <rect x="243" y="205" width="194" height="9" rx="0" fill="rgba(0,212,255,0.15)"/>
             <text font-family="'Orbitron',monospace" font-size="11" font-weight="700" fill="#00d4ff" x="340" y="208" text-anchor="middle">🖧 Ubuntu Server</text>
-            <text font-family="'Exo 2',sans-serif" font-size="10" fill="#e0f0ff" x="340" y="226" text-anchor="middle">22.04 LTS · Mínima · CLI</text>
+            <text font-family="'Exo 2',sans-serif" font-size="10" fill="#e0f0ff" x="340" y="226" text-anchor="middle">22.04 LTS · CLI</text>
             <text font-family="'JetBrains Mono',monospace" font-size="10" fill="#00d4ff" x="340" y="243" text-anchor="middle">192.168.56.20</text>
             <text font-family="'JetBrains Mono',monospace" font-size="9" fill="#5a7a99" x="340" y="259" text-anchor="middle">RAM: 1 GB · Disco: 20 GB</text>
             <text font-family="'JetBrains Mono',monospace" font-size="9" fill="#5a7a99" x="340" y="274" text-anchor="middle">LVM + OpenSSH ativo</text>
@@ -957,7 +957,7 @@ body::before {
             <rect x="444" y="192" width="194" height="22" rx="12" fill="rgba(255,140,0,0.15)"/>
             <rect x="444" y="205" width="194" height="9" rx="0" fill="rgba(255,140,0,0.15)"/>
             <text font-family="'Orbitron',monospace" font-size="11" font-weight="700" fill="#ff8c00" x="541" y="208" text-anchor="middle">🔥 Firewall UFW</text>
-            <text font-family="'Exo 2',sans-serif" font-size="10" fill="#e0f0ff" x="541" y="226" text-anchor="middle">Ubuntu Server 22.04 · Mínima</text>
+            <text font-family="'Exo 2',sans-serif" font-size="10" fill="#e0f0ff" x="541" y="226" text-anchor="middle">Ubuntu Server 22.04</text>
             <text font-family="'JetBrains Mono',monospace" font-size="10" fill="#ff8c00" x="541" y="243" text-anchor="middle">192.168.56.1 (Gateway)</text>
             <text font-family="'JetBrains Mono',monospace" font-size="9" fill="#5a7a99" x="541" y="259" text-anchor="middle">enp0s3: NAT · enp0s8: 56.1</text>
             <text font-family="'JetBrains Mono',monospace" font-size="9" fill="#5a7a99" x="541" y="274" text-anchor="middle">IP forward=1 · masquerade</text>
@@ -1018,7 +1018,7 @@ body::before {
           </li>
           <li class="obj-item" onclick="toggleObj(this,2)">
             <div class="obj-circle">✓</div>
-            Instalar o Ubuntu Server 22.04 LTS — modalidade mínima (sem GUI)
+            Instalar o Ubuntu Server 22.04 LTS (sem GUI)
           </li>
           <li class="obj-item" onclick="toggleObj(this,3)">
             <div class="obj-circle">✓</div>
@@ -1067,7 +1067,7 @@ body::before {
           </div>
           <div class="concept-card purple">
             <div class="concept-title">🖧 UBUNTU SERVER</div>
-            <span class="tag">Instalação mínima</span>
+            <span class="tag">Instalação Server</span>
             <span class="tag">CLI apenas</span>
             <span class="tag">OpenSSH</span>
             <span class="tag">LVM</span>
@@ -1259,8 +1259,8 @@ body::before {
 
             <!-- NOTA PEDAGÓGICA -->
             <div style="background:rgba(255,204,0,0.06); border:1px solid rgba(255,204,0,0.25); border-left:4px solid var(--yellow); border-radius:9px; padding:14px 16px; margin-bottom:16px; font-size:0.85em; line-height:1.6; color:var(--muted);">
-              <strong style="color:var(--yellow)">💡 Por que instalação mínima?</strong><br>
-              Em segurança da informação, menos software = menor superfície de ataque. Todo serviço desnecessário é uma vulnerabilidade potencial. Servidores reais de produção rodam sem interface gráfica — você precisará dominar o terminal para administrá-los. Além disso, a instalação mínima consome apenas <strong style="color:var(--cyan)">~1 GB de RAM</strong> e deixa você no controle total do que é instalado, usando o <code>apt</code> para adicionar apenas o necessário.
+              <strong style="color:var(--yellow)">💡 Por que instalar sem interface gráfica?</strong><br>
+              Em segurança da informação, menos software = menor superfície de ataque. Todo serviço desnecessário é uma vulnerabilidade potencial. Servidores reais de produção rodam sem interface gráfica — você precisará dominar o terminal para administrá-los. Além disso, a instalação sem GUI consome apenas <strong style="color:var(--cyan)">~1 GB de RAM</strong> e deixa você no controle total do que é instalado, usando o <code>apt</code> para adicionar apenas o necessário.
             </div>
 
             <div class="os-tabs">
@@ -1288,7 +1288,6 @@ body::before {
 
             <div id="m2-panel-install" class="os-panel">
               <div class="info-box">📹 <strong>Referência em vídeo:</strong> <a href="https://youtu.be/HIfgTVoDn6I" target="_blank" style="color:var(--cyan)">https://youtu.be/HIfgTVoDn6I</a> — siga exatamente o passo a passo demonstrado.</div>
-              <div class="warn-box">⚠️ <strong>Atenção:</strong> a instalação <strong>não é mais na modalidade mínima (minimized)</strong>; realize-a conforme demonstrado no vídeo de referência.</div>
               <div class="step"><div class="step-num">1</div><p>Boot da ISO → selecione <strong>Install Ubuntu Server</strong></p></div>
               <div class="step"><div class="step-num">2</div><p>Idioma: <strong>Português</strong> · Layout: <strong>Portuguese (Brazil)</strong></p></div>
               <div class="step"><div class="step-num">3</div><p>Tipo de instalação: siga o vídeo de referência — realize a instalação conforme demonstrado</p></div>
@@ -1402,7 +1401,7 @@ body::before {
 
             <!-- ABA 1 — VirtualBox -->
             <div id="m4-panel-vbox" class="os-panel active-panel">
-              <div class="info-box">💡 Use a mesma ISO do Ubuntu Server 22.04 disponível na <strong>unidade Z: (Prof. Isaque)</strong> — a instalação <strong>não é mais na modalidade mínima (minimized)</strong>; realize-a conforme o vídeo: <a href="https://youtu.be/HIfgTVoDn6I" target="_blank" style="color:var(--cyan)">https://youtu.be/HIfgTVoDn6I</a></div>
+              <div class="info-box">💡 Use a mesma ISO do Ubuntu Server 22.04 disponível na <strong>unidade Z: (Prof. Isaque)</strong> — realize a instalação conforme o vídeo: <a href="https://youtu.be/HIfgTVoDn6I" target="_blank" style="color:var(--cyan)">https://youtu.be/HIfgTVoDn6I</a></div>
 
               <div class="fatec-box">
                 🏫 <strong>No laboratório da Fatec a VM já está criada</strong> — vá direto para a aba <strong>💿 Instalação</strong> e siga os passos a partir do boot da ISO.<br><br>
