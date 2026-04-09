@@ -704,6 +704,50 @@ body::before {
 .toast-title { font-family: 'Orbitron', monospace; font-size: 0.8em; font-weight: 700; color: var(--green); }
 .toast-msg { font-size: 0.78em; color: var(--muted); margin-top: 2px; }
 
+/* OVA DOWNLOAD BOX */
+.ova-box {
+  background: linear-gradient(135deg, rgba(0,255,136,0.07), rgba(0,212,255,0.05));
+  border: 1px solid rgba(0,255,136,0.3);
+  border-left: 4px solid var(--green);
+  border-radius: 10px; padding: 16px 18px;
+  margin: 12px 0; font-size: 0.85em; line-height: 1.6;
+}
+.ova-box-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.88em; font-weight: 700;
+  color: var(--green); margin-bottom: 6px;
+  display: flex; align-items: center; gap: 7px;
+}
+.ova-box p { color: var(--muted); margin-bottom: 10px; }
+.ova-download-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, rgba(0,255,136,0.18), rgba(0,212,255,0.12));
+  border: 1px solid rgba(0,255,136,0.45);
+  color: var(--green); padding: 9px 20px; border-radius: 8px;
+  font-family: 'Exo 2', sans-serif; font-size: 0.88em; font-weight: 800;
+  text-decoration: none; cursor: pointer; transition: all 0.25s;
+  letter-spacing: 0.5px;
+}
+.ova-download-btn:hover {
+  background: linear-gradient(135deg, rgba(0,255,136,0.28), rgba(0,212,255,0.2));
+  box-shadow: 0 0 18px rgba(0,255,136,0.35); transform: translateY(-1px);
+}
+.fatec-box {
+  background: rgba(0,255,136,0.05); border: 1px solid rgba(0,255,136,0.25);
+  border-left: 4px solid var(--green);
+  border-radius: 9px; padding: 14px 16px;
+  font-size: 0.86em; color: var(--muted); margin: 10px 0;
+  line-height: 1.6;
+}
+.fatec-box strong { color: var(--green); }
+.home-label {
+  display: inline-block;
+  background: rgba(0,212,255,0.08); border: 1px solid rgba(0,212,255,0.25);
+  border-radius: 5px; padding: 2px 9px;
+  font-size: 0.82em; color: var(--cyan); font-weight: 700;
+  margin-bottom: 6px;
+}
+
 /* BIBILOGRAFIA */
 .bib-item {
   background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);
@@ -1077,7 +1121,7 @@ body::before {
             <div class="video-info">
               <h4>Ubuntu Desktop 22.04 no VirtualBox</h4>
               <p>Instalação passo a passo completa</p>
-              <a href="https://www.youtube.com/results?search_query=ubuntu+desktop+22.04+virtualbox+instalacao" target="_blank" class="video-link">▶ YouTube</a>
+              <a href="https://youtu.be/UXq193Ol33g" target="_blank" class="video-link">▶ YouTube</a>
             </div>
           </div>
           <div class="video-card">
@@ -1085,9 +1129,9 @@ body::before {
               <div class="play-btn" onclick="watchVideo(this)">▶</div>
             </div>
             <div class="video-info">
-              <h4>Ubuntu Server 22.04 — Instalação Mínima</h4>
-              <p>Minimized install + pós-instalação + SSH</p>
-              <a href="https://www.youtube.com/results?search_query=ubuntu+server+22.04+minimized+instalacao+virtualbox" target="_blank" class="video-link">▶ YouTube</a>
+              <h4>Ubuntu Server 22.04 — Instalação</h4>
+              <p>Mesmo procedimento para Ubuntu Server e Ubuntu Firewall</p>
+              <a href="https://youtu.be/HIfgTVoDn6I" target="_blank" class="video-link">▶ YouTube</a>
             </div>
           </div>
           <div class="video-card">
@@ -1144,7 +1188,17 @@ body::before {
             </div>
 
             <div id="m1-panel-vbox" class="os-panel active-panel">
-              <div class="info-box">💡 Baixe o Ubuntu Desktop 22.04.3 LTS em <strong>ubuntu.com/download/desktop</strong></div>
+              <div class="fatec-box">
+                🏫 <strong>No laboratório da Fatec a VM já está criada</strong> — vá direto para a aba <strong>💿 Instalação</strong> e siga os passos a partir do boot da ISO.<br><br>
+                💻 <span class="home-label">Notebook / PC pessoal</span><br>
+                Se estiver no seu computador pessoal, crie a VM seguindo os passos abaixo, <strong>ou importe o arquivo OVA</strong> disponível para download:
+              </div>
+              <div class="ova-box">
+                <div class="ova-box-title">⬇️ Download — Arquivo OVA (importação rápida)</div>
+                <p>Importe diretamente no VirtualBox: <strong>Arquivo → Importar Appliance</strong> → selecione o arquivo <code>Isaque.ova</code>. Todas as VMs já estarão configuradas.</p>
+                <a class="ova-download-btn" href="Isaque.ova" download="Isaque.ova">⬇️ Baixar Isaque.ova</a>
+              </div>
+              <div class="info-box">💡 A ISO do Ubuntu Desktop está disponível na <strong>unidade Z: (Prof. Isaque)</strong> — aponte-a ao criar a VM no VirtualBox. Não é necessário baixar.</div>
               <div class="step"><div class="step-num">1</div><p>Abra o VirtualBox → clique em <strong>Novo</strong> → Nome: <code>Ubuntu-Desktop-22</code> → Tipo: Linux → Versão: Ubuntu (64-bit)</p></div>
               <div class="step"><div class="step-num">2</div><p>Memória RAM: mínimo <code>2048 MB</code> (recomendado <code>4096 MB</code>)</p></div>
               <div class="step"><div class="step-num">3</div><p>Disco Virtual: <strong>Criar novo disco VDI</strong> → alocação dinâmica → <code>25 GB</code></p></div>
@@ -1177,6 +1231,13 @@ body::before {
 <span class="prompt">$</span> <span class="cmd">sudo apt install net-tools curl wget htop -y</span>
               </div>
               <div class="success-box">✅ Após o update, tire um <strong>Snapshot</strong> no VirtualBox (Máquina → Tirar Snapshot) para salvar o estado limpo!</div>
+
+              <div class="info-box">📹 <strong>Referência em vídeo:</strong> <a href="https://youtu.be/UXq193Ol33g" target="_blank" style="color:var(--cyan)">https://youtu.be/UXq193Ol33g</a></div>
+
+              <div class="warn-box" style="border-left-color:#e91e63; background:rgba(233,30,99,0.05);">
+                🔄 <strong>Precisa reinstalar?</strong> Abra o VirtualBox → selecione a máquina → menu <strong>Dispositivos → Discos Ópticos → Escolher um arquivo em disco</strong> → navegue até a <strong>unidade Z:</strong> (Prof. Isaque) e selecione a ISO → menu <strong>Máquina → Reinicializar</strong> (ou pressione <code>Host+R</code>) → prossiga com a instalação conforme o vídeo.
+              </div>
+
               <button class="complete-btn" id="btn-m1" onclick="completeM('m1','btn-m1','a-desktop','bm-desktop','Ubuntu Desktop instalado! 🖥️','desktop')">✅ MISSÃO CONCLUÍDA — Ubuntu Desktop Instalado!</button>
             </div>
           </div>
@@ -1187,14 +1248,14 @@ body::before {
           <div class="mission-head">
             <div class="mission-num cyan-num">02</div>
             <div class="mission-info">
-              <div class="mission-title">🖧 Instalar Ubuntu Server 22.04 — Instalação Mínima</div>
+              <div class="mission-title">🖧 Instalar Ubuntu Server 22.04 — Instalação Ubuntu Server</div>
               <div class="mission-meta">⏱️ 40 min · Dificuldade: ⭐⭐⭐ · CLI apenas · SSH + LVM · Sem interface gráfica</div>
             </div>
             <div class="mission-xp">+50 XP</div>
             <div class="mission-toggle">▼</div>
           </div>
           <div class="mission-body">
-            <div class="mission-desc">🎯 Criar uma VM separada e instalar o Ubuntu Server 22.04 LTS na modalidade <strong>mínima</strong> — apenas CLI, sem GUI. Inclui LVM, usuário administrador e OpenSSH.</div>
+            <div class="mission-desc">🎯 Instalar o Ubuntu Server 22.04 LTS conforme demonstrado no vídeo de referência — apenas CLI, sem GUI. Inclui LVM, usuário administrador e OpenSSH.</div>
 
             <!-- NOTA PEDAGÓGICA -->
             <div style="background:rgba(255,204,0,0.06); border:1px solid rgba(255,204,0,0.25); border-left:4px solid var(--yellow); border-radius:9px; padding:14px 16px; margin-bottom:16px; font-size:0.85em; line-height:1.6; color:var(--muted);">
@@ -1209,23 +1270,39 @@ body::before {
             </div>
 
             <div id="m2-panel-vbox" class="os-panel active-panel">
-              <div class="info-box">💡 Baixe a ISO em <strong>ubuntu.com/download/server</strong> — Ubuntu Server 22.04.3 LTS (~1.8 GB)</div>
+              <div class="info-box">💡 A ISO do Ubuntu Server está disponível na <strong>unidade Z: (Prof. Isaque)</strong> — a mesma ISO é usada para o Ubuntu Server e para o Ubuntu Firewall. Não é necessário baixar.</div>
+              <div class="fatec-box">
+                🏫 <strong>No laboratório da Fatec a VM já está criada</strong> — vá direto para a aba <strong>💿 Instalação</strong> e siga os passos a partir do boot da ISO.<br><br>
+                💻 <span class="home-label">Notebook / PC pessoal</span><br>
+                Se estiver no seu computador pessoal, crie a VM seguindo os passos abaixo, <strong>ou importe o arquivo OVA</strong> disponível para download:
+              </div>
+              <div class="ova-box">
+                <div class="ova-box-title">⬇️ Download — Arquivo OVA (importação rápida)</div>
+                <p>Importe diretamente no VirtualBox: <strong>Arquivo → Importar Appliance</strong> → selecione o arquivo <code>Isaque.ova</code>. Todas as VMs já estarão configuradas.</p>
+                <a class="ova-download-btn" href="Isaque.ova" download="Isaque.ova">⬇️ Baixar Isaque.ova</a>
+              </div>
               <div class="step"><div class="step-num">1</div><p>VirtualBox → Novo → Nome: <code>Ubuntu-Server-22</code> → Tipo: Linux → Versão: Ubuntu (64-bit)</p></div>
               <div class="step"><div class="step-num">2</div><p>RAM: <code>1024 MB</code> — servidor não usa GUI, 1 GB é suficiente · Disco: <code>20 GB</code> VDI dinâmico</p></div>
               <div class="step"><div class="step-num">3</div><p>Rede: Adaptador 1 → <code>NAT</code> + Adaptador 2 → <code>Rede Interna</code> (para comunicação entre VMs)</p></div>
             </div>
 
             <div id="m2-panel-install" class="os-panel">
-              <div class="warn-box">⚠️ <strong>Atenção:</strong> selecione <strong>Ubuntu Server (minimized)</strong> na tela de tipo de instalação — NÃO a opção padrão. Isso garante o menor conjunto de pacotes possível.</div>
+              <div class="info-box">📹 <strong>Referência em vídeo:</strong> <a href="https://youtu.be/HIfgTVoDn6I" target="_blank" style="color:var(--cyan)">https://youtu.be/HIfgTVoDn6I</a> — siga exatamente o passo a passo demonstrado.</div>
+              <div class="warn-box">⚠️ <strong>Atenção:</strong> a instalação <strong>não é mais na modalidade mínima (minimized)</strong>; realize-a conforme demonstrado no vídeo de referência.</div>
               <div class="step"><div class="step-num">1</div><p>Boot da ISO → selecione <strong>Install Ubuntu Server</strong></p></div>
               <div class="step"><div class="step-num">2</div><p>Idioma: <strong>Português</strong> · Layout: <strong>Portuguese (Brazil)</strong></p></div>
-              <div class="step"><div class="step-num">3</div><p>Tipo de instalação: selecione <strong style="color:var(--green)">Ubuntu Server (minimized)</strong> — menos pacotes, maior segurança</p></div>
+              <div class="step"><div class="step-num">3</div><p>Tipo de instalação: siga o vídeo de referência — realize a instalação conforme demonstrado</p></div>
               <div class="step"><div class="step-num">4</div><p>Configuração de rede: aceite o DHCP por padrão; vamos configurar IP estático depois via <code>netplan</code></p></div>
               <div class="step"><div class="step-num">5</div><p>Particionamento: escolha <strong>Use an entire disk and set up this disk as an LVM group</strong> para LVM automático</p></div>
               <div class="step"><div class="step-num">6</div><p>Perfil: nome completo, nome da máquina (<code>lab-server</code>), usuário (<code>admin</code>), senha forte</p></div>
-              <div class="step"><div class="step-num">7</div><p>Na tela <em>Featured Server Snaps</em>: <strong>não selecione nada</strong> — instalação mínima não precisa de snaps adicionais</p></div>
+              <div class="step"><div class="step-num">7</div><p>Na tela <em>Featured Server Snaps</em>: <strong>não selecione nada</strong> — instalação não precisa de snaps adicionais</p></div>
               <div class="step"><div class="step-num">8</div><p>Marque obrigatoriamente: <strong>Install OpenSSH server</strong> → única adição necessária neste passo</p></div>
               <div class="step"><div class="step-num">9</div><p>Aguarde instalação (~10 min) → <strong>Reboot Now</strong> → remova ISO → faça login com o usuário criado</p></div>
+
+              <div class="warn-box" style="border-left-color:#e91e63; background:rgba(233,30,99,0.05); margin-top:12px;">
+                🔄 <strong>Precisa reinstalar?</strong> Abra o VirtualBox → selecione a máquina → menu <strong>Dispositivos → Discos Ópticos → Escolher um arquivo em disco</strong> → navegue até a <strong>unidade Z:</strong> (Prof. Isaque) e selecione a ISO do Ubuntu Server → menu <strong>Máquina → Reinicializar</strong> (ou pressione <code>Host+R</code>) → prossiga com a instalação conforme o vídeo.
+              </div>
+
               <div class="success-box" style="margin-top:12px;">✅ Ao fazer login, você verá apenas o prompt de terminal — <strong style="color:var(--green)">isso é o esperado!</strong> Sem janelas, sem ícones. Bem-vindo ao servidor Linux.</div>
             </div>
 
@@ -1325,13 +1402,63 @@ body::before {
 
             <!-- ABA 1 — VirtualBox -->
             <div id="m4-panel-vbox" class="os-panel active-panel">
-              <div class="info-box">💡 Use a mesma ISO do Ubuntu Server 22.04 — instale como <strong>minimized</strong>, igual à VM do servidor.</div>
+              <div class="info-box">💡 Use a mesma ISO do Ubuntu Server 22.04 disponível na <strong>unidade Z: (Prof. Isaque)</strong> — a instalação <strong>não é mais na modalidade mínima (minimized)</strong>; realize-a conforme o vídeo: <a href="https://youtu.be/HIfgTVoDn6I" target="_blank" style="color:var(--cyan)">https://youtu.be/HIfgTVoDn6I</a></div>
+
+              <div class="fatec-box">
+                🏫 <strong>No laboratório da Fatec a VM já está criada</strong> — vá direto para a aba <strong>💿 Instalação</strong> e siga os passos a partir do boot da ISO.<br><br>
+                💻 <span class="home-label">Notebook / PC pessoal</span><br>
+                Se estiver no seu computador pessoal, crie a VM seguindo os passos abaixo, <strong>ou importe o arquivo OVA</strong> disponível para download:
+              </div>
+              <div class="ova-box">
+                <div class="ova-box-title">⬇️ Download — Arquivo OVA (importação rápida)</div>
+                <p>Importe diretamente no VirtualBox: <strong>Arquivo → Importar Appliance</strong> → selecione o arquivo <code>Isaque.ova</code>. Todas as VMs já estarão configuradas.</p>
+                <a class="ova-download-btn" href="Isaque.ova" download="Isaque.ova">⬇️ Baixar Isaque.ova</a>
+              </div>
+
+              <!-- CONFIGURAÇÃO DE REDE NO VIRTUALBOX -->
+              <div style="background:rgba(63,81,181,0.08); border:1px solid rgba(63,81,181,0.35); border-left:4px solid #3f51b5; border-radius:9px; padding:16px; margin:12px 0; font-size:0.85em; line-height:1.6; color:var(--muted);">
+                <strong style="color:#7986cb; font-size:1em;">⚙️ Pré-requisito: Configuração de Rede no VirtualBox</strong>
+                <p style="margin-top:10px; color:#9fa8da;">Antes de instalar o Ubuntu Firewall, configure os adaptadores de rede da VM <strong style="color:var(--text)">UbuntuFirewall</strong>:</p>
+                <ol style="margin:10px 0 0 20px; line-height:2.2;">
+                  <li>Acesse as <strong>Configurações</strong> da VM <strong>UbuntuFirewall</strong> no VirtualBox</li>
+                  <li>Vá em <strong>Rede → Adaptador 1</strong></li>
+                  <li>Defina <strong>"Conectado a"</strong> como <strong>Rede Interna</strong> e o nome como <strong>Intranet</strong></li>
+                  <li>Clique na aba <strong>Adaptador 2</strong> e <strong>desabilite</strong> a placa de rede (desmarque "Habilitar Placa de Rede")</li>
+                  <li>Clique em <strong>OK</strong> para salvar</li>
+                </ol>
+              </div>
+
               <div class="step"><div class="step-num">1</div><p>VirtualBox → Novo → Nome: <code>Ubuntu-Firewall-22</code> → Tipo: Linux → Versão: Ubuntu (64-bit)</p></div>
               <div class="step"><div class="step-num">2</div><p>RAM: <code>1024 MB</code> · Disco: <code>15 GB</code> VDI dinâmico — firewall não precisa de muito espaço</p></div>
-              <div class="step"><div class="step-num">3</div><p>Configurações → Rede → <strong>Adaptador 1</strong>: <code>NAT</code> — esta é a interface que conecta à internet via host</p></div>
-              <div class="step"><div class="step-num">4</div><p>Configurações → Rede → <strong>Adaptador 2</strong>: habilitar → <code>Rede Interna</code> → nome: <code>intnet</code> — esta é a LAN das VMs</p></div>
-              <div class="step"><div class="step-num">5</div><p>Nas outras VMs (Desktop e Server): Adaptador 2 também deve ser <code>Rede Interna</code> com nome <code>intnet</code> (mesmo nome!)</p></div>
-              <div class="step"><div class="step-num">6</div><p>Instale o Ubuntu Server 22.04 <strong>minimized</strong> + OpenSSH, nome da máquina: <code>lab-firewall</code>, usuário: <code>admin</code></p></div>
+              <div class="step"><div class="step-num">3</div><p>Configurações → Rede → <strong>Adaptador 1</strong>: <code>Rede Interna</code> → nome: <code>Intranet</code></p></div>
+              <div class="step"><div class="step-num">4</div><p>Configurações → Rede → <strong>Adaptador 2</strong>: <strong>desabilite</strong> a placa (desmarque "Habilitar Placa de Rede")</p></div>
+              <div class="step"><div class="step-num">5</div><p>Instale o Ubuntu Server conforme o vídeo de referência, nome da máquina: <code>lab-firewall</code>, usuário: <code>admin</code></p></div>
+
+              <div class="warn-box" style="border-left-color:#e91e63; background:rgba(233,30,99,0.05); margin-top:12px;">
+                🔄 <strong>Precisa reinstalar?</strong> VirtualBox → selecione a máquina → menu <strong>Dispositivos → Discos Ópticos → Escolher um arquivo em disco</strong> → navegue até a <strong>unidade Z:</strong> (Prof. Isaque) e selecione a ISO → menu <strong>Máquina → Reinicializar</strong> (ou pressione <code>Host+R</code>) → prossiga conforme o vídeo.
+              </div>
+
+              <!-- TROUBLESHOOTING DE REDE -->
+              <div style="background:rgba(249,168,37,0.06); border:1px solid rgba(249,168,37,0.3); border-left:4px solid #f9a825; border-radius:9px; padding:16px; margin-top:16px; font-size:0.85em; line-height:1.6; color:var(--muted);">
+                <strong style="color:#ffa000; font-size:1em;">🔧 A placa de rede não funcionou após a instalação? Siga estes passos:</strong>
+                <div style="margin-top:14px;">
+                  <p style="font-weight:bold; color:#00ff88; margin-bottom:6px;">✅ 1. Ativar a interface manualmente</p>
+                  <div class="cmd-block">sudo ip link set enp0s3 up</div>
+                </div>
+                <div style="margin-top:12px;">
+                  <p style="font-weight:bold; color:#00ff88; margin-bottom:6px;">✅ 2. Solicitar IP via DHCP</p>
+                  <div class="cmd-block">sudo dhclient enp0s3</div>
+                </div>
+                <div style="margin-top:12px;">
+                  <p style="font-weight:bold; color:#00d4ff; margin-bottom:6px;">🧪 3. Testar a conectividade</p>
+                  <div class="cmd-block">ping -c 4 8.8.8.8</div>
+                  <p style="margin:8px 0;">Se responder, teste também a resolução de nomes:</p>
+                  <div class="cmd-block">ping -c 4 google.com</div>
+                </div>
+                <div style="background:rgba(0,0,0,0.2); border-radius:6px; padding:10px; margin-top:12px;">
+                  <strong style="color:#ffa000;">⚠️ Atenção:</strong> Substitua <code>enp0s3</code> pelo nome real da sua interface, caso seja diferente. Use <code>ip link show</code> para verificar o nome correto.
+                </div>
+              </div>
             </div>
 
             <!-- ABA 2 — Rede / IP Estático -->
