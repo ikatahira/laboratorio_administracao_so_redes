@@ -1,0 +1,1578 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🛡️ GUFW — Semana 5.3 | ISO-103</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #050d1a;
+  --bg2: #091424;
+  --card: #0d1f35;
+  --card2: #0f2540;
+  --cyan: #00d4ff;
+  --cyan2: #00a8cc;
+  --purple: #b44aff;
+  --purple2: #8b2fe0;
+  --purple3: #6a1fc2;
+  --green: #00ff88;
+  --green2: #00cc6a;
+  --yellow: #ffcc00;
+  --orange: #ff8c00;
+  --red: #ff4466;
+  --text: #e0f0ff;
+  --muted: #5a7a99;
+  --border: rgba(180,74,255,0.15);
+  --glow-cyan: 0 0 20px rgba(0,212,255,0.4);
+  --glow-purple: 0 0 20px rgba(180,74,255,0.5);
+  --glow-green: 0 0 20px rgba(0,255,136,0.4);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Exo 2', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+body::before {
+  content: '';
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(180,74,255,0.07) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 70%, rgba(0,212,255,0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(180,74,255,0.03) 0%, transparent 60%);
+  pointer-events: none; z-index: 0;
+}
+
+/* SHIELD BG */
+.shield-bg {
+  position: fixed; top: 40px; right: -40px;
+  font-size: 18em; opacity: 0.04;
+  pointer-events: none; z-index: 0;
+  animation: shieldFloat 7s ease-in-out infinite;
+}
+@keyframes shieldFloat {
+  0%, 100% { transform: translateY(0px) rotate(-4deg) scale(1); }
+  50% { transform: translateY(-18px) rotate(4deg) scale(1.04); }
+}
+
+/* HEADER */
+.header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(5,13,26,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 0;
+}
+.header::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--purple2), var(--purple), var(--cyan), var(--purple), transparent);
+}
+.header-inner {
+  max-width: 1300px; margin: 0 auto; padding: 0 24px;
+  display: flex; align-items: center; gap: 16px;
+}
+.header-logo {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.75em; font-weight: 700;
+  color: var(--purple);
+  letter-spacing: 2px;
+  text-shadow: var(--glow-purple);
+}
+.header-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 1em; font-weight: 900;
+  color: var(--text);
+}
+.header-title span { color: var(--purple); }
+.back-btn {
+  background: rgba(180,74,255,0.1);
+  border: 1px solid rgba(180,74,255,0.2);
+  color: var(--purple); padding: 6px 14px; border-radius: 6px;
+  font-family: 'Exo 2', sans-serif; font-size: 0.8em; font-weight: 700;
+  cursor: pointer; text-decoration: none;
+  transition: all 0.2s;
+  display: flex; align-items: center; gap: 6px;
+}
+.back-btn:hover { background: rgba(180,74,255,0.2); box-shadow: var(--glow-purple); }
+.back-btn.cyan {
+  background: rgba(0,212,255,0.08); border-color: rgba(0,212,255,0.2); color: var(--cyan);
+}
+.back-btn.cyan:hover { background: rgba(0,212,255,0.18); box-shadow: var(--glow-cyan); }
+
+.hud {
+  margin-left: auto;
+  display: flex; align-items: center; gap: 10px;
+}
+.hud-pill {
+  background: rgba(180,74,255,0.08);
+  border: 1px solid rgba(180,74,255,0.2);
+  border-radius: 8px; padding: 6px 14px;
+  text-align: center;
+}
+.hud-pill .v {
+  font-family: 'Orbitron', monospace;
+  font-size: 1.2em; font-weight: 700;
+  color: var(--purple); display: block; line-height: 1;
+}
+.hud-pill .l {
+  font-size: 0.58em; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 1px;
+  display: block; margin-top: 2px;
+}
+.hud-xp-wrap {
+  background: rgba(180,74,255,0.08);
+  border: 1px solid rgba(180,74,255,0.2);
+  border-radius: 8px; padding: 7px 14px; min-width: 150px;
+}
+.hud-xp-label {
+  display: flex; justify-content: space-between;
+  font-size: 0.6em; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 1px;
+  margin-bottom: 5px;
+}
+.hud-bar-bg {
+  background: rgba(0,0,0,0.4); border-radius: 100px; height: 6px; overflow: hidden;
+}
+.hud-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--purple2), var(--purple), var(--cyan));
+  border-radius: 100px;
+  transition: width 0.8s ease;
+  box-shadow: 0 0 10px rgba(180,74,255,0.5);
+  width: 0%;
+}
+
+/* LAYOUT */
+.layout {
+  max-width: 1300px; margin: 0 auto; padding: 28px 24px;
+  display: grid; grid-template-columns: 260px 1fr; gap: 24px;
+  position: relative; z-index: 1;
+}
+.sidebar { display: flex; flex-direction: column; gap: 16px; }
+.scard {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px; padding: 18px;
+}
+.scard-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.72em; font-weight: 700;
+  color: var(--purple); letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 14px; padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.nav-link {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; border-radius: 8px;
+  text-decoration: none; color: var(--muted);
+  font-size: 0.85em; font-weight: 600;
+  transition: all 0.2s; margin-bottom: 4px;
+  border: 1px solid transparent;
+}
+.nav-link:hover { color: var(--purple); background: rgba(180,74,255,0.06); border-color: rgba(180,74,255,0.15); }
+.nav-link.active {
+  color: var(--purple); background: rgba(180,74,255,0.12);
+  border-color: rgba(180,74,255,0.3);
+  box-shadow: inset 3px 0 0 var(--purple);
+}
+.nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.nav-dot.purple { background: var(--purple); box-shadow: 0 0 8px var(--purple); }
+.nav-dot.cyan { background: var(--cyan); }
+.nav-dot.green { background: var(--green); }
+.nav-dot.orange { background: var(--orange); }
+
+.prog-block { margin-bottom: 12px; }
+.prog-label {
+  display: flex; justify-content: space-between;
+  font-size: 0.75em; color: var(--muted); font-weight: 600;
+  margin-bottom: 5px;
+}
+.prog-label span:last-child { color: var(--purple); font-family: 'Orbitron', monospace; }
+.prog-bg {
+  background: rgba(255,255,255,0.06); border-radius: 100px; height: 6px; overflow: hidden;
+}
+.prog-fill { height: 100%; border-radius: 100px; transition: width 0.8s ease; }
+.prog-fill.p { background: linear-gradient(90deg, var(--purple2), var(--purple)); box-shadow: 0 0 8px rgba(180,74,255,0.5); }
+.prog-fill.c { background: linear-gradient(90deg, var(--cyan2), var(--cyan)); }
+.prog-fill.g { background: linear-gradient(90deg, var(--green2), var(--green)); }
+
+/* MAIN */
+.main { display: flex; flex-direction: column; gap: 22px; }
+
+/* HERO */
+.hero {
+  background: var(--card);
+  border: 1px solid rgba(180,74,255,0.25);
+  border-radius: 16px; padding: 36px 40px;
+  position: relative; overflow: hidden;
+  box-shadow: 0 0 40px rgba(180,74,255,0.07);
+}
+.hero::before {
+  content: '🛡️';
+  position: absolute; right: 30px; top: 50%; transform: translateY(-50%);
+  font-size: 8em; opacity: 0.07;
+}
+.hero-tag {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.65em; letter-spacing: 3px; font-weight: 700;
+  color: var(--purple); text-transform: uppercase;
+  margin-bottom: 10px; opacity: 0.85;
+}
+.hero h1 {
+  font-family: 'Orbitron', monospace;
+  font-size: 2em; font-weight: 900;
+  color: var(--text); line-height: 1.2; margin-bottom: 8px;
+}
+.hero h1 span { color: var(--purple); text-shadow: var(--glow-purple); }
+.hero-sub { color: var(--muted); font-size: 1em; margin-bottom: 20px; }
+.hero-chips { display: flex; gap: 10px; flex-wrap: wrap; }
+.chip {
+  border-radius: 100px; padding: 5px 14px;
+  font-size: 0.78em; font-weight: 700;
+  display: flex; align-items: center; gap: 5px;
+}
+.chip.purple { background: rgba(180,74,255,0.1); border: 1px solid rgba(180,74,255,0.25); color: var(--purple); }
+.chip.cyan   { background: rgba(0,212,255,0.08); border: 1px solid rgba(0,212,255,0.2); color: var(--cyan); }
+.chip.green  { background: rgba(0,255,136,0.08); border: 1px solid rgba(0,255,136,0.2); color: var(--green); }
+.chip.orange { background: rgba(255,140,0,0.08); border: 1px solid rgba(255,140,0,0.2); color: var(--orange); }
+
+/* CARD */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px; overflow: hidden;
+}
+.card-head {
+  padding: 16px 22px; display: flex; align-items: center; gap: 12px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(180,74,255,0.02);
+}
+.card-icon {
+  width: 36px; height: 36px; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1em; flex-shrink: 0;
+}
+.ci-p { background: rgba(180,74,255,0.15); border: 1px solid rgba(180,74,255,0.3); }
+.ci-c { background: rgba(0,212,255,0.15); border: 1px solid rgba(0,212,255,0.3); }
+.ci-g { background: rgba(0,255,136,0.15); border: 1px solid rgba(0,255,136,0.3); }
+.ci-o { background: rgba(255,140,0,0.15); border: 1px solid rgba(255,140,0,0.3); }
+.card-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.85em; font-weight: 700; color: var(--text);
+  letter-spacing: 1px;
+}
+.xp-tag {
+  margin-left: auto;
+  border-radius: 100px; padding: 3px 12px;
+  font-size: 0.72em; font-weight: 700;
+  font-family: 'Orbitron', monospace;
+}
+.xp-tag.purple { background: rgba(180,74,255,0.1); border: 1px solid rgba(180,74,255,0.3); color: var(--purple); }
+.xp-tag.green  { background: rgba(0,255,136,0.1);  border: 1px solid rgba(0,255,136,0.3);  color: var(--green); }
+.xp-tag.cyan   { background: rgba(0,212,255,0.1);  border: 1px solid rgba(0,212,255,0.3);  color: var(--cyan); }
+.card-body { padding: 22px; }
+
+/* TABS */
+.os-tabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.os-tab {
+  padding: 9px 18px; border-radius: 8px; cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.02);
+  color: var(--muted); font-family: 'Exo 2', sans-serif;
+  font-size: 0.84em; font-weight: 700; transition: all 0.2s;
+  display: flex; align-items: center; gap: 7px;
+}
+.os-tab:hover { border-color: rgba(180,74,255,0.2); color: var(--purple); }
+.os-tab.active-tab {
+  background: rgba(180,74,255,0.12); border-color: rgba(180,74,255,0.4);
+  color: var(--purple); box-shadow: 0 0 12px rgba(180,74,255,0.2);
+}
+.os-tab.active-tab.tab-cyan {
+  background: rgba(0,212,255,0.12); border-color: rgba(0,212,255,0.4);
+  color: var(--cyan); box-shadow: 0 0 12px rgba(0,212,255,0.2);
+}
+.os-tab.active-tab.tab-green {
+  background: rgba(0,255,136,0.12); border-color: rgba(0,255,136,0.4);
+  color: var(--green); box-shadow: 0 0 12px rgba(0,255,136,0.2);
+}
+.os-tab.active-tab.tab-orange {
+  background: rgba(255,140,0,0.12); border-color: rgba(255,140,0,0.4);
+  color: var(--orange); box-shadow: 0 0 12px rgba(255,140,0,0.2);
+}
+.os-panel { display: none; }
+.os-panel.active-panel { display: block; }
+
+/* STEP */
+.step { display: flex; gap: 12px; margin-bottom: 10px; align-items: flex-start; }
+.step-num {
+  width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+  background: rgba(180,74,255,0.15); border: 1px solid rgba(180,74,255,0.3);
+  color: var(--purple); display: flex; align-items: center; justify-content: center;
+  font-size: 0.72em; font-weight: 700; font-family: 'Orbitron', monospace;
+  margin-top: 2px;
+}
+.step p { font-size: 0.86em; line-height: 1.5; color: var(--text); }
+.step code {
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(180,74,255,0.1); color: var(--purple);
+  padding: 1px 6px; border-radius: 4px; font-size: 0.9em;
+}
+
+/* CMD BLOCK */
+.cmd-block {
+  background: #020a14; border: 1px solid rgba(180,74,255,0.15);
+  border-radius: 9px; padding: 14px 16px;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.78em;
+  line-height: 1.7; margin: 10px 0;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.3);
+  overflow-x: auto;
+}
+.cmd-block .prompt { color: var(--purple); }
+.cmd-block .cmd    { color: #e0e0e0; }
+.cmd-block .comment{ color: #445566; }
+.cmd-block .output { color: var(--cyan); }
+.cmd-block .value  { color: var(--yellow); }
+.cmd-block .warn   { color: var(--orange); }
+
+/* BOXES */
+.info-box {
+  background: rgba(0,212,255,0.05); border: 1px solid rgba(0,212,255,0.2);
+  border-left: 4px solid var(--cyan);
+  border-radius: 9px; padding: 14px 16px;
+  font-size: 0.86em; color: var(--muted); margin: 10px 0; line-height: 1.5;
+}
+.warn-box {
+  background: rgba(255,140,0,0.05); border: 1px solid rgba(255,140,0,0.2);
+  border-left: 4px solid var(--orange);
+  border-radius: 9px; padding: 14px 16px;
+  font-size: 0.86em; color: var(--muted); margin: 10px 0; line-height: 1.5;
+}
+.success-box {
+  background: rgba(0,255,136,0.05); border: 1px solid rgba(0,255,136,0.2);
+  border-left: 4px solid var(--green);
+  border-radius: 9px; padding: 14px 16px;
+  font-size: 0.86em; color: var(--muted); margin: 10px 0; line-height: 1.5;
+}
+.purple-box {
+  background: rgba(180,74,255,0.05); border: 1px solid rgba(180,74,255,0.2);
+  border-left: 4px solid var(--purple);
+  border-radius: 9px; padding: 14px 16px;
+  font-size: 0.86em; color: var(--muted); margin: 10px 0; line-height: 1.5;
+}
+
+/* SECTION HEADER */
+.section-header {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.72em; color: var(--purple); font-weight: 700;
+  margin: 16px 0 8px; letter-spacing: 2px;
+}
+.section-header.cyan   { color: var(--cyan); }
+.section-header.green  { color: var(--green); }
+.section-header.orange { color: var(--orange); }
+
+/* CONCEPT GRID */
+.concept-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px;
+  margin-bottom: 20px;
+}
+.concept-card {
+  background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px; padding: 16px; transition: all 0.2s;
+}
+.concept-card.purple { border-top: 3px solid var(--purple); }
+.concept-card.purple:hover { background: rgba(180,74,255,0.04); border-color: rgba(180,74,255,0.15); }
+.concept-card.cyan   { border-top: 3px solid var(--cyan); }
+.concept-card.cyan:hover { background: rgba(0,212,255,0.04); border-color: rgba(0,212,255,0.15); }
+.concept-card.green  { border-top: 3px solid var(--green); }
+.concept-card.green:hover { background: rgba(0,255,136,0.04); border-color: rgba(0,255,136,0.15); }
+.concept-card.orange { border-top: 3px solid var(--orange); }
+.concept-card.orange:hover { background: rgba(255,140,0,0.04); border-color: rgba(255,140,0,0.15); }
+.concept-title { font-size: 0.82em; font-weight: 800; margin-bottom: 8px; }
+.concept-card.purple .concept-title { color: var(--purple); }
+.concept-card.cyan   .concept-title { color: var(--cyan); }
+.concept-card.green  .concept-title { color: var(--green); }
+.concept-card.orange .concept-title { color: var(--orange); }
+.concept-card p { font-size: 0.8em; color: var(--muted); line-height: 1.4; }
+
+/* GUFW MOCKUP (SVG-style GUI simulation) */
+.gufw-window {
+  background: #1a1a2e;
+  border: 1px solid rgba(180,74,255,0.3);
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 14px 0;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 20px rgba(180,74,255,0.1);
+}
+.gufw-titlebar {
+  background: linear-gradient(135deg, #2a1a4a, #1e1035);
+  padding: 10px 16px;
+  display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid rgba(180,74,255,0.2);
+}
+.gufw-dots { display: flex; gap: 6px; }
+.gufw-dot {
+  width: 12px; height: 12px; border-radius: 50%;
+}
+.gufw-dot.red    { background: #ff5f56; }
+.gufw-dot.yellow { background: #ffbd2e; }
+.gufw-dot.green  { background: #27c93f; }
+.gufw-title {
+  font-family: 'Exo 2', sans-serif; font-size: 0.8em; font-weight: 700;
+  color: var(--muted); margin-left: 8px;
+}
+.gufw-body { padding: 18px; }
+.gufw-row {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 12px;
+}
+.gufw-label { font-size: 0.8em; color: var(--muted); min-width: 90px; }
+.gufw-toggle {
+  width: 48px; height: 24px; border-radius: 12px;
+  position: relative; cursor: pointer;
+  transition: background 0.3s;
+  flex-shrink: 0;
+}
+.gufw-toggle.on  { background: var(--green); box-shadow: 0 0 10px rgba(0,255,136,0.4); }
+.gufw-toggle.off { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.1); }
+.gufw-toggle::after {
+  content: '';
+  position: absolute; top: 3px;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: white;
+  transition: left 0.3s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+}
+.gufw-toggle.on::after  { left: 27px; }
+.gufw-toggle.off::after { left: 3px; }
+.gufw-status-on  { font-size: 0.8em; font-weight: 700; color: var(--green); }
+.gufw-status-off { font-size: 0.8em; font-weight: 700; color: var(--red); }
+.gufw-select {
+  background: rgba(0,0,0,0.3); border: 1px solid rgba(180,74,255,0.2);
+  border-radius: 5px; padding: 5px 10px;
+  color: var(--text); font-family: 'Exo 2', sans-serif; font-size: 0.8em;
+  min-width: 140px;
+}
+.gufw-rules-header {
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 8px; padding: 6px 10px;
+  background: rgba(180,74,255,0.1);
+  border-radius: 6px 6px 0 0;
+  font-size: 0.72em; font-weight: 700;
+  color: var(--purple); font-family: 'Orbitron', monospace;
+  letter-spacing: 1px; margin-top: 12px;
+}
+.gufw-rule-row {
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 8px; padding: 7px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 0.78em; color: var(--muted);
+  transition: background 0.15s;
+}
+.gufw-rule-row:hover { background: rgba(180,74,255,0.04); }
+.gufw-badge {
+  display: inline-flex; align-items: center;
+  padding: 2px 8px; border-radius: 4px; font-size: 0.85em; font-weight: 700;
+}
+.gufw-badge.allow { background: rgba(0,255,136,0.1); color: var(--green); border: 1px solid rgba(0,255,136,0.3); }
+.gufw-badge.deny  { background: rgba(255,68,102,0.1); color: var(--red);   border: 1px solid rgba(255,68,102,0.3); }
+.gufw-badge.in    { background: rgba(0,212,255,0.08); color: var(--cyan);   border: 1px solid rgba(0,212,255,0.2); }
+.gufw-badge.out   { background: rgba(255,140,0,0.08); color: var(--orange); border: 1px solid rgba(255,140,0,0.2); }
+.gufw-add-row {
+  display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 8px;
+  margin-top: 12px; align-items: center;
+}
+.gufw-input {
+  background: rgba(0,0,0,0.3); border: 1px solid rgba(180,74,255,0.2);
+  border-radius: 6px; padding: 7px 10px;
+  color: var(--text); font-family: 'JetBrains Mono', monospace; font-size: 0.8em;
+  width: 100%;
+}
+.gufw-input:focus { outline: none; border-color: rgba(180,74,255,0.5); box-shadow: 0 0 10px rgba(180,74,255,0.1); }
+.gufw-sel {
+  background: rgba(0,0,0,0.3); border: 1px solid rgba(180,74,255,0.2);
+  border-radius: 6px; padding: 7px 10px;
+  color: var(--text); font-family: 'Exo 2', sans-serif; font-size: 0.8em; width: 100%;
+}
+.gufw-add-btn {
+  padding: 7px 18px; border: 1px solid rgba(180,74,255,0.35);
+  background: rgba(180,74,255,0.12); color: var(--purple);
+  border-radius: 7px; cursor: pointer; font-size: 0.82em; font-weight: 700;
+  font-family: 'Exo 2', sans-serif; transition: all 0.2s; white-space: nowrap;
+}
+.gufw-add-btn:hover { background: rgba(180,74,255,0.22); box-shadow: var(--glow-purple); }
+.gufw-count { font-size: 0.74em; color: var(--muted); margin-top: 8px; }
+
+/* COMPLETE BTN */
+.complete-btn {
+  width: 100%; margin-top: 14px;
+  padding: 13px; border: none; border-radius: 9px; cursor: pointer;
+  font-family: 'Exo 2', sans-serif; font-size: 0.9em; font-weight: 800;
+  background: linear-gradient(135deg, rgba(180,74,255,0.15), rgba(180,74,255,0.08));
+  border: 1px solid rgba(180,74,255,0.3);
+  color: var(--purple); transition: all 0.3s; letter-spacing: 1px;
+}
+.complete-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(180,74,255,0.25), rgba(180,74,255,0.15));
+  box-shadow: 0 0 20px rgba(180,74,255,0.3); transform: translateY(-1px);
+}
+.complete-btn:disabled {
+  opacity: 0.7; cursor: default; transform: none;
+}
+
+/* QUIZ */
+.quiz-prog-wrap { margin-bottom: 16px; }
+.quiz-prog-label { font-size: 0.75em; color: var(--muted); margin-bottom: 5px; display: flex; justify-content: space-between; }
+.quiz-prog-bg { background: rgba(255,255,255,0.06); border-radius: 100px; height: 5px; overflow: hidden; }
+.quiz-prog-fill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, var(--purple2), var(--purple), var(--cyan));
+  border-radius: 100px; transition: width 0.5s ease;
+  box-shadow: 0 0 8px rgba(180,74,255,0.4);
+}
+.qcard { display: none; }
+.qcard.active { display: block; }
+.qcard h4 { font-size: 0.95em; font-weight: 700; color: var(--text); margin-bottom: 14px; line-height: 1.4; }
+.qopts { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+.qopt {
+  padding: 11px 16px; border-radius: 8px; cursor: pointer;
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+  color: var(--text); font-family: 'Exo 2', sans-serif; font-size: 0.86em;
+  font-weight: 600; text-align: left; transition: all 0.2s;
+}
+.qopt:hover:not(:disabled) { background: rgba(180,74,255,0.08); border-color: rgba(180,74,255,0.25); color: var(--purple); }
+.qopt.correct { background: rgba(0,255,136,0.12); border-color: rgba(0,255,136,0.4); color: var(--green); }
+.qopt.wrong   { background: rgba(255,68,102,0.12); border-color: rgba(255,68,102,0.4); color: var(--red); }
+.qopt:disabled { cursor: default; }
+.qfb { display: none; padding: 10px 14px; border-radius: 8px; font-size: 0.82em; line-height: 1.4; margin: 8px 0; }
+.qfb.show { display: block; }
+.qfb.ok   { background: rgba(0,255,136,0.08); border: 1px solid rgba(0,255,136,0.2); color: var(--green); }
+.qfb.fail { background: rgba(255,68,102,0.08); border: 1px solid rgba(255,68,102,0.2); color: var(--red); }
+.qnx { display: none; }
+.qnx.show { display: flex; justify-content: flex-end; }
+.qnx-btn {
+  padding: 8px 18px; border: 1px solid rgba(180,74,255,0.3);
+  background: rgba(180,74,255,0.1); color: var(--purple);
+  border-radius: 6px; cursor: pointer; font-size: 0.82em; font-weight: 700;
+  font-family: 'Exo 2', sans-serif; transition: all 0.2s;
+}
+.qnx-btn:hover { background: rgba(180,74,255,0.2); }
+.q-result { display: none; text-align: center; padding: 28px 0; }
+.q-result.show { display: block; }
+.q-score {
+  font-family: 'Orbitron', monospace; font-size: 3em; font-weight: 900;
+  color: var(--purple); text-shadow: var(--glow-purple);
+  display: block; margin-bottom: 8px;
+}
+.q-msg  { color: var(--muted); margin-bottom: 16px; font-size: 0.9em; }
+.q-xp   { color: var(--purple); font-weight: 700; font-size: 0.85em; margin-bottom: 16px; }
+.restart-btn {
+  padding: 10px 24px; border: 1px solid rgba(180,74,255,0.3);
+  background: rgba(180,74,255,0.1); color: var(--purple);
+  border-radius: 8px; cursor: pointer; font-size: 0.85em; font-weight: 700;
+  font-family: 'Exo 2', sans-serif; transition: all 0.2s;
+}
+.restart-btn:hover { background: rgba(180,74,255,0.2); box-shadow: var(--glow-purple); }
+
+/* COMPARATIVO TABLE */
+.comp-table { width: 100%; border-collapse: collapse; font-size: 0.82em; margin: 12px 0; }
+.comp-table th {
+  font-family: 'Orbitron', monospace; font-size: 0.7em; letter-spacing: 1px;
+  color: var(--purple); text-align: left; padding: 8px 12px;
+  border-bottom: 1px solid rgba(180,74,255,0.2);
+}
+.comp-table td { padding: 9px 12px; color: var(--muted); border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+.comp-table tr:hover td { background: rgba(180,74,255,0.03); }
+.comp-table td:first-child { color: var(--text); font-weight: 700; }
+.comp-table .yes { color: var(--green); font-weight: 700; }
+.comp-table .no  { color: var(--red); }
+.comp-table .par { color: var(--yellow); }
+
+/* TOAST */
+.toast {
+  position: fixed; bottom: 28px; right: 28px; z-index: 9999;
+  background: var(--card2); border: 1px solid rgba(180,74,255,0.3);
+  border-radius: 12px; padding: 14px 18px;
+  display: flex; align-items: center; gap: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 20px rgba(180,74,255,0.15);
+  transform: translateX(120%); transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  min-width: 280px; max-width: 360px;
+}
+.toast.show { transform: translateX(0); }
+.toast-icon  { font-size: 1.6em; flex-shrink: 0; }
+.toast-title { font-family: 'Orbitron', monospace; font-size: 0.8em; font-weight: 700; color: var(--purple); }
+.toast-msg   { font-size: 0.78em; color: var(--muted); margin-top: 2px; }
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { order: 2; }
+  .main { order: 1; }
+  .gufw-rules-header,
+  .gufw-rule-row,
+  .gufw-add-row { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="shield-bg">🛡️</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-icon" id="toast-icon">🛡️</div>
+  <div>
+    <div class="toast-title" id="toast-title">+XP</div>
+    <div class="toast-msg" id="toast-msg"></div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <div class="header-logo">ISO-103</div>
+    <div class="header-title">SEMANA <span>05.3</span></div>
+    <a href="semana05_02.html" class="back-btn">← Semana 5.2</a>
+    <a href="semana05.html" class="back-btn">← Semana 5</a>
+    <a href="index.html" class="back-btn cyan">🏠 Início</a>
+    <div class="hud">
+      <div class="hud-pill">
+        <span class="v" id="hud-xp">0</span>
+        <span class="l">XP</span>
+      </div>
+      <div class="hud-pill">
+        <span class="v" id="hud-badges">0</span>
+        <span class="l">Badges</span>
+      </div>
+      <div class="hud-xp-wrap">
+        <div class="hud-xp-label">
+          <span id="hud-level">Iniciante</span>
+          <span id="hud-pct">0%</span>
+        </div>
+        <div class="hud-bar-bg">
+          <div class="hud-bar" id="hud-bar"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="scard">
+      <div class="scard-title">🛡️ GUFW — Seções</div>
+      <a href="#section-intro"    class="nav-link active"><div class="nav-dot purple"></div>O que é o GUFW?</a>
+      <a href="#section-instalar" class="nav-link"><div class="nav-dot cyan"></div>Instalar GUFW</a>
+      <a href="#section-interface" class="nav-link"><div class="nav-dot purple"></div>Interface Gráfica</a>
+      <a href="#section-missao"   class="nav-link"><div class="nav-dot orange"></div>Missão — Configurar</a>
+      <a href="#section-sim"      class="nav-link"><div class="nav-dot purple"></div>Simulador GUFW</a>
+      <a href="#section-vs"       class="nav-link"><div class="nav-dot cyan"></div>GUFW vs UFW</a>
+      <a href="#section-quiz"     class="nav-link"><div class="nav-dot green"></div>Quiz</a>
+    </div>
+
+    <div class="scard">
+      <div class="scard-title">📊 Progresso</div>
+      <div class="prog-block">
+        <div class="prog-label"><span>Missão</span><span id="mis-pct">0%</span></div>
+        <div class="prog-bg"><div class="prog-fill p" id="mis-bar" style="width:0%"></div></div>
+      </div>
+      <div class="prog-block">
+        <div class="prog-label"><span>Simulador</span><span id="sim-pct">0 regras</span></div>
+        <div class="prog-bg"><div class="prog-fill c" id="sim-bar" style="width:0%"></div></div>
+      </div>
+      <div class="prog-block">
+        <div class="prog-label"><span>Quiz</span><span id="quiz-pct">0/5</span></div>
+        <div class="prog-bg"><div class="prog-fill g" id="quiz-bar" style="width:0%"></div></div>
+      </div>
+    </div>
+
+    <!-- REFERÊNCIA RÁPIDA -->
+    <div class="scard">
+      <div class="scard-title">⚡ Referência Rápida</div>
+      <div style="font-size:0.78em;color:var(--muted);line-height:2;">
+        <div><span style="color:var(--purple);font-weight:700;">Instalar:</span><br>
+          <code style="font-family:'JetBrains Mono',monospace;font-size:0.88em;color:var(--cyan);">sudo apt install gufw</code></div>
+        <div style="margin-top:8px;"><span style="color:var(--purple);font-weight:700;">Abrir:</span><br>
+          <code style="font-family:'JetBrains Mono',monospace;font-size:0.88em;color:var(--cyan);">sudo gufw</code></div>
+        <div style="margin-top:8px;"><span style="color:var(--purple);font-weight:700;">Ou via menu:</span><br>
+          Atividades → Firewall</div>
+        <div style="margin-top:8px;"><span style="color:var(--purple);font-weight:700;">Backend:</span><br>
+          UFW + iptables</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- HERO -->
+    <div class="hero" id="section-intro">
+      <div class="hero-tag">ISO-103 · 3º Semestre · Semana 05.3</div>
+      <h1>🛡️ <span>GUFW</span> — Firewall Gráfico</h1>
+      <div class="hero-sub">Interface gráfica do UFW para o Ubuntu Desktop — configure regras de firewall sem digitar um único comando.</div>
+      <div class="hero-chips">
+        <div class="chip purple">🛡️ GUFW</div>
+        <div class="chip cyan">🖥️ Ubuntu Desktop</div>
+        <div class="chip green">🖱️ Interface Gráfica</div>
+        <div class="chip orange">🔥 Backend UFW</div>
+      </div>
+    </div>
+
+    <!-- O QUE É GUFW -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon ci-p">🛡️</div>
+        <div class="card-title">O QUE É O GUFW?</div>
+        <div class="xp-tag purple">Base teórica</div>
+      </div>
+      <div class="card-body">
+        <div class="purple-box">
+          💡 <strong>GUFW</strong> (Graphical Uncomplicated Firewall) é a <strong>interface gráfica oficial do UFW</strong> para ambientes desktop Linux. Ele permite gerenciar regras de firewall visualmente — ativar/desativar o firewall, criar regras de allow/deny e definir políticas de entrada e saída, tudo com cliques, sem usar o terminal.
+        </div>
+
+        <div class="concept-grid">
+          <div class="concept-card purple">
+            <div class="concept-title">🛡️ GUFW</div>
+            <p>Front-end gráfico do UFW. Usa GTK e roda no GNOME do Ubuntu Desktop. Internamente chama os mesmos comandos <code style="font-family:'JetBrains Mono',monospace;font-size:0.88em;color:var(--purple);">ufw</code> do terminal.</p>
+          </div>
+          <div class="concept-card cyan">
+            <div class="concept-title">🔧 Back-end UFW</div>
+            <p>Toda regra criada no GUFW é traduzida para comandos UFW. O que você clica na tela equivale exatamente ao que digitaria no terminal.</p>
+          </div>
+          <div class="concept-card green">
+            <div class="concept-title">🖥️ Ubuntu Desktop</div>
+            <p>O GUFW é indicado para o ambiente Desktop — onde existe interface gráfica. No Server (sem GUI), usa-se o UFW diretamente pelo terminal.</p>
+          </div>
+          <div class="concept-card orange">
+            <div class="concept-title">🔒 Profiles</div>
+            <p>O GUFW permite criar perfis (Home, Office, Public) com políticas diferentes para cada ambiente de rede — troca com um clique.</p>
+          </div>
+        </div>
+
+        <div class="warn-box">⚠️ O GUFW exige privilégios de administrador (<code>sudo</code>) para ser executado. Se aberto sem sudo, abrirá somente leitura — não será possível alterar nenhuma regra.</div>
+      </div>
+    </div>
+
+    <!-- INSTALAÇÃO -->
+    <div class="card" id="section-instalar">
+      <div class="card-head">
+        <div class="card-icon ci-c">📦</div>
+        <div class="card-title">INSTALAR O GUFW NO UBUNTU DESKTOP</div>
+        <div class="xp-tag cyan">+10 XP</div>
+      </div>
+      <div class="card-body">
+        <div class="info-box">💡 O GUFW pode não vir instalado por padrão no Ubuntu Desktop 22.04. A instalação é simples e rápida — apenas um comando no terminal.</div>
+
+        <div class="section-header">📋 PASSO A PASSO — INSTALAÇÃO</div>
+
+        <div class="step"><div class="step-num">1</div><p>Abra o terminal (<kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>T</kbd>) e atualize a lista de repositórios:</p></div>
+        <div class="cmd-block">
+<span class="prompt">usuario@ubuntu:~$</span> <span class="cmd">sudo apt update</span>
+<span class="output">Hit:1 http://br.archive.ubuntu.com/ubuntu jammy InRelease
+Reading package lists... Done</span>
+        </div>
+
+        <div class="step"><div class="step-num">2</div><p>Instale o GUFW:</p></div>
+        <div class="cmd-block">
+<span class="prompt">usuario@ubuntu:~$</span> <span class="cmd">sudo apt install gufw -y</span>
+<span class="output">Reading package lists... Done
+Building dependency tree... Done
+The following NEW packages will be installed: gufw
+0 upgraded, 1 newly installed, 0 to remove and 0 not upgraded.
+Do you want to continue? [Y/n] Y
+Setting up gufw ...</span>
+        </div>
+
+        <div class="step"><div class="step-num">3</div><p>Abra o GUFW com privilégios de administrador:</p></div>
+        <div class="cmd-block">
+<span class="comment"># Opção 1 — pelo terminal (recomendado para garantir permissões)</span>
+<span class="prompt">usuario@ubuntu:~$</span> <span class="cmd">sudo gufw</span>
+
+<span class="comment"># Opção 2 — pelo menu do GNOME</span>
+<span class="comment"># Atividades → digitar "Firewall" → clicar em "Configuração do Firewall"</span>
+<span class="comment"># O sistema solicitará a senha de administrador automaticamente</span>
+        </div>
+
+        <div class="step"><div class="step-num">4</div><p>Verifique que o UFW está instalado (backend do GUFW):</p></div>
+        <div class="cmd-block">
+<span class="prompt">usuario@ubuntu:~$</span> <span class="cmd">sudo ufw version</span>
+<span class="output">ufw 0.36.1
+Copyright 2008-2021 Canonical Ltd.</span>
+        </div>
+
+        <div class="success-box">✅ Com o GUFW instalado e aberto com <code>sudo</code>, a janela principal do firewall aparecerá. O próximo passo é entender a interface.</div>
+
+        <button class="complete-btn" id="btn-instalar" onclick="completeEtapa('instalar', 'btn-instalar', 10, 'GUFW instalado!', '📦')">✅ GUFW Instalado!</button>
+      </div>
+    </div>
+
+    <!-- INTERFACE GRÁFICA -->
+    <div class="card" id="section-interface">
+      <div class="card-head">
+        <div class="card-icon ci-p">🖥️</div>
+        <div class="card-title">ENTENDENDO A INTERFACE DO GUFW</div>
+        <div class="xp-tag purple">+15 XP</div>
+      </div>
+      <div class="card-body">
+
+        <div class="os-tabs">
+          <button class="os-tab active-tab" onclick="switchTab('visao',this)">🖥️ Visão Geral</button>
+          <button class="os-tab tab-cyan" onclick="switchTab('perfis',this)">📂 Perfis</button>
+          <button class="os-tab tab-green" onclick="switchTab('politicas',this)">🛡️ Políticas</button>
+          <button class="os-tab tab-orange" onclick="switchTab('adicionar',this)">➕ Adicionar Regra</button>
+        </div>
+
+        <!-- ABA — Visão Geral -->
+        <div id="panel-visao" class="os-panel active-panel">
+          <p style="font-size:0.86em;color:var(--muted);margin-bottom:14px;">A janela principal do GUFW é dividida em três áreas principais: barra de controle no topo, lista de regras no centro e botões de ação na base.</p>
+
+          <!-- MOCKUP DA JANELA GUFW -->
+          <div class="gufw-window">
+            <div class="gufw-titlebar">
+              <div class="gufw-dots">
+                <div class="gufw-dot red"></div>
+                <div class="gufw-dot yellow"></div>
+                <div class="gufw-dot green"></div>
+              </div>
+              <div class="gufw-title">🛡️ Configuração do Firewall (GUFW)</div>
+            </div>
+            <div class="gufw-body">
+              <!-- Barra de controle -->
+              <div class="gufw-row">
+                <div class="gufw-label">Status:</div>
+                <div class="gufw-toggle on" title="Firewall ativo"></div>
+                <div class="gufw-status-on">Ativado ✅</div>
+              </div>
+              <div class="gufw-row">
+                <div class="gufw-label">Perfil:</div>
+                <select class="gufw-select">
+                  <option>Home</option>
+                  <option>Office</option>
+                  <option>Public</option>
+                </select>
+              </div>
+              <div class="gufw-row">
+                <div class="gufw-label">Entrada:</div>
+                <select class="gufw-select"><option>Deny</option><option>Allow</option></select>
+                <div class="gufw-label" style="margin-left:12px;">Saída:</div>
+                <select class="gufw-select"><option>Allow</option><option>Deny</option></select>
+              </div>
+              <!-- Lista de regras simulada -->
+              <div class="gufw-rules-header">
+                <span>Aplicativo / Porta</span>
+                <span>Ação</span>
+                <span>Direção</span>
+                <span>Protocolo</span>
+              </div>
+              <div class="gufw-rule-row">
+                <span>SSH (22)</span>
+                <span><div class="gufw-badge allow">ALLOW</div></span>
+                <span><div class="gufw-badge in">IN</div></span>
+                <span>TCP</span>
+              </div>
+              <div class="gufw-rule-row">
+                <span>HTTP (80)</span>
+                <span><div class="gufw-badge allow">ALLOW</div></span>
+                <span><div class="gufw-badge in">IN</div></span>
+                <span>TCP</span>
+              </div>
+              <div class="gufw-rule-row">
+                <span>Telnet (23)</span>
+                <span><div class="gufw-badge deny">DENY</div></span>
+                <span><div class="gufw-badge in">IN</div></span>
+                <span>TCP</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="purple-box" style="margin-top:14px;">
+            <strong style="color:var(--purple)">🔍 Elementos da janela:</strong>
+            <ul style="margin:8px 0 0 16px;line-height:2;">
+              <li><strong style="color:var(--text)">Toggle Status</strong> — liga/desliga o firewall com um clique</li>
+              <li><strong style="color:var(--text)">Perfil</strong> — seleciona o conjunto de regras ativo (Home, Office, Public)</li>
+              <li><strong style="color:var(--text)">Política de Entrada/Saída</strong> — define o comportamento padrão para tráfego não coberto por regras específicas</li>
+              <li><strong style="color:var(--text)">Lista de Regras</strong> — exibe todas as regras ativas; clique em uma para selecioná-la e deletar</li>
+              <li><strong style="color:var(--text)">Botão + (Adicionar)</strong> — abre o diálogo para criar uma nova regra</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- ABA — Perfis -->
+        <div id="panel-perfis" class="os-panel">
+          <div class="info-box">💡 Os <strong>Perfis</strong> permitem ter conjuntos de regras diferentes para cada ambiente de rede. Ideal para laptops que transitam entre casa, trabalho e redes públicas.</div>
+
+          <div class="concept-grid">
+            <div class="concept-card green">
+              <div class="concept-title">🏠 Home</div>
+              <p>Rede doméstica confiável. Política mais permissiva — entrada liberada para serviços locais, saída totalmente liberada.</p>
+            </div>
+            <div class="concept-card cyan">
+              <div class="concept-title">🏢 Office</div>
+              <p>Rede corporativa. Regras específicas para aplicativos de trabalho. Geralmente bloqueia serviços desnecessários.</p>
+            </div>
+            <div class="concept-card orange">
+              <div class="concept-title">☕ Public</div>
+              <p>Redes públicas (cafés, aeroportos). Política mais restritiva — nega toda entrada, só permite conexões iniciadas pela máquina.</p>
+            </div>
+          </div>
+
+          <div class="section-header">📋 COMO TROCAR DE PERFIL</div>
+          <div style="background:rgba(180,74,255,0.04);border:1px solid rgba(180,74,255,0.15);border-radius:9px;padding:16px;font-size:0.85em;color:var(--muted);line-height:1.8;">
+            <strong style="color:var(--purple)">No GUFW:</strong><br>
+            1. Abra o GUFW com <code style="font-family:'JetBrains Mono',monospace;color:var(--cyan);">sudo gufw</code><br>
+            2. No menu superior, clique em <strong style="color:var(--text)">Perfil</strong><br>
+            3. Selecione o perfil desejado (Home / Office / Public)<br>
+            4. As regras e políticas mudarão automaticamente para as daquele perfil<br><br>
+            <strong style="color:var(--purple)">Criar um novo perfil:</strong><br>
+            Menu <strong style="color:var(--text)">Editar → Preferências → Perfis</strong> → clique em <strong style="color:var(--text)">+</strong> e nomeie o novo perfil
+          </div>
+
+          <div class="warn-box">⚠️ Cada perfil armazena suas próprias regras independentemente. Trocar de perfil não apaga as regras dos outros — elas ficam salvas para quando você voltar.</div>
+        </div>
+
+        <!-- ABA — Políticas -->
+        <div id="panel-politicas" class="os-panel">
+          <div class="info-box">💡 As <strong>Políticas Padrão</strong> definem o que acontece com tráfego que <em>não</em> corresponde a nenhuma regra específica. São o comportamento de fallback do firewall.</div>
+
+          <table class="comp-table">
+            <tr>
+              <th>Política</th>
+              <th>Entrada (Incoming)</th>
+              <th>Saída (Outgoing)</th>
+              <th>Uso recomendado</th>
+            </tr>
+            <tr>
+              <td>🏠 Home</td>
+              <td><span class="yes">Allow</span></td>
+              <td><span class="yes">Allow</span></td>
+              <td>Rede doméstica totalmente confiável</td>
+            </tr>
+            <tr>
+              <td>🔒 Padrão seguro</td>
+              <td><span class="no">Deny</span></td>
+              <td><span class="yes">Allow</span></td>
+              <td>Recomendado para servidores e uso geral</td>
+            </tr>
+            <tr>
+              <td>☕ Public</td>
+              <td><span class="no">Deny</span></td>
+              <td><span class="no">Deny</span></td>
+              <td>Redes públicas desconhecidas</td>
+            </tr>
+            <tr>
+              <td>🧪 Reject</td>
+              <td><span class="par">Reject</span></td>
+              <td><span class="yes">Allow</span></td>
+              <td>Bloqueia e informa o remetente (diferente do Deny silencioso)</td>
+            </tr>
+          </table>
+
+          <div class="section-header">🖱️ COMO ALTERAR NO GUFW</div>
+          <div style="background:rgba(0,212,255,0.04);border:1px solid rgba(0,212,255,0.15);border-radius:9px;padding:14px;font-size:0.85em;color:var(--muted);line-height:1.8;">
+            Na tela principal do GUFW, os menus dropdown <strong style="color:var(--text)">Entrada</strong> e <strong style="color:var(--text)">Saída</strong> controlam as políticas padrão.<br>
+            Opções disponíveis: <strong style="color:var(--green)">Allow</strong> · <strong style="color:var(--red)">Deny</strong> · <strong style="color:var(--yellow)">Reject</strong><br><br>
+            A diferença entre <strong>Deny</strong> e <strong>Reject</strong>:<br>
+            • <strong style="color:var(--red)">Deny</strong> — descarta o pacote silenciosamente (o remetente não recebe resposta)<br>
+            • <strong style="color:var(--yellow)">Reject</strong> — descarta e envia uma mensagem de erro ao remetente (ICMP unreachable)
+          </div>
+        </div>
+
+        <!-- ABA — Adicionar Regra -->
+        <div id="panel-adicionar" class="os-panel">
+          <div class="info-box">💡 Para adicionar uma regra no GUFW, clique no botão <strong>+</strong> na barra inferior da janela. Um diálogo com três abas aparecerá: <strong>Simples</strong>, <strong>Avançado</strong> e <strong>App</strong>.</div>
+
+          <div class="section-header">🖱️ ABA "SIMPLES" — O MAIS USADO NO DIA A DIA</div>
+          <div style="background:rgba(180,74,255,0.04);border:1px solid rgba(180,74,255,0.15);border-radius:9px;padding:16px;font-size:0.85em;color:var(--muted);line-height:1.9;">
+            <strong style="color:var(--purple)">Campos disponíveis:</strong><br>
+            • <strong style="color:var(--text)">Política:</strong> Allow / Deny / Reject / Limit<br>
+            • <strong style="color:var(--text)">Direção:</strong> In / Out / Both<br>
+            • <strong style="color:var(--text)">Protocolo:</strong> TCP / UDP / Both<br>
+            • <strong style="color:var(--text)">Porta:</strong> número da porta (ex: 22, 80, 443)<br><br>
+            <strong style="color:var(--purple)">Exemplos de regras simples:</strong><br>
+            Allow · In · TCP · 22 → libera SSH<br>
+            Deny  · In · TCP · 23 → bloqueia Telnet<br>
+            Allow · In · Both · 80 → libera HTTP (TCP e UDP)
+          </div>
+
+          <div class="section-header cyan">🖱️ ABA "AVANÇADO" — CONTROLE POR IP</div>
+          <div style="background:rgba(0,212,255,0.04);border:1px solid rgba(0,212,255,0.15);border-radius:9px;padding:16px;font-size:0.85em;color:var(--muted);line-height:1.9;">
+            <strong style="color:var(--cyan)">Permite filtrar por IP de origem e destino:</strong><br>
+            • <strong style="color:var(--text)">From (origem):</strong> IP específico ou faixa CIDR (ex: 192.168.1.0/24)<br>
+            • <strong style="color:var(--text)">To (destino):</strong> IP de destino da regra<br>
+            • <strong style="color:var(--text)">Port (origem/destino):</strong> porta da origem e da regra<br><br>
+            <strong style="color:var(--cyan)">Exemplos avançados:</strong><br>
+            Allow · In · TCP · From: 192.168.1.100 · Port: 22 → só esse IP acessa SSH<br>
+            Deny  · In · TCP · From: 10.0.0.0/8    · Port: 3389 → bloqueia RDP de toda a faixa 10.x
+          </div>
+
+          <div class="section-header green">🖱️ ABA "APP" — REGRAS PRÉ-DEFINIDAS</div>
+          <div style="background:rgba(0,255,136,0.04);border:1px solid rgba(0,255,136,0.15);border-radius:9px;padding:16px;font-size:0.85em;color:var(--muted);line-height:1.9;">
+            <strong style="color:var(--green)">O UFW possui perfis de aplicativos pré-configurados:</strong><br>
+            • <strong style="color:var(--text)">OpenSSH</strong> → abre porta 22/tcp<br>
+            • <strong style="color:var(--text)">Apache</strong>  → abre portas 80 e 443<br>
+            • <strong style="color:var(--text)">Nginx</strong>   → abre portas 80 e 443<br>
+            • <strong style="color:var(--text)">Samba</strong>   → abre as portas do compartilhamento de arquivos<br><br>
+            Selecione o aplicativo, defina Allow/Deny e clique em Adicionar — mais simples do que lembrar cada porta.
+          </div>
+
+          <div class="success-box">✅ Toda regra criada no GUFW é persistente — sobrevive ao reboot automaticamente, pois o UFW salva em <code>/etc/ufw/user.rules</code>.</div>
+
+          <button class="complete-btn" id="btn-interface" onclick="completeEtapa('interface','btn-interface',15,'Interface do GUFW dominada!','🖥️')">✅ Interface Entendida!</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MISSÃO -->
+    <div class="card" id="section-missao">
+      <div class="card-head">
+        <div class="card-icon ci-o">⚔️</div>
+        <div class="card-title">MISSÃO — CONFIGURAR O GUFW NO UBUNTU DESKTOP</div>
+        <div class="xp-tag purple">+50 XP</div>
+      </div>
+      <div class="card-body">
+        <div class="purple-box">🎯 <strong>Objetivo:</strong> Instalar o GUFW no Ubuntu Desktop 22.04, ativar o firewall, configurar as políticas padrão corretas e criar regras essenciais usando a interface gráfica.</div>
+
+        <div class="section-header">✅ CHECKLIST DA MISSÃO</div>
+
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
+          <label class="check-item" id="chk0" onclick="toggleCheck(0)">
+            <input type="checkbox" style="display:none">
+            <span class="check-box">☐</span>
+            <span class="check-text">Abrir o terminal e executar <code style="font-family:'JetBrains Mono',monospace;font-size:0.88em;color:var(--purple);">sudo apt install gufw -y</code></span>
+          </label>
+          <label class="check-item" id="chk1" onclick="toggleCheck(1)">
+            <input type="checkbox" style="display:none">
+            <span class="check-box">☐</span>
+            <span class="check-text">Abrir o GUFW com <code style="font-family:'JetBrains Mono',monospace;font-size:0.88em;color:var(--purple);">sudo gufw</code> ou pelo menu Atividades</span>
+          </label>
+          <label class="check-item" id="chk2" onclick="toggleCheck(2)">
+            <input type="checkbox" style="display:none">
+            <span class="check-box">☐</span>
+            <span class="check-text">Ativar o firewall (toggle Status → Ativado)</span>
+          </label>
+          <label class="check-item" id="chk3" onclick="toggleCheck(3)">
+            <input type="checkbox" style="display:none">
+            <span class="check-box">☐</span>
+            <span class="check-text">Definir política de Entrada: <strong>Deny</strong> e Saída: <strong>Allow</strong></span>
+          </label>
+          <label class="check-item" id="chk4" onclick="toggleCheck(4)">
+            <input type="checkbox" style="display:none">
+            <span class="check-box">☐</span>
+            <span class="check-text">Criar regra: Allow · In · TCP · porta 22 (SSH)</span>
+          </label>
+          <label class="check-item" id="chk5" onclick="toggleCheck(5)">
+            <input type="checkbox" style="display:none">
+            <span class="check-box">☐</span>
+            <span class="check-text">Criar regra: Allow · In · TCP · porta 80 (HTTP)</span>
+          </label>
+          <label class="check-item" id="chk6" onclick="toggleCheck(6)">
+            <input type="checkbox" style="display:none">
+            <span class="check-box">☐</span>
+            <span class="check-text">Criar regra: Deny · In · TCP · porta 23 (Telnet)</span>
+          </label>
+          <label class="check-item" id="chk7" onclick="toggleCheck(7)">
+            <input type="checkbox" style="display:none">
+            <span class="check-box">☐</span>
+            <span class="check-text">Verificar as regras no terminal: <code style="font-family:'JetBrains Mono',monospace;font-size:0.88em;color:var(--purple);">sudo ufw status verbose</code></span>
+          </label>
+        </div>
+
+        <style>
+        .check-item {
+          display:flex; align-items:center; gap:12px;
+          padding:10px 14px; border-radius:8px; cursor:pointer;
+          background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06);
+          transition:all 0.2s; font-size:0.87em; color:var(--text);
+          user-select:none;
+        }
+        .check-item:hover { background:rgba(180,74,255,0.06); border-color:rgba(180,74,255,0.2); }
+        .check-item.done { background:rgba(0,255,136,0.05); border-color:rgba(0,255,136,0.2); color:var(--muted); text-decoration:line-through; }
+        .check-box { font-size:1.2em; flex-shrink:0; transition:all 0.2s; }
+        .check-item.done .check-box { color:var(--green); }
+        </style>
+
+        <div class="section-header cyan">🔍 VERIFICAR O RESULTADO NO TERMINAL</div>
+        <div class="cmd-block">
+<span class="comment"># Após configurar no GUFW, confirme pelo terminal que as regras foram aplicadas</span>
+<span class="prompt">usuario@ubuntu:~$</span> <span class="cmd">sudo ufw status verbose</span>
+<span class="output">Status: active
+Logging: on (low)
+Default: deny (incoming), allow (outgoing), disabled (routed)
+
+To             Action      From
+--             ------      ----
+22/tcp         ALLOW IN    Anywhere       ← SSH liberado no GUFW
+80/tcp         ALLOW IN    Anywhere       ← HTTP liberado no GUFW
+23/tcp         DENY IN     Anywhere       ← Telnet bloqueado no GUFW</span>
+        </div>
+
+        <div class="success-box">✅ O que você fez no GUFW aparece exatamente aqui — GUFW e UFW compartilham o mesmo conjunto de regras. A interface gráfica é apenas uma camada de conveniência por cima do UFW.</div>
+
+        <button class="complete-btn" id="btn-missao" onclick="completeMissao()">✅ MISSÃO CONCLUÍDA — GUFW Configurado!</button>
+      </div>
+    </div>
+
+    <!-- SIMULADOR GUFW -->
+    <div class="card" id="section-sim">
+      <div class="card-head">
+        <div class="card-icon ci-p">🖱️</div>
+        <div class="card-title">SIMULADOR GUFW — INTERFACE INTERATIVA</div>
+        <div class="xp-tag purple">+15 XP por regra</div>
+      </div>
+      <div class="card-body">
+        <p style="font-size:0.86em;color:var(--muted);margin-bottom:16px;">Simule a interface do GUFW. Adicione regras como faria na aplicação real — elas serão exibidas na lista de regras abaixo.</p>
+
+        <div class="gufw-window">
+          <div class="gufw-titlebar">
+            <div class="gufw-dots">
+              <div class="gufw-dot red"></div>
+              <div class="gufw-dot yellow"></div>
+              <div class="gufw-dot green"></div>
+            </div>
+            <div class="gufw-title">🛡️ Configuração do Firewall (GUFW) — Simulador</div>
+          </div>
+          <div class="gufw-body">
+            <!-- Status & perfil -->
+            <div class="gufw-row">
+              <div class="gufw-label">Status:</div>
+              <div class="gufw-toggle on"></div>
+              <div class="gufw-status-on">Ativado ✅</div>
+            </div>
+            <div class="gufw-row">
+              <div class="gufw-label">Entrada:</div>
+              <select class="gufw-select"><option>Deny</option><option>Allow</option><option>Reject</option></select>
+              <div class="gufw-label" style="margin-left:12px;">Saída:</div>
+              <select class="gufw-select"><option>Allow</option><option>Deny</option></select>
+            </div>
+
+            <!-- Lista de regras -->
+            <div class="gufw-rules-header">
+              <span>Porta / Serviço</span>
+              <span>Ação</span>
+              <span>Direção</span>
+              <span>Protocolo</span>
+            </div>
+            <div id="sim-rules-list">
+              <div class="gufw-rule-row">
+                <span>22 (SSH)</span>
+                <span><div class="gufw-badge allow">ALLOW</div></span>
+                <span><div class="gufw-badge in">IN</div></span>
+                <span>TCP</span>
+              </div>
+              <div class="gufw-rule-row">
+                <span>80 (HTTP)</span>
+                <span><div class="gufw-badge allow">ALLOW</div></span>
+                <span><div class="gufw-badge in">IN</div></span>
+                <span>TCP</span>
+              </div>
+              <div class="gufw-rule-row">
+                <span>23 (Telnet)</span>
+                <span><div class="gufw-badge deny">DENY</div></span>
+                <span><div class="gufw-badge in">IN</div></span>
+                <span>TCP</span>
+              </div>
+            </div>
+
+            <!-- Adicionar regra -->
+            <div class="gufw-add-row" style="margin-top:14px;">
+              <input type="text" class="gufw-input" id="sim-port" placeholder="Porta (ex: 443)" />
+              <select class="gufw-sel" id="sim-action">
+                <option value="allow">Allow</option>
+                <option value="deny">Deny</option>
+                <option value="reject">Reject</option>
+              </select>
+              <select class="gufw-sel" id="sim-proto">
+                <option value="TCP">TCP</option>
+                <option value="UDP">UDP</option>
+                <option value="Both">Both</option>
+              </select>
+              <button class="gufw-add-btn" onclick="addSimRule()">+ Adicionar</button>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:10px;align-items:center;">
+              <button onclick="clearSimRules()" style="padding:6px 14px;border:1px solid rgba(255,68,102,0.3);background:rgba(255,68,102,0.08);color:var(--red);border-radius:6px;cursor:pointer;font-size:0.78em;font-weight:700;font-family:'Exo 2',sans-serif;">🗑️ Resetar</button>
+              <span id="sim-count" class="gufw-count">3 regras ativas</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GUFW vs UFW -->
+    <div class="card" id="section-vs">
+      <div class="card-head">
+        <div class="card-icon ci-c">⚖️</div>
+        <div class="card-title">GUFW vs UFW — QUANDO USAR CADA UM?</div>
+        <div class="xp-tag cyan">Comparativo</div>
+      </div>
+      <div class="card-body">
+        <table class="comp-table">
+          <tr>
+            <th>Critério</th>
+            <th>🛡️ GUFW</th>
+            <th>🔥 UFW (terminal)</th>
+          </tr>
+          <tr>
+            <td>Interface</td>
+            <td><span class="yes">Gráfica (cliques)</span></td>
+            <td>Linha de comando</td>
+          </tr>
+          <tr>
+            <td>Ambiente</td>
+            <td><span class="yes">Desktop (GNOME)</span></td>
+            <td><span class="yes">Server e Desktop</span></td>
+          </tr>
+          <tr>
+            <td>Curva de aprendizado</td>
+            <td><span class="yes">Baixa — intuitivo</span></td>
+            <td><span class="par">Média — requer saber os comandos</span></td>
+          </tr>
+          <tr>
+            <td>Automação / Scripts</td>
+            <td><span class="no">Não suporta</span></td>
+            <td><span class="yes">Total — ideal para scripts</span></td>
+          </tr>
+          <tr>
+            <td>Conexão remota (SSH)</td>
+            <td><span class="no">Não funciona sem GUI</span></td>
+            <td><span class="yes">Funciona em qualquer cenário</span></td>
+          </tr>
+          <tr>
+            <td>Regras por IP</td>
+            <td><span class="yes">Aba Avançado</span></td>
+            <td><span class="yes">Diretamente no comando</span></td>
+          </tr>
+          <tr>
+            <td>Perfis de rede</td>
+            <td><span class="yes">Home / Office / Public</span></td>
+            <td><span class="no">Não tem nativamente</span></td>
+          </tr>
+          <tr>
+            <td>Back-end</td>
+            <td colspan="2" style="text-align:center;color:var(--purple);">Ambos usam o mesmo — UFW → iptables/nftables</td>
+          </tr>
+        </table>
+
+        <div class="purple-box" style="margin-top:14px;">
+          <strong style="color:var(--purple)">🎯 Resumo prático:</strong><br>
+          Use o <strong style="color:var(--text)">GUFW</strong> no seu desktop pessoal ou nos computadores de usuários comuns — é mais acessível e visual.<br>
+          Use o <strong style="color:var(--text)">UFW pelo terminal</strong> em servidores, via SSH, em scripts de automação ou quando precisar de controle preciso e repetível.
+        </div>
+      </div>
+    </div>
+
+    <!-- QUIZ -->
+    <div class="card" id="section-quiz">
+      <div class="card-head">
+        <div class="card-icon ci-g">🧠</div>
+        <div class="card-title">QUIZ — GUFW e Firewall Gráfico</div>
+        <div class="xp-tag green">+10 a +20 XP</div>
+      </div>
+      <div class="card-body">
+        <div class="quiz-prog-wrap">
+          <div class="quiz-prog-label"><span>Progresso</span><span id="q-cnt">0/5</span></div>
+          <div class="quiz-prog-bg"><div class="quiz-prog-fill" id="q-prog"></div></div>
+        </div>
+
+        <!-- Q0 -->
+        <div class="qcard active" id="qc0">
+          <h4>🛡️ O GUFW é uma interface gráfica para qual ferramenta de linha de comando?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(0,0,2)">A) iptables</button>
+            <button class="qopt" onclick="ansQ(0,1,2)">B) nftables</button>
+            <button class="qopt" onclick="ansQ(0,2,2)">C) UFW (Uncomplicated Firewall)</button>
+            <button class="qopt" onclick="ansQ(0,3,2)">D) firewalld</button>
+          </div>
+          <div class="qfb" id="qfb0"></div>
+          <div class="qnx" id="qnx0"><button class="qnx-btn" onclick="nextQ(1)">Próxima →</button></div>
+        </div>
+
+        <!-- Q1 -->
+        <div class="qcard" id="qc1">
+          <h4>🖥️ Por que o GUFW deve ser aberto com <code>sudo gufw</code> e não apenas <code>gufw</code>?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(1,0,1)">A) Porque precisa de privilégios de administrador para alterar regras de firewall</button>
+            <button class="qopt" onclick="ansQ(1,1,1)">B) Porque a interface gráfica só carrega com sudo</button>
+            <button class="qopt" onclick="ansQ(1,2,1)">C) Porque o gufw é instalado na pasta /root</button>
+            <button class="qopt" onclick="ansQ(1,3,1)">D) Porque o Ubuntu Desktop exige sudo para qualquer aplicativo</button>
+          </div>
+          <div class="qfb" id="qfb1"></div>
+          <div class="qnx" id="qnx1"><button class="qnx-btn" onclick="nextQ(2)">Próxima →</button></div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="qcard" id="qc2">
+          <h4>📂 Qual perfil do GUFW é mais adequado para uso em uma rede pública (aeroporto, shopping)?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(2,0,2)">A) Home</button>
+            <button class="qopt" onclick="ansQ(2,1,2)">B) Office</button>
+            <button class="qopt" onclick="ansQ(2,2,2)">C) Public</button>
+            <button class="qopt" onclick="ansQ(2,3,2)">D) Custom</button>
+          </div>
+          <div class="qfb" id="qfb2"></div>
+          <div class="qnx" id="qnx2"><button class="qnx-btn" onclick="nextQ(3)">Próxima →</button></div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="qcard" id="qc3">
+          <h4>⚖️ Qual a diferença entre as ações <strong>Deny</strong> e <strong>Reject</strong> no GUFW?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(3,0,3)">A) Deny bloqueia apenas TCP; Reject bloqueia TCP e UDP</button>
+            <button class="qopt" onclick="ansQ(3,1,3)">B) Deny é temporário; Reject é permanente</button>
+            <button class="qopt" onclick="ansQ(3,2,3)">C) Deny funciona só na entrada; Reject funciona em ambas as direções</button>
+            <button class="qopt" onclick="ansQ(3,3,3)">D) Deny descarta silenciosamente; Reject descarta e notifica o remetente com erro</button>
+          </div>
+          <div class="qfb" id="qfb3"></div>
+          <div class="qnx" id="qnx3"><button class="qnx-btn" onclick="nextQ(4)">Próxima →</button></div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="qcard" id="qc4">
+          <h4>🔍 Uma regra criada no GUFW fica salva em qual arquivo do sistema?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(4,0,2)">A) /etc/gufw/gufw.rules</button>
+            <button class="qopt" onclick="ansQ(4,1,2)">B) /etc/iptables/rules.v4</button>
+            <button class="qopt" onclick="ansQ(4,2,2)">C) /etc/ufw/user.rules</button>
+            <button class="qopt" onclick="ansQ(4,3,2)">D) ~/.config/gufw/rules.conf</button>
+          </div>
+          <div class="qfb" id="qfb4"></div>
+          <div class="qnx" id="qnx4"><button class="qnx-btn" onclick="showResult()">Ver Resultado →</button></div>
+        </div>
+
+        <!-- RESULTADO -->
+        <div class="q-result" id="q-result">
+          <span class="q-score" id="q-score">0/5</span>
+          <p class="q-msg" id="q-msg"></p>
+          <p class="q-xp" id="q-xp-earned"></p>
+          <button class="restart-btn" onclick="restartQuiz()">🔄 Tentar Novamente</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// ========== STATE ==========
+let xp = 0, badges = 0;
+let etapasDone = {};
+let missaoDone = false;
+let checksMarked = Array(8).fill(false);
+let simRules = [
+  { port:'22 (SSH)',   action:'allow', dir:'IN', proto:'TCP' },
+  { port:'80 (HTTP)',  action:'allow', dir:'IN', proto:'TCP' },
+  { port:'23 (Telnet)',action:'deny',  dir:'IN', proto:'TCP' },
+];
+let qCorrect = 0, qAnswers = {};
+
+const LEVELS = [
+  {min:0,  max:50,  label:'Iniciante'},
+  {min:50, max:120, label:'Aprendiz'},
+  {min:120,max:200, label:'Técnico'},
+  {min:200,max:300, label:'Expert'},
+  {min:300,max:500, label:'🛡️ GUFW Master'},
+];
+const QXPS = [15, 15, 10, 20, 15];
+
+// ========== HUD ==========
+function updateHUD() {
+  document.getElementById('hud-xp').textContent = xp;
+  document.getElementById('hud-badges').textContent = badges;
+  const lv = LEVELS.find(l => xp >= l.min && xp < l.max) || LEVELS[LEVELS.length-1];
+  const pct = Math.min(100, Math.round((xp - lv.min) / (lv.max - lv.min) * 100));
+  document.getElementById('hud-level').textContent = lv.label;
+  document.getElementById('hud-pct').textContent = pct + '%';
+  document.getElementById('hud-bar').style.width = pct + '%';
+
+  // Missão bar
+  const chkDone = checksMarked.filter(Boolean).length;
+  const misPct = missaoDone ? 100 : Math.round(chkDone / 8 * 100);
+  document.getElementById('mis-bar').style.width = misPct + '%';
+  document.getElementById('mis-pct').textContent = misPct + '%';
+
+  // Simulador bar
+  const extraRules = Math.max(0, simRules.length - 3);
+  document.getElementById('sim-bar').style.width = Math.min(100, extraRules / 5 * 100) + '%';
+  document.getElementById('sim-pct').textContent = simRules.length + ' regras';
+
+  // Quiz bar
+  const qn = Object.keys(qAnswers).length;
+  document.getElementById('quiz-bar').style.width = (qn / 5 * 100) + '%';
+  document.getElementById('quiz-pct').textContent = qn + '/5';
+}
+
+function addXP(amount, msg, icon) {
+  xp += amount; updateHUD();
+  toast(icon || '⚡', '+' + amount + ' XP', msg);
+}
+
+function toast(icon, title, msg) {
+  document.getElementById('toast-icon').textContent = icon;
+  document.getElementById('toast-title').textContent = title;
+  document.getElementById('toast-msg').textContent = msg;
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+// ========== TABS ==========
+function switchTab(tab, btn) {
+  document.querySelectorAll('[id^="panel-"]').forEach(p => p.classList.remove('active-panel'));
+  document.getElementById('panel-' + tab).classList.add('active-panel');
+  btn.closest('.os-tabs').querySelectorAll('.os-tab').forEach(t =>
+    t.classList.remove('active-tab','tab-cyan','tab-green','tab-orange')
+  );
+  btn.classList.add('active-tab');
+  const map = { visao:[5,'Visão geral estudada!','🖥️'], perfis:[5,'Perfis GUFW estudados!','📂'], politicas:[8,'Políticas estudadas!','🛡️'], adicionar:[8,'Como adicionar regras!','➕'] };
+  if (map[tab]) addXP(...map[tab]);
+  event.stopPropagation();
+}
+
+// ========== CHECKLIST ==========
+function toggleCheck(idx) {
+  checksMarked[idx] = !checksMarked[idx];
+  const el = document.getElementById('chk' + idx);
+  el.classList.toggle('done', checksMarked[idx]);
+  el.querySelector('.check-box').textContent = checksMarked[idx] ? '☑' : '☐';
+  if (checksMarked[idx]) addXP(5, 'Etapa marcada!', '✅');
+  const done = checksMarked.filter(Boolean).length;
+  if (done === 8 && !missaoDone) {
+    addXP(10, 'Checklist completo!', '🎯'); badges++; updateHUD();
+  }
+  updateHUD();
+}
+
+// ========== ETAPAS ==========
+function completeEtapa(key, btnId, xpAmt, msg, icon) {
+  if (etapasDone[key]) return;
+  etapasDone[key] = true;
+  const btn = document.getElementById(btnId);
+  btn.disabled = true; btn.textContent = '✅ Concluído!';
+  badges++; addXP(xpAmt, msg, icon); updateHUD();
+}
+
+// ========== MISSÃO ==========
+function completeMissao() {
+  if (missaoDone) return;
+  missaoDone = true;
+  const btn = document.getElementById('btn-missao');
+  btn.disabled = true; btn.textContent = '✅ Missão Concluída!';
+  badges++; addXP(50, 'GUFW configurado no Ubuntu Desktop!', '🛡️'); updateHUD();
+}
+
+// ========== SIMULADOR ==========
+function renderSimRules() {
+  const list = document.getElementById('sim-rules-list');
+  list.innerHTML = '';
+  simRules.forEach(r => {
+    const actionBadge = r.action === 'allow'
+      ? '<div class="gufw-badge allow">ALLOW</div>'
+      : r.action === 'deny'
+        ? '<div class="gufw-badge deny">DENY</div>'
+        : '<div class="gufw-badge" style="background:rgba(255,204,0,0.1);color:var(--yellow);border:1px solid rgba(255,204,0,0.3);">REJECT</div>';
+    list.innerHTML += `<div class="gufw-rule-row">
+      <span>${r.port}</span>
+      <span>${actionBadge}</span>
+      <span><div class="gufw-badge in">IN</div></span>
+      <span>${r.proto}</span>
+    </div>`;
+  });
+  document.getElementById('sim-count').textContent = simRules.length + ' regra' + (simRules.length !== 1 ? 's' : '') + ' ativa' + (simRules.length !== 1 ? 's' : '');
+  updateHUD();
+}
+
+function addSimRule() {
+  const port   = document.getElementById('sim-port').value.trim();
+  const action = document.getElementById('sim-action').value;
+  const proto  = document.getElementById('sim-proto').value;
+  if (!port) { toast('⚠️', 'Atenção', 'Informe a porta!'); return; }
+  simRules.push({ port, action, dir: 'IN', proto });
+  renderSimRules();
+  document.getElementById('sim-port').value = '';
+  addXP(15, 'Regra adicionada no GUFW!', '🛡️');
+  if (simRules.length >= 8) { badges++; toast('🏆', 'Badge!', '8+ regras no simulador!'); updateHUD(); }
+}
+
+function clearSimRules() {
+  simRules = [
+    { port:'22 (SSH)',   action:'allow', dir:'IN', proto:'TCP' },
+    { port:'80 (HTTP)',  action:'allow', dir:'IN', proto:'TCP' },
+    { port:'23 (Telnet)',action:'deny',  dir:'IN', proto:'TCP' },
+  ];
+  renderSimRules();
+  toast('🗑️', 'Simulador', 'Regras resetadas ao padrão');
+}
+
+// ========== QUIZ ==========
+const QFB = [
+  { ok: '✅ Correto! O GUFW é a interface gráfica oficial do UFW. Internamente, cada ação no GUFW chama os mesmos comandos UFW que você digitaria no terminal.' },
+  { ok: '✅ Exato! Sem sudo, o GUFW abre em modo somente leitura — você vê as regras mas não consegue alterar nada. O firewall é um recurso de sistema que exige permissões de root.' },
+  { ok: '✅ Certo! O perfil Public é o mais restritivo — ideal para redes desconhecidas. Ele normalmente nega toda entrada e pode restringir a saída também, protegendo ao máximo.' },
+  { ok: '✅ Exato! Deny descarta o pacote silenciosamente (o remetente não sabe o que aconteceu). Reject descarta e envia de volta uma mensagem ICMP "port unreachable", notificando o remetente.' },
+  { ok: '✅ Correto! As regras do UFW (e portanto do GUFW) ficam em /etc/ufw/user.rules. Por isso sobrevivem ao reboot — são carregadas automaticamente na inicialização do sistema.' },
+];
+
+function ansQ(qi, chosen, correct) {
+  const card = document.getElementById('qc' + qi);
+  const opts = card.querySelectorAll('.qopt');
+  opts.forEach(o => o.disabled = true);
+  opts[chosen].classList.add(chosen === correct ? 'correct' : 'wrong');
+  if (chosen !== correct) opts[correct].classList.add('correct');
+  const ok = chosen === correct;
+  const fb = document.getElementById('qfb' + qi);
+  fb.innerHTML = ok ? QFB[qi].ok : '❌ Errado. ' + QFB[qi].ok;
+  fb.className = 'qfb show ' + (ok ? 'ok' : 'fail');
+  document.getElementById('qnx' + qi).classList.add('show');
+  if (ok) { qCorrect++; addXP(QXPS[qi], 'Resposta correta!', '🎯'); }
+  qAnswers[qi] = ok;
+  document.getElementById('q-prog').style.width = ((qi + 1) / 5 * 100) + '%';
+  document.getElementById('q-cnt').textContent = (qi + 1) + '/5';
+  updateHUD();
+}
+
+function nextQ(n) {
+  document.getElementById('qc' + (n - 1)).classList.remove('active');
+  document.getElementById('qc' + n).classList.add('active');
+}
+
+function showResult() {
+  document.getElementById('qc4').classList.remove('active');
+  const r = document.getElementById('q-result');
+  r.classList.add('show');
+  document.getElementById('q-score').textContent = qCorrect + '/5';
+  const msgs = ['Continue estudando!', 'Progredindo!', 'Bom trabalho!', 'Ótimo domínio de GUFW!', '🛡️ GUFW Expert! Perfeito!', '🛡️ GUFW Expert! Perfeito!'];
+  document.getElementById('q-msg').textContent = msgs[Math.min(qCorrect, 5)];
+  const earned = Object.keys(qAnswers).filter(k => qAnswers[k]).reduce((a, k) => a + QXPS[+k], 0);
+  document.getElementById('q-xp-earned').textContent = '+' + earned + ' XP conquistados no quiz';
+  document.getElementById('q-prog').style.width = '100%';
+  document.getElementById('q-cnt').textContent = '5/5';
+  if (qCorrect >= 4) { badges++; toast('🏆', 'Badge!', 'GUFW Especialista — 4+ acertos!'); updateHUD(); }
+  if (qCorrect === 5) { badges++; toast('💎', 'Badge!', 'Quiz GUFW Perfeito! 5/5!'); updateHUD(); }
+}
+
+function restartQuiz() {
+  qCorrect = 0; qAnswers = {};
+  document.getElementById('q-result').classList.remove('show');
+  document.getElementById('q-prog').style.width = '0%';
+  document.getElementById('q-cnt').textContent = '0/5';
+  for (let i = 0; i < 5; i++) {
+    const c = document.getElementById('qc' + i);
+    c.classList.toggle('active', i === 0);
+    c.querySelectorAll('.qopt').forEach(o => { o.disabled = false; o.classList.remove('correct','wrong'); });
+    document.getElementById('qfb' + i).className = 'qfb';
+    document.getElementById('qnx' + i).classList.remove('show');
+  }
+  updateHUD();
+}
+
+// Init
+updateHUD();
+toast('🛡️', 'Bem-vindo!', 'Semana 5.3 — GUFW no Ubuntu Desktop!');
+</script>
+</body>
+</html>
