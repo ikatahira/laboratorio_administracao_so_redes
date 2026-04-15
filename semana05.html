@@ -1348,7 +1348,37 @@ body::before {
                   ⚠️ <strong>Não selecione nenhum snap!</strong> Snaps são pacotes autocontidos que instalam serviços adicionais. Para este laboratório, queremos um servidor <strong>mínimo</strong> — cada serviço instalado desnecessariamente aumenta a superfície de ataque e consome recursos. Instalaremos apenas o que precisarmos via <code>apt</code> depois. → Pressione <strong>Concluído</strong> sem marcar nada.
                 </div>
               </div>
-              <div class="step"><div class="step-num">11</div><p>Ao finalizar, selecione <strong>Reboot Now</strong>. Quando pedir para remover o disco, pressione Enter. Após o reboot, faça login com <code>fatec-server</code> e senha <code>Fatec2026@</code>.</p></div>
+              <div class="step"><div class="step-num">11</div><p>Tela <strong>Updating system</strong> — a instalação começa automaticamente. Você verá um log em tempo real com todas as etapas sendo executadas:</p>
+                <div class="cmd-block" style="margin-top:8px; line-height:1.8; font-size:0.76em;">
+                  <span class="output">running 'curtin curthooks'</span><br>
+                  <span class="output">  configuring apt</span>          <span class="comment"> ← configura o gerenciador de pacotes</span><br>
+                  <span class="output">  installing missing packages</span><br>
+                  <span class="output">  installing packages: ['grub-pc']</span> <span class="comment"> ← instala o bootloader</span><br>
+                  <span class="output">  configuring iscsi service</span><br>
+                  <span class="output">  installing kernel</span>        <span class="comment"> ← instala o núcleo do Linux</span><br>
+                  <span class="output">  setting up swap</span>          <span class="comment"> ← configura memória virtual</span><br>
+                  <span class="output">  apply networking config</span>  <span class="comment"> ← aplica configurações de rede</span><br>
+                  <span class="output">  writing etc/fstab</span>        <span class="comment"> ← registra partições para montagem automática</span><br>
+                  <span class="output">  installing grub to target devices</span> <span class="comment"> ← instala bootloader no disco</span><br>
+                  <span class="output">final system configuration</span><br>
+                  <span class="output">  installing openssh-server</span> <span class="comment"> ← instala o SSH (porque você marcou na etapa anterior)</span><br>
+                  <span class="output">  retrieving openssh-server</span><br>
+                  <span class="output">  unpacking openssh-server</span><br>
+                  <span class="output">  configuring cloud-init</span><br>
+                  <span class="output">  downloading and installing security updates</span> <span class="comment"> ← pode demorar mais aqui</span><br>
+                  <span class="warn">  curtin command in-target -</span>  <span class="comment"> ← última etapa antes do reboot</span>
+                </div>
+                <div class="info-box" style="margin-top:10px;">
+                  ⏱️ <strong>Tempo estimado de instalação:</strong>
+                  <ul style="margin:8px 0 0 16px; line-height:2;">
+                    <li>💻 <strong>Laboratório da Fatec</strong> (máquinas com SSD): <strong>~5 a 10 minutos</strong></li>
+                    <li>🏠 <strong>Notebook/PC pessoal com HDD</strong>: <strong>~15 a 25 minutos</strong></li>
+                    <li>🐢 <strong>Se a internet estiver lenta</strong>: o passo <em>"downloading security updates"</em> pode levar mais tempo — é normal</li>
+                  </ul>
+                  <p style="margin-top:8px;">💡 <strong>Não mexa no teclado nem feche a janela</strong> durante a instalação. Aguarde até aparecer o botão <strong>Reboot Now</strong>.</p>
+                </div>
+              </div>
+              <div class="step"><div class="step-num">12</div><p>Ao finalizar, selecione <strong>Reboot Now</strong>. Quando pedir para remover o disco, pressione <strong>Enter</strong>. Após o reboot, faça login com <code>fatec-server</code> e senha <code>Fatec2026@</code>.</p></div>
               <div class="success-box" style="margin-top:12px;">✅ Ao fazer login, você verá apenas o prompt de terminal — <strong style="color:var(--green)">isso é o esperado!</strong> Sem janelas, sem ícones. O prompt será: <code>fatec-server@fatec-server:~$</code> — bem-vindo ao servidor Linux!</div>
               <div class="warn-box" style="border-left-color:#e91e63; background:rgba(233,30,99,0.05); margin-top:12px;">
                 🔄 <strong>Precisa reinstalar?</strong> Abra o VirtualBox → selecione a máquina → menu <strong>Dispositivos → Discos Ópticos → Escolher um arquivo em disco</strong> → navegue até a <strong>unidade Z:</strong> (Prof. Isaque) e selecione a ISO do Ubuntu Server → menu <strong>Máquina → Reinicializar</strong> (ou pressione <code>Host+R</code>) → prossiga com a instalação conforme o vídeo.
@@ -1749,7 +1779,33 @@ fatec-server@fatec-server:~$</span>
                   <span class="warn">[ ]  powershell</span>    <span class="comment"> — PowerShell para Linux</span>
                 </div>
                 <div class="warn-box" style="margin-top:8px;">
-                  ⚠️ <strong>Não selecione nenhum snap!</strong> O firewall deve ser o sistema mais <strong>enxuto possível</strong> — cada serviço extra é uma porta aberta a mais. Instale somente o estritamente necessário. → Pressione <strong>Concluído</strong> sem marcar nada. Aguarde a instalação (~10 min) e selecione <strong>Reboot Now</strong> ao finalizar.
+                  ⚠️ <strong>Não selecione nenhum snap!</strong> O firewall deve ser o sistema mais <strong>enxuto possível</strong> — cada serviço extra é uma porta aberta a mais. Instale somente o estritamente necessário. → Pressione <strong>Concluído</strong> sem marcar nada.
+                </div>
+              </div>
+
+              <div class="step"><div class="step-num">8</div><p>Tela <strong>Updating system</strong> — a instalação roda automaticamente. Acompanhe o log em tempo real:</p>
+                <div class="cmd-block" style="margin-top:8px; line-height:1.8; font-size:0.76em;">
+                  <span class="output">running 'curtin curthooks'</span><br>
+                  <span class="output">  configuring apt</span>          <span class="comment"> ← configura o gerenciador de pacotes</span><br>
+                  <span class="output">  installing kernel</span>        <span class="comment"> ← instala o núcleo do Linux</span><br>
+                  <span class="output">  setting up swap</span>          <span class="comment"> ← configura memória virtual</span><br>
+                  <span class="output">  apply networking config</span>  <span class="comment"> ← aplica configurações de rede</span><br>
+                  <span class="output">  writing etc/fstab</span>        <span class="comment"> ← registra partições para montagem automática</span><br>
+                  <span class="output">  installing grub to target devices</span> <span class="comment"> ← instala bootloader no disco</span><br>
+                  <span class="output">final system configuration</span><br>
+                  <span class="output">  installing openssh-server</span> <span class="comment"> ← instala o SSH (marcado na etapa anterior)</span><br>
+                  <span class="output">  configuring cloud-init</span><br>
+                  <span class="output">  downloading and installing security updates</span> <span class="comment"> ← pode demorar mais aqui</span><br>
+                  <span class="warn">  curtin command in-target -</span>  <span class="comment"> ← última etapa antes do reboot</span>
+                </div>
+                <div class="info-box" style="margin-top:10px;">
+                  ⏱️ <strong>Tempo estimado de instalação:</strong>
+                  <ul style="margin:8px 0 0 16px; line-height:2;">
+                    <li>💻 <strong>Laboratório da Fatec</strong> (máquinas com SSD): <strong>~5 a 10 minutos</strong></li>
+                    <li>🏠 <strong>Notebook/PC pessoal com HDD</strong>: <strong>~15 a 25 minutos</strong></li>
+                    <li>🐢 <strong>Se a internet estiver lenta</strong>: o passo <em>"downloading security updates"</em> pode levar mais tempo — é normal</li>
+                  </ul>
+                  <p style="margin-top:8px;">💡 <strong>Não mexa no teclado nem feche a janela</strong> durante a instalação. Aguarde até aparecer o botão <strong>Reboot Now</strong> e então selecione-o. Quando pedir para remover o disco, pressione <strong>Enter</strong>. Após o reboot, faça login com <code>fatec-fw</code> e senha <code>Fatec2026@</code>.</p>
                 </div>
               </div>
 
