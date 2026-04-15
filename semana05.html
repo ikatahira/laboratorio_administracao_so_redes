@@ -1223,7 +1223,7 @@ body::before {
               <div class="step"><div class="step-num">5</div><p>Tipo de instalação: selecione <strong>Instalação Normal</strong> (instala o sistema completo com GNOME e aplicativos básicos). Marque também <strong>"Baixar atualizações ao instalar"</strong> se tiver internet disponível.</p></div>
               <div class="step"><div class="step-num">6</div><p>Particionamento: selecione <strong>Apagar disco e instalar Ubuntu</strong> → clique em <strong>Instalar agora</strong> → confirme com <strong>Continuar</strong>.</p></div>
               <div class="step"><div class="step-num">7</div><p>Fuso horário: clique no mapa em <strong>São Paulo</strong> (Brasil) → clique em <strong>Continuar</strong>.</p></div>
-              <div class="step"><div class="step-num">8</div><p>Criar usuário: preencha seu nome, nome da máquina: <code>seunomecliente</code>, usuário: seu nome, senha: <code>Fatec2025@</code> → marque <strong>"Exigir senha para entrar"</strong> → clique em <strong>Continuar</strong>.</p></div>
+              <div class="step"><div class="step-num">8</div><p>Criar usuário: preencha seu nome, nome da máquina: <code>fatec-desktop</code>, usuário: seu nome, senha: <code>Fatec2025@</code> → marque <strong>"Exigir senha para entrar"</strong> → clique em <strong>Continuar</strong>.</p></div>
               <div class="step"><div class="step-num">9</div><p>Aguarde a instalação (~15 min). Ao finalizar, clique em <strong>Reiniciar agora</strong>. Quando aparecer a mensagem para remover o disco, pressione <strong>Enter</strong>.</p></div>
               <div class="step"><div class="step-num">10</div><p>Após o reboot, faça login com o usuário e senha criados. A área de trabalho GNOME vai aparecer — isso confirma que a instalação foi bem-sucedida! ✅</p></div>
             </div>
@@ -1307,12 +1307,12 @@ body::before {
               <div class="step"><div class="step-num">4</div><p>Configuração de rede: o instalador vai detectar a interface <code>enp0s3</code> e obter IP via DHCP automaticamente. Apenas confirme com <strong>Done</strong>.</p></div>
               <div class="step"><div class="step-num">5</div><p>Proxy: deixe em branco → <strong>Done</strong>. Mirror de repositório: deixe o padrão → <strong>Done</strong>.</p></div>
               <div class="step"><div class="step-num">6</div><p>Particionamento: selecione <strong>Use an entire disk and set up this disk as an LVM group</strong> → <strong>Done</strong> → confirme com <strong>Continue</strong> na tela de confirmação.</p></div>
-              <div class="step"><div class="step-num">7</div><p>Perfil do servidor: preencha — Nome completo: seu nome, Nome da máquina: <code>seunomeserver</code>, Usuário: <code>seunomeserver</code>, Senha: <code>Fatec2026@</code> → <strong>Done</strong>.</p></div>
+              <div class="step"><div class="step-num">7</div><p>Perfil do servidor: preencha — Nome completo: seu nome, Nome da máquina: <code>fatec-server</code>, Usuário: <code>fatec-server</code>, Senha: <code>Fatec2026@</code> → <strong>Done</strong>.</p></div>
               <div class="step"><div class="step-num">8</div><p>Ubuntu Pro: selecione <strong>Skip for now</strong> → <strong>Continue</strong>.</p></div>
               <div class="step"><div class="step-num">9</div><p>SSH Setup: marque obrigatoriamente <strong>Install OpenSSH server</strong> (pressione Espaço para marcar) → <strong>Done</strong>.</p></div>
               <div class="step"><div class="step-num">10</div><p>Featured Snaps: <strong>não selecione nada</strong> → <strong>Done</strong>. Aguarde a instalação (~10 min).</p></div>
-              <div class="step"><div class="step-num">11</div><p>Ao finalizar, selecione <strong>Reboot Now</strong>. Quando pedir para remover o disco, pressione Enter. Após o reboot, faça login com <code>seunomeserver</code> e senha <code>Fatec2026@</code>.</p></div>
-              <div class="success-box" style="margin-top:12px;">✅ Ao fazer login, você verá apenas o prompt de terminal — <strong style="color:var(--green)">isso é o esperado!</strong> Sem janelas, sem ícones. O prompt será: <code>seunomeserver@seunomeserver:~$</code> — bem-vindo ao servidor Linux!</div>
+              <div class="step"><div class="step-num">11</div><p>Ao finalizar, selecione <strong>Reboot Now</strong>. Quando pedir para remover o disco, pressione Enter. Após o reboot, faça login com <code>fatec-server</code> e senha <code>Fatec2026@</code>.</p></div>
+              <div class="success-box" style="margin-top:12px;">✅ Ao fazer login, você verá apenas o prompt de terminal — <strong style="color:var(--green)">isso é o esperado!</strong> Sem janelas, sem ícones. O prompt será: <code>fatec-server@fatec-server:~$</code> — bem-vindo ao servidor Linux!</div>
               <div class="warn-box" style="border-left-color:#e91e63; background:rgba(233,30,99,0.05); margin-top:12px;">
                 🔄 <strong>Precisa reinstalar?</strong> Abra o VirtualBox → selecione a máquina → menu <strong>Dispositivos → Discos Ópticos → Escolher um arquivo em disco</strong> → navegue até a <strong>unidade Z:</strong> (Prof. Isaque) e selecione a ISO do Ubuntu Server → menu <strong>Máquina → Reinicializar</strong> (ou pressione <code>Host+R</code>) → prossiga com a instalação conforme o vídeo.
               </div>
@@ -1321,23 +1321,23 @@ body::before {
             <div id="m2-panel-lvm" class="os-panel">
               <div class="cmd-block">
 <span class="comment"># Verificar volumes LVM criados</span>
-<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">sudo pvs</span>
+<span class="prompt">fatec-server@fatec-server:~$</span> <span class="cmd">sudo pvs</span>
 <span class="output">  PV         VG        Fmt  Attr PSize  PFree</span>
 <span class="output">  /dev/sda3  ubuntu-vg lvm2 a--  18.50g    0 </span>
 
-<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">sudo vgs</span>
+<span class="prompt">fatec-server@fatec-server:~$</span> <span class="cmd">sudo vgs</span>
 <span class="output">  VG        #PV #LV  SSize  SFree</span>
 <span class="output">  ubuntu-vg   1   1  18.50g    0 </span>
 
-<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">sudo lvs</span>
+<span class="prompt">fatec-server@fatec-server:~$</span> <span class="cmd">sudo lvs</span>
 <span class="output">  LV        VG        Attr       LSize  </span>
 <span class="output">  ubuntu-lv ubuntu-vg -wi-ao---- 18.50g </span>
 
 <span class="comment"># Expandir LV para usar todo o VG (se necessário)</span>
-<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">sudo lvextend -l +100%FREE /dev/ubuntu-vg/ubuntu-lv</span>
-<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">sudo resize2fs /dev/ubuntu-vg/ubuntu-lv</span>
+<span class="prompt">fatec-server@fatec-server:~$</span> <span class="cmd">sudo lvextend -l +100%FREE /dev/ubuntu-vg/ubuntu-lv</span>
+<span class="prompt">fatec-server@fatec-server:~$</span> <span class="cmd">sudo resize2fs /dev/ubuntu-vg/ubuntu-lv</span>
               </div>
-              <div class="warn-box">⚠️ Dica para acessar o servidor por SSH da máquina real: configure a rede do VirtualBox como <strong>Bridge</strong> e use <code>ssh seunomeserver@IP_DA_VM</code></div>
+              <div class="warn-box">⚠️ Dica para acessar o servidor por SSH da máquina real: configure a rede do VirtualBox como <strong>Bridge</strong> e use <code>ssh fatec-server@IP_DA_VM</code></div>
               <button class="complete-btn" id="btn-m2" onclick="completeM('m2','btn-m2','a-server','bm-server','Ubuntu Server instalado! 🖧','server')">✅ MISSÃO CONCLUÍDA — Ubuntu Server Instalado!</button>
             </div>
           </div>
@@ -1359,56 +1359,56 @@ body::before {
             <div class="info-box">💡 O SSH (Secure Shell) foi instalado durante a configuração do Ubuntu Server. Ele permite que você acesse o servidor remotamente — como se estivesse digitando diretamente nele, mas a partir de outra máquina. A porta padrão é a <strong>22/tcp</strong>.</div>
             <div class="cmd-block">
 <span class="comment"># Execute no Ubuntu Server — verificar se o SSH está rodando</span>
-<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">sudo systemctl status ssh</span>
+<span class="prompt">fatec-server@fatec-server:~$</span> <span class="cmd">sudo systemctl status ssh</span>
 <span class="output">● ssh.service - OpenBSD Secure Shell server
      Loaded: loaded (/lib/systemd/system/ssh.service)
      Active: <span style="color:var(--green)">active (running)</span> since ...
      Main PID: 1234 (sshd)</span>
 
 <span class="comment"># Se aparecer "inactive" ou "failed", iniciar o serviço:</span>
-<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">sudo systemctl start ssh</span>
-<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">sudo systemctl enable ssh</span>
+<span class="prompt">fatec-server@fatec-server:~$</span> <span class="cmd">sudo systemctl start ssh</span>
+<span class="prompt">fatec-server@fatec-server:~$</span> <span class="cmd">sudo systemctl enable ssh</span>
 <span class="comment">                              # ↑ garante que inicia automaticamente no boot</span>
 
 <span class="comment"># Descobrir o IP do servidor na rede interna</span>
-<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">ip addr show enp0s8 | grep inet</span>
+<span class="prompt">fatec-server@fatec-server:~$</span> <span class="cmd">ip addr show enp0s8 | grep inet</span>
 <span class="output">    inet <span style="color:var(--green)">192.168.56.20</span>/24 brd 192.168.56.255 scope global enp0s8</span>
 
 <span class="comment"># Liberar SSH no firewall local do Server (porta 22)</span>
-<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">sudo ufw allow OpenSSH</span>
+<span class="prompt">fatec-server@fatec-server:~$</span> <span class="cmd">sudo ufw allow OpenSSH</span>
 <span class="output">Rules updated</span>
 
 <span class="comment"># Criar banner de boas-vindas que aparece no login SSH</span>
-<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">sudo nano /etc/motd</span>
+<span class="prompt">fatec-server@fatec-server:~$</span> <span class="cmd">sudo nano /etc/motd</span>
 <span class="value">═══════════════════════════════════════════
   ISO-103 | 3º Semestre — Fatec
-  Servidor: seunomeserver
+  Servidor: fatec-server
   Acesso autorizado apenas para alunos
 ═══════════════════════════════════════════</span>
 
 <span class="comment"># Reiniciar o SSH para aplicar as alterações</span>
-<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">sudo systemctl restart ssh</span>
+<span class="prompt">fatec-server@fatec-server:~$</span> <span class="cmd">sudo systemctl restart ssh</span>
             </div>
 
             <div style="font-family:'Orbitron',monospace; font-size:0.72em; color:var(--purple); font-weight:700; margin:14px 0 8px; letter-spacing:2px;">🔑 TESTAR ACESSO SSH A PARTIR DO DESKTOP</div>
             <div class="info-box">💡 Agora acesse o <strong>Ubuntu Desktop</strong> e abra um terminal (<strong>Ctrl+Alt+T</strong>). Você vai se conectar ao Server como se fosse um administrador remoto.</div>
             <div class="cmd-block">
 <span class="comment"># No Ubuntu Desktop — conectar ao Server via SSH</span>
-<span class="prompt">seunomecliente@seunomecliente:~$</span> <span class="cmd">ssh seunomeserver@192.168.56.20</span>
+<span class="prompt">fatec-desktop@fatec-desktop:~$</span> <span class="cmd">ssh fatec-server@192.168.56.20</span>
 <span class="output">The authenticity of host '192.168.56.20' can't be established.
 Are you sure you want to continue connecting (yes/no)? </span><span class="value">yes</span>
 <span class="output">═══════════════════════════════════════════
   ISO-103 | 3º Semestre — Fatec
-  Servidor: seunomeserver
+  Servidor: fatec-server
   Acesso autorizado apenas para alunos
 ═══════════════════════════════════════════
-seunomeserver@seunomeserver:~$</span>
+fatec-server@fatec-server:~$</span>
 <span class="comment">                    # ↑ Você está DENTRO do servidor agora!</span>
 
 <span class="comment"># Para sair da sessão SSH e voltar ao Desktop:</span>
-<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">exit</span>
+<span class="prompt">fatec-server@fatec-server:~$</span> <span class="cmd">exit</span>
             </div>
-            <div class="success-box">✅ Se o banner apareceu e o prompt mudou para <code>seunomeserver@seunomeserver:~$</code>, o SSH está funcionando perfeitamente!</div>
+            <div class="success-box">✅ Se o banner apareceu e o prompt mudou para <code>fatec-server@fatec-server:~$</code>, o SSH está funcionando perfeitamente!</div>
             <button class="complete-btn" id="btn-m3" onclick="completeM('m3','btn-m3','a-ssh','bm-ssh','SSH configurado e operacional! 🔑','ssh')">✅ MISSÃO CONCLUÍDA — SSH Ativo!</button>
           </div>
         </div>
@@ -1675,7 +1675,7 @@ seunomeserver@seunomeserver:~$</span>
               <div class="step"><div class="step-num">2</div><p>RAM: <code>1024 MB</code> · Disco: <code>15 GB</code> VDI dinâmico — firewall não precisa de muito espaço</p></div>
               <div class="step"><div class="step-num">3</div><p>Configurações → Rede → <strong>Adaptador 1</strong>: Conectado a <code>NAT</code> (para acesso à internet)</p></div>
               <div class="step"><div class="step-num">4</div><p>Configurações → Rede → <strong>Adaptador 2</strong>: habilite → Conectado a <code>Rede Interna</code> → Nome: <code>Intranet</code></p></div>
-              <div class="step"><div class="step-num">5</div><p>Instale o Ubuntu Server conforme o vídeo de referência, nome da máquina: <code>seunomefirewall</code>, usuário: <code>seunomefirewall</code>, senha: <code>Fatec2026@</code></p></div>
+              <div class="step"><div class="step-num">5</div><p>Instale o Ubuntu Server conforme o vídeo de referência, nome da máquina: <code>fatec-fw</code>, usuário: <code>fatec-fw</code>, senha: <code>Fatec2026@</code></p></div>
 
               <div class="warn-box" style="border-left-color:#e91e63; background:rgba(233,30,99,0.05); margin-top:12px;">
                 🔄 <strong>Precisa reinstalar?</strong> VirtualBox → selecione a máquina → menu <strong>Dispositivos → Discos Ópticos → Escolher um arquivo em disco</strong> → navegue até a <strong>unidade Z:</strong> (Prof. Isaque) e selecione a ISO → menu <strong>Máquina → Reinicializar</strong> (ou pressione <code>Host+R</code>) → prossiga conforme o vídeo.
@@ -1710,14 +1710,14 @@ seunomeserver@seunomeserver:~$</span>
               <div class="step"><div class="step-num">1</div><p>Identifique os nomes das interfaces de rede:</p></div>
               <div class="cmd-block">
 <span class="comment"># Ver todas as interfaces e seus nomes</span>
-<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">ip link show</span>
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">ip link show</span>
 <span class="output">1: lo: &lt;LOOPBACK&gt; ...
 2: enp0s3: &lt;BROADCAST&gt; ...   ← Adaptador 1 (NAT / internet)
 3: enp0s8: &lt;BROADCAST&gt; ...   ← Adaptador 2 (Rede Interna / LAN)</span>
               </div>
               <div class="step"><div class="step-num">2</div><p>Edite o arquivo de configuração do netplan:</p></div>
               <div class="cmd-block">
-<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo nano /etc/netplan/00-installer-config.yaml</span>
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo nano /etc/netplan/00-installer-config.yaml</span>
               </div>
               <div class="step"><div class="step-num">3</div><p>Substitua o conteúdo pelo seguinte (atenção à <strong>indentação com espaços</strong> — YAML não aceita tabs):</p></div>
               <div class="cmd-block">
@@ -1736,8 +1736,8 @@ seunomeserver@seunomeserver:~$</span>
               </div>
               <div class="step"><div class="step-num">4</div><p>Aplique as configurações e verifique:</p></div>
               <div class="cmd-block">
-<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo netplan apply</span>
-<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">ip addr show enp0s8</span>
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo netplan apply</span>
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">ip addr show enp0s8</span>
 <span class="output">3: enp0s8: &lt;BROADCAST,MULTICAST,UP&gt;
     inet <span style="color:var(--green)">192.168.56.1/24</span> brd 192.168.56.255 scope global enp0s8</span>
               </div>
@@ -1750,23 +1750,23 @@ seunomeserver@seunomeserver:~$</span>
               <div class="step"><div class="step-num">1</div><p>Habilitar IP forwarding permanentemente no kernel:</p></div>
               <div class="cmd-block">
 <span class="comment"># Editar o arquivo de configuração do kernel</span>
-<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo nano /etc/sysctl.conf</span>
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo nano /etc/sysctl.conf</span>
 
 <span class="comment"># Encontrar e descomentar (remover o #) a linha:</span>
 <span class="value">net.ipv4.ip_forward=1</span>
 
 <span class="comment"># Aplicar sem reiniciar</span>
-<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo sysctl -p</span>
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo sysctl -p</span>
 <span class="output">net.ipv4.ip_forward = 1</span>
 
 <span class="comment"># Confirmar que está ativo (deve retornar 1)</span>
-<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">cat /proc/sys/net/ipv4/ip_forward</span>
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">cat /proc/sys/net/ipv4/ip_forward</span>
 <span class="output">1</span>
               </div>
               <div class="step"><div class="step-num">2</div><p>Configurar o <strong>masquerading</strong> (NAT) no UFW para que as VMs da LAN acessem a internet usando o IP do firewall:</p></div>
               <div class="cmd-block">
 <span class="comment"># Editar as regras brutas do UFW (antes do *filter)</span>
-<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo nano /etc/ufw/before.rules</span>
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo nano /etc/ufw/before.rules</span>
 
 <span class="comment"># Adicionar no INÍCIO do arquivo, antes de *filter:</span>
 <span class="value"># NAT — masquerading para saída pela interface enp0s3 (internet)
@@ -1777,7 +1777,7 @@ COMMIT</span>
               </div>
               <div class="step"><div class="step-num">3</div><p>Permitir o encaminhamento (forwarding) no arquivo de configuração do UFW:</p></div>
               <div class="cmd-block">
-<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo nano /etc/default/ufw</span>
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo nano /etc/default/ufw</span>
 
 <span class="comment"># Alterar a linha DEFAULT_FORWARD_POLICY:</span>
 <span class="value">DEFAULT_FORWARD_POLICY="ACCEPT"</span>
@@ -1790,45 +1790,45 @@ COMMIT</span>
 
               <div class="cmd-block">
 <span class="comment">## PASSO 1 — Liberar SSH e ativar UFW</span>
-<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo ufw allow 22/tcp</span>
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw allow 22/tcp</span>
 <span class="output">Rules updated</span>
 
-<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo ufw enable</span>
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw enable</span>
 <span class="warn">Command may disrupt existing ssh connections. Proceed with operation (y|n)? y</span>
 <span class="output">Firewall is active and enabled on system startup</span>
               </div>
 
               <div class="cmd-block">
 <span class="comment">## PASSO 2 — Políticas padrão (negar tudo, permitir saída)</span>
-<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo ufw default deny incoming</span>
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw default deny incoming</span>
 <span class="output">Default incoming policy changed to 'deny'</span>
 
-<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo ufw default allow outgoing</span>
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw default allow outgoing</span>
 <span class="output">Default outgoing policy changed to 'allow'</span>
 
-<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo ufw default allow routed</span>
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw default allow routed</span>
 <span class="output">Default routed policy changed to 'allow'</span>
 <span class="comment">                                  # ↑ essencial para o masquerading funcionar</span>
               </div>
 
               <div class="cmd-block">
 <span class="comment">## PASSO 3 — Regras para serviços permitidos</span>
-<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo ufw allow 22/tcp</span>    <span class="comment">  # SSH (já liberado, reforçando)</span>
-<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo ufw allow 80/tcp</span>    <span class="comment">  # HTTP</span>
-<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo ufw allow 443/tcp</span>   <span class="comment">  # HTTPS</span>
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw allow 22/tcp</span>    <span class="comment">  # SSH (já liberado, reforçando)</span>
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw allow 80/tcp</span>    <span class="comment">  # HTTP</span>
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw allow 443/tcp</span>   <span class="comment">  # HTTPS</span>
 
 <span class="comment">## PASSO 4 — Bloquear serviços inseguros explicitamente</span>
-<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo ufw deny 23/tcp</span>     <span class="comment">  # Telnet — protocolo sem criptografia</span>
-<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo ufw deny 21/tcp</span>     <span class="comment">  # FTP — senhas em texto claro</span>
-<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo ufw deny 3389/tcp</span>   <span class="comment">  # RDP — alvo frequente de ataques</span>
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw deny 23/tcp</span>     <span class="comment">  # Telnet — protocolo sem criptografia</span>
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw deny 21/tcp</span>     <span class="comment">  # FTP — senhas em texto claro</span>
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw deny 3389/tcp</span>   <span class="comment">  # RDP — alvo frequente de ataques</span>
               </div>
 
               <div class="cmd-block">
 <span class="comment">## PASSO 5 — Recarregar e verificar status completo</span>
-<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo ufw reload</span>
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw reload</span>
 <span class="output">Firewall reloaded</span>
 
-<span class="prompt">seunomefirewall@seunomefirewall:~$</span> <span class="cmd">sudo ufw status verbose</span>
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw status verbose</span>
 <span class="output">Status: active
 Logging: on (low)
 Default: deny (incoming), allow (outgoing), allow (routed)
@@ -1846,11 +1846,11 @@ To             Action      From
               <div class="cmd-block">
 <span class="comment">## PASSO 6 — Testar conectividade (nas VMs Desktop/Server)</span>
 <span class="comment"># Nas outras VMs, confirmar que o gateway está correto</span>
-<span class="prompt">seunomecliente@seunomecliente:~$</span> <span class="cmd">ip route show</span>
+<span class="prompt">fatec-desktop@fatec-desktop:~$</span> <span class="cmd">ip route show</span>
 <span class="output">default via <span style="color:var(--green)">192.168.56.1</span> dev enp0s8    ← tráfego passa pelo firewall</span>
 
 <span class="comment"># Testar que a internet funciona através do firewall</span>
-<span class="prompt">seunomecliente@seunomecliente:~$</span> <span class="cmd">ping -c 3 8.8.8.8</span>
+<span class="prompt">fatec-desktop@fatec-desktop:~$</span> <span class="cmd">ping -c 3 8.8.8.8</span>
 <span class="output">3 packets transmitted, 3 received, 0% packet loss</span>
               </div>
 
@@ -1876,13 +1876,13 @@ To             Action      From
             <div class="info-box">💡 O <strong>apt</strong> (Advanced Package Tool) é o gerenciador de pacotes do Ubuntu. Com ele você instala, remove e atualiza software a partir dos repositórios oficiais. Execute esses comandos no <strong>Ubuntu Server</strong> após configurar a rede.</div>
             <div class="cmd-block">
 <span class="comment"># Atualizar lista de repositórios (sempre fazer antes de instalar)</span>
-<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">sudo apt update</span>
+<span class="prompt">fatec-server@fatec-server:~$</span> <span class="cmd">sudo apt update</span>
 <span class="output">Hit:1 http://br.archive.ubuntu.com/ubuntu jammy InRelease
 Reading package lists... Done
 Building dependency tree... Done</span>
 
 <span class="comment"># Instalar utilitários essenciais de rede e diagnóstico</span>
-<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">sudo apt install -y net-tools curl wget htop nmap tree</span>
+<span class="prompt">fatec-server@fatec-server:~$</span> <span class="cmd">sudo apt install -y net-tools curl wget htop nmap tree</span>
 <span class="output">Reading package lists... Done
 The following NEW packages will be installed: net-tools curl wget htop nmap tree
 0 upgraded, 6 newly installed ...
@@ -1892,23 +1892,23 @@ Do you want to continue? [Y/n]</span> <span class="value">y</span>
 <span class="comment"># nmap = scanner de portas  |  tree = ver estrutura de pastas</span>
 
 <span class="comment"># Verificar informações de um pacote antes de instalar</span>
-<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">apt show nmap</span>
+<span class="prompt">fatec-server@fatec-server:~$</span> <span class="cmd">apt show nmap</span>
 <span class="output">Package: nmap
 Version: 7.80+dfsg1-2build2
 Description: The Network Mapper — scanner de portas e redes</span>
 
 <span class="comment"># Remover pacote (mantendo arquivos de configuração)</span>
-<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">sudo apt remove nmap</span>
+<span class="prompt">fatec-server@fatec-server:~$</span> <span class="cmd">sudo apt remove nmap</span>
 
 <span class="comment"># Remover pacote + configs + dependências que não são mais necessárias</span>
-<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">sudo apt purge nmap && sudo apt autoremove -y</span>
+<span class="prompt">fatec-server@fatec-server:~$</span> <span class="cmd">sudo apt purge nmap && sudo apt autoremove -y</span>
 
 <span class="comment"># Listar todos os pacotes instalados no sistema</span>
-<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">dpkg --list | grep "^ii" | less</span>
+<span class="prompt">fatec-server@fatec-server:~$</span> <span class="cmd">dpkg --list | grep "^ii" | less</span>
 <span class="comment">                                         # pressione Q para sair do less</span>
 
 <span class="comment"># Buscar um pacote por nome</span>
-<span class="prompt">seunomeserver@seunomeserver:~$</span> <span class="cmd">apt search apache2</span>
+<span class="prompt">fatec-server@fatec-server:~$</span> <span class="cmd">apt search apache2</span>
             </div>
             <button class="complete-btn" id="btn-m5" onclick="completeM('m5','btn-m5','a-apt','bm-vbox','APT dominado! Pacotes sob controle! 📦','apt')">✅ MISSÃO CONCLUÍDA — APT Dominado!</button>
           </div>
