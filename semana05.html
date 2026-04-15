@@ -1307,10 +1307,47 @@ body::before {
               <div class="step"><div class="step-num">4</div><p>Configuração de rede: o instalador vai detectar a interface <code>enp0s3</code> e obter IP via DHCP automaticamente. Apenas confirme com <strong>Done</strong>.</p></div>
               <div class="step"><div class="step-num">5</div><p>Proxy: deixe em branco → <strong>Done</strong>. Mirror de repositório: deixe o padrão → <strong>Done</strong>.</p></div>
               <div class="step"><div class="step-num">6</div><p>Particionamento: selecione <strong>Use an entire disk and set up this disk as an LVM group</strong> → <strong>Done</strong> → confirme com <strong>Continue</strong> na tela de confirmação.</p></div>
-              <div class="step"><div class="step-num">7</div><p>Perfil do servidor: preencha — Nome completo: seu nome, Nome da máquina: <code>fatec-server</code>, Usuário: <code>fatec-server</code>, Senha: <code>Fatec2026@</code> → <strong>Done</strong>.</p></div>
+              <div class="step"><div class="step-num">7</div><p>Perfil do servidor — tela <strong>Profile Configuration</strong>: preencha os campos conforme abaixo e pressione <strong>Done</strong>:</p>
+                <div class="cmd-block" style="margin-top:8px;">
+                  <span class="comment"># Campo 1 — O seu nome (Your name)</span><br>
+                  <span class="value">fatec-server</span><br><br>
+                  <span class="comment"># Campo 2 — Your server's name (hostname da máquina na rede)</span><br>
+                  <span class="value">fatec-server</span><br><br>
+                  <span class="comment"># Campo 3 — Escolha um nome de utilizador (username para login)</span><br>
+                  <span class="value">fatec-server</span><br><br>
+                  <span class="comment"># Campo 4 — Escolha uma palavra-passe (senha)</span><br>
+                  <span class="value">Fatec2026@</span><br><br>
+                  <span class="comment"># Campo 5 — Confirme a sua palavra-passe</span><br>
+                  <span class="value">Fatec2026@</span>
+                </div>
+              </div>
               <div class="step"><div class="step-num">8</div><p>Ubuntu Pro: selecione <strong>Skip for now</strong> → <strong>Continue</strong>.</p></div>
-              <div class="step"><div class="step-num">9</div><p>SSH Setup: marque obrigatoriamente <strong>Install OpenSSH server</strong> (pressione Espaço para marcar) → <strong>Done</strong>.</p></div>
-              <div class="step"><div class="step-num">10</div><p>Featured Snaps: <strong>não selecione nada</strong> → <strong>Done</strong>. Aguarde a instalação (~10 min).</p></div>
+              <div class="step"><div class="step-num">9</div><p>Tela <strong>SSH Setup</strong> — configure exatamente como abaixo:</p>
+                <div class="cmd-block" style="margin-top:8px; line-height:2;">
+                  <span class="output">[X]  Install OpenSSH server</span> <span class="comment">  ← marque com Espaço (obrigatório para acesso remoto)</span><br>
+                  <span class="output">[X]  Allow password authentication over SSH</span> <span class="comment">  ← marque com Espaço (permite login com senha)</span><br>
+                  <span class="comment">     [ Import SSH key ▶ ]  ← deixe sem importar (não necessário no lab)</span><br>
+                  <span class="comment">     AUTHORIZED KEYS: No authorized key  ← normal, não precisa configurar</span>
+                </div>
+                <div class="info-box" style="margin-top:8px;">
+                  💡 <strong>O que é OpenSSH?</strong> É o serviço que permite acessar o servidor remotamente via terminal usando o comando <code>ssh usuario@ip</code>. Sem ele instalado, você só consegue operar o servidor com teclado e monitor físico. <strong>Allow password authentication</strong> libera o login com usuário e senha (alternativa às chaves criptográficas, mais simples para o laboratório).
+                </div>
+                <p style="font-size:0.86em; margin-top:8px;">Após configurar → pressione <strong>Concluído</strong>.</p>
+              </div>
+              <div class="step"><div class="step-num">10</div><p>Tela <strong>Featured Server Snaps</strong> — lista de aplicativos opcionais para servidores:</p>
+                <div class="cmd-block" style="margin-top:8px; line-height:1.9;">
+                  <span class="comment"># Exemplos do que aparece na lista — NÃO selecione nenhum:</span><br>
+                  <span class="warn">[ ]  microk8s</span>      <span class="comment"> — Kubernetes para workstations</span><br>
+                  <span class="warn">[ ]  nextcloud</span>     <span class="comment"> — Servidor de arquivos em nuvem privada</span><br>
+                  <span class="warn">[ ]  wekan</span>         <span class="comment"> — Kanban open-source</span><br>
+                  <span class="warn">[ ]  rocketchat</span>    <span class="comment"> — Chat corporativo</span><br>
+                  <span class="warn">[ ]  prometheus</span>    <span class="comment"> — Sistema de monitoramento</span><br>
+                  <span class="warn">[ ]  powershell</span>    <span class="comment"> — PowerShell para Linux</span>
+                </div>
+                <div class="warn-box" style="margin-top:8px;">
+                  ⚠️ <strong>Não selecione nenhum snap!</strong> Snaps são pacotes autocontidos que instalam serviços adicionais. Para este laboratório, queremos um servidor <strong>mínimo</strong> — cada serviço instalado desnecessariamente aumenta a superfície de ataque e consome recursos. Instalaremos apenas o que precisarmos via <code>apt</code> depois. → Pressione <strong>Concluído</strong> sem marcar nada.
+                </div>
+              </div>
               <div class="step"><div class="step-num">11</div><p>Ao finalizar, selecione <strong>Reboot Now</strong>. Quando pedir para remover o disco, pressione Enter. Após o reboot, faça login com <code>fatec-server</code> e senha <code>Fatec2026@</code>.</p></div>
               <div class="success-box" style="margin-top:12px;">✅ Ao fazer login, você verá apenas o prompt de terminal — <strong style="color:var(--green)">isso é o esperado!</strong> Sem janelas, sem ícones. O prompt será: <code>fatec-server@fatec-server:~$</code> — bem-vindo ao servidor Linux!</div>
               <div class="warn-box" style="border-left-color:#e91e63; background:rgba(233,30,99,0.05); margin-top:12px;">
@@ -1675,7 +1712,46 @@ fatec-server@fatec-server:~$</span>
               <div class="step"><div class="step-num">2</div><p>RAM: <code>1024 MB</code> · Disco: <code>15 GB</code> VDI dinâmico — firewall não precisa de muito espaço</p></div>
               <div class="step"><div class="step-num">3</div><p>Configurações → Rede → <strong>Adaptador 1</strong>: Conectado a <code>NAT</code> (para acesso à internet)</p></div>
               <div class="step"><div class="step-num">4</div><p>Configurações → Rede → <strong>Adaptador 2</strong>: habilite → Conectado a <code>Rede Interna</code> → Nome: <code>Intranet</code></p></div>
-              <div class="step"><div class="step-num">5</div><p>Instale o Ubuntu Server conforme o vídeo de referência, nome da máquina: <code>fatec-fw</code>, usuário: <code>fatec-fw</code>, senha: <code>Fatec2026@</code></p></div>
+              <div class="step"><div class="step-num">5</div><p>Instale o Ubuntu Server conforme o vídeo de referência. Na tela <strong>Profile Configuration</strong>, preencha os campos conforme abaixo e pressione <strong>Done</strong>:</p>
+                <div class="cmd-block" style="margin-top:8px;">
+                  <span class="comment"># Campo 1 — O seu nome (Your name)</span><br>
+                  <span class="value">fatec-fw</span><br><br>
+                  <span class="comment"># Campo 2 — Your server's name (hostname da máquina na rede)</span><br>
+                  <span class="value">fatec-fw</span><br><br>
+                  <span class="comment"># Campo 3 — Escolha um nome de utilizador (username para login)</span><br>
+                  <span class="value">fatec-fw</span><br><br>
+                  <span class="comment"># Campo 4 — Escolha uma palavra-passe (senha)</span><br>
+                  <span class="value">Fatec2026@</span><br><br>
+                  <span class="comment"># Campo 5 — Confirme a sua palavra-passe</span><br>
+                  <span class="value">Fatec2026@</span>
+                </div>
+              </div>
+
+              <div class="step"><div class="step-num">6</div><p>Tela <strong>SSH Setup</strong> — configure exatamente como abaixo:</p>
+                <div class="cmd-block" style="margin-top:8px; line-height:2;">
+                  <span class="output">[X]  Install OpenSSH server</span> <span class="comment">  ← marque com Espaço (obrigatório para acesso remoto)</span><br>
+                  <span class="output">[X]  Allow password authentication over SSH</span> <span class="comment">  ← marque com Espaço (permite login com senha)</span><br>
+                  <span class="comment">     [ Import SSH key ▶ ]  ← deixe sem importar</span><br>
+                  <span class="comment">     AUTHORIZED KEYS: No authorized key  ← normal</span>
+                </div>
+                <div class="info-box" style="margin-top:8px;">
+                  💡 <strong>Por que instalar OpenSSH no firewall?</strong> Mesmo sendo um firewall, precisamos acessá-lo remotamente para gerenciar regras via terminal. O SSH garante que essa conexão seja <strong>criptografada e segura</strong>. <strong>Allow password authentication</strong> permite login simples com usuário e senha, adequado para o ambiente de laboratório.
+                </div>
+                <p style="font-size:0.86em; margin-top:8px;">→ Pressione <strong>Concluído</strong>.</p>
+              </div>
+
+              <div class="step"><div class="step-num">7</div><p>Tela <strong>Featured Server Snaps</strong> — lista de aplicativos opcionais:</p>
+                <div class="cmd-block" style="margin-top:8px; line-height:1.9;">
+                  <span class="comment"># NÃO selecione nenhum snap — exemplos do que aparece:</span><br>
+                  <span class="warn">[ ]  microk8s</span>      <span class="comment"> — Kubernetes para workstations</span><br>
+                  <span class="warn">[ ]  nextcloud</span>     <span class="comment"> — Servidor de arquivos em nuvem privada</span><br>
+                  <span class="warn">[ ]  prometheus</span>    <span class="comment"> — Sistema de monitoramento</span><br>
+                  <span class="warn">[ ]  powershell</span>    <span class="comment"> — PowerShell para Linux</span>
+                </div>
+                <div class="warn-box" style="margin-top:8px;">
+                  ⚠️ <strong>Não selecione nenhum snap!</strong> O firewall deve ser o sistema mais <strong>enxuto possível</strong> — cada serviço extra é uma porta aberta a mais. Instale somente o estritamente necessário. → Pressione <strong>Concluído</strong> sem marcar nada. Aguarde a instalação (~10 min) e selecione <strong>Reboot Now</strong> ao finalizar.
+                </div>
+              </div>
 
               <div class="warn-box" style="border-left-color:#e91e63; background:rgba(233,30,99,0.05); margin-top:12px;">
                 🔄 <strong>Precisa reinstalar?</strong> VirtualBox → selecione a máquina → menu <strong>Dispositivos → Discos Ópticos → Escolher um arquivo em disco</strong> → navegue até a <strong>unidade Z:</strong> (Prof. Isaque) e selecione a ISO → menu <strong>Máquina → Reinicializar</strong> (ou pressione <code>Host+R</code>) → prossiga conforme o vídeo.
