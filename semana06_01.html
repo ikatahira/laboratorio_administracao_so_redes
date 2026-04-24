@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐧 Primeiros Passos: Usuários no Linux — Semana 06_01 | ISO-103</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #050d1a;
+  --bg2: #091424;
+  --card: #0d1f35;
+  --card2: #0f2540;
+  --cyan: #00d4ff;
+  --cyan2: #00a8cc;
+  --purple: #b44aff;
+  --purple2: #8b2fe0;
+  --green: #00ff88;
+  --green2: #00cc6a;
+  --yellow: #ffcc00;
+  --orange: #ff8c00;
+  --red: #ff4466;
+  --text: #e0f0ff;
+  --muted: #5a7a99;
+  --border: rgba(0,212,255,0.15);
+  --glow-cyan: 0 0 20px rgba(0,212,255,0.4);
+  --glow-purple: 0 0 20px rgba(180,74,255,0.4);
+  --glow-green: 0 0 20px rgba(0,255,136,0.4);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Exo 2', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+body::before { content:''; position:fixed; top:0;left:0;right:0;bottom:0; background: radial-gradient(ellipse at 15% 15%, rgba(0,255,136,0.04) 0%, transparent 50%), radial-gradient(ellipse at 85% 75%, rgba(0,212,255,0.04) 0%, transparent 50%); pointer-events:none; z-index:0; }
+.tux-bg { position:fixed; top:40px; right:-40px; font-size:18em; opacity:0.04; pointer-events:none; z-index:0; animation:tuxFloat 6s ease-in-out infinite; }
+@keyframes tuxFloat { 0%,100%{transform:translateY(0px) rotate(-5deg);}50%{transform:translateY(-20px) rotate(5deg);} }
+
+/* HEADER */
+.header { position:sticky; top:0; z-index:100; background:rgba(5,13,26,0.92); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); padding:14px 0; }
+.header::after { content:''; position:absolute; bottom:0;left:0;right:0; height:2px; background:linear-gradient(90deg, transparent, var(--green), var(--cyan), transparent); }
+.header-inner { max-width:1300px; margin:0 auto; padding:0 24px; display:flex; align-items:center; gap:16px; }
+.header-logo { font-family:'Orbitron',monospace; font-size:0.75em; font-weight:700; color:var(--green); letter-spacing:2px; text-shadow:var(--glow-green); }
+.header-title { font-family:'Orbitron',monospace; font-size:1em; font-weight:900; color:var(--text); }
+.header-title span { color:var(--green); }
+.back-btn { background:rgba(0,255,136,0.1); border:1px solid rgba(0,255,136,0.2); color:var(--green); padding:6px 14px; border-radius:6px; font-family:'Exo 2',sans-serif; font-size:0.8em; font-weight:700; cursor:pointer; text-decoration:none; transition:all 0.2s; display:flex; align-items:center; gap:6px; }
+.back-btn:hover { background:rgba(0,255,136,0.2); box-shadow:var(--glow-green); }
+.hud { margin-left:auto; display:flex; align-items:center; gap:10px; }
+.hud-pill { background:rgba(0,255,136,0.08); border:1px solid rgba(0,255,136,0.2); border-radius:8px; padding:6px 14px; text-align:center; }
+.hud-pill .v { font-family:'Orbitron',monospace; font-size:1.2em; font-weight:700; color:var(--green); display:block; line-height:1; }
+.hud-pill .l { font-size:0.58em; color:var(--muted); text-transform:uppercase; letter-spacing:1px; display:block; margin-top:2px; }
+.hud-xp-wrap { background:rgba(0,255,136,0.08); border:1px solid rgba(0,255,136,0.2); border-radius:8px; padding:7px 14px; min-width:150px; }
+.hud-xp-label { display:flex; justify-content:space-between; font-size:0.6em; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:5px; }
+.hud-bar-bg { background:rgba(0,0,0,0.4); border-radius:100px; height:6px; overflow:hidden; }
+.hud-bar { height:100%; background:linear-gradient(90deg,var(--green),var(--cyan)); border-radius:100px; transition:width 0.8s ease; box-shadow:0 0 10px rgba(0,255,136,0.5); width:0%; }
+
+/* LAYOUT */
+.layout { max-width:1300px; margin:0 auto; padding:28px 24px; display:grid; grid-template-columns:260px 1fr; gap:24px; position:relative; z-index:1; }
+.sidebar { display:flex; flex-direction:column; gap:16px; }
+.scard { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:18px; }
+.scard-title { font-family:'Orbitron',monospace; font-size:0.72em; font-weight:700; color:var(--green); letter-spacing:2px; text-transform:uppercase; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--border); }
+.nav-link { display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:8px; text-decoration:none; color:var(--muted); font-size:0.85em; font-weight:600; transition:all 0.2s; margin-bottom:4px; border:1px solid transparent; }
+.nav-link:hover { color:var(--green); background:rgba(0,255,136,0.06); border-color:rgba(0,255,136,0.15); }
+.nav-link.active { color:var(--green); background:rgba(0,255,136,0.12); border-color:rgba(0,255,136,0.3); box-shadow:inset 3px 0 0 var(--green); }
+.nav-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.nav-dot.green { background:var(--green); box-shadow:0 0 8px var(--green); }
+.nav-dot.cyan { background:var(--cyan); }
+.nav-dot.purple { background:var(--purple); }
+.nav-dot.orange { background:var(--orange); }
+
+.prog-block { margin-bottom:12px; }
+.prog-label { display:flex; justify-content:space-between; font-size:0.75em; color:var(--muted); font-weight:600; margin-bottom:5px; }
+.prog-label span:last-child { color:var(--green); font-family:'Orbitron',monospace; }
+.prog-bg { background:rgba(255,255,255,0.06); border-radius:100px; height:6px; overflow:hidden; }
+.prog-fill { height:100%; border-radius:100px; transition:width 0.8s ease; }
+.prog-fill.g { background:linear-gradient(90deg,var(--green2),var(--green)); box-shadow:0 0 8px rgba(0,255,136,0.4); }
+.prog-fill.c { background:linear-gradient(90deg,var(--cyan2),var(--cyan)); box-shadow:0 0 8px rgba(0,212,255,0.4); }
+.prog-fill.p { background:linear-gradient(90deg,var(--purple2),var(--purple)); }
+.prog-fill.o { background:linear-gradient(90deg,#cc5500,var(--orange)); }
+
+.badge-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:7px; }
+.badge-item { aspect-ratio:1; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:1.2em; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); filter:grayscale(1) opacity(0.3); transition:all 0.4s; cursor:default; position:relative; }
+.badge-item.unlocked { filter:none; background:rgba(0,255,136,0.1); border-color:rgba(0,255,136,0.4); box-shadow:0 0 16px rgba(0,255,136,0.3); animation:badgePop 0.5s ease; }
+@keyframes badgePop { 0%{transform:scale(0.5);opacity:0;}70%{transform:scale(1.2);}100%{transform:scale(1);opacity:1;} }
+.badge-item[title]:hover::after { content:attr(title); position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%); background:var(--card2); color:var(--green); border:1px solid var(--border); font-family:'Exo 2',sans-serif; font-size:0.6em; padding:4px 8px; border-radius:5px; white-space:nowrap; z-index:100; }
+
+/* MAIN */
+.main { display:flex; flex-direction:column; gap:22px; }
+
+/* HERO */
+.hero { background:var(--card); border:1px solid rgba(0,255,136,0.25); border-radius:16px; padding:36px 40px; position:relative; overflow:hidden; box-shadow:0 0 40px rgba(0,255,136,0.07); }
+.hero::before { content:'🐧'; position:absolute; right:30px; top:50%; transform:translateY(-50%); font-size:8em; opacity:0.07; }
+.hero-tag { font-family:'Orbitron',monospace; font-size:0.65em; letter-spacing:3px; font-weight:700; color:var(--green); text-transform:uppercase; margin-bottom:10px; opacity:0.8; }
+.hero h1 { font-family:'Orbitron',monospace; font-size:2em; font-weight:900; color:var(--text); line-height:1.2; margin-bottom:8px; }
+.hero h1 span { color:var(--green); text-shadow:var(--glow-green); }
+.hero-sub { color:var(--muted); font-size:1em; margin-bottom:20px; line-height:1.6; }
+.hero-chips { display:flex; gap:10px; flex-wrap:wrap; }
+.chip { background:rgba(0,255,136,0.08); border:1px solid rgba(0,255,136,0.2); border-radius:100px; padding:5px 14px; font-size:0.78em; font-weight:700; color:var(--green); display:flex; align-items:center; gap:5px; }
+.chip.cyan { background:rgba(0,212,255,0.08); border-color:rgba(0,212,255,0.2); color:var(--cyan); }
+.chip.purple { background:rgba(180,74,255,0.08); border-color:rgba(180,74,255,0.2); color:var(--purple); }
+.chip.orange { background:rgba(255,140,0,0.08); border-color:rgba(255,140,0,0.2); color:var(--orange); }
+
+/* CARD */
+.card { background:var(--card); border:1px solid var(--border); border-radius:14px; overflow:hidden; }
+.card-head { padding:16px 22px; display:flex; align-items:center; gap:12px; border-bottom:1px solid var(--border); background:rgba(0,255,136,0.02); }
+.card-icon { width:36px; height:36px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:1.1em; flex-shrink:0; }
+.ci-g { background:rgba(0,255,136,0.15); border:1px solid rgba(0,255,136,0.3); }
+.ci-c { background:rgba(0,212,255,0.15); border:1px solid rgba(0,212,255,0.3); }
+.ci-p { background:rgba(180,74,255,0.15); border:1px solid rgba(180,74,255,0.3); }
+.ci-o { background:rgba(255,140,0,0.15); border:1px solid rgba(255,140,0,0.3); }
+.card-title { font-family:'Orbitron',monospace; font-size:0.85em; font-weight:700; color:var(--text); letter-spacing:1px; }
+.xp-tag { margin-left:auto; background:rgba(0,255,136,0.1); border:1px solid rgba(0,255,136,0.3); color:var(--green); padding:3px 12px; border-radius:100px; font-size:0.72em; font-weight:700; font-family:'Orbitron',monospace; }
+.card-body { padding:22px; }
+
+/* ANALOGIA CARD */
+.analogy-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px; margin-bottom:18px; }
+.analogy-card { background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:18px; text-align:center; border-top:3px solid var(--green); transition:all 0.2s; }
+.analogy-card:hover { background:rgba(0,255,136,0.04); border-color:rgba(0,255,136,0.2); }
+.analogy-icon { font-size:2.5em; margin-bottom:10px; }
+.analogy-title { font-size:0.88em; font-weight:800; color:var(--green); margin-bottom:6px; }
+.analogy-real { font-size:0.78em; color:var(--cyan); font-weight:700; margin-bottom:6px; font-family:'JetBrains Mono',monospace; }
+.analogy-desc { font-size:0.76em; color:var(--muted); line-height:1.5; }
+
+/* EXPLAIN BOX */
+.explain { background:rgba(0,255,136,0.04); border:1px solid rgba(0,255,136,0.15); border-radius:10px; padding:16px 18px; font-size:0.88em; color:var(--muted); line-height:1.7; margin-bottom:14px; }
+.explain strong { color:var(--green); }
+.explain code { font-family:'JetBrains Mono',monospace; background:rgba(0,255,136,0.1); color:var(--green); padding:1px 6px; border-radius:4px; font-size:0.88em; }
+.info-box { background:rgba(0,212,255,0.05); border:1px solid rgba(0,212,255,0.2); border-left:4px solid var(--cyan); border-radius:9px; padding:14px 16px; font-size:0.86em; color:var(--muted); margin:10px 0; line-height:1.5; }
+.info-box code { font-family:'JetBrains Mono',monospace; color:var(--cyan); background:rgba(0,212,255,0.1); padding:1px 5px; border-radius:3px; }
+.warn-box { background:rgba(255,140,0,0.05); border:1px solid rgba(255,140,0,0.2); border-left:4px solid var(--orange); border-radius:9px; padding:14px 16px; font-size:0.86em; color:var(--muted); margin:10px 0; line-height:1.5; }
+.success-box { background:rgba(0,255,136,0.05); border:1px solid rgba(0,255,136,0.2); border-left:4px solid var(--green); border-radius:9px; padding:14px 16px; font-size:0.86em; color:var(--muted); margin:10px 0; line-height:1.5; }
+
+/* ========== TERMINAL INTERATIVO ========== */
+.terminal-wrap { margin:14px 0; border-radius:12px; overflow:hidden; border:1px solid rgba(0,255,136,0.2); box-shadow:0 4px 24px rgba(0,0,0,0.4); }
+.terminal-bar { background:#0a1628; padding:10px 16px; display:flex; align-items:center; gap:8px; border-bottom:1px solid rgba(0,255,136,0.1); }
+.t-dot { width:12px; height:12px; border-radius:50%; }
+.t-dot.red { background:#ff5f57; }
+.t-dot.yellow { background:#febc2e; }
+.t-dot.green { background:#28c840; }
+.t-title { font-family:'JetBrains Mono',monospace; font-size:0.72em; color:var(--muted); margin-left:6px; }
+.terminal-body { background:#020c1a; padding:16px 18px; font-family:'JetBrains Mono',monospace; font-size:0.82em; line-height:1.8; min-height:60px; }
+.t-line { display:flex; align-items:flex-start; gap:8px; margin-bottom:2px; }
+.t-prompt { color:var(--green); white-space:nowrap; flex-shrink:0; }
+.t-cmd { color:#e8e8e8; }
+.t-output { color:var(--cyan); }
+.t-output.yellow { color:var(--yellow); }
+.t-output.green { color:var(--green); }
+.t-output.red { color:var(--red); }
+.t-output.muted { color:var(--muted); }
+.t-comment { color:#334455; font-style:italic; }
+.t-output-block { padding:4px 0 4px 0; }
+
+/* EXECUTAR BUTTON */
+.run-btn { display:flex; align-items:center; gap:8px; padding:10px 20px; border:none; border-radius:8px; cursor:pointer; font-family:'Exo 2',sans-serif; font-size:0.85em; font-weight:800; transition:all 0.25s; letter-spacing:0.5px; margin-top:10px; }
+.run-btn.green { background:rgba(0,255,136,0.15); border:1px solid rgba(0,255,136,0.35); color:var(--green); }
+.run-btn.green:hover:not(:disabled) { background:rgba(0,255,136,0.28); box-shadow:0 0 18px rgba(0,255,136,0.3); transform:translateY(-1px); }
+.run-btn.cyan { background:rgba(0,212,255,0.15); border:1px solid rgba(0,212,255,0.35); color:var(--cyan); }
+.run-btn.cyan:hover:not(:disabled) { background:rgba(0,212,255,0.28); box-shadow:0 0 18px rgba(0,212,255,0.3); transform:translateY(-1px); }
+.run-btn.purple { background:rgba(180,74,255,0.15); border:1px solid rgba(180,74,255,0.35); color:var(--purple); }
+.run-btn.purple:hover:not(:disabled) { background:rgba(180,74,255,0.28); box-shadow:0 0 18px rgba(180,74,255,0.3); transform:translateY(-1px); }
+.run-btn.orange { background:rgba(255,140,0,0.15); border:1px solid rgba(255,140,0,0.35); color:var(--orange); }
+.run-btn.orange:hover:not(:disabled) { background:rgba(255,140,0,0.28); box-shadow:0 0 18px rgba(255,140,0,0.3); transform:translateY(-1px); }
+.run-btn:disabled { opacity:0.5; cursor:default; transform:none !important; }
+
+/* OUTPUT AREA que aparece ao clicar */
+.output-area { display:none; background:#020c1a; border-top:1px solid rgba(0,255,136,0.1); padding:12px 18px; font-family:'JetBrains Mono',monospace; font-size:0.8em; line-height:1.8; }
+.output-area.show { display:block; animation:fadeIn 0.3s ease; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);} }
+
+/* PERM VISUAL */
+.perm-demo { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin:10px 0; }
+.perm-group { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:10px 14px; text-align:center; min-width:90px; }
+.perm-group-label { font-size:0.65em; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+.perm-bits { display:flex; gap:4px; justify-content:center; }
+.perm-bit { width:28px; height:28px; border-radius:5px; display:flex; align-items:center; justify-content:center; font-family:'JetBrains Mono',monospace; font-size:0.85em; font-weight:700; }
+.perm-bit.on { background:rgba(0,255,136,0.2); border:1px solid rgba(0,255,136,0.4); color:var(--green); }
+.perm-bit.off { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); color:var(--muted); }
+.perm-octal { font-family:'JetBrains Mono',monospace; font-size:1.4em; font-weight:700; color:var(--yellow); text-align:center; margin-top:6px; }
+.perm-sep { font-size:1.5em; color:var(--muted); }
+
+/* STEP CARD */
+.step-card { background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:16px 18px; margin-bottom:12px; display:flex; gap:14px; align-items:flex-start; }
+.step-num { width:32px; height:32px; border-radius:8px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-family:'Orbitron',monospace; font-size:0.85em; font-weight:700; color:#000; background:linear-gradient(135deg,var(--green2),var(--green)); }
+.step-content { flex:1; }
+.step-title { font-size:0.9em; font-weight:800; color:var(--text); margin-bottom:5px; }
+.step-desc { font-size:0.84em; color:var(--muted); line-height:1.6; }
+.step-desc code { font-family:'JetBrains Mono',monospace; background:rgba(0,255,136,0.1); color:var(--green); padding:1px 6px; border-radius:4px; font-size:0.9em; }
+
+/* OBJECTIVES */
+.obj-list { list-style:none; display:flex; flex-direction:column; gap:8px; }
+.obj-item { display:flex; align-items:center; gap:12px; padding:12px 16px; border-radius:9px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); cursor:pointer; transition:all 0.2s; font-size:0.9em; font-weight:600; }
+.obj-item:hover { background:rgba(0,255,136,0.06); border-color:rgba(0,255,136,0.2); }
+.obj-item.checked { background:rgba(0,255,136,0.06); border-color:rgba(0,255,136,0.2); color:var(--muted); text-decoration:line-through; }
+.obj-circle { width:24px; height:24px; border-radius:50%; flex-shrink:0; border:2px solid rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; font-size:0.8em; transition:all 0.3s; }
+.obj-item.checked .obj-circle { background:var(--green); border-color:var(--green); color:#000; box-shadow:0 0 12px rgba(0,255,136,0.5); }
+
+/* QUIZ */
+.qcard { display:none; }
+.qcard.active { display:block; }
+.qcard h4 { font-size:0.95em; font-weight:700; color:var(--text); margin-bottom:14px; line-height:1.5; }
+.qopts { display:flex; flex-direction:column; gap:8px; margin-bottom:10px; }
+.qopt { padding:11px 16px; border-radius:8px; cursor:pointer; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); color:var(--text); font-family:'Exo 2',sans-serif; font-size:0.86em; font-weight:600; text-align:left; transition:all 0.2s; }
+.qopt:hover:not(:disabled) { background:rgba(0,255,136,0.08); border-color:rgba(0,255,136,0.25); color:var(--green); }
+.qopt.correct { background:rgba(0,255,136,0.12); border-color:rgba(0,255,136,0.4); color:var(--green); }
+.qopt.wrong { background:rgba(255,68,102,0.12); border-color:rgba(255,68,102,0.4); color:var(--red); }
+.qopt:disabled { cursor:default; }
+.qfb { display:none; font-size:0.82em; padding:10px 14px; border-radius:8px; margin-bottom:10px; line-height:1.5; }
+.qfb.show { display:block; }
+.qfb.ok { background:rgba(0,255,136,0.06); border:1px solid rgba(0,255,136,0.2); color:var(--green); }
+.qfb.fail { background:rgba(255,68,102,0.06); border:1px solid rgba(255,68,102,0.2); color:var(--red); }
+.qnx { display:none; padding:9px 18px; border-radius:8px; cursor:pointer; background:rgba(0,255,136,0.1); border:1px solid rgba(0,255,136,0.3); color:var(--green); font-family:'Exo 2',sans-serif; font-size:0.84em; font-weight:700; transition:all 0.2s; margin-top:6px; }
+.qnx.show { display:inline-block; }
+.qnx:hover { background:rgba(0,255,136,0.2); }
+.q-result { display:none; text-align:center; padding:24px; }
+.q-result.show { display:block; }
+.q-score-big { font-family:'Orbitron',monospace; font-size:3em; font-weight:900; color:var(--green); text-shadow:var(--glow-green); }
+.q-result-msg { font-size:1.1em; font-weight:700; color:var(--text); margin:8px 0; }
+.q-xp-earned { font-family:'Orbitron',monospace; font-size:0.8em; color:var(--green); margin-bottom:20px; }
+.restart-btn { padding:11px 28px; border-radius:8px; cursor:pointer; background:rgba(0,255,136,0.1); border:1px solid rgba(0,255,136,0.3); color:var(--green); font-family:'Exo 2',sans-serif; font-size:0.88em; font-weight:700; transition:all 0.2s; }
+.restart-btn:hover { background:rgba(0,255,136,0.2); }
+.quiz-prog-wrap { margin-bottom:16px; }
+.quiz-prog-label { font-size:0.75em; color:var(--muted); margin-bottom:5px; display:flex; justify-content:space-between; }
+.quiz-prog-bg { background:rgba(255,255,255,0.06); border-radius:100px; height:5px; overflow:hidden; }
+.quiz-prog-fill { height:100%; width:0%; background:linear-gradient(90deg,var(--green),var(--cyan)); border-radius:100px; transition:width 0.5s ease; box-shadow:0 0 8px rgba(0,255,136,0.4); }
+
+/* TOAST */
+.toast { position:fixed; bottom:24px; right:24px; z-index:9999; background:var(--card2); border:1px solid rgba(0,255,136,0.3); border-radius:12px; padding:14px 20px; display:flex; align-items:center; gap:14px; box-shadow:0 8px 32px rgba(0,0,0,0.5),var(--glow-green); transform:translateX(120%); transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1); min-width:280px; max-width:360px; }
+.toast.show { transform:translateX(0); }
+.toast-icon { font-size:1.6em; flex-shrink:0; }
+.toast-title { font-family:'Orbitron',monospace; font-size:0.8em; font-weight:700; color:var(--green); }
+.toast-msg { font-size:0.78em; color:var(--muted); margin-top:2px; }
+
+.bib-item { background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-left:3px solid var(--cyan); border-radius:8px; padding:12px 16px; font-size:0.82em; color:var(--muted); margin-bottom:8px; line-height:1.5; }
+
+/* HIGHLIGHT INLINE */
+.hl-green { color:var(--green); font-weight:700; }
+.hl-cyan { color:var(--cyan); font-weight:700; }
+.hl-yellow { color:var(--yellow); font-weight:700; }
+.hl-orange { color:var(--orange); font-weight:700; }
+
+@media(max-width:900px){ .layout{grid-template-columns:1fr;} .sidebar{order:2;} .main{order:1;} }
+</style>
+</head>
+<body>
+<div class="tux-bg">🐧</div>
+<div id="toast" class="toast">
+  <span class="toast-icon" id="toast-icon">⚡</span>
+  <div><div class="toast-title" id="toast-title">+XP</div><div class="toast-msg" id="toast-msg"></div></div>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <div class="header-logo">ISO-103</div>
+    <div class="header-title">SEMANA <span>06_01</span></div>
+    <a href="index.html" class="back-btn">🏠 Início</a>
+    <div class="hud">
+      <div class="hud-pill"><span class="v" id="hud-xp">0</span><span class="l">XP</span></div>
+      <div class="hud-pill"><span class="v" id="hud-streak">0</span><span class="l">Streak</span></div>
+      <div class="hud-pill"><span class="v" id="hud-badges">0</span><span class="l">Badges</span></div>
+      <div class="hud-xp-wrap">
+        <div class="hud-xp-label"><span id="hud-level">Novato</span><span id="hud-pct">0%</span></div>
+        <div class="hud-bar-bg"><div class="hud-bar" id="hud-bar"></div></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="scard">
+    <div class="scard-title">📅 Navegação</div>
+    <a href="#section-intro" class="nav-link active"><span class="nav-dot green"></span>O que é Usuário?</a>
+    <a href="#section-arquivos" class="nav-link"><span class="nav-dot cyan"></span>Arquivos do Sistema</a>
+    <a href="#section-criar" class="nav-link"><span class="nav-dot green"></span>Criar Usuário</a>
+    <a href="#section-grupos" class="nav-link"><span class="nav-dot cyan"></span>Grupos</a>
+    <a href="#section-perms" class="nav-link"><span class="nav-dot purple"></span>Permissões rwx</a>
+    <a href="#section-chmod" class="nav-link"><span class="nav-dot orange"></span>Usando chmod</a>
+    <a href="#section-quiz" class="nav-link"><span class="nav-dot orange"></span>Quiz Final</a>
+  </div>
+  <div class="scard">
+    <div class="scard-title">📊 Progresso</div>
+    <div class="prog-block"><div class="prog-label"><span>Objetivos</span><span id="obj-pct">0%</span></div><div class="prog-bg"><div class="prog-fill c" id="obj-bar" style="width:0%"></div></div></div>
+    <div class="prog-block"><div class="prog-label"><span>Terminais</span><span id="trm-pct">0%</span></div><div class="prog-bg"><div class="prog-fill g" id="trm-bar" style="width:0%"></div></div></div>
+    <div class="prog-block"><div class="prog-label"><span>Quiz</span><span id="quiz-pct">0%</span></div><div class="prog-bg"><div class="prog-fill p" id="quiz-bar" style="width:0%"></div></div></div>
+    <div class="prog-block"><div class="prog-label"><span>Badges</span><span id="ach-pct">0/8</span></div><div class="prog-bg"><div class="prog-fill o" id="ach-bar" style="width:0%"></div></div></div>
+  </div>
+  <div class="scard">
+    <div class="scard-title">🏅 Badges</div>
+    <div class="badge-grid">
+      <div class="badge-item" id="bm-start" title="Aula iniciada">🚀</div>
+      <div class="badge-item" id="bm-obj" title="Todos objetivos">🎯</div>
+      <div class="badge-item" id="bm-trm1" title="1° terminal">💻</div>
+      <div class="badge-item" id="bm-trm2" title="Usuário criado">👤</div>
+      <div class="badge-item" id="bm-trm3" title="Grupos vistos">👥</div>
+      <div class="badge-item" id="bm-perm" title="chmod explorado">🔐</div>
+      <div class="badge-item" id="bm-quiz" title="Quiz 4+ acertos">💡</div>
+      <div class="badge-item" id="bm-perfect" title="Quiz perfeito">💎</div>
+    </div>
+  </div>
+  <div class="scard">
+    <div class="scard-title">🗓️ Sequência</div>
+    <a href="semana06_01.html" class="nav-link active"><span class="nav-dot green"></span>S6.01 — Primeiros Passos ←</a>
+    <a href="semana06.html" class="nav-link"><span class="nav-dot cyan"></span>S6 — Usuários & Permissões</a>
+    <a href="semana06_2.html" class="nav-link"><span class="nav-dot purple"></span>S6.2 — Controle de Acesso</a>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+<!-- HERO -->
+<div class="hero" id="section-intro">
+  <div class="hero-tag">Semana 06_01 · ISO-103 · Aula Introdutória · Segurança da Informação</div>
+  <h1>🐧 Primeiros <span>Passos</span> no Linux</h1>
+  <p class="hero-sub">Nunca mexeu com usuários no Linux? Sem problema. Aqui você vai aprender do zero, com exemplos prontos e resultados reais na tela. É só clicar e ver acontecer!</p>
+  <div class="hero-chips">
+    <span class="chip">⏱️ 2h/aula</span>
+    <span class="chip green">🟢 Nível iniciante</span>
+    <span class="chip cyan">💻 Terminais interativos</span>
+    <span class="chip purple">🏆 280 XP disponíveis</span>
+  </div>
+</div>
+
+<!-- OBJETIVOS -->
+<div class="card">
+  <div class="card-head"><div class="card-icon ci-c">🎯</div><div class="card-title">O QUE VOCÊ VAI APRENDER HOJE</div><div class="xp-tag">+5 XP cada</div></div>
+  <div class="card-body">
+    <p style="font-size:0.85em;color:var(--muted);margin-bottom:14px;">✅ Marque cada item quando entender. Complete todos para ganhar bônus de XP!</p>
+    <ul class="obj-list">
+      <li class="obj-item" onclick="toggleObj(this,0)"><div class="obj-circle">✓</div>Entender o que são usuários e grupos no Linux</li>
+      <li class="obj-item" onclick="toggleObj(this,1)"><div class="obj-circle">✓</div>Saber onde o Linux guarda as informações de usuários</li>
+      <li class="obj-item" onclick="toggleObj(this,2)"><div class="obj-circle">✓</div>Criar um usuário com o comando useradd</li>
+      <li class="obj-item" onclick="toggleObj(this,3)"><div class="obj-circle">✓</div>Entender o que significam as letras rwx (leitura, escrita, execução)</li>
+      <li class="obj-item" onclick="toggleObj(this,4)"><div class="obj-circle">✓</div>Ler permissões de um arquivo (ex: -rw-r--r--)</li>
+      <li class="obj-item" onclick="toggleObj(this,5)"><div class="obj-circle">✓</div>Usar chmod para mudar permissões de um arquivo</li>
+    </ul>
+  </div>
+</div>
+
+<!-- SEÇÃO 1: O QUE É UM USUÁRIO? -->
+<div class="card">
+  <div class="card-head"><div class="card-icon ci-g">🤔</div><div class="card-title">1. O QUE É UM USUÁRIO NO LINUX?</div></div>
+  <div class="card-body">
+    <div class="explain">
+      Pense no Linux como um <strong>prédio de apartamentos</strong>. Cada morador tem sua <strong>chave própria</strong> (nome de usuário + senha) que dá acesso somente ao seu apartamento e às áreas comuns. O porteiro-chefe (o usuário <strong>root</strong>) tem a chave mestre que abre tudo.
+    </div>
+    <div class="analogy-grid">
+      <div class="analogy-card">
+        <div class="analogy-icon">🏢</div>
+        <div class="analogy-title">Usuário Comum</div>
+        <div class="analogy-real">joao, maria, pedro</div>
+        <div class="analogy-desc">Só acessa sua própria pasta e arquivos com permissão pública. Não pode mexer no sistema.</div>
+      </div>
+      <div class="analogy-card">
+        <div class="analogy-icon">👮</div>
+        <div class="analogy-title">Superusuário</div>
+        <div class="analogy-real">root</div>
+        <div class="analogy-desc">Acesso total ao sistema. Pode criar, apagar e modificar qualquer arquivo. Usar com responsabilidade!</div>
+      </div>
+      <div class="analogy-card">
+        <div class="analogy-icon">🤖</div>
+        <div class="analogy-title">Usuário de Serviço</div>
+        <div class="analogy-real">www-data, mysql</div>
+        <div class="analogy-desc">Criado automaticamente por programas (Apache, MySQL). Não faz login. É dono dos arquivos do programa.</div>
+      </div>
+      <div class="analogy-card">
+        <div class="analogy-icon">👥</div>
+        <div class="analogy-title">Grupo</div>
+        <div class="analogy-real">ti, rh, devs</div>
+        <div class="analogy-desc">Uma coleção de usuários. Facilita dar a mesma permissão para várias pessoas ao mesmo tempo.</div>
+      </div>
+    </div>
+
+    <!-- TERMINAL 1: ver usuário atual -->
+    <p style="font-size:0.88em;font-weight:700;color:var(--text);margin-bottom:8px;">▶ Experimente: descubra quem você é no sistema</p>
+    <div class="terminal-wrap" id="term1-wrap">
+      <div class="terminal-bar">
+        <div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div>
+        <span class="t-title">ubuntu-server — bash</span>
+      </div>
+      <div class="terminal-body">
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">whoami</span></div>
+        <div class="t-line"><span class="t-comment"># Mostra o nome do usuário atual</span></div>
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">id</span></div>
+        <div class="t-line"><span class="t-comment"># Mostra UID, GID e grupos do usuário</span></div>
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">id root</span></div>
+        <div class="t-line"><span class="t-comment"># Mostra informações do root</span></div>
+      </div>
+      <div id="out1" class="output-area">
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">whoami</span></div>
+        <div class="t-line"><span class="t-output green">aluno</span></div>
+        <br>
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">id</span></div>
+        <div class="t-line"><span class="t-output">uid=<span class="hl-yellow">1000</span>(aluno) gid=<span class="hl-green">1000</span>(aluno) groups=<span class="hl-cyan">1000</span>(aluno),<span class="hl-cyan">4</span>(adm),<span class="hl-cyan">27</span>(sudo)</span></div>
+        <div style="margin:6px 0;padding:8px 12px;background:rgba(0,255,136,0.06);border-radius:6px;font-size:0.85em;color:var(--muted);">
+          💡 <span class="hl-yellow">uid=1000</span> = identificador único do usuário &nbsp;|&nbsp; <span class="hl-green">gid=1000</span> = grupo principal &nbsp;|&nbsp; <span class="hl-cyan">groups</span> = todos os grupos
+        </div>
+        <br>
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">id root</span></div>
+        <div class="t-line"><span class="t-output">uid=<span class="hl-yellow">0</span>(root) gid=<span class="hl-green">0</span>(root) groups=<span class="hl-green">0</span>(root)</span></div>
+        <div style="margin:6px 0;padding:8px 12px;background:rgba(255,140,0,0.06);border-radius:6px;font-size:0.85em;color:var(--muted);">
+          ⚠️ O root sempre tem <span class="hl-orange">uid=0</span>. É assim que o Linux sabe quem é o superusuário — pelo número, não pelo nome!
+        </div>
+      </div>
+    </div>
+    <button class="run-btn green" id="run1" onclick="runTerm(1)">▶ Executar e ver resultado</button>
+  </div>
+</div>
+
+<!-- SEÇÃO 2: ARQUIVOS DO SISTEMA -->
+<div class="card" id="section-arquivos">
+  <div class="card-head"><div class="card-icon ci-c">📁</div><div class="card-title">2. ONDE O LINUX GUARDA OS USUÁRIOS?</div></div>
+  <div class="card-body">
+    <div class="explain">
+      O Linux não usa banco de dados para guardar usuários — usa <strong>arquivos de texto simples</strong>! Existem 3 arquivos principais que você precisa conhecer:
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:18px;">
+      <div style="background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.2);border-radius:10px;padding:16px;">
+        <div style="font-family:'JetBrains Mono',monospace;color:var(--cyan);font-weight:700;font-size:0.88em;margin-bottom:8px;">/etc/passwd</div>
+        <div style="font-size:0.78em;color:var(--muted);line-height:1.5;">Lista de todos os usuários. <strong style="color:var(--text)">Qualquer um pode ler</strong> este arquivo (sem senhas aqui).</div>
+      </div>
+      <div style="background:rgba(255,68,102,0.05);border:1px solid rgba(255,68,102,0.2);border-radius:10px;padding:16px;">
+        <div style="font-family:'JetBrains Mono',monospace;color:var(--red);font-weight:700;font-size:0.88em;margin-bottom:8px;">/etc/shadow</div>
+        <div style="font-size:0.78em;color:var(--muted);line-height:1.5;">Senhas criptografadas. <strong style="color:var(--red)">Só root pode ler!</strong> É aqui que ficam os hashes das senhas.</div>
+      </div>
+      <div style="background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.2);border-radius:10px;padding:16px;">
+        <div style="font-family:'JetBrains Mono',monospace;color:var(--green);font-weight:700;font-size:0.88em;margin-bottom:8px;">/etc/group</div>
+        <div style="font-size:0.78em;color:var(--muted);line-height:1.5;">Lista de todos os grupos e seus membros. <strong style="color:var(--text)">Qualquer um pode ler.</strong></div>
+      </div>
+    </div>
+
+    <!-- TERMINAL 2: ver passwd -->
+    <p style="font-size:0.88em;font-weight:700;color:var(--text);margin-bottom:8px;">▶ Veja o conteúdo real do /etc/passwd</p>
+    <div class="terminal-wrap">
+      <div class="terminal-bar">
+        <div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div>
+        <span class="t-title">ubuntu-server — bash</span>
+      </div>
+      <div class="terminal-body">
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">cat /etc/passwd | head -5</span></div>
+        <div class="t-line"><span class="t-comment"># Mostra as 5 primeiras linhas do arquivo de usuários</span></div>
+      </div>
+      <div id="out2" class="output-area">
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">cat /etc/passwd | head -5</span></div>
+        <div class="t-output-block">
+          <div class="t-line"><span class="t-output">root:x:0:0:root:/root:/bin/bash</span></div>
+          <div class="t-line"><span class="t-output">daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin</span></div>
+          <div class="t-line"><span class="t-output">bin:x:2:2:bin:/bin:/usr/sbin/nologin</span></div>
+          <div class="t-line"><span class="t-output">sys:x:3:3:sys:/dev:/usr/sbin/nologin</span></div>
+          <div class="t-line"><span class="t-output">aluno:x:1000:1000:Aluno ISO103:/home/aluno:/bin/bash</span></div>
+        </div>
+        <div style="margin:10px 0;padding:12px;background:rgba(0,212,255,0.06);border-radius:8px;font-size:0.82em;color:var(--muted);line-height:1.8;">
+          <strong style="color:var(--cyan)">Anatomia de uma linha:</strong><br>
+          <code style="font-family:JetBrains Mono,monospace;color:var(--yellow)">aluno</code> : nome de login &nbsp;|&nbsp;
+          <code style="font-family:JetBrains Mono,monospace;color:var(--red)">x</code> : senha está no /etc/shadow &nbsp;|&nbsp;
+          <code style="font-family:JetBrains Mono,monospace;color:var(--green)">1000</code> : UID &nbsp;|&nbsp;
+          <code style="font-family:JetBrains Mono,monospace;color:var(--green)">1000</code> : GID &nbsp;|&nbsp;
+          <code style="font-family:JetBrains Mono,monospace;color:var(--cyan)">Aluno ISO103</code> : comentário &nbsp;|&nbsp;
+          <code style="font-family:JetBrains Mono,monospace;color:var(--orange)">/home/aluno</code> : pasta pessoal &nbsp;|&nbsp;
+          <code style="font-family:JetBrains Mono,monospace;color:var(--purple)">/bin/bash</code> : shell padrão
+        </div>
+      </div>
+    </div>
+    <button class="run-btn cyan" id="run2" onclick="runTerm(2)">▶ Executar e ver resultado</button>
+
+    <div class="info-box" style="margin-top:14px;">
+      🔒 Tente <code>cat /etc/shadow</code> sem sudo — vai dar erro de permissão. Isso é proposital! O Linux protege os hashes de senha para que nenhum usuário comum possa tentar quebrá-los.
+    </div>
+  </div>
+</div>
+
+<!-- SEÇÃO 3: CRIAR USUÁRIO -->
+<div class="card" id="section-criar">
+  <div class="card-head"><div class="card-icon ci-g">👤</div><div class="card-title">3. CRIANDO SEU PRIMEIRO USUÁRIO</div></div>
+  <div class="card-body">
+    <div class="explain">
+      O comando <strong><code>useradd</code></strong> cria usuários. Mas atenção: sozinho ele faz o mínimo. Precisamos de alguns <strong>parâmetros</strong> para criar um usuário completo que consiga fazer login.
+    </div>
+
+    <div style="margin-bottom:18px;">
+      <div style="font-size:0.85em;font-weight:700;color:var(--text);margin-bottom:10px;">🔧 Os parâmetros mais usados:</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;">
+        <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:12px;">
+          <div style="font-family:'JetBrains Mono',monospace;color:var(--green);font-size:0.88em;font-weight:700;">-m</div>
+          <div style="font-size:0.76em;color:var(--muted);margin-top:5px;">Cria a pasta pessoal <br><code style="color:var(--cyan)">/home/nomeusuario</code></div>
+        </div>
+        <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:12px;">
+          <div style="font-family:'JetBrains Mono',monospace;color:var(--green);font-size:0.88em;font-weight:700;">-s /bin/bash</div>
+          <div style="font-size:0.76em;color:var(--muted);margin-top:5px;">Define o shell padrão<br>(necessário para login)</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:12px;">
+          <div style="font-family:'JetBrains Mono',monospace;color:var(--green);font-size:0.88em;font-weight:700;">-c "Nome"</div>
+          <div style="font-size:0.76em;color:var(--muted);margin-top:5px;">Nome completo do usuário<br>(comentário no passwd)</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:12px;">
+          <div style="font-family:'JetBrains Mono',monospace;color:var(--green);font-size:0.88em;font-weight:700;">-G grupo</div>
+          <div style="font-size:0.76em;color:var(--muted);margin-top:5px;">Adiciona a grupos<br>extras na criação</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TERMINAL 3: criar usuário -->
+    <p style="font-size:0.88em;font-weight:700;color:var(--text);margin-bottom:8px;">▶ Crie um usuário chamado "joao" passo a passo</p>
+    <div class="terminal-wrap">
+      <div class="terminal-bar">
+        <div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div>
+        <span class="t-title">ubuntu-server — bash (como root/sudo)</span>
+      </div>
+      <div class="terminal-body">
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">sudo useradd -m -s /bin/bash -c "Joao Silva" joao</span></div>
+        <div class="t-line"><span class="t-comment"># -m = cria /home/joao  |  -s = shell bash  |  -c = nome completo</span></div>
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">sudo passwd joao</span></div>
+        <div class="t-line"><span class="t-comment"># Define a senha para joao</span></div>
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">grep joao /etc/passwd</span></div>
+        <div class="t-line"><span class="t-comment"># Confirma que o usuário foi criado</span></div>
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">ls -la /home/</span></div>
+        <div class="t-line"><span class="t-comment"># Vê que a pasta /home/joao foi criada</span></div>
+      </div>
+      <div id="out3" class="output-area">
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">sudo useradd -m -s /bin/bash -c "Joao Silva" joao</span></div>
+        <div class="t-line"><span class="t-output muted">[sem output = deu certo! No Linux, silêncio é sinal de sucesso ✅]</span></div>
+        <br>
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">sudo passwd joao</span></div>
+        <div class="t-line"><span class="t-output yellow">New password: ••••••••</span></div>
+        <div class="t-line"><span class="t-output yellow">Retype new password: ••••••••</span></div>
+        <div class="t-line"><span class="t-output green">passwd: password updated successfully</span></div>
+        <br>
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">grep joao /etc/passwd</span></div>
+        <div class="t-line"><span class="t-output">joao:x:<span class="hl-yellow">1001</span>:<span class="hl-yellow">1001</span>:Joao Silva:/home/joao:/bin/bash</span></div>
+        <div style="margin:6px 0;padding:8px 12px;background:rgba(0,255,136,0.06);border-radius:6px;font-size:0.82em;color:var(--muted);">
+          ✅ Usuário joao criado! UID=1001 (o Linux atribui automaticamente, começando do 1000 para usuários reais)
+        </div>
+        <br>
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">ls -la /home/</span></div>
+        <div class="t-line"><span class="t-output">drwxr-xr-x 4 root  root  4096 Apr 24 10:00 .</span></div>
+        <div class="t-line"><span class="t-output">drwxr-xr-x 2 <span class="hl-green">aluno</span> aluno 4096 Apr 24 09:00 aluno</span></div>
+        <div class="t-line"><span class="t-output">drwxr-xr-x 2 <span class="hl-cyan">joao</span>  joao  4096 Apr 24 10:00 joao</span></div>
+        <div style="margin:6px 0;padding:8px 12px;background:rgba(0,212,255,0.06);border-radius:6px;font-size:0.82em;color:var(--muted);">
+          📁 A pasta <span class="hl-cyan">/home/joao</span> foi criada automaticamente pelo parâmetro <span class="hl-green">-m</span>!
+        </div>
+      </div>
+    </div>
+    <button class="run-btn green" id="run3" onclick="runTerm(3)">▶ Executar e ver resultado</button>
+
+    <div class="warn-box" style="margin-top:12px;">
+      ⚠️ <strong>Sem o -m</strong>, o usuário é criado mas não tem pasta /home. Sem o <strong>-s /bin/bash</strong>, ele não consegue fazer login interativo. Sempre use esses dois parâmetros!
+    </div>
+  </div>
+</div>
+
+<!-- SEÇÃO 4: GRUPOS -->
+<div class="card" id="section-grupos">
+  <div class="card-head"><div class="card-icon ci-c">👥</div><div class="card-title">4. GRUPOS — PERMISSÕES PARA VÁRIOS DE UMA VEZ</div></div>
+  <div class="card-body">
+    <div class="explain">
+      Imagine que você tem <strong>10 funcionários do RH</strong>. Em vez de dar permissão ao arquivo para cada um dos 10, você cria um grupo chamado <strong>"rh"</strong>, coloca todos lá, e dá a permissão uma só vez para o grupo. Muito mais prático!
+    </div>
+
+    <!-- TERMINAL 4: grupos -->
+    <p style="font-size:0.88em;font-weight:700;color:var(--text);margin-bottom:8px;">▶ Crie um grupo e adicione o joao</p>
+    <div class="terminal-wrap">
+      <div class="terminal-bar">
+        <div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div>
+        <span class="t-title">ubuntu-server — bash</span>
+      </div>
+      <div class="terminal-body">
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">sudo groupadd ti</span></div>
+        <div class="t-line"><span class="t-comment"># Cria o grupo "ti"</span></div>
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">sudo usermod -aG ti joao</span></div>
+        <div class="t-line"><span class="t-comment"># -aG = adiciona joao ao grupo ti (sem remover dos outros grupos)</span></div>
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">id joao</span></div>
+        <div class="t-line"><span class="t-comment"># Verifica os grupos de joao</span></div>
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">grep ti /etc/group</span></div>
+        <div class="t-line"><span class="t-comment"># Vê o grupo "ti" no arquivo de grupos</span></div>
+      </div>
+      <div id="out4" class="output-area">
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">sudo groupadd ti</span></div>
+        <div class="t-line"><span class="t-output muted">[sem output = grupo criado com sucesso ✅]</span></div>
+        <br>
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">sudo usermod -aG ti joao</span></div>
+        <div class="t-line"><span class="t-output muted">[sem output = joao adicionado ao grupo ti ✅]</span></div>
+        <br>
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">id joao</span></div>
+        <div class="t-line"><span class="t-output">uid=<span class="hl-yellow">1001</span>(joao) gid=<span class="hl-yellow">1001</span>(joao) groups=<span class="hl-yellow">1001</span>(joao),<span class="hl-cyan">1002</span>(ti)</span></div>
+        <div style="margin:6px 0;padding:8px 12px;background:rgba(0,255,136,0.06);border-radius:6px;font-size:0.82em;color:var(--muted);">
+          ✅ joao agora está em 2 grupos: o grupo dele próprio (<span class="hl-yellow">joao</span>) e o grupo <span class="hl-cyan">ti</span>!
+        </div>
+        <br>
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">grep ti /etc/group</span></div>
+        <div class="t-line"><span class="t-output">ti:x:<span class="hl-yellow">1002</span>:<span class="hl-cyan">joao</span></span></div>
+        <div style="margin:6px 0;padding:8px 12px;background:rgba(0,212,255,0.06);border-radius:6px;font-size:0.82em;color:var(--muted);">
+          Formato: <span class="hl-green">nome_grupo</span> : x : <span class="hl-yellow">GID</span> : <span class="hl-cyan">membros</span>
+        </div>
+      </div>
+    </div>
+    <button class="run-btn cyan" id="run4" onclick="runTerm(4)">▶ Executar e ver resultado</button>
+
+    <div class="info-box" style="margin-top:12px;">
+      💡 <strong>Por que -aG e não só -G?</strong><br>
+      O <code>-G</code> sozinho <em>substitui</em> todos os grupos do usuário. O <code>-aG</code> (<em>append</em>) <strong>adiciona</strong> ao grupo sem remover os outros. Quase sempre você quer o <code>-aG</code>!
+    </div>
+  </div>
+</div>
+
+<!-- SEÇÃO 5: PERMISSÕES rwx -->
+<div class="card" id="section-perms">
+  <div class="card-head"><div class="card-icon ci-p">🔐</div><div class="card-title">5. PERMISSÕES — O QUE SIGNIFICA rwx?</div></div>
+  <div class="card-body">
+    <div class="explain">
+      Todo arquivo e pasta no Linux tem <strong>permissões</strong> que dizem quem pode fazer o quê. São 3 letras para 3 tipos de ação:<br>
+      <strong>r</strong> = <em>read</em> (ler) &nbsp;|&nbsp; <strong>w</strong> = <em>write</em> (escrever/modificar) &nbsp;|&nbsp; <strong>x</strong> = <em>execute</em> (executar).<br>
+      E essas 3 ações são definidas para 3 grupos de pessoas: o <strong>dono</strong>, o <strong>grupo</strong> e os <strong>outros</strong>.
+    </div>
+
+    <!-- TERMINAL 5: ls -la -->
+    <p style="font-size:0.88em;font-weight:700;color:var(--text);margin-bottom:8px;">▶ Veja as permissões de arquivos reais</p>
+    <div class="terminal-wrap">
+      <div class="terminal-bar">
+        <div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div>
+        <span class="t-title">ubuntu-server — bash</span>
+      </div>
+      <div class="terminal-body">
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">ls -la /home/joao/</span></div>
+        <div class="t-line"><span class="t-comment"># -l = formato longo (mostra permissões)  |  -a = mostra arquivos ocultos</span></div>
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">ls -la /etc/passwd /etc/shadow</span></div>
+        <div class="t-line"><span class="t-comment"># Compara as permissões desses dois arquivos importantes</span></div>
+      </div>
+      <div id="out5" class="output-area">
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">ls -la /home/joao/</span></div>
+        <div class="t-output-block">
+          <div class="t-line"><span class="t-output">total 20</span></div>
+          <div class="t-line"><span class="t-output"><span class="hl-cyan">drwxr-xr-x</span> 2 joao joao 4096 Apr 24 10:00 <span class="hl-green">.</span></span></div>
+          <div class="t-line"><span class="t-output"><span class="hl-cyan">drwxr-xr-x</span> 4 root root 4096 Apr 24 10:00 <span class="hl-green">..</span></span></div>
+          <div class="t-line"><span class="t-output"><span class="hl-cyan">-rw-r--r--</span> 1 joao joao  220 Apr 24 10:00 .bash_logout</span></div>
+          <div class="t-line"><span class="t-output"><span class="hl-cyan">-rw-r--r--</span> 1 joao joao 3526 Apr 24 10:00 .bashrc</span></div>
+          <div class="t-line"><span class="t-output"><span class="hl-cyan">-rw-r--r--</span> 1 joao joao  807 Apr 24 10:00 .profile</span></div>
+        </div>
+        <br>
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">ls -la /etc/passwd /etc/shadow</span></div>
+        <div class="t-line"><span class="t-output"><span class="hl-cyan">-rw-r--r--</span> 1 root root   1823 Apr 24 10:00 /etc/passwd</span></div>
+        <div class="t-line"><span class="t-output"><span class="hl-orange">-rw-r-----</span> 1 root shadow  987 Apr 24 10:00 /etc/shadow</span></div>
+
+        <!-- DECOMPOSIÇÃO VISUAL -->
+        <div style="margin:12px 0;padding:14px;background:rgba(0,212,255,0.04);border:1px solid rgba(0,212,255,0.15);border-radius:10px;">
+          <div style="font-size:0.8em;font-weight:700;color:var(--cyan);margin-bottom:10px;">🔍 Decompondo: <span style="font-family:'JetBrains Mono',monospace;">-rw-r--r--</span></div>
+          <div style="display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap;">
+            <div style="text-align:center;padding:8px 10px;background:rgba(255,255,255,0.04);border-radius:7px;min-width:40px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:1.1em;color:var(--muted);">-</div>
+              <div style="font-size:0.6em;color:var(--muted);margin-top:4px;">tipo</div>
+              <div style="font-size:0.62em;color:var(--muted);">arquivo</div>
+            </div>
+            <div style="padding:5px 8px;color:var(--muted);font-size:1.2em;align-self:center;">|</div>
+            <div style="padding:8px 12px;background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.2);border-radius:7px;text-align:center;">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:1em;color:var(--green);">rw-</div>
+              <div style="font-size:0.6em;color:var(--green);margin-top:4px;">DONO</div>
+              <div style="font-size:0.62em;color:var(--muted);">lê + escreve</div>
+            </div>
+            <div style="padding:8px 12px;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);border-radius:7px;text-align:center;">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:1em;color:var(--cyan);">r--</div>
+              <div style="font-size:0.6em;color:var(--cyan);margin-top:4px;">GRUPO</div>
+              <div style="font-size:0.62em;color:var(--muted);">só lê</div>
+            </div>
+            <div style="padding:8px 12px;background:rgba(180,74,255,0.08);border:1px solid rgba(180,74,255,0.2);border-radius:7px;text-align:center;">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:1em;color:var(--purple);">r--</div>
+              <div style="font-size:0.6em;color:var(--purple);margin-top:4px;">OUTROS</div>
+              <div style="font-size:0.62em;color:var(--muted);">só lê</div>
+            </div>
+          </div>
+          <div style="margin-top:10px;font-size:0.78em;color:var(--muted);">
+            📌 O traço (<code style="color:var(--muted)">-</code>) no lugar de uma letra = <strong style="color:var(--text)">sem essa permissão</strong>. Ex: <code style="color:var(--orange)">r--</code> = só leitura, sem escrita, sem execução.
+          </div>
+        </div>
+
+        <div style="margin:8px 0;padding:10px 14px;background:rgba(255,140,0,0.06);border-radius:6px;font-size:0.82em;color:var(--muted);">
+          ⚠️ Repare: <code style="color:var(--orange)">-rw-r-----</code> no /etc/shadow significa que <strong style="color:var(--text)">outros</strong> não têm NENHUM acesso (<code>---</code>). Por isso usuários comuns não conseguem ler as senhas!
+        </div>
+      </div>
+    </div>
+    <button class="run-btn purple" id="run5" onclick="runTerm(5)">▶ Executar e ver resultado</button>
+  </div>
+</div>
+
+<!-- SEÇÃO 6: CHMOD -->
+<div class="card" id="section-chmod">
+  <div class="card-head"><div class="card-icon ci-o">⚙️</div><div class="card-title">6. MUDANDO PERMISSÕES COM chmod</div></div>
+  <div class="card-body">
+    <div class="explain">
+      O comando <strong><code>chmod</code></strong> (<em>change mode</em>) muda as permissões de um arquivo. Você pode usar de dois jeitos: com <strong>letras</strong> (mais fácil de lembrar) ou com <strong>números</strong> (mais rápido).
+    </div>
+
+    <!-- VISUAL: tabela de bits -->
+    <div style="margin-bottom:18px;">
+      <div style="font-size:0.85em;font-weight:700;color:var(--text);margin-bottom:10px;">📊 Tabela de permissões em números (octal):</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;">
+        <div style="background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.2);border-radius:8px;padding:12px;text-align:center;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:1.6em;font-weight:700;color:var(--green);">4</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.88em;color:var(--text);margin:4px 0;">r--</div>
+          <div style="font-size:0.72em;color:var(--muted);">Só leitura</div>
+        </div>
+        <div style="background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);border-radius:8px;padding:12px;text-align:center;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:1.6em;font-weight:700;color:var(--cyan);">2</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.88em;color:var(--text);margin:4px 0;">-w-</div>
+          <div style="font-size:0.72em;color:var(--muted);">Só escrita</div>
+        </div>
+        <div style="background:rgba(180,74,255,0.08);border:1px solid rgba(180,74,255,0.2);border-radius:8px;padding:12px;text-align:center;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:1.6em;font-weight:700;color:var(--purple);">1</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.88em;color:var(--text);margin:4px 0;">--x</div>
+          <div style="font-size:0.72em;color:var(--muted);">Só execução</div>
+        </div>
+        <div style="background:rgba(255,204,0,0.08);border:1px solid rgba(255,204,0,0.2);border-radius:8px;padding:12px;text-align:center;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:1.6em;font-weight:700;color:var(--yellow);">7</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.88em;color:var(--text);margin:4px 0;">rwx</div>
+          <div style="font-size:0.72em;color:var(--muted);">4+2+1 = tudo</div>
+        </div>
+        <div style="background:rgba(255,140,0,0.08);border:1px solid rgba(255,140,0,0.2);border-radius:8px;padding:12px;text-align:center;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:1.6em;font-weight:700;color:var(--orange);">6</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.88em;color:var(--text);margin:4px 0;">rw-</div>
+          <div style="font-size:0.72em;color:var(--muted);">4+2 = ler+escrever</div>
+        </div>
+        <div style="background:rgba(255,68,102,0.08);border:1px solid rgba(255,68,102,0.2);border-radius:8px;padding:12px;text-align:center;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:1.6em;font-weight:700;color:var(--red);">0</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.88em;color:var(--text);margin:4px 0;">---</div>
+          <div style="font-size:0.72em;color:var(--muted);">Nenhum acesso</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="explain" style="margin-bottom:14px;">
+      <strong>Exemplo:</strong> <code>chmod 755 script.sh</code><br>
+      → Dono=<span class="hl-yellow">7</span>(rwx) &nbsp; Grupo=<span class="hl-green">5</span>(r-x) &nbsp; Outros=<span class="hl-green">5</span>(r-x)<br>
+      → O dono faz tudo. Grupo e outros podem ler e executar, mas não modificar.
+    </div>
+
+    <!-- TERMINAL 6: chmod -->
+    <p style="font-size:0.88em;font-weight:700;color:var(--text);margin-bottom:8px;">▶ Veja o chmod em ação — antes e depois</p>
+    <div class="terminal-wrap">
+      <div class="terminal-bar">
+        <div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div>
+        <span class="t-title">ubuntu-server — bash</span>
+      </div>
+      <div class="terminal-body">
+        <div class="t-line"><span class="t-comment"># Criar um arquivo de teste</span></div>
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">touch /tmp/teste.txt</span></div>
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">ls -la /tmp/teste.txt</span></div>
+        <div class="t-line"><span class="t-comment"># Veja as permissões padrão que o Linux atribui</span></div>
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">chmod 600 /tmp/teste.txt</span></div>
+        <div class="t-line"><span class="t-comment"># Muda para: dono=rw, grupo=nada, outros=nada</span></div>
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">ls -la /tmp/teste.txt</span></div>
+        <div class="t-line"><span class="t-comment"># Veja a mudança! Também com notação simbólica:</span></div>
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">chmod u+x /tmp/teste.txt</span></div>
+        <div class="t-line"><span class="t-comment"># u=dono, +=adicionar, x=execução</span></div>
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">ls -la /tmp/teste.txt</span></div>
+      </div>
+      <div id="out6" class="output-area">
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">touch /tmp/teste.txt</span></div>
+        <div class="t-line"><span class="t-output muted">[arquivo criado ✅]</span></div>
+        <br>
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">ls -la /tmp/teste.txt</span></div>
+        <div class="t-line"><span class="t-output"><span class="hl-cyan">-rw-r--r--</span> 1 aluno aluno 0 Apr 24 10:05 /tmp/teste.txt</span></div>
+        <div style="padding:6px 10px;background:rgba(0,212,255,0.05);border-radius:6px;font-size:0.8em;color:var(--muted);margin:4px 0;">Permissão inicial: dono lê+escreve, grupo e outros só leem (padrão do Linux)</div>
+        <br>
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">chmod 600 /tmp/teste.txt</span></div>
+        <div class="t-line"><span class="t-output muted">[sem output = ok ✅]</span></div>
+        <br>
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">ls -la /tmp/teste.txt</span></div>
+        <div class="t-line"><span class="t-output"><span class="hl-orange">-rw-------</span> 1 aluno aluno 0 Apr 24 10:05 /tmp/teste.txt</span></div>
+        <div style="padding:6px 10px;background:rgba(0,255,136,0.05);border-radius:6px;font-size:0.8em;color:var(--muted);margin:4px 0;">✅ Agora só o dono pode ler e escrever. Grupo e outros não têm <strong>nenhum</strong> acesso (—)!</div>
+        <br>
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">chmod u+x /tmp/teste.txt</span></div>
+        <div class="t-line"><span class="t-output muted">[adicionado bit de execução para o dono ✅]</span></div>
+        <br>
+        <div class="t-line"><span class="t-prompt">aluno@ubuntu:~$</span>&nbsp;<span class="t-cmd">ls -la /tmp/teste.txt</span></div>
+        <div class="t-line"><span class="t-output"><span class="hl-green">-rwx------</span> 1 aluno aluno 0 Apr 24 10:05 /tmp/teste.txt</span></div>
+        <div style="padding:6px 10px;background:rgba(0,255,136,0.05);border-radius:6px;font-size:0.8em;color:var(--muted);margin:4px 0;">✅ Agora tem o <span class="hl-green">x</span>! Dono pode ler, escrever <em>e</em> executar. Equivale ao 700.</div>
+
+        <!-- COMPARATIVO VISUAL -->
+        <div style="margin:12px 0;padding:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:8px;">
+          <div style="font-size:0.78em;font-weight:700;color:var(--text);margin-bottom:8px;">📊 Permissões mais comuns — cole isso no seu caderno:</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.75em;line-height:2;color:var(--muted);">
+            <span class="hl-yellow">755</span> = rwxr-xr-x → Diretórios públicos (dono edita, outros acessam)<br>
+            <span class="hl-cyan">644</span> = rw-r--r-- → Arquivos de texto normais<br>
+            <span class="hl-orange">600</span> = rw------- → Arquivos privados (chaves SSH, configs sensíveis)<br>
+            <span class="hl-green">700</span> = rwx------ → Diretórios privados (só o dono entra)<br>
+            <span class="hl-red">777</span> = rwxrwxrwx → ⚠️ PERIGOSO — todos fazem tudo!
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="run-btn orange" id="run6" onclick="runTerm(6)">▶ Executar e ver resultado</button>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div class="card" id="section-quiz">
+  <div class="card-head"><div class="card-icon ci-o">🧠</div><div class="card-title">QUIZ — TESTANDO O QUE APRENDEU</div><div class="xp-tag">Até +50 XP</div></div>
+  <div class="card-body">
+    <p style="font-size:0.84em;color:var(--muted);margin-bottom:16px;">5 perguntas sobre o conteúdo de hoje. Não vale colar — você vai precisar saber isso na prova! 😄</p>
+    <div class="quiz-prog-wrap">
+      <div class="quiz-prog-label"><span>Progresso</span><span id="q-cnt">0/5</span></div>
+      <div class="quiz-prog-bg"><div class="quiz-prog-fill" id="q-prog"></div></div>
+    </div>
+
+    <div class="qcard active" id="qc0">
+      <h4>1️⃣ Qual parâmetro do <code>useradd</code> cria a pasta pessoal do usuário automaticamente?</h4>
+      <div class="qopts">
+        <button class="qopt" onclick="ansQ(0,0,1)">A) -s</button>
+        <button class="qopt" onclick="ansQ(0,1,1)">B) -m</button>
+        <button class="qopt" onclick="ansQ(0,2,1)">C) -c</button>
+        <button class="qopt" onclick="ansQ(0,3,1)">D) -G</button>
+      </div>
+      <div class="qfb" id="qfb0"></div>
+      <button class="qnx" id="qnx0" onclick="nextQ(1)">Próxima →</button>
+    </div>
+
+    <div class="qcard" id="qc1">
+      <h4>2️⃣ O arquivo <code>/etc/shadow</code> contém as senhas dos usuários. Quem pode ler esse arquivo?</h4>
+      <div class="qopts">
+        <button class="qopt" onclick="ansQ(1,0,2)">A) Qualquer usuário do sistema</button>
+        <button class="qopt" onclick="ansQ(1,1,2)">B) Apenas usuários do grupo "users"</button>
+        <button class="qopt" onclick="ansQ(1,2,2)">C) Apenas o root (e o grupo shadow)</button>
+        <button class="qopt" onclick="ansQ(1,3,2)">D) Apenas o usuário root e o próprio dono da conta</button>
+      </div>
+      <div class="qfb" id="qfb1"></div>
+      <button class="qnx" id="qnx1" onclick="nextQ(2)">Próxima →</button>
+    </div>
+
+    <div class="qcard" id="qc2">
+      <h4>3️⃣ O arquivo tem permissão <code>-rw-r--r--</code>. O que o GRUPO pode fazer?</h4>
+      <div class="qopts">
+        <button class="qopt" onclick="ansQ(2,0,0)">A) Ler e escrever</button>
+        <button class="qopt" onclick="ansQ(2,1,0)">B) Ler, escrever e executar</button>
+        <button class="qopt" onclick="ansQ(2,2,0)">C) Nada — sem acesso</button>
+        <button class="qopt" onclick="ansQ(2,3,0)">D) Apenas ler</button>
+      </div>
+      <div class="qfb" id="qfb2"></div>
+      <button class="qnx" id="qnx2" onclick="nextQ(3)">Próxima →</button>
+    </div>
+
+    <div class="qcard" id="qc3">
+      <h4>4️⃣ Qual o resultado de <code>chmod 700 pasta/</code>?</h4>
+      <div class="qopts">
+        <button class="qopt" onclick="ansQ(3,0,1)">A) Dono tem acesso total; grupo e outros não têm nenhum acesso</button>
+        <button class="qopt" onclick="ansQ(3,1,1)">B) Todos têm acesso total à pasta</button>
+        <button class="qopt" onclick="ansQ(3,2,1)">C) Dono lê e escreve; grupo e outros só leem</button>
+        <button class="qopt" onclick="ansQ(3,3,1)">D) Ninguém tem acesso</button>
+      </div>
+      <div class="qfb" id="qfb3"></div>
+      <button class="qnx" id="qnx3" onclick="nextQ(4)">Próxima →</button>
+    </div>
+
+    <div class="qcard" id="qc4">
+      <h4>5️⃣ Para adicionar o usuário "maria" ao grupo "rh" SEM remover seus outros grupos, qual comando usar?</h4>
+      <div class="qopts">
+        <button class="qopt" onclick="ansQ(4,0,2)">A) usermod -G rh maria</button>
+        <button class="qopt" onclick="ansQ(4,1,2)">B) groupadd maria rh</button>
+        <button class="qopt" onclick="ansQ(4,2,2)">C) usermod -aG rh maria</button>
+        <button class="qopt" onclick="ansQ(4,3,2)">D) addgroup rh maria</button>
+      </div>
+      <div class="qfb" id="qfb4"></div>
+      <button class="qnx" id="qnx4" onclick="showResult()">Ver resultado 🏆</button>
+    </div>
+
+    <div class="q-result" id="q-result">
+      <div class="q-score-big" id="q-score">0/5</div>
+      <div class="q-result-msg" id="q-msg">Resultado</div>
+      <div class="q-xp-earned" id="q-xp-earned"></div>
+      <button class="restart-btn" onclick="restartQuiz()">🔄 Refazer Quiz</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESUMO FINAL -->
+<div class="card">
+  <div class="card-head"><div class="card-icon ci-g">📋</div><div class="card-title">RESUMÃO — COLA MENTAL</div></div>
+  <div class="card-body">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;">
+      <div style="background:rgba(0,255,136,0.04);border:1px solid rgba(0,255,136,0.15);border-radius:10px;padding:16px;">
+        <div style="font-size:0.82em;font-weight:800;color:var(--green);margin-bottom:10px;">👤 USUÁRIOS</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.74em;line-height:2;color:var(--muted);">
+          useradd -m -s /bin/bash nome<br>
+          passwd nome<br>
+          userdel -r nome<br>
+          cat /etc/passwd
+        </div>
+      </div>
+      <div style="background:rgba(0,212,255,0.04);border:1px solid rgba(0,212,255,0.15);border-radius:10px;padding:16px;">
+        <div style="font-size:0.82em;font-weight:800;color:var(--cyan);margin-bottom:10px;">👥 GRUPOS</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.74em;line-height:2;color:var(--muted);">
+          groupadd nome_grupo<br>
+          usermod -aG grupo user<br>
+          id usuario<br>
+          cat /etc/group
+        </div>
+      </div>
+      <div style="background:rgba(180,74,255,0.04);border:1px solid rgba(180,74,255,0.15);border-radius:10px;padding:16px;">
+        <div style="font-size:0.82em;font-weight:800;color:var(--purple);margin-bottom:10px;">🔐 PERMISSÕES</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.74em;line-height:2;color:var(--muted);">
+          ls -la arquivo<br>
+          chmod 755 dir/<br>
+          chmod 600 arquivo<br>
+          chmod u+x script.sh
+        </div>
+      </div>
+    </div>
+    <div class="success-box" style="margin-top:14px;">
+      🚀 <strong>Próximo passo:</strong> Agora que você entende o básico, a <strong>Semana 06</strong> aprofunda tudo isso: SUID, ACLs, sudoers e políticas de senha avançadas!
+    </div>
+  </div>
+</div>
+
+<!-- REFERÊNCIAS -->
+<div style="padding:20px;background:var(--card);border:1px solid var(--border);border-radius:14px;">
+  <div style="font-family:'Orbitron',monospace;font-size:0.75em;font-weight:700;color:var(--green);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;">📚 Referências</div>
+  <div class="bib-item">NEMETH, Evi et al. <strong>Manual completo do Linux.</strong> 5. ed. Bookman, 2017.</div>
+  <div class="bib-item">WARD, Brian. <strong>How Linux Works.</strong> No Starch Press, 2021.</div>
+  <div class="bib-item">Linux Man Pages. <strong>useradd(8), chmod(1), id(1).</strong> Disponível em: man7.org</div>
+</div>
+
+<!-- NAVEGAÇÃO -->
+<div style="display:flex;justify-content:space-between;gap:12px;margin-top:4px;">
+  <a href="index.html" style="padding:13px 24px;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.3);color:var(--cyan);text-decoration:none;border-radius:9px;font-weight:700;font-size:0.9em;" onmouseover="this.style.background='rgba(0,212,255,0.2)'" onmouseout="this.style.background='rgba(0,212,255,0.1)'">🏠 Voltar ao Índice</a>
+  <a href="semana06.html" style="padding:13px 24px;background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.3);color:var(--green);text-decoration:none;border-radius:9px;font-weight:700;font-size:0.9em;" onmouseover="this.style.background='rgba(0,255,136,0.2)'" onmouseout="this.style.background='rgba(0,255,136,0.1)'">Semana 06 — Usuários & Permissões →</a>
+</div>
+
+</main>
+</div><!-- /layout -->
+
+<!-- TOAST -->
+<div id="toast" class="toast">
+  <span class="toast-icon" id="toast-icon">⚡</span>
+  <div><div class="toast-title" id="toast-title">+XP</div><div class="toast-msg" id="toast-msg"></div></div>
+</div>
+
+<script>
+let xp=0,streak=0,badges=0;
+const TOTAL_XP=280;
+const numBadges=8;
+const objChecked=Array(6).fill(false);
+let termsRun=0;
+const TOTAL_TERMS=6;
+let qCorrect=0;
+const qAnswers={};
+const qxps=[8,10,10,10,12];
+
+const QFB=[
+  `✅ Correto! O <code>-m</code> cria o diretório home (<code>/home/nomeusuario</code>). Sem ele o usuário não tem pasta pessoal e não consegue salvar nada!`,
+  `✅ Correto! Apenas root (uid=0) e o grupo "shadow" podem ler o <code>/etc/shadow</code>. Essa restrição protege os hashes de senha contra ataques de força bruta.`,
+  `✅ Exato! Em <code>-rw-r--r--</code>, os bits do grupo são <code>r--</code> (posições 4-6), o que significa somente leitura. O grupo não pode escrever nem executar.`,
+  `✅ Certo! 700 = 7(rwx) para o dono + 0(---) para o grupo + 0(---) para outros. É a permissão ideal para diretórios pessoais e privados.`,
+  `✅ Perfeito! O <code>-aG</code> (<em>append to Groups</em>) adiciona ao grupo sem remover os outros. Usar apenas <code>-G</code> substituiria todos os grupos — um erro muito comum!`
+];
+
+setTimeout(()=>unlock('a-start','bm-start','Aula 6.01 iniciada! 🚀'),800);
+
+function updateHUD(){
+  document.getElementById('hud-xp').textContent=xp;
+  document.getElementById('hud-streak').textContent=streak;
+  document.getElementById('hud-badges').textContent=badges;
+  const pct=Math.min(Math.round(xp/TOTAL_XP*100),100);
+  document.getElementById('hud-bar').style.width=pct+'%';
+  document.getElementById('hud-pct').textContent=pct+'%';
+  const lvls=[[0,'Novato'],[40,'Explorador'],[100,'Aprendiz Linux'],[180,'Praticante'],[260,'Expert Básico']];
+  let lv=lvls[0][1];
+  for(const[t,n]of lvls){if(xp>=t)lv=n;}
+  document.getElementById('hud-level').textContent=lv;
+  const od=objChecked.filter(Boolean).length;
+  setBar('obj-bar','obj-pct',od/6*100,Math.round(od/6*100)+'%');
+  setBar('trm-bar','trm-pct',termsRun/TOTAL_TERMS*100,termsRun+'/'+TOTAL_TERMS);
+  setBar('quiz-bar','quiz-pct',Math.min(qCorrect/5*100,100),Math.round(qCorrect/5*100)+'%');
+  setBar('ach-bar','ach-pct',badges/numBadges*100,badges+'/'+numBadges);
+}
+function setBar(bid,lid,pct,txt){document.getElementById(bid).style.width=Math.min(pct,100)+'%';document.getElementById(lid).textContent=txt;}
+function addXP(amount,msg,icon){xp+=amount;updateHUD();toast(icon||'⚡','+'+amount+' XP',msg);}
+function toast(icon,title,msg){
+  document.getElementById('toast-icon').textContent=icon;
+  document.getElementById('toast-title').textContent=title;
+  document.getElementById('toast-msg').textContent=msg;
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3200);
+}
+function unlock(achId,badgeId,msg){
+  const b=document.getElementById(badgeId);
+  if(b&&!b.classList.contains('unlocked')){
+    b.classList.add('unlocked');
+    badges++;updateHUD();toast('🏆','Badge desbloqueado!',msg);
+  }
+}
+function toggleObj(el,idx){
+  el.classList.toggle('checked');
+  objChecked[idx]=el.classList.contains('checked');
+  if(objChecked[idx]){addXP(5,'Objetivo marcado!','✅');streak++;}
+  else streak=Math.max(0,streak-1);
+  if(objChecked.filter(Boolean).length===6){addXP(20,'Todos os objetivos!','🎯');unlock('a-obj','bm-obj','Foco Total! 🎯');}
+  updateHUD();
+}
+
+const termDone={};
+function runTerm(n){
+  if(termDone[n]) return;
+  termDone[n]=true;
+  const out=document.getElementById('out'+n);
+  const btn=document.getElementById('run'+n);
+  if(out){
+    out.classList.add('show');
+    // animate typing
+    out.style.opacity='0';
+    setTimeout(()=>{out.style.transition='opacity 0.4s';out.style.opacity='1';},50);
+  }
+  if(btn){btn.disabled=true;btn.textContent='✅ Executado!';}
+  termsRun++;
+  addXP(10,'Terminal executado!','💻');
+  if(termsRun===1) unlock(null,'bm-trm1','Primeiro terminal! 💻');
+  if(n===3) unlock(null,'bm-trm2','Usuário criado! 👤');
+  if(n===4) unlock(null,'bm-trm3','Grupos explorados! 👥');
+  if(n===6) unlock(null,'bm-perm','chmod dominado! 🔐');
+  if(termsRun===TOTAL_TERMS){addXP(20,'Todos os terminais!','💻');}
+  updateHUD();
+}
+
+function ansQ(qi,chosen,correct){
+  const card=document.getElementById('qc'+qi);
+  const opts=card.querySelectorAll('.qopt');
+  opts.forEach(o=>o.disabled=true);
+  opts[chosen].classList.add(chosen===correct?'correct':'wrong');
+  if(chosen!==correct)opts[correct].classList.add('correct');
+  const fb=document.getElementById('qfb'+qi);
+  const nx=document.getElementById('qnx'+qi);
+  const ok=chosen===correct;
+  fb.innerHTML=ok?QFB[qi]:'❌ Não foi dessa vez. '+QFB[qi];
+  fb.className='qfb show '+(ok?'ok':'fail');
+  nx.classList.add('show');
+  if(ok){qCorrect++;addXP(qxps[qi],'Resposta correta!','🎯');streak++;}
+  else streak=0;
+  qAnswers[qi]=ok;
+  document.getElementById('q-prog').style.width=((qi+1)/5*100)+'%';
+  document.getElementById('q-cnt').textContent=(qi+1)+'/5';
+  updateHUD();
+}
+function nextQ(n){
+  document.getElementById('qc'+(n-1)).classList.remove('active');
+  document.getElementById('qc'+n).classList.add('active');
+}
+function showResult(){
+  document.getElementById('qc4').classList.remove('active');
+  const r=document.getElementById('q-result');
+  r.classList.add('show');
+  document.getElementById('q-score').textContent=qCorrect+'/5';
+  const msgs=['Revise o material!','Está quase lá!','Bom progresso!','Muito bom!','🏆 Perfeito!'];
+  document.getElementById('q-msg').textContent=msgs[Math.min(qCorrect,4)];
+  const earned=Object.keys(qAnswers).filter(k=>qAnswers[k]).reduce((a,k)=>a+qxps[+k],0);
+  document.getElementById('q-xp-earned').textContent='+'+earned+' XP conquistados!';
+  document.getElementById('q-prog').style.width='100%';
+  document.getElementById('q-cnt').textContent='5/5';
+  if(qCorrect>=4)unlock(null,'bm-quiz','Quiz — 4+ acertos! 💡');
+  if(qCorrect===5)unlock(null,'bm-perfect','Quiz Perfeito! 💎');
+  updateHUD();
+}
+function restartQuiz(){
+  qCorrect=0;
+  document.getElementById('q-result').classList.remove('show');
+  document.getElementById('q-prog').style.width='0%';
+  document.getElementById('q-cnt').textContent='0/5';
+  for(let i=0;i<5;i++){
+    const c=document.getElementById('qc'+i);
+    c.classList.toggle('active',i===0);
+    c.querySelectorAll('.qopt').forEach(o=>{o.disabled=false;o.classList.remove('correct','wrong');});
+    const fb=c.querySelector('.qfb');if(fb){fb.className='qfb';fb.innerHTML='';}
+    const nx=c.querySelector('.qnx');if(nx)nx.classList.remove('show');
+  }
+  updateHUD();
+}
+</script>
+</body>
+</html>
