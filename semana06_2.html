@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔑 Gestão de Usuários & Controle de Acesso — Semana 06_2 | ISO-103</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #050d1a;
+  --bg2: #091424;
+  --card: #0d1f35;
+  --card2: #0f2540;
+  --cyan: #00d4ff;
+  --cyan2: #00a8cc;
+  --purple: #b44aff;
+  --purple2: #8b2fe0;
+  --green: #00ff88;
+  --green2: #00cc6a;
+  --yellow: #ffcc00;
+  --orange: #ff8c00;
+  --red: #ff4466;
+  --text: #e0f0ff;
+  --muted: #5a7a99;
+  --border: rgba(0,212,255,0.15);
+  --glow-cyan: 0 0 20px rgba(0,212,255,0.4);
+  --glow-purple: 0 0 20px rgba(180,74,255,0.4);
+  --glow-green: 0 0 20px rgba(0,255,136,0.4);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Exo 2', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+body::before {
+  content: '';
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(ellipse at 15% 15%, rgba(0,212,255,0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 75%, rgba(180,74,255,0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(0,255,136,0.03) 0%, transparent 60%);
+  pointer-events: none; z-index: 0;
+}
+.tux-bg {
+  position: fixed; top: 40px; right: -40px;
+  font-size: 18em; opacity: 0.04;
+  pointer-events: none; z-index: 0;
+  animation: tuxFloat 6s ease-in-out infinite;
+}
+@keyframes tuxFloat {
+  0%, 100% { transform: translateY(0px) rotate(-5deg); }
+  50% { transform: translateY(-20px) rotate(5deg); }
+}
+.header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(5,13,26,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 0;
+}
+.header::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--cyan), var(--purple), var(--green), transparent);
+}
+.header-inner {
+  max-width: 1300px; margin: 0 auto; padding: 0 24px;
+  display: flex; align-items: center; gap: 16px;
+}
+.header-logo {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.75em; font-weight: 700;
+  color: var(--cyan);
+  letter-spacing: 2px;
+  text-shadow: var(--glow-cyan);
+}
+.header-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 1em; font-weight: 900;
+  color: var(--text);
+}
+.header-title span { color: var(--cyan); }
+.back-btn {
+  background: rgba(0,212,255,0.1);
+  border: 1px solid rgba(0,212,255,0.2);
+  color: var(--cyan); padding: 6px 14px; border-radius: 6px;
+  font-family: 'Exo 2', sans-serif; font-size: 0.8em; font-weight: 700;
+  cursor: pointer; text-decoration: none;
+  transition: all 0.2s;
+  display: flex; align-items: center; gap: 6px;
+}
+.back-btn:hover { background: rgba(0,212,255,0.2); box-shadow: var(--glow-cyan); }
+.hud { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.hud-pill {
+  background: rgba(0,212,255,0.08);
+  border: 1px solid rgba(0,212,255,0.2);
+  border-radius: 8px; padding: 6px 14px;
+  text-align: center;
+}
+.hud-pill .v {
+  font-family: 'Orbitron', monospace;
+  font-size: 1.2em; font-weight: 700;
+  color: var(--cyan); display: block; line-height: 1;
+}
+.hud-pill .l { font-size: 0.58em; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; display: block; margin-top: 2px; }
+.hud-xp-wrap {
+  background: rgba(0,212,255,0.08);
+  border: 1px solid rgba(0,212,255,0.2);
+  border-radius: 8px; padding: 7px 14px; min-width: 150px;
+}
+.hud-xp-label { display: flex; justify-content: space-between; font-size: 0.6em; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+.hud-bar-bg { background: rgba(0,0,0,0.4); border-radius: 100px; height: 6px; overflow: hidden; }
+.hud-bar { height: 100%; background: linear-gradient(90deg, var(--cyan), var(--purple)); border-radius: 100px; transition: width 0.8s ease; box-shadow: 0 0 10px rgba(0,212,255,0.5); width: 0%; }
+
+.layout { max-width: 1300px; margin: 0 auto; padding: 28px 24px; display: grid; grid-template-columns: 260px 1fr; gap: 24px; position: relative; z-index: 1; }
+.sidebar { display: flex; flex-direction: column; gap: 16px; }
+.scard { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
+.scard-title { font-family: 'Orbitron', monospace; font-size: 0.72em; font-weight: 700; color: var(--cyan); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 6px; }
+.nav-link { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; text-decoration: none; color: var(--muted); font-size: 0.85em; font-weight: 600; transition: all 0.2s; margin-bottom: 4px; border: 1px solid transparent; }
+.nav-link:hover { color: var(--cyan); background: rgba(0,212,255,0.06); border-color: rgba(0,212,255,0.15); }
+.nav-link.active { color: var(--cyan); background: rgba(0,212,255,0.12); border-color: rgba(0,212,255,0.3); box-shadow: inset 3px 0 0 var(--cyan); }
+.nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.nav-dot.green { background: var(--green); box-shadow: 0 0 8px var(--green); }
+.nav-dot.cyan { background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
+.nav-dot.purple { background: var(--purple); }
+.nav-dot.orange { background: var(--orange); }
+
+.prog-block { margin-bottom: 12px; }
+.prog-label { display: flex; justify-content: space-between; font-size: 0.75em; color: var(--muted); font-weight: 600; margin-bottom: 5px; }
+.prog-label span:last-child { color: var(--cyan); font-family: 'Orbitron', monospace; }
+.prog-bg { background: rgba(255,255,255,0.06); border-radius: 100px; height: 6px; overflow: hidden; }
+.prog-fill { height: 100%; border-radius: 100px; transition: width 0.8s ease; }
+.prog-fill.g { background: linear-gradient(90deg, var(--green2), var(--green)); box-shadow: 0 0 8px rgba(0,255,136,0.4); }
+.prog-fill.c { background: linear-gradient(90deg, var(--cyan2), var(--cyan)); box-shadow: 0 0 8px rgba(0,212,255,0.4); }
+.prog-fill.p { background: linear-gradient(90deg, var(--purple2), var(--purple)); box-shadow: 0 0 8px rgba(180,74,255,0.4); }
+.prog-fill.o { background: linear-gradient(90deg, #cc5500, var(--orange)); }
+
+.badge-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
+.badge-item { aspect-ratio: 1; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 1.2em; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); filter: grayscale(1) opacity(0.3); transition: all 0.4s; cursor: default; position: relative; }
+.badge-item.unlocked { filter: none; background: rgba(0,212,255,0.1); border-color: rgba(0,212,255,0.4); box-shadow: 0 0 16px rgba(0,212,255,0.3); animation: badgePop 0.5s ease; }
+@keyframes badgePop { 0% { transform: scale(0.5); opacity: 0; } 70% { transform: scale(1.2); } 100% { transform: scale(1); opacity: 1; } }
+.badge-item[title]:hover::after { content: attr(title); position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: var(--card2); color: var(--cyan); border: 1px solid var(--border); font-family: 'Exo 2', sans-serif; font-size: 0.6em; padding: 4px 8px; border-radius: 5px; white-space: nowrap; z-index: 100; }
+
+.main { display: flex; flex-direction: column; gap: 22px; }
+.hero { background: var(--card); border: 1px solid rgba(0,212,255,0.2); border-radius: 16px; padding: 36px 40px; position: relative; overflow: hidden; box-shadow: 0 0 40px rgba(0,212,255,0.06); }
+.hero::before { content: '🔑'; position: absolute; right: 30px; top: 50%; transform: translateY(-50%); font-size: 8em; opacity: 0.07; }
+.hero-tag { font-family: 'Orbitron', monospace; font-size: 0.65em; letter-spacing: 3px; font-weight: 700; color: var(--cyan); text-transform: uppercase; margin-bottom: 10px; opacity: 0.8; }
+.hero h1 { font-family: 'Orbitron', monospace; font-size: 2em; font-weight: 900; color: var(--text); line-height: 1.2; margin-bottom: 8px; }
+.hero h1 span { color: var(--cyan); text-shadow: var(--glow-cyan); }
+.hero-sub { color: var(--muted); font-size: 1em; margin-bottom: 20px; }
+.hero-chips { display: flex; gap: 10px; flex-wrap: wrap; }
+.chip { background: rgba(0,212,255,0.08); border: 1px solid rgba(0,212,255,0.2); border-radius: 100px; padding: 5px 14px; font-size: 0.78em; font-weight: 700; color: var(--cyan); display: flex; align-items: center; gap: 5px; }
+.chip.green { background: rgba(0,255,136,0.08); border-color: rgba(0,255,136,0.2); color: var(--green); }
+.chip.purple { background: rgba(180,74,255,0.08); border-color: rgba(180,74,255,0.2); color: var(--purple); }
+.chip.orange { background: rgba(255,140,0,0.08); border-color: rgba(255,140,0,0.2); color: var(--orange); }
+
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+.card-head { padding: 16px 22px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); background: rgba(0,212,255,0.02); }
+.card-icon { width: 36px; height: 36px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 1.1em; flex-shrink: 0; }
+.ci-g { background: rgba(0,255,136,0.15); border: 1px solid rgba(0,255,136,0.3); }
+.ci-c { background: rgba(0,212,255,0.15); border: 1px solid rgba(0,212,255,0.3); }
+.ci-p { background: rgba(180,74,255,0.15); border: 1px solid rgba(180,74,255,0.3); }
+.ci-o { background: rgba(255,140,0,0.15); border: 1px solid rgba(255,140,0,0.3); }
+.card-title { font-family: 'Orbitron', monospace; font-size: 0.85em; font-weight: 700; color: var(--text); letter-spacing: 1px; }
+.xp-tag { margin-left: auto; background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.3); color: var(--cyan); padding: 3px 12px; border-radius: 100px; font-size: 0.72em; font-weight: 700; font-family: 'Orbitron', monospace; }
+.xp-tag.green { background: rgba(0,255,136,0.1); border-color: rgba(0,255,136,0.3); color: var(--green); }
+.xp-tag.purple { background: rgba(180,74,255,0.1); border-color: rgba(180,74,255,0.3); color: var(--purple); }
+.card-body { padding: 22px; }
+
+.obj-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.obj-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 9px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); cursor: pointer; transition: all 0.2s; font-size: 0.9em; font-weight: 600; }
+.obj-item:hover { background: rgba(0,212,255,0.06); border-color: rgba(0,212,255,0.2); }
+.obj-item.checked { background: rgba(0,212,255,0.06); border-color: rgba(0,212,255,0.2); color: var(--muted); text-decoration: line-through; }
+.obj-circle { width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0; border: 2px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 0.8em; transition: all 0.3s; }
+.obj-item.checked .obj-circle { background: var(--cyan); border-color: var(--cyan); color: #000; box-shadow: 0 0 12px rgba(0,212,255,0.5); }
+
+.concept-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 20px; }
+.concept-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 16px; border-top: 3px solid var(--cyan); }
+.concept-card.green { border-top-color: var(--green); }
+.concept-card.purple { border-top-color: var(--purple); }
+.concept-card.orange { border-top-color: var(--orange); }
+.concept-title { font-size: 0.88em; font-weight: 800; color: var(--text); margin-bottom: 10px; }
+.tag { display: inline-block; background: rgba(0,212,255,0.08); border: 1px solid rgba(0,212,255,0.15); color: var(--cyan); padding: 2px 9px; border-radius: 4px; font-size: 0.72em; font-weight: 700; font-family: 'JetBrains Mono', monospace; margin: 2px; }
+.tag.green { background: rgba(0,255,136,0.08); border-color: rgba(0,255,136,0.15); color: var(--green); }
+.tag.purple { background: rgba(180,74,255,0.08); border-color: rgba(180,74,255,0.15); color: var(--purple); }
+.tag.orange { background: rgba(255,140,0,0.08); border-color: rgba(255,140,0,0.15); color: var(--orange); }
+
+/* TOPIC TABS */
+.os-tabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.os-tab { padding: 9px 18px; border-radius: 8px; cursor: pointer; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.02); color: var(--muted); font-family: 'Exo 2', sans-serif; font-size: 0.84em; font-weight: 700; transition: all 0.2s; display: flex; align-items: center; gap: 7px; }
+.os-tab:hover { border-color: rgba(0,212,255,0.2); color: var(--cyan); }
+.os-tab.active-tab { background: rgba(0,212,255,0.12); border-color: rgba(0,212,255,0.4); color: var(--cyan); box-shadow: 0 0 12px rgba(0,212,255,0.2); }
+.os-tab.active-tab.tab-green { background: rgba(0,255,136,0.12); border-color: rgba(0,255,136,0.4); color: var(--green); box-shadow: 0 0 12px rgba(0,255,136,0.2); }
+.os-tab.active-tab.tab-purple { background: rgba(180,74,255,0.12); border-color: rgba(180,74,255,0.4); color: var(--purple); box-shadow: 0 0 12px rgba(180,74,255,0.2); }
+.os-tab.active-tab.tab-orange { background: rgba(255,140,0,0.12); border-color: rgba(255,140,0,0.4); color: var(--orange); box-shadow: 0 0 12px rgba(255,140,0,0.2); }
+.os-panel { display: none; }
+.os-panel.active-panel { display: block; }
+
+/* TERMINAL BLOCK */
+.cmd-block { background: #020a14; border: 1px solid rgba(0,212,255,0.15); border-radius: 9px; padding: 14px 16px; font-family: 'JetBrains Mono', monospace; font-size: 0.78em; line-height: 1.7; margin: 10px 0; box-shadow: inset 0 0 20px rgba(0,0,0,0.3); overflow-x: auto; }
+.cmd-block .prompt { color: var(--cyan); }
+.cmd-block .cmd { color: #e0e0e0; }
+.cmd-block .comment { color: #445566; }
+.cmd-block .output { color: var(--green); }
+.cmd-block .value { color: var(--yellow); }
+.cmd-block .warn { color: var(--orange); }
+.cmd-block .err { color: var(--red); }
+
+/* INFO BOXES */
+.info-box { background: rgba(0,212,255,0.05); border: 1px solid rgba(0,212,255,0.2); border-left: 4px solid var(--cyan); border-radius: 9px; padding: 14px 16px; font-size: 0.86em; color: var(--muted); margin: 10px 0; line-height: 1.5; }
+.warn-box { background: rgba(255,140,0,0.05); border: 1px solid rgba(255,140,0,0.2); border-left: 4px solid var(--orange); border-radius: 9px; padding: 14px 16px; font-size: 0.86em; color: var(--muted); margin: 10px 0; line-height: 1.5; }
+.success-box { background: rgba(0,255,136,0.05); border: 1px solid rgba(0,255,136,0.2); border-left: 4px solid var(--green); border-radius: 9px; padding: 14px 16px; font-size: 0.86em; color: var(--muted); margin: 10px 0; line-height: 1.5; }
+.danger-box { background: rgba(255,68,102,0.05); border: 1px solid rgba(255,68,102,0.2); border-left: 4px solid var(--red); border-radius: 9px; padding: 14px 16px; font-size: 0.86em; color: var(--muted); margin: 10px 0; line-height: 1.5; }
+
+/* MISSIONS */
+.mission { border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; overflow: hidden; transition: all 0.2s; margin-bottom: 12px; }
+.mission:hover { border-color: rgba(0,212,255,0.2); }
+.mission.done { border-color: rgba(0,212,255,0.3); }
+.mission-head { padding: 14px 18px; display: flex; align-items: center; gap: 14px; cursor: pointer; background: rgba(255,255,255,0.02); user-select: none; transition: background 0.2s; }
+.mission.done .mission-head { background: rgba(0,212,255,0.04); }
+.mission-head:hover { background: rgba(0,212,255,0.05); }
+.mission-num { width: 38px; height: 38px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-family: 'Orbitron', monospace; font-size: 0.9em; font-weight: 700; flex-shrink: 0; color: #000; background: linear-gradient(135deg, var(--cyan2), var(--cyan)); }
+.mission.done .mission-num { background: linear-gradient(135deg, #00aa55, var(--green)); }
+.mission-num.purple-num { background: linear-gradient(135deg, var(--purple2), var(--purple)); color: #fff; }
+.mission-num.green-num { background: linear-gradient(135deg, var(--green2), var(--green)); color: #000; }
+.mission-num.orange-num { background: linear-gradient(135deg, #cc5500, var(--orange)); color: #000; }
+.mission-info { flex: 1; }
+.mission-title { font-weight: 800; font-size: 0.92em; color: var(--text); }
+.mission.done .mission-title { color: var(--cyan); }
+.mission-meta { font-size: 0.73em; color: var(--muted); font-weight: 600; margin-top: 2px; }
+.mission-xp { background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.2); color: var(--cyan); padding: 3px 11px; border-radius: 100px; font-size: 0.72em; font-weight: 700; font-family: 'Orbitron', monospace; }
+.mission.done .mission-xp { background: rgba(0,212,255,0.15); border-color: rgba(0,212,255,0.4); }
+.mission-toggle { color: var(--muted); font-size: 0.8em; transition: transform 0.3s; }
+.mission.open .mission-toggle { transform: rotate(180deg); }
+.mission-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s; padding: 0 18px; }
+.mission.open .mission-body { max-height: 1200px; padding: 4px 18px 18px; }
+.mission-desc { font-size: 0.85em; color: var(--muted); font-weight: 600; margin-bottom: 14px; padding: 10px 14px; background: rgba(0,212,255,0.03); border-radius: 8px; border-left: 3px solid var(--cyan); }
+.step { display: flex; gap: 12px; margin-bottom: 10px; align-items: flex-start; }
+.step-num { width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0; background: rgba(0,212,255,0.15); border: 1px solid rgba(0,212,255,0.3); color: var(--cyan); display: flex; align-items: center; justify-content: center; font-size: 0.72em; font-weight: 700; font-family: 'Orbitron', monospace; margin-top: 2px; }
+.step p { font-size: 0.86em; line-height: 1.5; color: var(--text); }
+.step code { font-family: 'JetBrains Mono', monospace; background: rgba(0,212,255,0.1); color: var(--cyan); padding: 1px 6px; border-radius: 4px; font-size: 0.9em; }
+
+.complete-btn { width: 100%; margin-top: 14px; padding: 13px; border: none; border-radius: 9px; cursor: pointer; font-family: 'Exo 2', sans-serif; font-size: 0.9em; font-weight: 800; background: linear-gradient(135deg, rgba(0,212,255,0.15), rgba(0,212,255,0.08)); border: 1px solid rgba(0,212,255,0.3); color: var(--cyan); transition: all 0.3s; letter-spacing: 1px; }
+.complete-btn:hover:not(:disabled) { background: linear-gradient(135deg, rgba(0,212,255,0.25), rgba(0,212,255,0.15)); box-shadow: 0 0 20px rgba(0,212,255,0.3); transform: translateY(-1px); }
+.complete-btn:disabled { background: rgba(0,212,255,0.1); border-color: rgba(0,212,255,0.3); color: var(--cyan); cursor: default; transform: none; opacity: 0.7; }
+
+/* QUIZ */
+.quiz-prog-wrap { margin-bottom: 16px; }
+.quiz-prog-label { font-size: 0.75em; color: var(--muted); margin-bottom: 5px; display: flex; justify-content: space-between; }
+.quiz-prog-bg { background: rgba(255,255,255,0.06); border-radius: 100px; height: 5px; overflow: hidden; }
+.quiz-prog-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--cyan), var(--purple)); border-radius: 100px; transition: width 0.5s ease; box-shadow: 0 0 8px rgba(0,212,255,0.4); }
+.qcard { display: none; }
+.qcard.active { display: block; }
+.qcard h4 { font-size: 0.95em; font-weight: 700; color: var(--text); margin-bottom: 14px; line-height: 1.4; }
+.qopts { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+.qopt { padding: 11px 16px; border-radius: 8px; cursor: pointer; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); color: var(--text); font-family: 'Exo 2', sans-serif; font-size: 0.86em; font-weight: 600; text-align: left; transition: all 0.2s; }
+.qopt:hover:not(:disabled) { background: rgba(0,212,255,0.08); border-color: rgba(0,212,255,0.25); color: var(--cyan); }
+.qopt.correct { background: rgba(0,255,136,0.12); border-color: rgba(0,255,136,0.4); color: var(--green); }
+.qopt.wrong { background: rgba(255,68,102,0.12); border-color: rgba(255,68,102,0.4); color: var(--red); }
+.qopt:disabled { cursor: default; }
+.qfb { display: none; font-size: 0.82em; padding: 10px 14px; border-radius: 8px; margin-bottom: 10px; line-height: 1.5; }
+.qfb.show { display: block; }
+.qfb.ok { background: rgba(0,255,136,0.06); border: 1px solid rgba(0,255,136,0.2); color: var(--green); }
+.qfb.fail { background: rgba(255,68,102,0.06); border: 1px solid rgba(255,68,102,0.2); color: var(--red); }
+.qfb code { font-family: 'JetBrains Mono', monospace; background: rgba(0,0,0,0.3); padding: 1px 5px; border-radius: 3px; }
+.qnx { display: none; padding: 9px 18px; border-radius: 8px; cursor: pointer; background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.3); color: var(--cyan); font-family: 'Exo 2', sans-serif; font-size: 0.84em; font-weight: 700; transition: all 0.2s; margin-top: 6px; }
+.qnx.show { display: inline-block; }
+.qnx:hover { background: rgba(0,212,255,0.2); }
+.q-result { display: none; text-align: center; padding: 24px; }
+.q-result.show { display: block; }
+.q-score-big { font-family: 'Orbitron', monospace; font-size: 3em; font-weight: 900; color: var(--cyan); text-shadow: var(--glow-cyan); }
+.q-result-msg { font-size: 1.1em; font-weight: 700; color: var(--text); margin: 8px 0; }
+.q-xp-earned { font-family: 'Orbitron', monospace; font-size: 0.8em; color: var(--cyan); margin-bottom: 20px; }
+.restart-btn { padding: 11px 28px; border-radius: 8px; cursor: pointer; background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.3); color: var(--cyan); font-family: 'Exo 2', sans-serif; font-size: 0.88em; font-weight: 700; transition: all 0.2s; }
+.restart-btn:hover { background: rgba(0,212,255,0.2); box-shadow: var(--glow-cyan); }
+
+/* ACHIEVEMENTS */
+.ach-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.ach-item { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 12px 14px; display: flex; align-items: center; gap: 12px; transition: all 0.3s; }
+.ach-item.unlocked { background: rgba(0,212,255,0.06); border-color: rgba(0,212,255,0.25); box-shadow: 0 0 12px rgba(0,212,255,0.15); }
+.ach-icon { font-size: 1.5em; filter: grayscale(1) opacity(0.3); transition: all 0.3s; }
+.ach-item.unlocked .ach-icon { filter: none; }
+.ach-info { flex: 1; }
+.ach-name { font-size: 0.8em; font-weight: 800; color: var(--muted); }
+.ach-item.unlocked .ach-name { color: var(--cyan); }
+.ach-desc { font-size: 0.68em; color: var(--muted); opacity: 0.7; margin-top: 1px; }
+
+/* GLOSSARY */
+.gloss-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.gloss-item { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 9px; padding: 12px 14px; }
+.gloss-term { font-family: 'JetBrains Mono', monospace; font-size: 0.82em; font-weight: 600; color: var(--cyan); margin-bottom: 4px; }
+.gloss-def { font-size: 0.78em; color: var(--muted); line-height: 1.4; }
+
+/* TOAST */
+.toast { position: fixed; bottom: 24px; right: 24px; z-index: 9999; background: var(--card2); border: 1px solid rgba(0,212,255,0.3); border-radius: 12px; padding: 14px 20px; display: flex; align-items: center; gap: 14px; box-shadow: 0 8px 32px rgba(0,0,0,0.5), var(--glow-cyan); transform: translateX(120%); transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1); min-width: 280px; max-width: 360px; }
+.toast.show { transform: translateX(0); }
+.toast-icon { font-size: 1.6em; flex-shrink: 0; }
+.toast-title { font-family: 'Orbitron', monospace; font-size: 0.8em; font-weight: 700; color: var(--cyan); }
+.toast-msg { font-size: 0.78em; color: var(--muted); margin-top: 2px; }
+
+/* BIBILOGRAFIA */
+.bib-item { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-left: 3px solid var(--cyan); border-radius: 8px; padding: 12px 16px; font-size: 0.82em; color: var(--muted); margin-bottom: 8px; line-height: 1.5; }
+
+/* REFLECTION */
+.reflection-card { background: linear-gradient(135deg, rgba(0,212,255,0.06), rgba(180,74,255,0.06)); border: 1px solid rgba(0,212,255,0.2); border-radius: 14px; padding: 24px; margin-top: 10px; }
+.reflection-title { font-family: 'Orbitron', monospace; font-size: 0.85em; font-weight: 700; color: var(--cyan); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.reflection-text { font-size: 0.9em; line-height: 1.7; color: var(--muted); }
+.reflection-text strong { color: var(--cyan); }
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { order: 2; }
+  .main { order: 1; }
+  .ach-grid { grid-template-columns: repeat(3, 1fr); }
+  .gloss-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="tux-bg">🔑</div>
+<div id="toast" class="toast">
+  <span class="toast-icon" id="toast-icon">⚡</span>
+  <div><div class="toast-title" id="toast-title">+XP</div><div class="toast-msg" id="toast-msg"></div></div>
+</div>
+
+<header class="header">
+  <div class="header-inner">
+    <div class="header-logo">ISO-103</div>
+    <div class="header-title">SEMANA <span>06_2</span></div>
+    <a href="semana06.html" class="back-btn">← S6.1</a>
+    <div class="hud">
+      <div class="hud-pill"><span class="v" id="hud-xp">0</span><span class="l">XP</span></div>
+      <div class="hud-pill"><span class="v" id="hud-streak">0</span><span class="l">Streak</span></div>
+      <div class="hud-pill"><span class="v" id="hud-badges">0</span><span class="l">Badges</span></div>
+      <div class="hud-xp-wrap">
+        <div class="hud-xp-label"><span id="hud-level">Iniciante</span><span id="hud-pct">0%</span></div>
+        <div class="hud-bar-bg"><div class="hud-bar" id="hud-bar"></div></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="scard">
+      <div class="scard-title">📅 Navegação</div>
+      <a href="#section-obj" class="nav-link active"><span class="nav-dot cyan"></span>Objetivos</a>
+      <a href="#section-conteudo" class="nav-link"><span class="nav-dot cyan"></span>Conteúdo</a>
+      <a href="#section-missions" class="nav-link"><span class="nav-dot green"></span>Missões Práticas</a>
+      <a href="#section-quiz" class="nav-link"><span class="nav-dot orange"></span>Quiz</a>
+      <a href="#section-reflexao" class="nav-link"><span class="nav-dot purple"></span>Reflexão</a>
+      <a href="#section-ach" class="nav-link"><span class="nav-dot cyan"></span>Conquistas</a>
+    </div>
+    <div class="scard">
+      <div class="scard-title">📊 Progresso</div>
+      <div class="prog-block"><div class="prog-label"><span>Objetivos</span><span id="obj-pct">0%</span></div><div class="prog-bg"><div class="prog-fill c" id="obj-bar" style="width:0%"></div></div></div>
+      <div class="prog-block"><div class="prog-label"><span>Missões</span><span id="mis-pct">0%</span></div><div class="prog-bg"><div class="prog-fill g" id="mis-bar" style="width:0%"></div></div></div>
+      <div class="prog-block"><div class="prog-label"><span>Quiz</span><span id="quiz-pct">0%</span></div><div class="prog-bg"><div class="prog-fill p" id="quiz-bar" style="width:0%"></div></div></div>
+      <div class="prog-block"><div class="prog-label"><span>Badges</span><span id="ach-pct">0/10</span></div><div class="prog-bg"><div class="prog-fill o" id="ach-bar" style="width:0%"></div></div></div>
+    </div>
+    <div class="scard">
+      <div class="scard-title">🏅 Badges</div>
+      <div class="badge-grid">
+        <div class="badge-item" id="bm-start" title="S6.2 iniciada">🚀</div>
+        <div class="badge-item" id="bm-obj" title="Todos objetivos">🎯</div>
+        <div class="badge-item" id="bm-cycle" title="Ciclo de vida">👤</div>
+        <div class="badge-item" id="bm-files" title="Arquivos sensíveis">📁</div>
+        <div class="badge-item" id="bm-chage" title="Políticas de conta">🔒</div>
+        <div class="badge-item" id="bm-acl2" title="ACL avançada">📋</div>
+        <div class="badge-item" id="bm-sudo2" title="Sudoers expert">🛡️</div>
+        <div class="badge-item" id="bm-shadow" title="Analisou shadow">👁️</div>
+        <div class="badge-item" id="bm-quiz" title="Quiz 4+ acertos">💡</div>
+        <div class="badge-item" id="bm-perfect" title="Quiz perfeito">💎</div>
+      </div>
+    </div>
+    <div class="scard">
+      <div class="scard-title">🗓️ Semanas</div>
+      <a href="semana06.html" class="nav-link"><span class="nav-dot green"></span>← S6.1 Usuários & Permissões</a>
+      <a href="semana06_2.html" class="nav-link active"><span class="nav-dot cyan"></span>S6.2 Gestão & Controle de Acesso</a>
+      <a href="semana07.html" class="nav-link"><span class="nav-dot purple"></span>S7 Configuração de Rede →</a>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+
+    <!-- HERO -->
+    <div class="hero" id="section-obj">
+      <div class="hero-tag">Semana 06_2 · ISO-103 · 3º Semestre · Segurança da Informação</div>
+      <h1>🔑 Gestão de Usuários &amp; <span>Controle de Acesso</span></h1>
+      <p class="hero-sub">Ciclo de vida de identidades, arquivos sensíveis do sistema, políticas de conta e delegação de privilégios — a base do Princípio do Menor Privilégio.</p>
+      <div class="hero-chips">
+        <span class="chip">⏱️ 2h/aula</span>
+        <span class="chip green">🏆 360 XP disponíveis</span>
+        <span class="chip purple">🔐 chage · visudo · ACL</span>
+        <span class="chip orange">📁 /etc/shadow · /etc/sudoers</span>
+      </div>
+    </div>
+
+    <!-- OBJETIVOS -->
+    <div class="card">
+      <div class="card-head"><div class="card-icon ci-c">🎯</div><div class="card-title">OBJETIVOS DE APRENDIZAGEM</div><div class="xp-tag">+5 XP cada</div></div>
+      <div class="card-body">
+        <p style="font-size:0.84em;color:var(--muted);margin-bottom:14px;">✅ Clique em cada objetivo ao concluir. Complete todos para ganhar bônus!</p>
+        <ul class="obj-list">
+          <li class="obj-item" onclick="toggleObj(this,0)"><div class="obj-circle">✓</div>Gerenciar o ciclo de vida completo de usuários (criação, modificação, exclusão)</li>
+          <li class="obj-item" onclick="toggleObj(this,1)"><div class="obj-circle">✓</div>Compreender a estrutura dos arquivos /etc/passwd, /etc/shadow e /etc/group</li>
+          <li class="obj-item" onclick="toggleObj(this,2)"><div class="obj-circle">✓</div>Configurar políticas de expiração de senha com o comando chage</li>
+          <li class="obj-item" onclick="toggleObj(this,3)"><div class="obj-circle">✓</div>Implementar delegação controlada de privilégios via sudoers</li>
+          <li class="obj-item" onclick="toggleObj(this,4)"><div class="obj-circle">✓</div>Aplicar ACLs granulares com setfacl e getfacl</li>
+          <li class="obj-item" onclick="toggleObj(this,5)"><div class="obj-circle">✓</div>Entender SUID, SGID e Sticky Bit como camadas de proteção</li>
+          <li class="obj-item" onclick="toggleObj(this,6)"><div class="obj-circle">✓</div>Identificar riscos de permissões excessivas e movimentação lateral</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- CONTEÚDO PROGRAMÁTICO -->
+    <div class="card" id="section-conteudo">
+      <div class="card-head"><div class="card-icon ci-c">📚</div><div class="card-title">RESUMO DA AULA</div></div>
+      <div class="card-body">
+        <p style="font-size:0.88em;color:var(--muted);line-height:1.7;margin-bottom:18px;">
+          A aula focou na implementação do <strong style="color:var(--cyan)">Princípio do Menor Privilégio</strong>, capacitando o aluno a gerenciar o ciclo de vida de usuários e grupos, além de configurar camadas de proteção de arquivos e diretórios através de permissões Unix tradicionais e avançadas.
+        </p>
+        <div class="concept-grid">
+          <div class="concept-card">
+            <div class="concept-title">👤 Administração de Identidades</div>
+            <span class="tag">useradd</span><span class="tag">usermod</span><span class="tag">userdel</span><span class="tag">/etc/passwd</span><span class="tag">/etc/shadow</span><span class="tag">/etc/group</span>
+          </div>
+          <div class="concept-card green">
+            <div class="concept-title">🔐 Controle de Acesso (rwx)</div>
+            <span class="tag green">chmod</span><span class="tag green">chown</span><span class="tag green">chgrp</span><span class="tag green">SUID</span><span class="tag green">SGID</span><span class="tag green">Sticky Bit</span>
+          </div>
+          <div class="concept-card purple">
+            <div class="concept-title">🛡️ Delegação Segura</div>
+            <span class="tag purple">sudo</span><span class="tag purple">visudo</span><span class="tag purple">setfacl</span><span class="tag purple">getfacl</span>
+          </div>
+          <div class="concept-card orange">
+            <div class="concept-title">🔒 Políticas de Conta</div>
+            <span class="tag orange">chage</span><span class="tag orange">passwd -l</span><span class="tag orange">umask</span><span class="tag orange">expiry</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TÓPICOS EM ABAS -->
+    <div class="card">
+      <div class="card-head"><div class="card-icon ci-c">📖</div><div class="card-title">TÓPICOS DETALHADOS</div></div>
+      <div class="card-body">
+        <div class="os-tabs">
+          <button class="os-tab active-tab" onclick="switchTab('t1')">👤 Identidades</button>
+          <button class="os-tab" onclick="switchTab('t2')">🔐 Permissões rwx</button>
+          <button class="os-tab" onclick="switchTab('t3')">🛡️ Sudo & ACLs</button>
+          <button class="os-tab" onclick="switchTab('t4')">🔒 Políticas de Conta</button>
+        </div>
+
+        <!-- TAB 1: Identidades -->
+        <div class="os-panel active-panel" id="t1">
+          <h3 style="color:var(--cyan);font-size:0.95em;margin-bottom:12px;">1. Administração de Identidades</h3>
+          <p style="font-size:0.87em;color:var(--muted);line-height:1.6;margin-bottom:14px;">O Linux gerencia usuários e grupos por meio de arquivos de configuração e comandos dedicados. Entender o ciclo de vida completo é essencial para controle de acesso seguro.</p>
+          <div class="cmd-block">
+<span class="comment"># Criar usuário com home, bash e senha</span>
+<span class="prompt">$</span> <span class="cmd">sudo useradd -m -s /bin/bash -c "Joao Silva" joao</span>
+<span class="prompt">$</span> <span class="cmd">sudo passwd joao</span>
+
+<span class="comment"># Modificar usuário (adicionar a grupo, mudar shell)</span>
+<span class="prompt">$</span> <span class="cmd">sudo usermod -aG sudo joao</span>
+<span class="prompt">$</span> <span class="cmd">sudo usermod -s /usr/sbin/nologin joao</span>
+
+<span class="comment"># Excluir usuário (preservando home com -r remove tudo)</span>
+<span class="prompt">$</span> <span class="cmd">sudo userdel joao</span>
+<span class="prompt">$</span> <span class="cmd">sudo userdel -r joao</span>   <span class="comment"># remove home também</span>
+          </div>
+          <div class="info-box">📁 <strong style="color:var(--cyan)">Arquivos sensíveis:</strong><br>
+            <code style="font-family:JetBrains Mono,monospace;color:var(--cyan)">/etc/passwd</code> — dados públicos (usuário:x:UID:GID:info:home:shell)<br>
+            <code style="font-family:JetBrains Mono,monospace;color:var(--cyan)">/etc/shadow</code> — hashes de senhas e políticas (apenas root acessa)<br>
+            <code style="font-family:JetBrains Mono,monospace;color:var(--cyan)">/etc/group</code> — definição de grupos do sistema
+          </div>
+          <div class="cmd-block">
+<span class="comment"># Inspecionar arquivos sensíveis</span>
+<span class="prompt">$</span> <span class="cmd">cat /etc/passwd | grep joao</span>
+<span class="output">joao:x:1001:1001:Joao Silva:/home/joao:/bin/bash</span>
+<span class="comment">#     ↑ "x" = senha no shadow  ↑UID  ↑GID  ↑info  ↑home  ↑shell</span>
+
+<span class="prompt">$</span> <span class="cmd">sudo cat /etc/shadow | grep joao</span>
+<span class="output">joao:$6$salt$hash...:19720:0:90:7:::</span>
+<span class="comment">#          ↑ hash SHA-512  ↑ último troca ↑ mínimo ↑ máximo ↑ aviso</span>
+          </div>
+        </div>
+
+        <!-- TAB 2: Permissões -->
+        <div class="os-panel" id="t2">
+          <h3 style="color:var(--green);font-size:0.95em;margin-bottom:12px;">2. Controle de Acesso e Permissões (rwx)</h3>
+          <p style="font-size:0.87em;color:var(--muted);line-height:1.6;margin-bottom:14px;">O modelo rwx aplica-se em três camadas: dono (u), grupo (g) e outros (o). Cada camada pode ter leitura (r=4), escrita (w=2) e execução (x=1).</p>
+          <div class="cmd-block">
+<span class="comment"># Verificar permissões</span>
+<span class="prompt">$</span> <span class="cmd">ls -la /home/joao/</span>
+<span class="output">drwxr-xr-x 2 joao joao 4096 Apr 24 10:00 .</span>
+<span class="comment">#↑ tipo ↑ dono ↑ grupo ↑ outros</span>
+
+<span class="comment"># chmod notação simbólica</span>
+<span class="prompt">$</span> <span class="cmd">chmod u+x script.sh</span>         <span class="comment"># dono pode executar</span>
+<span class="prompt">$</span> <span class="cmd">chmod go-w arquivo.conf</span>     <span class="comment"># grupo e outros sem escrita</span>
+<span class="prompt">$</span> <span class="cmd">chmod u=rwx,g=rx,o= dir/</span>   <span class="comment"># definição explícita</span>
+
+<span class="comment"># chmod notação octal</span>
+<span class="prompt">$</span> <span class="cmd">chmod 755 diretorio_publico/</span>  <span class="comment"># rwxr-xr-x</span>
+<span class="prompt">$</span> <span class="cmd">chmod 700 diretorio_privado/</span>  <span class="comment"># rwx------</span>
+<span class="prompt">$</span> <span class="cmd">chmod 644 documento.txt</span>       <span class="comment"># rw-r--r--</span>
+          </div>
+          <div class="cmd-block">
+<span class="comment"># Permissões especiais</span>
+<span class="prompt">$</span> <span class="cmd">chmod u+s /usr/bin/programa</span>   <span class="comment"># SUID: executa como dono</span>
+<span class="prompt">$</span> <span class="cmd">chmod g+s /empresa/ti/</span>        <span class="comment"># SGID: herda grupo do dir</span>
+<span class="prompt">$</span> <span class="cmd">chmod +t /tmp</span>                  <span class="comment"># Sticky: só dono deleta</span>
+<span class="prompt">$</span> <span class="cmd">chmod 4755 programa</span>            <span class="comment"># SUID+755 em octal</span>
+<span class="prompt">$</span> <span class="cmd">chmod 2770 pasta_grupo</span>         <span class="comment"># SGID+770</span>
+<span class="prompt">$</span> <span class="cmd">chmod 1777 /tmp</span>                <span class="comment"># Sticky+777</span>
+          </div>
+          <div class="warn-box">⚠️ <strong>SUID em scripts é ignorado pelo kernel Linux por segurança.</strong> Funciona apenas em binários compilados. Nunca use SUID em arquivos desnecessários — é vetor de escalada de privilégios!</div>
+        </div>
+
+        <!-- TAB 3: Sudo & ACLs -->
+        <div class="os-panel" id="t3">
+          <h3 style="color:var(--purple);font-size:0.95em;margin-bottom:12px;">3. Segurança Avançada e Delegação</h3>
+          <p style="font-size:0.87em;color:var(--muted);line-height:1.6;margin-bottom:14px;">O sudo permite delegar comandos específicos sem dar acesso root completo. As ACLs estendem o modelo rwx com permissões granulares por usuário ou grupo.</p>
+          <div class="cmd-block">
+<span class="comment"># Editar sudoers com segurança</span>
+<span class="prompt">$</span> <span class="cmd">sudo visudo</span>
+
+<span class="comment"># Exemplos de regras no sudoers:</span>
+<span class="value"># usuario  máquina=(usuário_destino)  comandos</span>
+<span class="value">joao ALL=(ALL) NOPASSWD: /bin/systemctl restart ssh</span>
+<span class="value">maria ALL=(ALL) /usr/bin/apt update, /usr/bin/apt upgrade</span>
+<span class="value">%ti ALL=(ALL) NOPASSWD: /usr/bin/journalctl</span>
+
+<span class="comment"># Verificar privilégios do usuário atual</span>
+<span class="prompt">$</span> <span class="cmd">sudo -l</span>
+          </div>
+          <div class="cmd-block">
+<span class="comment"># ACLs — Access Control Lists</span>
+<span class="prompt">$</span> <span class="cmd">sudo apt install acl -y</span>
+
+<span class="comment"># Dar permissão específica a um usuário</span>
+<span class="prompt">$</span> <span class="cmd">setfacl -m u:maria:r-- /empresa/ti/relatorio.txt</span>
+
+<span class="comment"># Dar permissão a um grupo</span>
+<span class="prompt">$</span> <span class="cmd">setfacl -m g:auditoria:r-x /var/log/</span>
+
+<span class="comment"># ACL padrão (novos arquivos herdam)</span>
+<span class="prompt">$</span> <span class="cmd">setfacl -d -m g:ti:rwx /empresa/projetos/</span>
+
+<span class="comment"># Consultar ACLs configuradas</span>
+<span class="prompt">$</span> <span class="cmd">getfacl /empresa/ti/relatorio.txt</span>
+<span class="output">user::rw-
+user:maria:r--      ← permissão específica!
+group::r--
+mask::r--
+other::---</span>
+
+<span class="comment"># Remover ACL de um usuário</span>
+<span class="prompt">$</span> <span class="cmd">setfacl -x u:maria /empresa/ti/relatorio.txt</span>
+          </div>
+        </div>
+
+        <!-- TAB 4: Políticas de Conta -->
+        <div class="os-panel" id="t4">
+          <h3 style="color:var(--orange);font-size:0.95em;margin-bottom:12px;">4. Políticas de Conta e Senhas</h3>
+          <p style="font-size:0.87em;color:var(--muted);line-height:1.6;margin-bottom:14px;">O comando <code style="font-family:JetBrains Mono,monospace;color:var(--orange)">chage</code> controla o ciclo de vida da senha, forçando rotação periódica — fundamental em ambientes corporativos.</p>
+          <div class="cmd-block">
+<span class="comment"># Ver políticas de senha do usuário</span>
+<span class="prompt">$</span> <span class="cmd">sudo chage -l joao</span>
+<span class="output">Last password change                    : Apr 24, 2025
+Password expires                        : Jul 23, 2025   (90 dias)
+Password inactive                       : never
+Account expires                         : never
+Minimum number of days between change   : 0
+Maximum number of days between change   : 90
+Number of days of warning before expiry : 7</span>
+
+<span class="comment"># Configurar política de senha (expirar em 90 dias, avisar 7 dias antes)</span>
+<span class="prompt">$</span> <span class="cmd">sudo chage -M 90 -W 7 joao</span>
+
+<span class="comment"># Forçar troca de senha no próximo login</span>
+<span class="prompt">$</span> <span class="cmd">sudo chage -d 0 joao</span>
+
+<span class="comment"># Expirar conta em data específica</span>
+<span class="prompt">$</span> <span class="cmd">sudo chage -E 2025-12-31 joao</span>
+
+<span class="comment"># Bloquear e desbloquear conta</span>
+<span class="prompt">$</span> <span class="cmd">sudo passwd -l joao</span>    <span class="comment"># bloqueia</span>
+<span class="prompt">$</span> <span class="cmd">sudo passwd -u joao</span>    <span class="comment"># desbloqueia</span>
+          </div>
+          <div class="cmd-block">
+<span class="comment"># umask — máscara de criação de arquivos</span>
+<span class="prompt">$</span> <span class="cmd">umask</span>
+<span class="output">0022</span>
+<span class="comment"># Arquivos criados com 644 (666-022), diretórios com 755 (777-022)</span>
+
+<span class="comment"># Umask mais restritivo (ambientes seguros)</span>
+<span class="prompt">$</span> <span class="cmd">umask 027</span>   <span class="comment"># arquivos=640, dirs=750 — outros sem acesso</span>
+<span class="prompt">$</span> <span class="cmd">umask 077</span>   <span class="comment"># somente dono tem acesso (mais seguro)</span>
+          </div>
+          <div class="success-box">✅ <strong>Boas práticas:</strong> Defina expiração de 90 dias para usuários comuns, 30 dias para contas privilegiadas. Sempre use <code style="font-family:JetBrains Mono,monospace">chage -d 0</code> ao criar novas contas para forçar troca na primeira entrada.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MISSÕES PRÁTICAS -->
+    <div class="card" id="section-missions">
+      <div class="card-head"><div class="card-icon ci-g">⚔️</div><div class="card-title">MISSÕES PRÁTICAS</div><div class="xp-tag green">+65 XP cada</div></div>
+      <div class="card-body">
+        <p style="font-size:0.84em;color:var(--muted);margin-bottom:16px;">⚔️ Atividades conduzidas em Ubuntu Server via VirtualBox. Clique em cada missão para expandir os passos e marcar como concluída.</p>
+
+        <!-- MISSÃO 1 -->
+        <div class="mission" id="m1" onclick="toggleMission('m1')">
+          <div class="mission-head">
+            <div class="mission-num">01</div>
+            <div class="mission-info"><div class="mission-title">👤 Ciclo de Vida de Usuários</div><div class="mission-meta">⏱️ 20 min · useradd, usermod, userdel e análise de arquivos</div></div>
+            <div class="mission-xp">+65 XP</div><div class="mission-toggle">▼</div>
+          </div>
+          <div class="mission-body">
+            <div class="mission-desc">🎯 Crie usuários com parâmetros corretos, modifique e depois remova — analisando os arquivos /etc/passwd e /etc/shadow em cada etapa.</div>
+            <div class="step"><div class="step-num">1</div><p>Crie dois usuários: <code>aluna1</code> (grupo TI) e <code>aluna2</code> (grupo RH) com home e bash.</p></div>
+            <div class="cmd-block">
+<span class="prompt">$</span> <span class="cmd">sudo groupadd ti && sudo groupadd rh</span>
+<span class="prompt">$</span> <span class="cmd">sudo useradd -m -s /bin/bash -G ti -c "Aluna TI" aluna1</span>
+<span class="prompt">$</span> <span class="cmd">sudo useradd -m -s /bin/bash -G rh -c "Aluna RH" aluna2</span>
+<span class="prompt">$</span> <span class="cmd">sudo passwd aluna1 && sudo passwd aluna2</span>
+            </div>
+            <div class="step"><div class="step-num">2</div><p>Inspecione os arquivos sensíveis para ver os registros criados.</p></div>
+            <div class="cmd-block">
+<span class="prompt">$</span> <span class="cmd">grep "aluna" /etc/passwd</span>
+<span class="prompt">$</span> <span class="cmd">sudo grep "aluna" /etc/shadow</span>
+<span class="prompt">$</span> <span class="cmd">grep "aluna\|ti\|rh" /etc/group</span>
+            </div>
+            <div class="step"><div class="step-num">3</div><p>Modifique <code>aluna2</code>: adicione ao grupo TI e bloqueie a conta temporariamente.</p></div>
+            <div class="cmd-block">
+<span class="prompt">$</span> <span class="cmd">sudo usermod -aG ti aluna2</span>
+<span class="prompt">$</span> <span class="cmd">sudo passwd -l aluna2</span>
+<span class="prompt">$</span> <span class="cmd">sudo grep "aluna2" /etc/shadow</span>
+<span class="output">aluna2:!$6$hash...:   ← "!" indica conta bloqueada!</span>
+            </div>
+            <div class="step"><div class="step-num">4</div><p>Remova <code>aluna1</code> preservando o home, depois verifique o que permanece.</p></div>
+            <div class="cmd-block">
+<span class="prompt">$</span> <span class="cmd">sudo userdel aluna1</span>
+<span class="prompt">$</span> <span class="cmd">ls -la /home/aluna1/</span>
+<span class="output">drwxr-xr-x 2 1002 1002 4096 ... /home/aluna1/</span>
+<span class="comment"># UID não resolve mais para nome — usuário removido mas home persiste!</span>
+<span class="prompt">$</span> <span class="cmd">grep "aluna1" /etc/passwd</span>   <span class="comment"># sem resultado = removido</span>
+            </div>
+            <div class="success-box">✅ Ciclo de vida gerenciado! O hash com "!" no shadow indica conta bloqueada — um mecanismo de segurança comum para contas de serviço.</div>
+            <button class="complete-btn" id="btn-m1" onclick="completeM('m1','btn-m1','a-cycle','bm-cycle','Ciclo de vida dominado! 👤','cycle')">✅ MISSÃO CONCLUÍDA — Ciclo de Vida Gerenciado!</button>
+          </div>
+        </div>
+
+        <!-- MISSÃO 2 -->
+        <div class="mission" id="m2" onclick="toggleMission('m2')">
+          <div class="mission-head">
+            <div class="mission-num green-num">02</div>
+            <div class="mission-info"><div class="mission-title">🔒 Políticas de Senha com chage</div><div class="mission-meta">⏱️ 15 min · Rotação obrigatória, expiração e aviso</div></div>
+            <div class="mission-xp">+65 XP</div><div class="mission-toggle">▼</div>
+          </div>
+          <div class="mission-body">
+            <div class="mission-desc">🎯 Configure políticas de senha para garantir rotação periódica e forçar troca no primeiro login — requisito básico de auditoria e compliance.</div>
+            <div class="cmd-block">
+<span class="comment"># Verificar estado atual da conta</span>
+<span class="prompt">$</span> <span class="cmd">sudo chage -l aluna2</span>
+<span class="output">Last password change     : Apr 24, 2025
+Password expires         : never
+Maximum days             : 99999</span>
+
+<span class="comment"># Aplicar política: 90 dias máx, 1 dia mín, aviso 7 dias antes</span>
+<span class="prompt">$</span> <span class="cmd">sudo chage -M 90 -m 1 -W 7 aluna2</span>
+
+<span class="comment"># Forçar troca de senha no próximo login (data de última mudança = 0)</span>
+<span class="prompt">$</span> <span class="cmd">sudo chage -d 0 aluna2</span>
+
+<span class="comment"># Verificar resultado</span>
+<span class="prompt">$</span> <span class="cmd">sudo chage -l aluna2</span>
+<span class="output">Password expires         : Jul 23, 2025
+Minimum number of days   : 1
+Number of days of warning: 7</span>
+            </div>
+            <div class="cmd-block">
+<span class="comment"># Testar: login como aluna2 deve pedir nova senha imediatamente</span>
+<span class="prompt">$</span> <span class="cmd">su - aluna2</span>
+<span class="output warn">WARNING: Your password has expired.
+You must change your password now and login again!
+New password: _</span>
+<span class="comment"># O sistema bloqueia até que a senha seja trocada!</span>
+            </div>
+            <div class="info-box">💡 <strong style="color:var(--cyan)">Dica de compliance:</strong> Em ambientes regulados (PCI-DSS, ISO 27001), geralmente exige-se rotação a cada 60-90 dias, histórico dos últimos 5 senhas e bloqueio após 3-5 tentativas falhas.</div>
+            <button class="complete-btn" id="btn-m2" onclick="completeM('m2','btn-m2','a-chage','bm-chage','Políticas de conta configuradas! 🔒','chage')">✅ MISSÃO CONCLUÍDA — Políticas de Senha Configuradas!</button>
+          </div>
+        </div>
+
+        <!-- MISSÃO 3 -->
+        <div class="mission" id="m3" onclick="toggleMission('m3')">
+          <div class="mission-head">
+            <div class="mission-num purple-num">03</div>
+            <div class="mission-info"><div class="mission-title">📋 ACLs para Controle Granular</div><div class="mission-meta">⏱️ 25 min · setfacl, getfacl e permissões por usuário</div></div>
+            <div class="mission-xp">+65 XP</div><div class="mission-toggle">▼</div>
+          </div>
+          <div class="mission-body">
+            <div class="mission-desc">🎯 O modelo rwx padrão limita a 3 entidades (dono, grupo, outros). ACLs permitem definir acesso por usuário/grupo específico sem alterar a propriedade do arquivo.</div>
+            <div class="warn-box">⚠️ Verifique que o sistema de arquivos foi montado com opção <code>acl</code>. No Ubuntu moderno, ext4 suporta ACL por padrão.</div>
+            <div class="cmd-block">
+<span class="comment"># Criar estrutura de teste</span>
+<span class="prompt">$</span> <span class="cmd">sudo mkdir -p /labs/documentos</span>
+<span class="prompt">$</span> <span class="cmd">sudo bash -c 'echo "Documento confidencial" > /labs/documentos/relatorio.txt'</span>
+<span class="prompt">$</span> <span class="cmd">sudo chown root:ti /labs/documentos/relatorio.txt</span>
+<span class="prompt">$</span> <span class="cmd">sudo chmod 640 /labs/documentos/relatorio.txt</span>
+<span class="comment"># Agora só root e membros de "ti" têm acesso</span>
+            </div>
+            <div class="cmd-block">
+<span class="comment"># Conceder leitura a aluna2 (RH) via ACL</span>
+<span class="prompt">$</span> <span class="cmd">sudo setfacl -m u:aluna2:r-- /labs/documentos/relatorio.txt</span>
+
+<span class="comment"># Consultar ACLs (o "+" no ls indica que há ACL ativa)</span>
+<span class="prompt">$</span> <span class="cmd">ls -la /labs/documentos/relatorio.txt</span>
+<span class="output">-rw-r-----+ 1 root ti 23 ... relatorio.txt</span>
+<span class="comment">#          ↑ "+" = ACL ativa!</span>
+
+<span class="prompt">$</span> <span class="cmd">getfacl /labs/documentos/relatorio.txt</span>
+<span class="output">file: labs/documentos/relatorio.txt
+owner: root
+group: ti
+user::rw-
+user:aluna2:r--     ← ACL explícita!
+group::r--
+mask::r--
+other::---</span>
+            </div>
+            <div class="cmd-block">
+<span class="comment"># ACL padrão para diretório (novos arquivos herdam)</span>
+<span class="prompt">$</span> <span class="cmd">sudo setfacl -d -m g:ti:rwx /labs/documentos/</span>
+<span class="prompt">$</span> <span class="cmd">getfacl /labs/documentos/</span>
+<span class="output">default:group:ti:rwx    ← novos arquivos herdarão esta ACL!</span>
+
+<span class="comment"># Remover ACL específica</span>
+<span class="prompt">$</span> <span class="cmd">sudo setfacl -x u:aluna2 /labs/documentos/relatorio.txt</span>
+
+<span class="comment"># Remover TODAS as ACLs do arquivo</span>
+<span class="prompt">$</span> <span class="cmd">sudo setfacl -b /labs/documentos/relatorio.txt</span>
+            </div>
+            <button class="complete-btn" id="btn-m3" onclick="completeM('m3','btn-m3','a-acl2','bm-acl2','ACL granular implementada! 📋','acl2')">✅ MISSÃO CONCLUÍDA — ACLs Configuradas!</button>
+          </div>
+        </div>
+
+        <!-- MISSÃO 4 -->
+        <div class="mission" id="m4" onclick="toggleMission('m4')">
+          <div class="mission-head">
+            <div class="mission-num orange-num">04</div>
+            <div class="mission-info"><div class="mission-title">🛡️ Auditoria de Permissões Excessivas</div><div class="mission-meta">⏱️ 20 min · Encontrar e corrigir brechas de segurança</div></div>
+            <div class="mission-xp">+65 XP</div><div class="mission-toggle">▼</div>
+          </div>
+          <div class="mission-body">
+            <div class="mission-desc">🎯 Permissões excessivas são vetores de movimentação lateral e escalada de privilégios. Aprenda a encontrar e corrigir brechas proativamente.</div>
+            <div class="cmd-block">
+<span class="comment"># Encontrar arquivos com SUID no sistema</span>
+<span class="prompt">$</span> <span class="cmd">find / -perm -4000 -type f 2>/dev/null</span>
+<span class="output">/usr/bin/passwd
+/usr/bin/sudo
+/usr/bin/pkexec
+/usr/bin/newgrp</span>
+<span class="comment"># Analise se todos são legítimos — SUID inesperado = suspeito!</span>
+
+<span class="comment"># Encontrar arquivos com SGID</span>
+<span class="prompt">$</span> <span class="cmd">find / -perm -2000 -type f 2>/dev/null</span>
+
+<span class="comment"># Encontrar arquivos com permissão 777 (perigo!)</span>
+<span class="prompt">$</span> <span class="cmd">find / -perm 0777 -type f 2>/dev/null</span>
+            </div>
+            <div class="danger-box">🚨 <strong>Alerta de segurança:</strong> <code style="font-family:JetBrains Mono,monospace">chmod 777</code> em qualquer arquivo de configuração ou script é uma brecha crítica. Um atacante com conta local pode modificar o arquivo e escalar privilégios.</div>
+            <div class="cmd-block">
+<span class="comment"># Encontrar arquivos sem dono (orphaned files — risco!</span>
+<span class="prompt">$</span> <span class="cmd">find / -nouser -o -nogroup 2>/dev/null</span>
+<span class="comment"># Arquivos sem dono aparecem quando usuário é deletado sem -r</span>
+<span class="comment"># Devem ser revisados e atribuídos a um dono válido</span>
+
+<span class="comment"># Corrigir arquivo com 777 para 644</span>
+<span class="prompt">$</span> <span class="cmd">find /var/www -perm 0777 -exec chmod 644 {} \;</span>
+<span class="comment"># Corrigir scripts para 755</span>
+<span class="prompt">$</span> <span class="cmd">find /var/www -name "*.sh" -perm 0777 -exec chmod 755 {} \;</span>
+            </div>
+            <div class="success-box">✅ Auditoria concluída! A busca por SUID/777/orphaned files deve ser parte do processo de hardening regular do sistema.</div>
+            <button class="complete-btn" id="btn-m4" onclick="completeM('m4','btn-m4','a-sudo2','bm-sudo2','Auditoria de permissões concluída! 🛡️','sudo2')">✅ MISSÃO CONCLUÍDA — Auditoria Realizada!</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUIZ -->
+    <div class="card" id="section-quiz">
+      <div class="card-head"><div class="card-icon ci-o">🧠</div><div class="card-title">QUIZ DE FIXAÇÃO</div><div class="xp-tag">Até +75 XP</div></div>
+      <div class="card-body">
+        <div class="quiz-prog-wrap">
+          <div class="quiz-prog-label"><span>Progresso do Quiz</span><span id="q-cnt">0/6</span></div>
+          <div class="quiz-prog-bg"><div class="quiz-prog-fill" id="q-prog"></div></div>
+        </div>
+
+        <div class="qcard active" id="qc0">
+          <h4>1️⃣ Qual a principal diferença entre <code>/etc/passwd</code> e <code>/etc/shadow</code>?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(0,0,1)">A) /etc/passwd armazena os hashes de senhas e é acessível apenas ao root</button>
+            <button class="qopt" onclick="ansQ(0,1,1)">B) /etc/shadow armazena hashes de senhas com permissão restrita, enquanto /etc/passwd é público mas exibe "x" no campo senha</button>
+            <button class="qopt" onclick="ansQ(0,2,1)">C) São arquivos equivalentes, sendo /etc/shadow apenas uma cópia de backup</button>
+            <button class="qopt" onclick="ansQ(0,3,1)">D) /etc/passwd é exclusivo para usuários do sistema, /etc/shadow apenas para usuários humanos</button>
+          </div>
+          <div class="qfb" id="qfb0"></div>
+          <button class="qnx" id="qnx0" onclick="nextQ(1)">Próxima pergunta →</button>
+        </div>
+
+        <div class="qcard" id="qc1">
+          <h4>2️⃣ Um administrador quer que somente o dono possa ler e escrever um arquivo, e ninguém mais. Qual chmod correto?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(1,0,2)">A) chmod 755 arquivo</button>
+            <button class="qopt" onclick="ansQ(1,1,2)">B) chmod 644 arquivo</button>
+            <button class="qopt" onclick="ansQ(1,2,2)">C) chmod 600 arquivo</button>
+            <button class="qopt" onclick="ansQ(1,3,2)">D) chmod 440 arquivo</button>
+          </div>
+          <div class="qfb" id="qfb1"></div>
+          <button class="qnx" id="qnx1" onclick="nextQ(2)">Próxima pergunta →</button>
+        </div>
+
+        <div class="qcard" id="qc2">
+          <h4>3️⃣ O que o comando <code>sudo chage -d 0 joao</code> faz?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(2,0,1)">A) Remove a conta joao após 0 dias</button>
+            <button class="qopt" onclick="ansQ(2,1,1)">B) Força joao a trocar a senha no próximo login</button>
+            <button class="qopt" onclick="ansQ(2,2,1)">C) Define que a senha nunca expira</button>
+            <button class="qopt" onclick="ansQ(2,3,1)">D) Bloqueia a conta imediatamente</button>
+          </div>
+          <div class="qfb" id="qfb2"></div>
+          <button class="qnx" id="qnx2" onclick="nextQ(3)">Próxima pergunta →</button>
+        </div>
+
+        <div class="qcard" id="qc3">
+          <h4>4️⃣ Um arquivo tem permissão <code>-rw-r-----+</code>. O que significa o "+" no final?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(3,0,2)">A) O arquivo tem o bit SUID ativo</button>
+            <button class="qopt" onclick="ansQ(3,1,2)">B) O arquivo está bloqueado para escrita</button>
+            <button class="qopt" onclick="ansQ(3,2,2)">C) O arquivo possui ACLs configuradas além das permissões padrão</button>
+            <button class="qopt" onclick="ansQ(3,3,2)">D) O arquivo pertence ao grupo root</button>
+          </div>
+          <div class="qfb" id="qfb3"></div>
+          <button class="qnx" id="qnx3" onclick="nextQ(4)">Próxima pergunta →</button>
+        </div>
+
+        <div class="qcard" id="qc4">
+          <h4>5️⃣ Qual a vantagem de usar <code>setfacl</code> em vez de apenas <code>chmod</code>?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(4,0,1)">A) setfacl é mais rápido para alterar permissões em massa</button>
+            <button class="qopt" onclick="ansQ(4,1,1)">B) setfacl permite definir permissões específicas para múltiplos usuários/grupos sem alterar dono ou grupo do arquivo</button>
+            <button class="qopt" onclick="ansQ(4,2,1)">C) setfacl é a única forma de configurar SUID e SGID</button>
+            <button class="qopt" onclick="ansQ(4,3,1)">D) setfacl substitui completamente o chmod em sistemas modernos</button>
+          </div>
+          <div class="qfb" id="qfb4"></div>
+          <button class="qnx" id="qnx4" onclick="nextQ(5)">Próxima pergunta →</button>
+        </div>
+
+        <div class="qcard" id="qc5">
+          <h4>6️⃣ Por que <code>find / -perm 0777 -type f</code> é importante em auditorias de segurança?</h4>
+          <div class="qopts">
+            <button class="qopt" onclick="ansQ(5,0,2)">A) Localiza arquivos de configuração do sistema para backup</button>
+            <button class="qopt" onclick="ansQ(5,1,2)">B) Lista scripts que precisam de permissão de execução</button>
+            <button class="qopt" onclick="ansQ(5,2,2)">C) Identifica arquivos com permissão total para todos os usuários, que podem ser vetores de ataque por movimentação lateral ou escalada de privilégios</button>
+            <button class="qopt" onclick="ansQ(5,3,2)">D) Encontra arquivos pertencentes ao root com acesso de leitura</button>
+          </div>
+          <div class="qfb" id="qfb5"></div>
+          <button class="qnx" id="qnx5" onclick="showResult()">Ver resultado 🏆</button>
+        </div>
+
+        <div class="q-result" id="q-result">
+          <div class="q-score-big" id="q-score">0/6</div>
+          <div class="q-result-msg" id="q-msg">Resultado</div>
+          <div class="q-xp-earned" id="q-xp-earned"></div>
+          <button class="restart-btn" onclick="restartQuiz()">🔄 Refazer Quiz</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- REFLEXÃO -->
+    <div class="card" id="section-reflexao">
+      <div class="card-head"><div class="card-icon ci-p">💡</div><div class="card-title">REFLEXÃO SOBRE SEGURANÇA</div></div>
+      <div class="card-body">
+        <div class="reflection-card">
+          <div class="reflection-title">⚔️ Permissões como Primeira Linha de Defesa</div>
+          <p class="reflection-text">
+            A correta configuração de permissões não é apenas uma tarefa administrativa, mas a <strong>primeira linha de defesa</strong> contra movimentação lateral e escalada de privilégios em sistemas Linux.<br><br>
+            <strong>Permissões excessivas são vetores comuns para exploração de vulnerabilidades.</strong> Um invasor que compromete uma conta comum com acesso irrestrito pode se mover lateralmente pelo sistema sem acionar alertas.<br><br>
+            O <strong>Princípio do Menor Privilégio</strong> estabelece que cada usuário, processo ou serviço deve ter apenas as permissões mínimas para executar sua função — nada mais. Isso reduz drasticamente a superfície de ataque e limita o dano em caso de comprometimento.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- GLOSSÁRIO -->
+    <div class="card">
+      <div class="card-head"><div class="card-icon ci-c">📖</div><div class="card-title">GLOSSÁRIO RÁPIDO</div></div>
+      <div class="card-body">
+        <div class="gloss-grid">
+          <div class="gloss-item"><div class="gloss-term">useradd / usermod / userdel</div><div class="gloss-def">Comandos para criar, modificar e remover usuários do sistema Linux</div></div>
+          <div class="gloss-item"><div class="gloss-term">/etc/shadow</div><div class="gloss-def">Arquivo que armazena hashes de senhas e políticas de expiração. Leitura restrita ao root</div></div>
+          <div class="gloss-item"><div class="gloss-term">chmod (rwx)</div><div class="gloss-def">Altera permissões de arquivos/diretórios. Notação simbólica (u+x) ou octal (755)</div></div>
+          <div class="gloss-item"><div class="gloss-term">SUID / SGID</div><div class="gloss-def">Bits especiais que executam um programa com os privilégios do dono ou grupo, respectivamente</div></div>
+          <div class="gloss-item"><div class="gloss-term">Sticky Bit</div><div class="gloss-def">Em diretórios compartilhados, impede que um usuário delete arquivos de outro. Exemplo: /tmp</div></div>
+          <div class="gloss-item"><div class="gloss-term">visudo</div><div class="gloss-def">Editor seguro do arquivo /etc/sudoers, valida sintaxe antes de salvar para evitar erros</div></div>
+          <div class="gloss-item"><div class="gloss-term">setfacl / getfacl</div><div class="gloss-def">Configura e consulta ACLs, permitindo permissões granulares por usuário ou grupo específico</div></div>
+          <div class="gloss-item"><div class="gloss-term">chage</div><div class="gloss-def">Gerencia políticas de expiração de senha: duração máxima, mínima, aviso e expiração da conta</div></div>
+          <div class="gloss-item"><div class="gloss-term">umask</div><div class="gloss-def">Máscara que define as permissões padrão subtraídas ao criar novos arquivos e diretórios</div></div>
+          <div class="gloss-item"><div class="gloss-term">Menor Privilégio</div><div class="gloss-def">Princípio de segurança: cada entidade deve ter apenas as permissões mínimas necessárias</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONQUISTAS -->
+    <div class="card" id="section-ach">
+      <div class="card-head"><div class="card-icon ci-g">🏆</div><div class="card-title">CONQUISTAS DA SEMANA 06_2</div></div>
+      <div class="card-body">
+        <div class="ach-grid">
+          <div class="ach-item" id="a-start"><span class="ach-icon">🚀</span><div class="ach-info"><div class="ach-name">Semana Iniciada</div><div class="ach-desc">Começou a S6.2</div></div></div>
+          <div class="ach-item" id="a-obj"><span class="ach-icon">🎯</span><div class="ach-info"><div class="ach-name">Foco Total</div><div class="ach-desc">Completou todos os objetivos</div></div></div>
+          <div class="ach-item" id="a-cycle"><span class="ach-icon">👤</span><div class="ach-info"><div class="ach-name">Ciclo de Vida</div><div class="ach-desc">Missão de usuários concluída</div></div></div>
+          <div class="ach-item" id="a-chage"><span class="ach-icon">🔒</span><div class="ach-info"><div class="ach-name">Políticas de Conta</div><div class="ach-desc">chage configurado com sucesso</div></div></div>
+          <div class="ach-item" id="a-acl2"><span class="ach-icon">📋</span><div class="ach-info"><div class="ach-name">ACL Expert</div><div class="ach-desc">Controle granular com setfacl</div></div></div>
+          <div class="ach-item" id="a-sudo2"><span class="ach-icon">🛡️</span><div class="ach-info"><div class="ach-name">Auditor de Segurança</div><div class="ach-desc">Auditoria de permissões feita</div></div></div>
+          <div class="ach-item" id="a-quiz"><span class="ach-icon">💡</span><div class="ach-info"><div class="ach-name">Aluno Dedicado</div><div class="ach-desc">Quiz com 4+ acertos</div></div></div>
+          <div class="ach-item" id="a-perfect"><span class="ach-icon">💎</span><div class="ach-info"><div class="ach-name">Quiz Perfeito</div><div class="ach-desc">6/6 no quiz!</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REFERÊNCIAS -->
+    <div style="padding:20px;background:var(--card);border:1px solid var(--border);border-radius:14px;">
+      <div style="font-family:'Orbitron',monospace;font-size:0.75em;font-weight:700;color:var(--cyan);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;">📚 Referências Principais</div>
+      <div class="bib-item">NEMETH, Evi et al. <strong>Manual completo do Linux.</strong> 5. ed. Bookman, 2017. Cap. 6: Controle de Acesso e Autenticação.</div>
+      <div class="bib-item">WARD, Brian. <strong>How Linux Works.</strong> No Starch Press, 2021. Cap. 7: Users and Permissions.</div>
+      <div class="bib-item">Linux Man Pages. <strong>useradd(8), chmod(1), sudo(8), setfacl(1), chage(1).</strong> Disponível em: man7.org</div>
+    </div>
+
+    <!-- NAVEGAÇÃO ENTRE SEMANAS -->
+    <div style="display:flex;justify-content:space-between;gap:12px;margin-top:4px;">
+      <a href="semana06.html" style="padding:13px 24px;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.3);color:var(--cyan);text-decoration:none;border-radius:9px;font-weight:700;font-size:0.9em;" onmouseover="this.style.background='rgba(0,212,255,0.2)'" onmouseout="this.style.background='rgba(0,212,255,0.1)'">← Semana 6.1 — Usuários & Permissões</a>
+      <a href="semana07.html" style="padding:13px 24px;background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.3);color:var(--green);text-decoration:none;border-radius:9px;font-weight:700;font-size:0.9em;" onmouseover="this.style.background='rgba(0,255,136,0.2)'" onmouseout="this.style.background='rgba(0,255,136,0.1)'">Semana 7 — Configuração de Rede →</a>
+    </div>
+
+  </main>
+</div>
+
+<script>
+let xp=0,streak=0,badges=0;
+const TOTAL_XP=360;
+const numMissions=4;
+const numBadges=10;
+const objChecked=Array(7).fill(false);
+const missionsDone={};
+let qCorrect=0;
+const qAnswers={};
+const qxps=[10,15,10,15,15,10];
+
+const QFB=[
+  `✅ Correto! O <code>/etc/passwd</code> é legível por todos mas mostra "x" onde ficaria a senha. O <code>/etc/shadow</code> armazena os hashes reais com permissão 640 (apenas root/shadow).`,
+  `✅ Perfeito! 600 = 6(rw-) + 0(---) + 0(---). Somente o dono pode ler e escrever. Nenhum outro usuário tem qualquer acesso.`,
+  `✅ Correto! <code>-d 0</code> define a data da última mudança de senha como zero (época Unix), fazendo o sistema entender que a senha "expirou" e exigindo troca imediata no próximo login.`,
+  `✅ Perfeito! O "+" no final das permissões indica que o arquivo possui uma ACL além das permissões padrão rwx. Use <code>getfacl</code> para ver os detalhes completos.`,
+  `✅ Correto! O modelo rwx padrão só permite uma entidade por categoria (dono, grupo, outros). A ACL permite regras específicas para cada usuário ou grupo — indispensável em ambientes corporativos.`,
+  `✅ Exato! Arquivos com chmod 777 permitem que qualquer usuário do sistema escreva neles. Um atacante pode modificar scripts, injetar código malicioso e executar com os privilégios do proprietário.`
+];
+
+setTimeout(()=>unlock('a-start','bm-start','Semana 6.2 iniciada! 🚀'),800);
+
+function updateHUD(){
+  document.getElementById('hud-xp').textContent=xp;
+  document.getElementById('hud-streak').textContent=streak;
+  document.getElementById('hud-badges').textContent=badges;
+  const pct=Math.min(Math.round(xp/TOTAL_XP*100),100);
+  document.getElementById('hud-bar').style.width=pct+'%';
+  document.getElementById('hud-pct').textContent=pct+'%';
+  const lvls=[[0,'Iniciante'],[50,'Operador'],[120,'Técnico Linux'],[200,'Admin Sistema'],[300,'Security Expert']];
+  let lv=lvls[0][1];
+  for(const[t,n]of lvls){if(xp>=t)lv=n;}
+  document.getElementById('hud-level').textContent=lv;
+  const od=objChecked.filter(Boolean).length;
+  setBar('obj-bar','obj-pct',od/7*100,Math.round(od/7*100)+'%');
+  const md=Object.keys(missionsDone).length;
+  setBar('mis-bar','mis-pct',md/numMissions*100,Math.round(md/numMissions*100)+'%');
+  setBar('quiz-bar','quiz-pct',Math.min(qCorrect/6*100,100),Math.round(qCorrect/6*100)+'%');
+  setBar('ach-bar','ach-pct',badges/numBadges*100,badges+'/'+numBadges);
+}
+function setBar(bid,lid,pct,txt){document.getElementById(bid).style.width=Math.min(pct,100)+'%';document.getElementById(lid).textContent=txt;}
+function addXP(amount,msg,icon){xp+=amount;updateHUD();toast(icon||'⚡','+'+amount+' XP',msg);}
+function toast(icon,title,msg){
+  document.getElementById('toast-icon').textContent=icon;
+  document.getElementById('toast-title').textContent=title;
+  document.getElementById('toast-msg').textContent=msg;
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3200);
+}
+function unlock(achId,badgeId,msg){
+  const a=document.getElementById(achId);const b=document.getElementById(badgeId);
+  if(a&&!a.classList.contains('unlocked')){
+    a.classList.add('unlocked');if(b)b.classList.add('unlocked');
+    badges++;updateHUD();toast('🏆','Badge desbloqueado!',msg);
+  }
+}
+function toggleObj(el,idx){
+  el.classList.toggle('checked');
+  objChecked[idx]=el.classList.contains('checked');
+  if(objChecked[idx]){addXP(5,'Objetivo marcado!','✅');streak++;}
+  else streak=Math.max(0,streak-1);
+  if(objChecked.filter(Boolean).length===7){addXP(25,'Todos os objetivos!','🎯');unlock('a-obj','bm-obj','Foco Total!');}
+  updateHUD();
+}
+function toggleMission(id){document.getElementById(id).classList.toggle('open');}
+function completeM(mId,btnId,achId,badgeId,msg,key){
+  event.stopPropagation();
+  if(missionsDone[key])return;
+  missionsDone[key]=true;
+  const btn=document.getElementById(btnId);
+  btn.disabled=true;btn.textContent='✅ Missão Concluída!';
+  document.getElementById(mId).classList.add('done');
+  addXP(65,msg,'⚔️');
+  unlock(achId,badgeId,msg);
+  streak++;updateHUD();
+  if(Object.keys(missionsDone).length===numMissions){
+    setTimeout(()=>{addXP(50,'TODAS AS MISSÕES CONCLUÍDAS! 🏆','🏆');},500);
+  }
+}
+function ansQ(qi,chosen,correct){
+  const card=document.getElementById('qc'+qi);
+  const opts=card.querySelectorAll('.qopt');
+  opts.forEach(o=>o.disabled=true);
+  opts[chosen].classList.add(chosen===correct?'correct':'wrong');
+  if(chosen!==correct)opts[correct].classList.add('correct');
+  const fb=document.getElementById('qfb'+qi);
+  const nx=document.getElementById('qnx'+qi);
+  const ok=chosen===correct;
+  fb.innerHTML=ok?QFB[qi]:'❌ Errado. '+QFB[qi];
+  fb.className='qfb show '+(ok?'ok':'fail');
+  nx.classList.add('show');
+  if(ok){qCorrect++;addXP(qxps[qi],'Resposta correta!','🎯');streak++;}
+  else streak=0;
+  qAnswers[qi]=ok;
+  document.getElementById('q-prog').style.width=((qi+1)/6*100)+'%';
+  document.getElementById('q-cnt').textContent=(qi+1)+'/6';
+  updateHUD();
+}
+function nextQ(n){
+  document.getElementById('qc'+(n-1)).classList.remove('active');
+  document.getElementById('qc'+n).classList.add('active');
+}
+function showResult(){
+  document.getElementById('qc5').classList.remove('active');
+  const r=document.getElementById('q-result');
+  r.classList.add('show');
+  document.getElementById('q-score').textContent=qCorrect+'/6';
+  const msgs=['Continue estudando!','Bom começo!','Progredindo bem!','Ótimo trabalho!','Excelente domínio!','💎 Expert! Quiz Perfeito!'];
+  document.getElementById('q-msg').textContent=msgs[Math.min(qCorrect,5)];
+  const earned=Object.keys(qAnswers).filter(k=>qAnswers[k]).reduce((a,k)=>a+qxps[+k],0);
+  document.getElementById('q-xp-earned').textContent='+'+earned+' XP conquistados no quiz';
+  document.getElementById('q-prog').style.width='100%';
+  document.getElementById('q-cnt').textContent='6/6';
+  if(qCorrect>=4)unlock('a-quiz','bm-quiz','Quiz — 4+ acertos!');
+  if(qCorrect===6)unlock('a-perfect','bm-perfect','Quiz Perfeito! 💎');
+  updateHUD();
+}
+function restartQuiz(){
+  qCorrect=0;
+  document.getElementById('q-result').classList.remove('show');
+  document.getElementById('q-prog').style.width='0%';
+  document.getElementById('q-cnt').textContent='0/6';
+  for(let i=0;i<6;i++){
+    const c=document.getElementById('qc'+i);
+    c.classList.toggle('active',i===0);
+    c.querySelectorAll('.qopt').forEach(o=>{o.disabled=false;o.classList.remove('correct','wrong');});
+    const fb=c.querySelector('.qfb');if(fb){fb.className='qfb';fb.innerHTML='';}
+    const nx=c.querySelector('.qnx');if(nx)nx.classList.remove('show');
+  }
+  updateHUD();
+}
+function switchTab(tid){
+  document.querySelectorAll('.os-panel').forEach(p=>p.classList.remove('active-panel'));
+  document.querySelectorAll('.os-tab').forEach(t=>t.classList.remove('active-tab','tab-green','tab-purple','tab-orange'));
+  document.getElementById(tid).classList.add('active-panel');
+  const tabs=['t1','t2','t3','t4'];
+  const colors=['','tab-green','tab-purple','tab-orange'];
+  const idx=tabs.indexOf(tid);
+  const btn=document.querySelectorAll('.os-tab')[idx];
+  btn.classList.add('active-tab');
+  if(colors[idx])btn.classList.add(colors[idx]);
+  addXP(3,'Tópico explorado!','📖');
+  if(tid==='t2')unlock('a-cycle','bm-files','Arquivos sensíveis explorados! 📁');
+  if(tid==='t4')unlock('a-chage','bm-shadow','Shadow analisado! 👁️');
+}
+</script>
+</body>
+</html>
