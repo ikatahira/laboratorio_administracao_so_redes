@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISO-103 · Avaliação Semana 06 — Modo Online</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d0d0d;
+  --bg2: #141414;
+  --bg3: #1a1a1a;
+  --bg4: #222;
+  --border: #2a2a2a;
+  --border2: #333;
+  --green: #00ff88;
+  --green-dim: #00c96a;
+  --green-bg: rgba(0,255,136,0.07);
+  --green-bg2: rgba(0,255,136,0.12);
+  --red: #ff4f4f;
+  --red-bg: rgba(255,79,79,0.08);
+  --yellow: #ffc94f;
+  --yellow-bg: rgba(255,201,79,0.08);
+  --blue: #4f9fff;
+  --blue-bg: rgba(79,159,255,0.08);
+  --text: #e8e8e8;
+  --text2: #999;
+  --text3: #666;
+  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'IBM Plex Sans', sans-serif;
+  --radius: 4px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); min-height: 100vh; }
+
+/* ── LOADING SCREEN ── */
+#loading-screen {
+  position: fixed; inset: 0; background: var(--bg);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  z-index: 9999; transition: opacity 0.5s;
+}
+#loading-screen .logo { font-family: var(--mono); font-size: 11px; color: var(--green); letter-spacing: 0.2em; margin-bottom: 32px; }
+#loading-screen h1 { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+#loading-screen p { font-size: 14px; color: var(--text2); margin-bottom: 40px; }
+.progress-bar { width: 280px; height: 2px; background: var(--border2); border-radius: 2px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--green); width: 0%; transition: width 0.3s; }
+
+/* ── SIDEBAR NAV ── */
+#app { display: flex; min-height: 100vh; }
+#sidebar {
+  width: 260px; min-height: 100vh; background: var(--bg2);
+  border-right: 1px solid var(--border); position: sticky; top: 0; height: 100vh;
+  overflow-y: auto; display: flex; flex-direction: column;
+}
+.sidebar-header { padding: 20px; border-bottom: 1px solid var(--border); }
+.sidebar-logo { font-family: var(--mono); font-size: 9px; color: var(--green); letter-spacing: 0.2em; margin-bottom: 6px; }
+.sidebar-title { font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.3; }
+.sidebar-sub { font-size: 11px; color: var(--text3); margin-top: 4px; }
+
+.sidebar-score { margin: 16px 20px; padding: 12px; background: var(--bg3); border: 1px solid var(--border); }
+.score-label { font-family: var(--mono); font-size: 9px; color: var(--text3); letter-spacing: 0.1em; margin-bottom: 4px; }
+.score-val { font-family: var(--mono); font-size: 24px; font-weight: 700; color: var(--green); }
+.score-sub { font-size: 11px; color: var(--text3); }
+
+.sidebar-nav { flex: 1; padding: 8px 0; }
+.nav-section { padding: 8px 20px 4px; font-family: var(--mono); font-size: 9px; color: var(--text3); letter-spacing: 0.15em; }
+.nav-item {
+  display: flex; align-items: center; gap: 10px; padding: 8px 20px;
+  cursor: pointer; transition: background 0.15s; border-left: 2px solid transparent;
+  font-size: 13px; color: var(--text2);
+}
+.nav-item:hover { background: var(--bg3); color: var(--text); }
+.nav-item.active { background: var(--green-bg); border-left-color: var(--green); color: var(--green); }
+.nav-item.done { color: var(--text3); }
+.nav-item.done .nav-status { color: var(--green); }
+.nav-item.wrong .nav-status { color: var(--red); }
+.nav-num { font-family: var(--mono); font-size: 11px; width: 20px; flex-shrink: 0; }
+.nav-label { flex: 1; font-size: 12px; }
+.nav-status { font-size: 11px; flex-shrink: 0; }
+
+.sidebar-footer { padding: 16px 20px; border-top: 1px solid var(--border); }
+.btn-finish {
+  width: 100%; padding: 10px; background: var(--green); color: #000; border: none;
+  font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+  cursor: pointer; transition: all 0.2s;
+}
+.btn-finish:hover { background: var(--green-dim); }
+.btn-finish:disabled { background: var(--border2); color: var(--text3); cursor: not-allowed; }
+
+/* ── MAIN CONTENT ── */
+#main {
+  flex: 1; overflow-y: auto; display: flex; flex-direction: column;
+}
+
+/* ── PROVA HEADER ── */
+.prova-header {
+  background: var(--bg2); border-bottom: 1px solid var(--border);
+  padding: 20px 32px; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+}
+.prova-badge { font-family: var(--mono); font-size: 9px; color: var(--green); letter-spacing: 0.15em; background: var(--green-bg2); padding: 4px 10px; }
+.prova-title { font-family: var(--mono); font-size: 18px; font-weight: 700; color: var(--text); margin: 6px 0 2px; }
+.prova-sub { font-size: 12px; color: var(--text2); }
+.timer { font-family: var(--mono); font-size: 20px; font-weight: 700; color: var(--text); }
+.timer.warning { color: var(--yellow); }
+.timer.danger { color: var(--red); }
+
+/* ── STUDENT INFO BAR ── */
+.info-bar {
+  background: var(--bg3); border-bottom: 1px solid var(--border);
+  padding: 12px 32px; display: flex; gap: 24px; align-items: center;
+}
+.info-field { display: flex; align-items: center; gap: 10px; }
+.info-label { font-family: var(--mono); font-size: 10px; color: var(--text3); }
+.info-input {
+  background: var(--bg); border: 1px solid var(--border2); color: var(--text);
+  padding: 6px 10px; font-family: var(--mono); font-size: 12px; width: 180px;
+  outline: none;
+}
+.info-input:focus { border-color: var(--green); }
+
+/* ── EXAM SECTIONS ── */
+#exam-content { padding: 32px; max-width: 860px; }
+
+.section-header {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 20px; margin-top: 32px;
+  border-bottom: 1px solid var(--border2); padding-bottom: 12px;
+}
+.section-header:first-child { margin-top: 0; }
+.section-badge {
+  font-family: var(--mono); font-size: 9px; font-weight: 700; letter-spacing: 0.15em;
+  background: #111; color: var(--text); padding: 4px 10px; border: 1px solid var(--border2);
+}
+.section-name { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--text); flex: 1; }
+.section-pts { font-family: var(--mono); font-size: 11px; color: var(--text3); border: 1px solid var(--border2); padding: 2px 8px; }
+
+/* ── QUESTION CARD ── */
+.q-card {
+  background: var(--bg2); border: 1px solid var(--border); margin-bottom: 16px;
+  transition: border-color 0.2s;
+}
+.q-card.answered { border-color: var(--border2); }
+.q-card.correct { border-color: rgba(0,255,136,0.3); }
+.q-card.wrong-ans { border-color: rgba(255,79,79,0.3); }
+
+.q-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--bg3);
+}
+.q-num {
+  font-family: var(--mono); font-size: 11px; font-weight: 700;
+  background: var(--bg); color: var(--text); padding: 3px 8px; border: 1px solid var(--border2);
+}
+.q-tag { font-family: var(--mono); font-size: 10px; color: var(--text3); border: 1px solid var(--border); padding: 2px 7px; }
+.q-pts { font-family: var(--mono); font-size: 10px; color: var(--text3); margin-left: auto; }
+.q-status-icon { font-size: 14px; }
+
+.q-body { padding: 16px; }
+.q-texto { font-size: 14px; line-height: 1.6; color: var(--text); margin-bottom: 14px; }
+.q-texto code {
+  font-family: var(--mono); background: var(--bg); border: 1px solid var(--border2);
+  padding: 1px 5px; font-size: 13px; color: var(--green);
+}
+.perm-box {
+  font-family: var(--mono); font-size: 13px; background: var(--bg3);
+  border: 1px solid var(--border2); padding: 3px 8px; color: var(--green); display: inline;
+}
+
+/* ── ALTERNATIVES ── */
+.alternatives { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.alt-item {
+  display: flex; align-items: center; gap: 12px;
+  border: 1px solid var(--border2); padding: 10px 14px; cursor: pointer;
+  transition: all 0.15s; position: relative;
+}
+.alt-item:hover:not(.disabled) { background: var(--bg3); border-color: var(--text3); }
+.alt-item.selected { background: var(--blue-bg); border-color: var(--blue); }
+.alt-item.correct-ans { background: var(--green-bg2) !important; border-color: var(--green) !important; }
+.alt-item.wrong-sel { background: var(--red-bg) !important; border-color: var(--red) !important; }
+.alt-item.disabled { cursor: not-allowed; }
+.alt-letter {
+  font-family: var(--mono); font-size: 12px; font-weight: 700; width: 24px; height: 24px;
+  border: 1px solid var(--border2); display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; color: var(--text2); transition: all 0.15s;
+}
+.alt-item.selected .alt-letter { border-color: var(--blue); color: var(--blue); }
+.alt-item.correct-ans .alt-letter { border-color: var(--green); color: var(--green); }
+.alt-item.wrong-sel .alt-letter { border-color: var(--red); color: var(--red); }
+.alt-text { font-size: 13px; color: var(--text2); line-height: 1.45; }
+.alt-text code {
+  font-family: var(--mono); background: var(--bg); border: 1px solid var(--border2);
+  padding: 1px 4px; font-size: 12px; color: var(--green);
+}
+.alt-item.selected .alt-text { color: var(--text); }
+.alt-item.correct-ans .alt-text { color: var(--text); }
+
+/* ── CONFIRM BUTTON ── */
+.btn-confirm {
+  margin-top: 14px; padding: 9px 20px; background: transparent;
+  border: 1px solid var(--green); color: var(--green); font-family: var(--mono);
+  font-size: 11px; font-weight: 700; letter-spacing: 0.08em; cursor: pointer; transition: all 0.2s;
+}
+.btn-confirm:hover { background: var(--green); color: #000; }
+.btn-confirm:disabled { border-color: var(--border2); color: var(--text3); cursor: not-allowed; }
+
+/* ── FEEDBACK BLOCK ── */
+.feedback-block {
+  margin-top: 14px; border: 1px solid var(--border); background: var(--bg3); overflow: hidden;
+}
+.feedback-head {
+  padding: 10px 14px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border);
+}
+.feedback-head.correct { background: var(--green-bg2); border-bottom-color: rgba(0,255,136,0.2); }
+.feedback-head.wrong { background: var(--red-bg); border-bottom-color: rgba(255,79,79,0.2); }
+.feedback-icon { font-size: 14px; }
+.feedback-label { font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 0.05em; }
+.feedback-head.correct .feedback-label { color: var(--green); }
+.feedback-head.wrong .feedback-label { color: var(--red); }
+.feedback-pts { font-family: var(--mono); font-size: 11px; color: var(--text3); margin-left: auto; }
+.feedback-body { padding: 14px; }
+.feedback-ai {
+  font-size: 13px; line-height: 1.7; color: var(--text2);
+}
+.feedback-ai .loading-dots::after {
+  content: ''; animation: dots 1.2s infinite;
+}
+@keyframes dots {
+  0%,20% { content: ''; }
+  40% { content: '.'; }
+  60% { content: '..'; }
+  80%,100% { content: '...'; }
+}
+.feedback-correct-ans {
+  margin-top: 10px; padding: 8px 12px; background: var(--green-bg);
+  border-left: 2px solid var(--green); font-family: var(--mono); font-size: 12px; color: var(--green);
+}
+.feedback-exp { margin-top: 10px; font-size: 13px; color: var(--text2); line-height: 1.6; }
+.feedback-exp code {
+  font-family: var(--mono); background: var(--bg); border: 1px solid var(--border2);
+  padding: 1px 4px; font-size: 11px; color: var(--green);
+}
+
+/* ── PRACTICAL TASKS ── */
+.task-card {
+  background: var(--bg2); border: 1px solid var(--border); margin-bottom: 20px;
+}
+.task-head {
+  background: var(--bg3); border-bottom: 1px solid var(--border); padding: 12px 16px;
+  display: flex; align-items: center; gap: 10px;
+}
+.task-num-badge {
+  font-family: var(--mono); font-size: 10px; font-weight: 700;
+  background: var(--green); color: #000; padding: 3px 10px;
+}
+.task-title-text { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--text); flex: 1; }
+.task-pts-badge { font-family: var(--mono); font-size: 10px; color: var(--text3); }
+
+.task-context {
+  margin: 14px 16px 0; padding: 10px 12px; background: var(--bg);
+  border-left: 2px solid var(--text3); font-size: 13px; color: var(--text3); font-style: italic; line-height: 1.6;
+}
+
+.task-steps { margin: 14px 16px 0; }
+.task-step {
+  display: flex; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text2); line-height: 1.55;
+}
+.task-step:last-child { border-bottom: none; }
+.step-num { font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--text3); flex-shrink: 0; width: 16px; padding-top: 1px; }
+.task-step code {
+  font-family: var(--mono); background: var(--bg); border: 1px solid var(--border2);
+  padding: 1px 5px; font-size: 12px; color: var(--green);
+}
+
+.task-answer-area { margin: 14px 16px 16px; }
+.task-answer-label { font-family: var(--mono); font-size: 9px; color: var(--text3); letter-spacing: 0.1em; margin-bottom: 6px; }
+.task-textarea {
+  width: 100%; background: var(--bg); border: 1px solid var(--border2); color: var(--text);
+  padding: 12px; font-family: var(--mono); font-size: 12px; line-height: 1.7;
+  resize: vertical; min-height: 120px; outline: none;
+}
+.task-textarea:focus { border-color: var(--green); }
+.task-textarea::placeholder { color: var(--text3); }
+
+.checklist-section { margin: 10px 16px 0; }
+.checklist-title { font-family: var(--mono); font-size: 9px; color: var(--text3); letter-spacing: 0.1em; margin-bottom: 6px; }
+.checklist-item {
+  display: flex; align-items: center; gap: 8px; padding: 4px 0;
+  font-size: 12px; color: var(--text3); cursor: pointer;
+}
+.checklist-item input[type=checkbox] { accent-color: var(--green); width: 14px; height: 14px; cursor: pointer; }
+.checklist-item label { cursor: pointer; }
+.checklist-item.checked label { color: var(--text2); }
+
+.tree-block {
+  font-family: var(--mono); font-size: 12px; color: var(--text2);
+  background: var(--bg); border: 1px solid var(--border2); padding: 10px 14px;
+  line-height: 1.8; margin: 10px 0;
+}
+.tree-dir { color: var(--green); font-weight: 700; }
+.tree-file { color: var(--text3); }
+
+.perm-table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 11px; margin: 8px 0; }
+.perm-table th { background: var(--bg); color: var(--text3); padding: 5px 10px; border: 1px solid var(--border); text-align: left; }
+.perm-table td { padding: 5px 10px; border: 1px solid var(--border); color: var(--text2); }
+.perm-table .perm-val { color: var(--green); }
+
+/* ── RESULTS SCREEN ── */
+#results-screen {
+  display: none; padding: 40px 32px; max-width: 860px;
+}
+.result-header { margin-bottom: 32px; }
+.result-badge { font-family: var(--mono); font-size: 9px; color: var(--green); letter-spacing: 0.2em; margin-bottom: 12px; }
+.result-title { font-family: var(--mono); font-size: 28px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.result-subtitle { font-size: 14px; color: var(--text2); }
+
+.result-score-big {
+  display: flex; align-items: baseline; gap: 8px; margin: 24px 0;
+  font-family: var(--mono);
+}
+.result-score-num { font-size: 64px; font-weight: 700; color: var(--green); line-height: 1; }
+.result-score-denom { font-size: 24px; color: var(--text3); }
+.result-grade { font-size: 20px; color: var(--text2); margin-left: 16px; }
+
+.result-status {
+  display: inline-block; font-family: var(--mono); font-size: 12px; font-weight: 700;
+  padding: 6px 16px; letter-spacing: 0.1em; margin-bottom: 24px;
+}
+.result-status.aprovado { background: var(--green-bg2); border: 1px solid var(--green); color: var(--green); }
+.result-status.reprovado { background: var(--red-bg); border: 1px solid var(--red); color: var(--red); }
+
+.result-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 28px; }
+.result-card { background: var(--bg2); border: 1px solid var(--border); padding: 16px; }
+.result-card-label { font-family: var(--mono); font-size: 9px; color: var(--text3); letter-spacing: 0.1em; margin-bottom: 6px; }
+.result-card-val { font-family: var(--mono); font-size: 22px; font-weight: 700; }
+.result-card-sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
+.val-green { color: var(--green); }
+.val-red { color: var(--red); }
+.val-yellow { color: var(--yellow); }
+
+.result-breakdown { background: var(--bg2); border: 1px solid var(--border); margin-bottom: 24px; }
+.breakdown-header { padding: 12px 16px; border-bottom: 1px solid var(--border); font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--text); }
+.breakdown-row { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-bottom: 1px solid var(--border); }
+.breakdown-row:last-child { border-bottom: none; }
+.breakdown-section { font-family: var(--mono); font-size: 11px; color: var(--text2); flex: 1; }
+.breakdown-bar-wrap { flex: 2; background: var(--bg3); height: 6px; }
+.breakdown-bar { height: 100%; background: var(--green); transition: width 1s ease; }
+.breakdown-score { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--green); width: 60px; text-align: right; }
+
+.btn-retry {
+  padding: 12px 28px; border: 1px solid var(--green); background: transparent;
+  color: var(--green); font-family: var(--mono); font-size: 12px; font-weight: 700;
+  letter-spacing: 0.08em; cursor: pointer; transition: all 0.2s;
+}
+.btn-retry:hover { background: var(--green); color: #000; }
+
+/* ── UTILS ── */
+.hide { display: none !important; }
+.tab-btn {
+  padding: 10px 20px; border: 1px solid var(--border2); background: transparent;
+  color: var(--text3); font-family: var(--mono); font-size: 11px; cursor: pointer; transition: all 0.2s;
+}
+.tab-btn.active { background: var(--bg3); border-color: var(--green); color: var(--green); }
+.tabs { display: flex; gap: 0; margin-bottom: 24px; }
+.tabs .tab-btn { margin-right: -1px; }
+</style>
+</head>
+<body>
+
+<!-- LOADING SCREEN -->
+<div id="loading-screen">
+  <div class="logo">▶ ISO-103 2026</div>
+  <h1>Carregando avaliação...</h1>
+  <p>Semana 06 · Usuários, Permissões &amp; Controle de Acesso</p>
+  <div class="progress-bar"><div class="progress-fill" id="prog-fill"></div></div>
+</div>
+
+<div id="app" style="display:none">
+  <!-- SIDEBAR -->
+  <nav id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">▶ ISO-103 2026</div>
+      <div class="sidebar-title">Avaliação<br>Semana 06</div>
+      <div class="sidebar-sub">Segurança da Informação</div>
+    </div>
+
+    <div class="sidebar-score">
+      <div class="score-label">PONTUAÇÃO</div>
+      <div class="score-val" id="score-display">0 / 100</div>
+      <div class="score-sub" id="score-sub">0 de 20 respondidas</div>
+    </div>
+
+    <div class="sidebar-nav">
+      <div class="nav-section">PROVA TEÓRICA</div>
+      <div class="tabs" style="margin:0;padding:6px 12px;gap:4px;flex-wrap:wrap">
+        <button class="tab-btn active" id="tab-teorica" onclick="switchExam('teorica')">Teórica</button>
+        <button class="tab-btn" id="tab-pratica" onclick="switchExam('pratica')">Prática</button>
+      </div>
+      <div id="nav-teorica"></div>
+      <div id="nav-pratica" class="hide"></div>
+    </div>
+
+    <div class="sidebar-footer">
+      <button class="btn-finish" id="btn-finish" onclick="finishExam()">FINALIZAR AVALIAÇÃO</button>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main id="main">
+    <!-- EXAM VIEW -->
+    <div id="exam-view">
+      <div class="prova-header">
+        <div>
+          <div class="prova-badge" id="prova-badge">▶ AVALIAÇÃO TEÓRICA</div>
+          <div class="prova-title" id="prova-title">Usuários, Permissões &amp; Controle de Acesso</div>
+          <div class="prova-sub">ISO-103 2026 · Semanas 06 &amp; 06.1</div>
+        </div>
+        <div style="text-align:right">
+          <div class="timer" id="timer">50:00</div>
+          <div style="font-size:11px;color:var(--text3);font-family:var(--mono)">restante</div>
+        </div>
+      </div>
+
+      <div class="info-bar">
+        <div class="info-field">
+          <span class="info-label">NOME:</span>
+          <input type="text" class="info-input" id="student-name" placeholder="Seu nome completo">
+        </div>
+        <div class="info-field">
+          <span class="info-label">RA:</span>
+          <input type="text" class="info-input" id="student-ra" placeholder="Registro acadêmico" style="width:130px">
+        </div>
+      </div>
+
+      <div id="exam-content">
+        <!-- Teórica -->
+        <div id="teorica-content"></div>
+        <!-- Prática -->
+        <div id="pratica-content" class="hide"></div>
+      </div>
+    </div>
+
+    <!-- RESULTS VIEW -->
+    <div id="results-screen"></div>
+  </main>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// DATA — PROVA TEÓRICA
+// ═══════════════════════════════════════════
+const teoricaData = [
+  {
+    section: 'A', title: 'Usuários & Arquivos do Sistema Linux', range: '01–08', pts: 40,
+    questions: [
+      { n:1, tag:'Arquivos do Sistema', pts:5, texto:'Qual arquivo Linux armazena a <strong>lista de todos os usuários</strong> do sistema e pode ser lido por qualquer usuário?',
+        alts:['<code>/etc/shadow</code>','<code>/etc/passwd</code>','<code>/etc/group</code>','<code>/etc/sudoers</code>'], correct:'B',
+        exp:'O <code>/etc/passwd</code> lista todos os usuários e pode ser lido por qualquer um. Não contém senhas reais — apenas "x", que indica que o hash real está em <code>/etc/shadow</code>.' },
+      { n:2, tag:'Senhas e Shadow', pts:5, texto:'O arquivo <code>/etc/shadow</code> armazena os hashes de senha. Quem tem permissão para <strong>ler</strong> esse arquivo?',
+        alts:['Qualquer usuário do sistema','Apenas o usuário root','Apenas root e grupo shadow','Apenas o grupo sudo'], correct:'C',
+        exp:'O <code>/etc/shadow</code> tem permissão 640: apenas root e membros do grupo shadow podem ler. Isso protege os hashes de ataques de força bruta offline.' },
+      { n:3, tag:'UID e Root', pts:5, texto:'O que realmente define o superusuário (root) no Linux?',
+        alts:['O nome de login ser "root"','UID igual a 0','Estar no grupo sudo','Ter shell /bin/bash'], correct:'B',
+        exp:'O Linux identifica o superusuário pelo número UID=0, não pelo nome. Por isso renomear "root" não retira os privilégios — o kernel verifica o UID.' },
+      { n:4, tag:'Criação de Usuário', pts:5, texto:'Ao criar um usuário com <code>useradd</code>, qual parâmetro garante que a pasta pessoal <code>/home/usuario</code> seja criada automaticamente?',
+        alts:['-s','-c','-G','-m'], correct:'D',
+        exp:'O parâmetro <code>-m</code> cria <code>/home/nomeusuario</code>. Sem ele, o usuário existe no sistema mas não tem pasta pessoal e não consegue salvar arquivos de configuração.' },
+      { n:5, tag:'Shell do Usuário', pts:5, texto:'O que o parâmetro <code>-s /bin/bash</code> define ao criar um usuário com useradd?',
+        alts:['Define o diretório home','Define o shell padrão do usuário','Cria o usuário como administrador','Define a senha inicial'], correct:'B',
+        exp:'Sem <code>-s /bin/bash</code>, o usuário não consegue fazer login interativo — o sistema usará um shell inválido. É obrigatório para contas que precisam de acesso ao terminal.' },
+      { n:6, tag:'Formato /etc/passwd', pts:5, texto:'Na linha <code>carlos:x:1001:1001:Carlos Souza:/home/carlos:/bin/bash</code>, o que o campo "x" representa?',
+        alts:['A senha em texto plano','A senha está armazenada em /etc/shadow','O UID do usuário','Que o usuário é administrador'], correct:'B',
+        exp:'O "x" indica que o hash real da senha está no <code>/etc/shadow</code>. Antigamente a senha ficava aqui, mas era inseguro por ser legível por qualquer usuário do sistema.' },
+      { n:7, tag:'Grupos', pts:5, texto:'Para adicionar o usuário "ana" ao grupo "rh" <strong>sem remover seus outros grupos</strong>, qual comando usar?',
+        alts:['<code>usermod -G rh ana</code>','<code>groupadd ana rh</code>','<code>usermod -aG rh ana</code>','<code>addgroup rh ana</code>'], correct:'C',
+        exp:'O <code>-aG</code> (append to Groups) adiciona ao grupo sem remover os outros. Usar apenas <code>-G</code> <strong>substitui</strong> todos os grupos do usuário — erro muito comum em administração Linux.' },
+      { n:8, tag:'Verificar Grupos', pts:5, texto:'Qual comando exibe o <strong>UID, GID e grupos</strong> de um usuário no Linux?',
+        alts:['<code>whoami joao</code>','<code>cat /etc/group joao</code>','<code>id joao</code>','<code>ls -la joao</code>'], correct:'C',
+        exp:'O comando <code>id</code> exibe uid, gid e todos os grupos. Exemplo: <code>uid=1001(joao) gid=1001(joao) groups=1001(joao),1002(ti)</code>. Essencial para verificar associações.' },
+    ]
+  },
+  {
+    section: 'B', title: 'Permissões rwx & Comando chmod', range: '09–16', pts: 40,
+    questions: [
+      { n:9, tag:'Leitura de Permissões', pts:5, texto:'Um arquivo tem a permissão <span class="perm-box">-rw-r--r--</span>. O que o <strong>grupo</strong> pode fazer?',
+        alts:['Ler, escrever e executar','Ler e escrever','Apenas ler','Nada — sem acesso'], correct:'C',
+        exp:'Em <code>-rw-r--r--</code>, as posições 4-6 são <code>r--</code> para o grupo: somente leitura (r=4, w=2, x=1). Grupo não escreve nem executa neste arquivo.' },
+      { n:10, tag:'chmod Octal', pts:5, texto:'Qual é o resultado de executar <code>chmod 700 pasta/</code>?',
+        alts:['Dono tem acesso total; grupo e outros não têm nenhum acesso','Todos têm acesso total à pasta','Dono lê e escreve; grupo e outros só leem','Ninguém tem acesso'], correct:'A',
+        exp:'700 = rwx(7) para dono + ---(0) para grupo + ---(0) para outros. O número 7 = 4(r)+2(w)+1(x). Ideal para diretórios pessoais e dados sigilosos.' },
+      { n:11, tag:'chmod 600', pts:5, texto:'Um administrador quer que <strong>somente o dono</strong> leia e escreva um arquivo, e ninguém mais tenha qualquer acesso. Qual <code>chmod</code> é correto?',
+        alts:['<code>chmod 755 arquivo</code>','<code>chmod 644 arquivo</code>','<code>chmod 600 arquivo</code>','<code>chmod 440 arquivo</code>'], correct:'C',
+        exp:'600 = rw-(6) dono + ---(0) grupo + ---(0) outros. Somente o dono lê e escreve. Usado para chaves SSH (<code>~/.ssh/id_rsa</code>) e arquivos de configuração sensíveis.' },
+      { n:12, tag:'chmod Simbólico', pts:5, texto:'O comando <code>chmod u+x script.sh</code> realiza qual ação?',
+        alts:['Remove a permissão de execução de todos','Adiciona permissão de execução para o grupo','Adiciona permissão de execução para o dono do arquivo','Torna o arquivo somente leitura'], correct:'C',
+        exp:'u=dono, +=adicionar, x=execução. Não altera as permissões de grupo e outros. Útil para tornar scripts shell executáveis sem abrir para todos.' },
+      { n:13, tag:'Permissões Perigosas', pts:5, texto:'Por que a permissão <code>chmod 777</code> em um arquivo de configuração é considerada <strong>perigosa</strong>?',
+        alts:['Porque impede que o root leia o arquivo','Porque qualquer usuário do sistema pode modificar o arquivo, facilitando ataques','Porque o arquivo fica invisível para outros usuários','Porque consome mais espaço em disco'], correct:'B',
+        exp:'777 = rwxrwxrwx. Qualquer usuário do sistema pode escrever no arquivo, possibilitando injeção de código malicioso e escalada de privilégios — vetor clássico de ataque em servidores Linux.' },
+      { n:14, tag:'Permissões Comuns', pts:5, texto:'Qual permissão octal é mais adequada para <strong>diretórios públicos</strong>, onde o dono pode editar, mas outros apenas acessam?',
+        alts:['<code>600</code>','<code>644</code>','<code>755</code>','<code>777</code>'], correct:'C',
+        exp:'755 = rwxr-xr-x. Dono tem acesso total (rwx), grupo e outros podem ler e entrar no diretório (r-x). Padrão para diretórios web públicos e programas.' },
+      { n:15, tag:'Listagem de Permissões', pts:5, texto:'Qual comando exibe as <strong>permissões detalhadas</strong> de arquivos e diretórios, incluindo dono e grupo?',
+        alts:['<code>cat /etc/passwd</code>','<code>ls -la</code>','<code>chmod -v</code>','<code>id -l</code>'], correct:'B',
+        exp:'<code>ls -l</code> mostra permissões, dono, grupo, tamanho e data. <code>-a</code> inclui arquivos ocultos (iniciados com ponto). Essencial para análise de segurança e auditoria.' },
+      { n:16, tag:'Saída do ls -la', pts:5, texto:'Na saída <span class="perm-box">-rwx------</span>, o que representa o primeiro caractere "<strong>-</strong>"?',
+        alts:['Que o arquivo não tem dono','Que o arquivo está bloqueado','Que é um arquivo regular (não é diretório nem link)','Que o arquivo tem permissão de execução negada'], correct:'C',
+        exp:'"–" = arquivo regular. "d" = diretório. "l" = link simbólico. "b" = dispositivo de bloco. "c" = dispositivo de caractere. O primeiro caractere sempre indica o tipo do item.' },
+    ]
+  },
+  {
+    section: 'C', title: 'Controle de Acesso Avançado', range: '17–20', pts: 20,
+    questions: [
+      { n:17, tag:'ACL', pts:5, texto:'Um arquivo tem permissão <span class="perm-box">-rw-r-----+</span>. O que significa o "<strong>+</strong>" no final?',
+        alts:['O arquivo tem o bit SUID ativo','O arquivo está bloqueado para escrita','O arquivo possui ACLs configuradas além das permissões padrão','O arquivo pertence ao grupo root'], correct:'C',
+        exp:'O "+" indica que o arquivo tem ACL (Access Control List) ativa além das permissões padrão. Use <code>getfacl arquivo</code> para ver as entradas detalhadas.' },
+      { n:18, tag:'chage', pts:5, texto:'O que o comando <code>sudo chage -d 0 joao</code> faz?',
+        alts:['Remove a conta joao após 0 dias','Força joao a trocar a senha no próximo login','Define que a senha de joao nunca expira','Bloqueia a conta imediatamente'], correct:'B',
+        exp:'<code>-d 0</code> define a data da última mudança como zero (época Unix), fazendo o sistema entender que a senha expirou imediatamente. No próximo login, a troca é obrigatória.' },
+      { n:19, tag:'Auditoria', pts:5, texto:'Por que o comando <code>find / -perm 0777 -type f</code> é importante em auditorias de segurança?',
+        alts:['Localiza arquivos de configuração para backup','Lista scripts que precisam de permissão de execução','Identifica arquivos com permissão total para todos — possíveis vetores de ataque','Encontra arquivos pertencentes ao root'], correct:'C',
+        exp:'Arquivos com 777 permitem que qualquer usuário escreva neles. Um atacante pode modificar scripts e executar código com privilégios alheios — por isso auditar e corrigir permissões 777 é essencial.' },
+      { n:20, tag:'Princípio do Menor Privilégio', pts:5, texto:'Qual afirmação descreve corretamente o <strong>Princípio do Menor Privilégio</strong> aplicado a permissões Linux?',
+        alts:['Todo usuário deve ter permissão de leitura em todos os arquivos do sistema','Cada usuário ou processo deve ter apenas as permissões mínimas para executar sua função','O root deve ser usado para todas as operações a fim de evitar erros de permissão','Grupos devem ter sempre permissão rwx para facilitar o trabalho colaborativo'], correct:'B',
+        exp:'Menor privilégio = limita o dano em caso de comprometimento. Acesso irrestrito aumenta a superfície de ataque; root para tudo é antiprática e perigoso; rwx indiscriminado viola o princípio.' },
+    ]
+  }
+];
+
+// ═══════════════════════════════════════════
+// DATA — PROVA PRÁTICA
+// ═══════════════════════════════════════════
+const praticaData = [
+  {
+    section:'A', title:'Criação e Gerenciamento de Usuários', pts:30,
+    tasks:[{
+      n:1, title:'Criando Usuários e Verificando o Sistema', pts:30,
+      context:'Você foi contratado como técnico de TI de uma pequena empresa. Antes de configurar o servidor, precisa criar contas para dois novos funcionários e verificar como o Linux organiza essas informações.',
+      steps:[
+        'Execute <code>cat /etc/passwd | head -5</code>. Anote o formato da saída e identifique os campos: <strong>nome de login, "x", UID, GID, comentário, home e shell</strong>.',
+        'Crie um usuário chamado <strong>carlos</strong>: <code>sudo useradd -m -s /bin/bash -c "Carlos Souza" carlos</code>. Em seguida: <code>sudo passwd carlos</code>',
+        'Crie um segundo usuário chamado <strong>patricia</strong> da mesma forma.',
+        'Execute <code>grep carlos /etc/passwd</code> e <code>grep patricia /etc/passwd</code>. Cole a saída e identifique o UID de cada um.',
+        'Execute <code>ls -la /home/</code>. Mostre as pastas de carlos e patricia criadas automaticamente.'
+      ],
+      placeholder:'Cole aqui os outputs dos comandos executados (grep, ls) e explique o formato do /etc/passwd com os campos identificados.\n\nExemplo de saída esperada:\ncarlos:x:1001:1001:Carlos Souza:/home/carlos:/bin/bash\n\nSua resposta:',
+      checklist:['cat /etc/passwd executado e formato explicado','Usuário carlos criado com -m e -s /bin/bash','Usuário patricia criado da mesma forma','Saída do grep colada com os dois usuários','UIDs identificados (≥1000)','ls -la /home/ mostrando as pastas'],
+      gabarito:{
+        resposta:'Comandos esperados: sudo useradd -m -s /bin/bash -c "..." nome · sudo passwd nome · grep nome /etc/passwd',
+        exp:'O /etc/passwd usa o formato: login:x:UID:GID:comentário:home:shell. O silêncio do useradd indica sucesso. UIDs normalmente começam a partir de 1000 para usuários comuns. O ls -la /home deve mostrar drwxr-xr-x com os donos corretos.'
+      }
+    }]
+  },
+  {
+    section:'B', title:'Grupos e Permissões de Acesso', pts:30,
+    tasks:[{
+      n:2, title:'Criando Grupos e Controlando o Acesso a Arquivos', pts:30,
+      context:'A empresa tem dois departamentos: TI e RH. Você deve criar grupos para cada setor, associar os usuários e garantir que os arquivos sigilosos do RH só possam ser lidos pelo dono.',
+      steps:[
+        'Crie os grupos: <code>sudo groupadd ti && sudo groupadd rh</code>',
+        'Adicione carlos ao grupo ti e patricia ao grupo rh sem remover grupos originais: <code>sudo usermod -aG ti carlos</code> e <code>sudo usermod -aG rh patricia</code>',
+        'Execute <code>id carlos</code> e <code>id patricia</code>. Confirme os grupos e cole a saída.',
+        'Crie um arquivo sigiloso: <code>touch /tmp/folha_pagamento.txt && chmod 600 /tmp/folha_pagamento.txt</code>',
+        'Execute <code>ls -la /tmp/folha_pagamento.txt</code>. Cole a saída e explique o que cada parte da permissão significa.'
+      ],
+      placeholder:'Cole os outputs (id, ls -la) e explique o que significa a permissão -rw------- mostrada para o arquivo.\n\nSaída esperada do ls:\n-rw------- 1 aluno aluno 0 [data] /tmp/folha_pagamento.txt\n\nSua explicação da permissão:',
+      checklist:['Grupos ti e rh criados com groupadd','usermod -aG usado (não -G sem "a")','Saída do id confirmando os grupos','chmod 600 aplicado ao arquivo','ls -la colado mostrando -rw-------','Explicação da permissão por escrito'],
+      gabarito:{
+        resposta:'-rw------- 1 aluno aluno 0 [data] /tmp/folha_pagamento.txt',
+        exp:'O -aG é obrigatório (append); -G sem "a" substituiria todos os grupos. chmod 600 = rw------- → somente dono lê e escreve. Os três grupos de 3 bits: dono(rw-), grupo(---), outros(---). Cada "-" representa uma permissão negada.'
+      }
+    }]
+  },
+  {
+    section:'C', title:'Estrutura de Diretórios com Permissões Profissionais', pts:25,
+    tasks:[{
+      n:3, title:'Criando a Estrutura de Arquivos da Empresa com Permissões Corretas', pts:25,
+      context:'Como administrador, você precisa criar uma estrutura de diretórios para o servidor e garantir que cada pasta tenha as permissões corretas conforme o nível de confidencialidade.',
+      steps:[
+        'Crie toda a estrutura: <code>mkdir -p /tmp/empresa/rh /tmp/empresa/ti /tmp/empresa/publico</code>',
+        'Crie os arquivos .txt em cada pasta com <code>touch</code>.',
+        'Aplique: rh/ → chmod 700 · ti/ → chmod 750 · publico/ → chmod 755 · arquivos .txt → chmod 644',
+        'Execute <code>ls -la /tmp/empresa/</code> e <code>ls -la /tmp/empresa/rh/</code>. Cole ambas as saídas.',
+        '<strong>Responda por escrito:</strong> por que a pasta rh/ tem permissão 700 e não 755? Explique o risco de deixá-la com 755.'
+      ],
+      placeholder:'Cole as saídas dos ls e responda à questão de justificativa.\n\nEstrutura esperada:\n/tmp/empresa/\n  rh/      → chmod 700 (drwx------)\n  ti/      → chmod 750 (drwxr-x---)\n  publico/ → chmod 755 (drwxr-xr-x)\n  arquivos → chmod 644 (-rw-r--r--)\n\nJustificativa (por que 700 e não 755 no rh/):',
+      checklist:['Estrutura de diretórios criada conforme diagrama','Arquivos .txt criados em cada pasta','chmod 700 em rh/, chmod 750 em ti/, chmod 755 em publico/','chmod 644 em todos os arquivos .txt','ls -la /tmp/empresa/ colado','Justificativa sobre o uso de 700 no rh/'],
+      gabarito:{
+        resposta:'rh/ = drwx------ (700) · ti/ = drwxr-x--- (750) · publico/ = drwxr-xr-x (755) · arquivos = -rw-r--r-- (644)',
+        exp:'rh/ com 700 porque contém dados sigilosos (salários, contratos). Com 755, qualquer usuário do sistema poderia entrar no diretório e listar os arquivos, violando a confidencialidade dos dados de RH — um exemplo de violação do princípio do menor privilégio.'
+      }
+    }]
+  },
+  {
+    section:'D', title:'Auditoria e Segurança de Permissões', pts:15,
+    tasks:[{
+      n:4, title:'Detectando e Corrigindo Permissões Inseguras', pts:15,
+      context:'Como técnico de segurança, você recebeu um servidor suspeito de ter configurações de permissão incorretas. Precisa identificar arquivos com permissão total (777) e corrigi-los.',
+      steps:[
+        'Crie arquivos inseguros: <code>touch /tmp/arquivo_inseguro.sh && chmod 777 /tmp/arquivo_inseguro.sh</code> e <code>touch /tmp/config_exposta.txt && chmod 777 /tmp/config_exposta.txt</code>',
+        'Execute a auditoria: <code>find /tmp -perm 0777 -type f 2>/dev/null</code>. Anote os arquivos encontrados.',
+        'Corrija: <code>chmod 644 /tmp/config_exposta.txt</code> e <code>chmod 755 /tmp/arquivo_inseguro.sh</code>',
+        'Rode o find novamente. Confirme que nenhum arquivo com 777 aparece.',
+        '<strong>Explique por escrito:</strong> qual é o risco de um script (.sh) com permissão 777 em um servidor com múltiplos usuários?'
+      ],
+      placeholder:'Cole a saída do find ANTES da correção, depois da correção, e explique o risco de segurança.\n\nSaída esperada antes:\n/tmp/arquivo_inseguro.sh\n/tmp/config_exposta.txt\n\nSaída esperada depois:\n(nenhum resultado)\n\nExplicação do risco do script com 777:',
+      checklist:['Arquivos inseguros criados e encontrados pelo find','Saída do find ANTES da correção colada','chmod 644 aplicado em config_exposta.txt','chmod 755 aplicado em arquivo_inseguro.sh','Saída do find DEPOIS confirmando a resolução','Risco do script com 777 explicado por escrito'],
+      gabarito:{
+        resposta:'/tmp/arquivo_inseguro.sh  /tmp/config_exposta.txt',
+        exp:'Um script .sh com 777 permite que qualquer usuário do sistema escreva nele. Um atacante com conta comum pode injetar código malicioso no script e, se ele for executado por um usuário privilegiado, obtém escalada de privilégios — um dos vetores mais comuns de movimentação lateral em servidores Linux.'
+      }
+    }]
+  }
+];
+
+// ═══════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════
+let currentExam = 'teorica';
+let answers = {}; // { 'q1': 'B', 'q2': 'A', ... }
+let taskAnswers = {}; // { 'task1': '...', ... }
+let taskChecks = {}; // { 'task1': [true, false, ...], ... }
+let confirmed = {}; // { 'q1': true, ... }
+let taskConfirmed = {}; // { 'task1': true, ... }
+let totalScore = 0;
+let timer = null;
+let timeLeft = 50 * 60;
+let examFinished = false;
+
+// ═══════════════════════════════════════════
+// RENDER TEÓRICA
+// ═══════════════════════════════════════════
+function renderTeorica() {
+  const container = document.getElementById('teorica-content');
+  let html = '';
+
+  teoricaData.forEach(sec => {
+    html += `
+      <div class="section-header">
+        <span class="section-badge">SEÇÃO ${sec.section}</span>
+        <span class="section-name">${sec.title}</span>
+        <span class="section-pts">Questões ${sec.range} · ${sec.pts} pontos</span>
+      </div>`;
+
+    sec.questions.forEach(q => {
+      const letters = ['A','B','C','D'];
+      let altsHtml = q.alts.map((a,i) => `
+        <li class="alt-item" id="alt-q${q.n}-${letters[i]}" onclick="selectAlt(${q.n},'${letters[i]}')">
+          <span class="alt-letter">${letters[i]}</span>
+          <span class="alt-text">${a}</span>
+        </li>`).join('');
+
+      html += `
+        <div class="q-card" id="qcard-${q.n}">
+          <div class="q-head">
+            <span class="q-num">Q${String(q.n).padStart(2,'0')}</span>
+            <span class="q-tag">${q.tag}</span>
+            <span class="q-pts">${q.pts} pts</span>
+            <span class="q-status-icon" id="qstatus-${q.n}"></span>
+          </div>
+          <div class="q-body">
+            <div class="q-texto">${q.texto}</div>
+            <ul class="alternatives">${altsHtml}</ul>
+            <button class="btn-confirm" id="btnconf-q${q.n}" onclick="confirmAnswer(${q.n})" disabled>
+              CONFIRMAR RESPOSTA →
+            </button>
+            <div id="feedback-q${q.n}"></div>
+          </div>
+        </div>`;
+    });
+  });
+
+  container.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════
+// RENDER PRÁTICA
+// ═══════════════════════════════════════════
+function renderPratica() {
+  const container = document.getElementById('pratica-content');
+  let html = '';
+
+  praticaData.forEach(sec => {
+    html += `
+      <div class="section-header">
+        <span class="section-badge">SEÇÃO ${sec.section}</span>
+        <span class="section-name">${sec.title}</span>
+        <span class="section-pts">${sec.pts} pontos</span>
+      </div>`;
+
+    sec.tasks.forEach(task => {
+      const stepsHtml = task.steps.map((s,i) => `
+        <div class="task-step">
+          <span class="step-num">${i+1}.</span>
+          <span>${s}</span>
+        </div>`).join('');
+
+      const checkHtml = task.checklist.map((c,i) => `
+        <label class="checklist-item" id="check-t${task.n}-${i}">
+          <input type="checkbox" onchange="toggleCheck(${task.n},${i},this.checked)"> ${c}
+        </label>`).join('');
+
+      html += `
+        <div class="task-card" id="tcard-${task.n}">
+          <div class="task-head">
+            <span class="task-num-badge">TAREFA ${String(task.n).padStart(2,'0')}</span>
+            <span class="task-title-text">${task.title}</span>
+            <span class="task-pts-badge">${task.pts} pts</span>
+          </div>
+          <div class="task-context">${task.context}</div>
+          <div class="task-steps">${stepsHtml}</div>
+          <div class="task-answer-area">
+            <div class="task-answer-label">SUA RESPOSTA / OUTPUTS</div>
+            <textarea class="task-textarea" id="taskans-${task.n}" placeholder="${task.placeholder}"
+              oninput="taskAnswers[${task.n}]=this.value; updateFinishBtn()"></textarea>
+          </div>
+          <div class="checklist-section">
+            <div class="checklist-title">☑ CHECKLIST DE ENTREGA</div>
+            ${checkHtml}
+          </div>
+          <div style="padding:14px 16px 16px">
+            <button class="btn-confirm" id="btnconf-t${task.n}" onclick="confirmTask(${task.n})">
+              ENVIAR PARA AVALIAÇÃO COM IA →
+            </button>
+            <div id="feedback-t${task.n}"></div>
+          </div>
+        </div>`;
+    });
+  });
+
+  container.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════
+// RENDER SIDEBAR NAV
+// ═══════════════════════════════════════════
+function renderNav() {
+  let tHtml = '';
+  teoricaData.forEach(sec => {
+    tHtml += `<div class="nav-section">SEÇÃO ${sec.section}</div>`;
+    sec.questions.forEach(q => {
+      tHtml += `<div class="nav-item" id="nav-q${q.n}" onclick="scrollToQ(${q.n},'teorica')">
+        <span class="nav-num">Q${String(q.n).padStart(2,'0')}</span>
+        <span class="nav-label">${q.tag}</span>
+        <span class="nav-status" id="navst-q${q.n}">—</span>
+      </div>`;
+    });
+  });
+  document.getElementById('nav-teorica').innerHTML = tHtml;
+
+  let pHtml = '';
+  praticaData.forEach(sec => {
+    pHtml += `<div class="nav-section">SEÇÃO ${sec.section}</div>`;
+    sec.tasks.forEach(t => {
+      pHtml += `<div class="nav-item" id="nav-t${t.n}" onclick="scrollToQ(${t.n},'pratica')">
+        <span class="nav-num">T${String(t.n).padStart(2,'0')}</span>
+        <span class="nav-label">${t.title.split(' ').slice(0,3).join(' ')}...</span>
+        <span class="nav-status" id="navst-t${t.n}">—</span>
+      </div>`;
+    });
+  });
+  document.getElementById('nav-pratica').innerHTML = pHtml;
+}
+
+// ═══════════════════════════════════════════
+// INTERACTIONS
+// ═══════════════════════════════════════════
+function selectAlt(qn, letter) {
+  if (confirmed['q'+qn]) return;
+  answers['q'+qn] = letter;
+  const letters = ['A','B','C','D'];
+  letters.forEach(l => {
+    const el = document.getElementById(`alt-q${qn}-${l}`);
+    if (!el) return;
+    el.classList.remove('selected');
+    if (l === letter) el.classList.add('selected');
+  });
+  document.getElementById(`btnconf-q${qn}`).disabled = false;
+}
+
+function confirmAnswer(qn) {
+  if (confirmed['q'+qn]) return;
+  confirmed['q'+qn] = true;
+
+  const allQs = teoricaData.flatMap(s => s.questions);
+  const q = allQs.find(x => x.n === qn);
+  const chosen = answers['q'+qn];
+  const isCorrect = chosen === q.correct;
+  const letters = ['A','B','C','D'];
+
+  // disable all alts
+  letters.forEach(l => {
+    const el = document.getElementById(`alt-q${qn}-${l}`);
+    if (!el) return;
+    el.classList.add('disabled');
+    if (l === q.correct) el.classList.add('correct-ans');
+    if (l === chosen && !isCorrect) el.classList.add('wrong-sel');
+  });
+
+  document.getElementById(`btnconf-q${qn}`).style.display = 'none';
+
+  const card = document.getElementById(`qcard-${qn}`);
+  card.classList.add(isCorrect ? 'correct' : 'wrong-ans');
+
+  const statusIcon = document.getElementById(`qstatus-${qn}`);
+  statusIcon.textContent = isCorrect ? '✓' : '✗';
+  statusIcon.style.color = isCorrect ? 'var(--green)' : 'var(--red)';
+
+  // update sidebar nav
+  const navSt = document.getElementById(`navst-q${qn}`);
+  navSt.textContent = isCorrect ? '✓' : '✗';
+  navSt.style.color = isCorrect ? 'var(--green)' : 'var(--red)';
+
+  if (isCorrect) totalScore += q.pts;
+
+  // show feedback
+  const fbDiv = document.getElementById(`feedback-q${qn}`);
+  fbDiv.innerHTML = `
+    <div class="feedback-block">
+      <div class="feedback-head ${isCorrect?'correct':'wrong'}">
+        <span class="feedback-icon">${isCorrect?'●':'○'}</span>
+        <span class="feedback-label">${isCorrect?'RESPOSTA CORRETA':'RESPOSTA INCORRETA'}</span>
+        <span class="feedback-pts">${isCorrect?'+'+q.pts+' pts':'0 pts'}</span>
+      </div>
+      <div class="feedback-body">
+        ${!isCorrect?`<div class="feedback-correct-ans">Resposta correta: ${q.correct}) ${q.alts[['A','B','C','D'].indexOf(q.correct)]}</div>`:''}
+        <div class="feedback-exp">${q.exp}</div>
+      </div>
+    </div>`;
+
+  updateScore();
+  updateFinishBtn();
+}
+
+function toggleCheck(taskN, idx, val) {
+  if (!taskChecks[taskN]) taskChecks[taskN] = [];
+  taskChecks[taskN][idx] = val;
+}
+
+async function confirmTask(taskN) {
+  if (taskConfirmed[taskN]) return;
+  taskConfirmed[taskN] = true;
+
+  const btn = document.getElementById(`btnconf-t${taskN}`);
+  btn.disabled = true;
+  btn.textContent = 'AVALIANDO...';
+
+  const ta = document.getElementById(`taskans-${taskN}`);
+  ta.disabled = true;
+
+  const allTasks = praticaData.flatMap(s => s.tasks);
+  const task = allTasks.find(t => t.n === taskN);
+  const userAnswer = taskAnswers[taskN] || '';
+  const checks = taskChecks[taskN] || [];
+  const checkCount = checks.filter(Boolean).length;
+  const totalChecks = task.checklist.length;
+
+  const fbDiv = document.getElementById(`feedback-t${taskN}`);
+  fbDiv.innerHTML = `
+    <div class="feedback-block" style="margin-top:14px">
+      <div class="feedback-head" style="background:var(--yellow-bg);border-bottom-color:rgba(255,201,79,0.2)">
+        <span class="feedback-icon" style="color:var(--yellow)">◐</span>
+        <span class="feedback-label" style="color:var(--yellow)">AVALIAÇÃO COM IA EM ANDAMENTO</span>
+      </div>
+      <div class="feedback-body">
+        <div class="feedback-ai" id="ai-feedback-t${taskN}">
+          <span class="loading-dots">Analisando sua resposta</span>
+        </div>
+      </div>
+    </div>`;
+
+  // Estimativa por checklist
+  const checkScore = Math.round((checkCount / totalChecks) * task.pts);
+
+  try {
+    const prompt = `Você é professor da disciplina ISO-103 (Segurança da Informação) corrigindo uma avaliação prática sobre permissões Linux.
+
+TAREFA ${taskN}: ${task.title} (${task.pts} pontos)
+Contexto: ${task.context}
+Gabarito esperado: ${task.gabarito.resposta}
+Explicação técnica do gabarito: ${task.gabarito.exp}
+
+RESPOSTA DO ALUNO:
+"${userAnswer || '(sem resposta)'}"
+
+Checklist marcado pelo aluno: ${checkCount} de ${totalChecks} itens confirmados.
+
+Analise a resposta do aluno e forneça:
+1. Uma pontuação estimada (de 0 a ${task.pts} pontos) — seja rigoroso mas justo
+2. Feedback específico sobre o que está correto e o que está faltando
+3. Uma dica de melhoria (se houver)
+
+Responda em português, de forma direta e técnica, em 3-5 frases. Comece com a pontuação: "Pontuação estimada: X/${task.pts} pts"`;
+
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        messages:[{role:'user',content:prompt}]
+      })
+    });
+
+    const data = await res.json();
+    const text = data.content?.[0]?.text || 'Não foi possível gerar feedback.';
+
+    // Extract score from AI response
+    const scoreMatch = text.match(/(\d+)\s*\/\s*\d+\s*pts?/i);
+    const aiScore = scoreMatch ? parseInt(scoreMatch[1]) : checkScore;
+    totalScore += Math.min(aiScore, task.pts);
+
+    document.getElementById(`feedback-t${taskN}`).innerHTML = `
+      <div class="feedback-block" style="margin-top:14px">
+        <div class="feedback-head" style="background:var(--blue-bg);border-bottom-color:rgba(79,159,255,0.2)">
+          <span class="feedback-icon" style="color:var(--blue)">◈</span>
+          <span class="feedback-label" style="color:var(--blue)">FEEDBACK DA IA</span>
+          <span class="feedback-pts" style="color:var(--blue)">Checklist: ${checkCount}/${totalChecks}</span>
+        </div>
+        <div class="feedback-body">
+          <div class="feedback-correct-ans" style="border-color:var(--blue);background:var(--blue-bg);color:var(--blue)">
+            Gabarito: ${task.gabarito.resposta}
+          </div>
+          <div class="feedback-exp" style="margin-top:12px">${text.replace(/\n/g,'<br>')}</div>
+        </div>
+      </div>`;
+
+    document.getElementById(`navst-t${taskN}`).textContent = '✓';
+    document.getElementById(`navst-t${taskN}`).style.color = 'var(--blue)';
+    btn.textContent = 'AVALIADO';
+    updateScore();
+    updateFinishBtn();
+
+  } catch(e) {
+    totalScore += checkScore;
+    document.getElementById(`feedback-t${taskN}`).innerHTML = `
+      <div class="feedback-block" style="margin-top:14px">
+        <div class="feedback-head" style="background:var(--blue-bg)">
+          <span class="feedback-label" style="color:var(--blue)">GABARITO</span>
+        </div>
+        <div class="feedback-body">
+          <div class="feedback-correct-ans" style="border-color:var(--blue);background:var(--blue-bg);color:var(--blue)">${task.gabarito.resposta}</div>
+          <div class="feedback-exp">${task.gabarito.exp}</div>
+          <div class="feedback-exp" style="color:var(--text3);margin-top:8px">Pontuação por checklist: ${checkScore}/${task.pts} pts (${checkCount}/${totalChecks} itens confirmados)</div>
+        </div>
+      </div>`;
+    updateScore();
+  }
+}
+
+function scrollToQ(n, type) {
+  if (currentExam !== type) switchExam(type);
+  setTimeout(() => {
+    const el = document.getElementById(type === 'teorica' ? `qcard-${n}` : `tcard-${n}`);
+    if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+  }, 50);
+}
+
+function switchExam(exam) {
+  currentExam = exam;
+  document.getElementById('teorica-content').classList.toggle('hide', exam !== 'teorica');
+  document.getElementById('pratica-content').classList.toggle('hide', exam !== 'pratica');
+  document.getElementById('nav-teorica').classList.toggle('hide', exam !== 'teorica');
+  document.getElementById('nav-pratica').classList.toggle('hide', exam !== 'pratica');
+  document.getElementById('tab-teorica').classList.toggle('active', exam === 'teorica');
+  document.getElementById('tab-pratica').classList.toggle('active', exam !== 'teorica');
+
+  if (exam === 'pratica') {
+    document.getElementById('prova-badge').textContent = '▶ AVALIAÇÃO PRÁTICA';
+    document.getElementById('prova-title').textContent = 'Permissões, Usuários & Auditoria Linux';
+  } else {
+    document.getElementById('prova-badge').textContent = '▶ AVALIAÇÃO TEÓRICA';
+    document.getElementById('prova-title').textContent = 'Usuários, Permissões & Controle de Acesso';
+  }
+}
+
+function updateScore() {
+  const confirmedCount = Object.keys(confirmed).length + Object.keys(taskConfirmed).length;
+  const totalQ = 20 + 4;
+  document.getElementById('score-display').textContent = `${totalScore} / 100`;
+  document.getElementById('score-sub').textContent = `${confirmedCount} de ${totalQ} respondidas`;
+}
+
+function updateFinishBtn() {
+  const allAnswered = Object.keys(answers).length >= 20;
+  document.getElementById('btn-finish').disabled = !allAnswered;
+}
+
+function finishExam() {
+  examFinished = true;
+  clearInterval(timer);
+
+  // Confirm all unanswered
+  teoricaData.flatMap(s => s.questions).forEach(q => {
+    if (!confirmed['q'+q.n]) {
+      if (answers['q'+q.n]) confirmAnswer(q.n);
+    }
+  });
+
+  document.getElementById('exam-view').classList.add('hide');
+  const results = document.getElementById('results-screen');
+  results.style.display = 'block';
+
+  // Calculate section scores
+  const secScores = [];
+  teoricaData.forEach(sec => {
+    let pts = 0;
+    sec.questions.forEach(q => {
+      if (answers['q'+q.n] === q.correct) pts += q.pts;
+    });
+    secScores.push({label: `Seção ${sec.section} — ${sec.title}`, pts, max: sec.pts});
+  });
+  praticaData.forEach(sec => {
+    let pts = 0;
+    sec.tasks.forEach(t => {
+      const checks = taskChecks[t.n] || [];
+      pts += Math.round((checks.filter(Boolean).length / t.checklist.length) * t.pts);
+    });
+    secScores.push({label: `Seção ${sec.section} (Prática) — ${sec.title}`, pts, max: sec.pts});
+  });
+
+  const nota = (totalScore / 10).toFixed(1);
+  const aprovado = totalScore >= 60;
+  const correctCount = teoricaData.flatMap(s => s.questions).filter(q => answers['q'+q.n] === q.correct).length;
+
+  let breakdownHtml = secScores.map(s => `
+    <div class="breakdown-row">
+      <span class="breakdown-section">${s.label}</span>
+      <div class="breakdown-bar-wrap">
+        <div class="breakdown-bar" style="width:${(s.pts/s.max)*100}%"></div>
+      </div>
+      <span class="breakdown-score">${s.pts}/${s.max}</span>
+    </div>`).join('');
+
+  results.innerHTML = `
+    <div class="result-header">
+      <div class="result-badge">▶ RESULTADO FINAL · ISO-103 2026</div>
+      <div class="result-title">Avaliação Concluída</div>
+      <div class="result-subtitle">Semana 06 · ${document.getElementById('student-name').value || 'Aluno'}</div>
+    </div>
+
+    <div class="result-score-big">
+      <span class="result-score-num">${totalScore}</span>
+      <span class="result-score-denom">/ 100 pts</span>
+      <span class="result-grade">→ Nota ${nota}</span>
+    </div>
+
+    <div class="result-status ${aprovado?'aprovado':'reprovado'}">
+      ${aprovado ? '✓ APROVADO' : '✗ REPROVADO'} · ${aprovado ? 'Parabéns!' : 'Nota mínima: 6,0'}
+    </div>
+
+    <div class="result-grid">
+      <div class="result-card">
+        <div class="result-card-label">PONTUAÇÃO TOTAL</div>
+        <div class="result-card-val ${aprovado?'val-green':'val-red'}">${totalScore}</div>
+        <div class="result-card-sub">de 100 pontos</div>
+      </div>
+      <div class="result-card">
+        <div class="result-card-label">NOTA FINAL</div>
+        <div class="result-card-val ${aprovado?'val-green':'val-red'}">${nota}</div>
+        <div class="result-card-sub">mínimo: 6,0</div>
+      </div>
+      <div class="result-card">
+        <div class="result-card-label">ACERTOS (TEÓRICA)</div>
+        <div class="result-card-val val-yellow">${correctCount}/20</div>
+        <div class="result-card-sub">questões corretas</div>
+      </div>
+      <div class="result-card">
+        <div class="result-card-label">SITUAÇÃO</div>
+        <div class="result-card-val ${aprovado?'val-green':'val-red'}">${aprovado?'APR':'REP'}</div>
+        <div class="result-card-sub">${aprovado?'Aprovado':'Reprovado'}</div>
+      </div>
+    </div>
+
+    <div class="result-breakdown">
+      <div class="breakdown-header">Desempenho por Seção</div>
+      ${breakdownHtml}
+    </div>
+
+    <button class="btn-retry" onclick="location.reload()">↺ REFAZER AVALIAÇÃO</button>`;
+}
+
+// ═══════════════════════════════════════════
+// TIMER
+// ═══════════════════════════════════════════
+function startTimer() {
+  const el = document.getElementById('timer');
+  timer = setInterval(() => {
+    timeLeft--;
+    const m = Math.floor(timeLeft / 60);
+    const s = timeLeft % 60;
+    el.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    if (timeLeft <= 300) el.classList.add('warning');
+    if (timeLeft <= 60) { el.classList.remove('warning'); el.classList.add('danger'); }
+    if (timeLeft <= 0) { clearInterval(timer); finishExam(); }
+  }, 1000);
+}
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+window.addEventListener('load', () => {
+  const fill = document.getElementById('prog-fill');
+  let pct = 0;
+  const interval = setInterval(() => {
+    pct += Math.random() * 15;
+    if (pct >= 100) { pct = 100; clearInterval(interval); }
+    fill.style.width = pct + '%';
+  }, 120);
+
+  setTimeout(() => {
+    document.getElementById('loading-screen').style.opacity = '0';
+    setTimeout(() => {
+      document.getElementById('loading-screen').style.display = 'none';
+      document.getElementById('app').style.display = 'flex';
+      renderTeorica();
+      renderPratica();
+      renderNav();
+      startTimer();
+    }, 500);
+  }, 1800);
+});
+</script>
+</body>
+</html>
