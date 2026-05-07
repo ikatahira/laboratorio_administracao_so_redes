@@ -934,6 +934,19 @@ PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
 <span class="indent">      </span><span class="key">addresses:</span>
 <span class="indent">        </span>- <span class="val">192.168.10.1/24</span>
         </div>
+        <div class="box box-warn" style="margin-top:10px;">
+          📐 <strong>Mapa de espaços — conte exatamente assim:</strong><br><br>
+          <span style="font-family:var(--mono);font-size:0.88em;line-height:2.2;display:block;">
+            <span style="color:var(--green);">network:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 0 — sem espaço antes</span><br>
+            <span style="color:var(--purple);">··</span><span style="color:var(--orange);">version: 2</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 1 — <strong>2 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">··</span><span style="color:var(--orange);">ethernets:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 1 — <strong>2 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">····</span><span style="color:var(--orange);">enp0s8:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 2 — <strong>4 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">······</span><span style="color:var(--orange);">dhcp4: false</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 3 — <strong>6 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">······</span><span style="color:var(--orange);">addresses:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 3 — <strong>6 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">········</span><span style="color:var(--blue);">- 192.168.10.1/24</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;← nível 4 — <strong>8 espaços</strong> + traço</span>
+          </span>
+          <br>⚠️ Use <strong>espaços</strong>, nunca a tecla Tab. Um espaço errado causa erro ao aplicar.
+        </div>
         <div class="box box-tip">📐 <strong>Por que 192.168.10.1/24?</strong> O IP <code>192.168.10.1</code> é o gateway da rede interna. O <code>/24</code> significa máscara <code>255.255.255.0</code> — ou seja, todos os IPs de <code>192.168.10.1</code> a <code>192.168.10.254</code> estão na mesma rede.</div>
       </div>
     </div>
