@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semana 5.1 — Roteamento pela Internet via Firewall | ISO-103</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080b12;
+  --card: #0f1320;
+  --card2: #131826;
+  --border: #1e2640;
+  --border2: #252d45;
+  --green: #00e5a0;
+  --green-dim: rgba(0,229,160,0.08);
+  --green-glow: rgba(0,229,160,0.25);
+  --blue: #4da6ff;
+  --blue-dim: rgba(77,166,255,0.1);
+  --orange: #ff8c42;
+  --orange-dim: rgba(255,140,66,0.1);
+  --red: #ff5c7a;
+  --red-dim: rgba(255,92,122,0.1);
+  --yellow: #ffd060;
+  --yellow-dim: rgba(255,208,96,0.08);
+  --purple: #b48eff;
+  --cyan: #00d4ff;
+  --text: #d8e4f0;
+  --text2: #8a9bb8;
+  --muted: #4a5878;
+  --code-bg: #060910;
+  --mono: 'Space Mono', monospace;
+  --sans: 'Sora', sans-serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.65;
+  font-size: 15px;
+}
+
+/* ── SCAN LINES ── */
+body::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+  pointer-events:none;
+  z-index:9999;
+}
+
+/* ── HEADER ── */
+.header {
+  background: linear-gradient(135deg, #0a0e1a 0%, #0f1525 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  position: sticky; top: 0; z-index: 200;
+}
+.header-inner {
+  max-width: 960px; margin: 0 auto;
+  display: flex; align-items: center; gap: 16px;
+  padding: 14px 0;
+}
+.logo {
+  width: 42px; height: 42px; border-radius: 10px;
+  background: linear-gradient(135deg, #4da6ff, #00e5a0);
+  display:flex; align-items:center; justify-content:center;
+  font-size: 1.3em; flex-shrink:0;
+  box-shadow: 0 0 16px rgba(77,166,255,0.3);
+}
+.header-meta { flex:1; }
+.header-badge {
+  display: inline-block;
+  background: rgba(77,166,255,0.1);
+  border: 1px solid rgba(77,166,255,0.3);
+  color: var(--blue);
+  border-radius: 4px;
+  padding: 2px 10px;
+  font-size: 0.68em; font-weight: 700;
+  letter-spacing: 1.5px; font-family: var(--mono);
+  margin-bottom: 2px;
+}
+.header h1 { font-size: 1em; font-weight: 700; color: var(--text); line-height:1.2; }
+.header-sub { font-size: 0.75em; color: var(--muted); }
+.back-link {
+  font-size: 0.78em; color: var(--muted);
+  text-decoration: none; font-family: var(--mono);
+  padding: 6px 12px; border-radius: 6px;
+  border: 1px solid var(--border);
+  transition: all 0.2s; white-space:nowrap;
+}
+.back-link:hover { color:var(--blue); border-color:var(--blue); }
+
+/* ── LAYOUT ── */
+.container { max-width: 960px; margin: 0 auto; padding: 32px 20px 60px; }
+
+/* ── OBJETIVO BANNER ── */
+.obj-banner {
+  background: linear-gradient(135deg, rgba(77,166,255,0.07) 0%, rgba(0,229,160,0.05) 100%);
+  border: 1px solid var(--border2);
+  border-left: 4px solid var(--blue);
+  border-radius: 12px;
+  padding: 22px 24px;
+  margin-bottom: 28px;
+}
+.obj-banner h2 {
+  font-size: 0.95em; font-weight: 700; color: var(--blue);
+  margin-bottom: 12px; display:flex; align-items:center; gap:8px;
+  font-family: var(--mono);
+}
+.obj-banner p { font-size:0.88em; color:var(--text2); line-height:1.65; }
+.obj-banner strong { color: var(--text); }
+
+/* ── CENÁRIO GRID ── */
+.scenario-grid {
+  display: grid; grid-template-columns: 1fr 80px 1fr; gap:0;
+  align-items: center;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px; padding: 20px;
+  margin: 14px 0 24px;
+}
+@media(max-width:640px){ .scenario-grid { grid-template-columns:1fr; } }
+.vm-box {
+  border: 1px solid var(--border2); border-radius:10px;
+  padding: 14px; text-align:center;
+}
+.vm-box.server { border-color: rgba(77,166,255,0.4); }
+.vm-box.client { border-color: rgba(0,229,160,0.4); }
+.vm-box.firewall { border-color: rgba(255,140,66,0.4); }
+.vm-icon { font-size:2em; margin-bottom:6px; }
+.vm-name { font-size:0.88em; font-weight:700; color:var(--text); margin-bottom:4px; }
+.vm-detail { font-size:0.74em; color:var(--text2); line-height:1.5; font-family:var(--mono); }
+.vm-detail .ip { color:var(--cyan); }
+.vm-detail .user { color:var(--green); }
+.arrow-col { display:flex; align-items:center; justify-content:center; flex-direction:column; gap:4px; }
+.arrow-txt { font-size:0.65em; color:var(--muted); font-family:var(--mono); }
+.arrow-sym { font-size:1.4em; color:var(--orange); }
+
+/* ── SECTION ── */
+.section { margin-bottom: 40px; }
+.section-title {
+  display:flex; align-items:center; gap:12px;
+  font-size: 1em; font-weight: 800; color: var(--text);
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono);
+}
+.section-num {
+  width: 30px; height: 30px; border-radius: 8px;
+  background: linear-gradient(135deg, var(--blue), var(--cyan));
+  color: #060910; display:flex; align-items:center; justify-content:center;
+  font-size: 0.82em; font-weight: 700; flex-shrink:0;
+  box-shadow: 0 0 12px rgba(77,166,255,0.3);
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px; overflow:hidden;
+  margin-bottom: 14px;
+}
+.card-head {
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.84em; font-weight: 700; color: var(--text);
+  display:flex; align-items:center; gap:8px;
+  background: rgba(255,255,255,0.02);
+}
+.card-body { padding: 18px; }
+
+/* ── USER CONTEXT ── */
+.user-context {
+  background: var(--code-bg);
+  border: 1px solid var(--border2);
+  border-radius: 10px; padding: 0; margin: 12px 0;
+  overflow:hidden;
+}
+.user-context-header {
+  background: rgba(255,255,255,0.03);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 16px;
+  font-size: 0.78em; font-weight: 700; color: var(--muted);
+  font-family: var(--mono);
+  display:flex; align-items:center; gap:8px;
+}
+.user-context-header span.server-col { color: var(--blue); }
+.user-context-header span.client-col { color: var(--green); }
+.user-context-body { padding: 14px 16px; }
+.login-line {
+  display:flex; align-items:baseline; gap:8px;
+  margin-bottom: 6px; font-family: var(--mono); font-size: 0.84em;
+}
+.login-prompt { color: var(--green); flex-shrink:0; }
+.login-prompt.blue { color: var(--blue); }
+.login-cmd { color: var(--text); }
+.login-comment { color: var(--muted); font-size:0.85em; }
+
+/* ── ALERT BOXES ── */
+.box {
+  border-radius: 9px; padding: 13px 16px;
+  margin-bottom: 12px; font-size: 0.86em; line-height: 1.65;
+  border-left: 3px solid;
+}
+.box-info  { background: var(--blue-dim);   border-color: var(--blue);   color: #a8d0ff; }
+.box-warn  { background: var(--orange-dim); border-color: var(--orange); color: #ffd0a8; }
+.box-danger{ background: var(--red-dim);    border-color: var(--red);    color: #ffb0c0; }
+.box-ok    { background: var(--green-dim);  border-color: var(--green);  color: #a0f0d8; }
+.box-tip   { background: var(--yellow-dim); border-color: var(--yellow); color: #ffe8a0; }
+.box-purple{ background: rgba(180,142,255,0.08); border-color: var(--purple); color: #d4beff; }
+.box strong { font-weight: 700; }
+.box code {
+  font-family: var(--mono);
+  background: rgba(255,255,255,0.1);
+  padding: 1px 6px; border-radius: 4px; font-size:0.9em;
+}
+
+/* ── STEP BLOCK ── */
+.step-block {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 10px;
+  overflow:hidden;
+}
+.step-block-header {
+  padding: 11px 16px;
+  background: rgba(255,255,255,0.025);
+  border-bottom: 1px solid var(--border);
+  display:flex; align-items:center; gap:10px;
+}
+.step-num {
+  width: 22px; height: 22px; border-radius: 50%; flex-shrink:0;
+  background: rgba(77,166,255,0.15);
+  border: 1px solid var(--blue);
+  color: var(--blue);
+  display:flex; align-items:center; justify-content:center;
+  font-size: 0.7em; font-weight: 700;
+  font-family: var(--mono);
+}
+.step-num.green {
+  background: rgba(0,229,160,0.15);
+  border-color: var(--green);
+  color: var(--green);
+}
+.step-title { font-size:0.88em; font-weight:700; color:var(--text); }
+.step-subtitle { font-size:0.78em; color:var(--text2); margin-top:2px; }
+.step-block-body { padding: 14px 16px; }
+.step-block-body p { font-size:0.86em; color:var(--text); margin-bottom:8px; line-height:1.6; }
+.step-block-body code {
+  font-family: var(--mono);
+  background: rgba(255,140,66,0.1);
+  color: var(--orange);
+  padding: 1px 6px; border-radius:4px; font-size:0.9em;
+}
+
+/* ── CODE BLOCK ── */
+.code-block {
+  background: var(--code-bg);
+  border: 1px solid #131c2e;
+  border-radius: 9px; padding: 16px;
+  font-family: var(--mono); font-size: 0.8em;
+  line-height: 1.9; margin: 10px 0;
+  overflow-x: auto; position:relative;
+}
+.code-block .prompt       { color: var(--green); }
+.code-block .prompt.blue  { color: var(--blue); }
+.code-block .cmd          { color: var(--text); }
+.code-block .comment      { color: #2d3f5e; }
+.code-block .key          { color: var(--orange); }
+.code-block .val          { color: var(--blue); }
+.code-block .ok           { color: var(--green); }
+.code-block .err          { color: var(--red); }
+.code-block .hl           { color: var(--yellow); }
+.code-block .dim          { color: var(--muted); }
+
+/* resultado esperado */
+.result-block {
+  background: rgba(0,229,160,0.04);
+  border: 1px solid rgba(0,229,160,0.2);
+  border-radius: 8px; padding: 12px 14px;
+  margin: 8px 0 12px;
+  font-family: var(--mono); font-size:0.79em;
+  line-height:1.8;
+}
+.result-label {
+  font-size:0.7em; font-weight:700; color:var(--green);
+  text-transform:uppercase; letter-spacing:1px;
+  margin-bottom:6px; font-family:var(--sans);
+}
+.result-block .r-ok  { color: var(--green); }
+.result-block .r-num { color: var(--cyan); }
+.result-block .r-dim { color: var(--muted); }
+.result-block .r-val { color: var(--text); }
+
+/* copy btn */
+.copy-btn {
+  position:absolute; top:10px; right:10px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--muted); padding: 3px 10px; border-radius:5px;
+  font-size:0.7em; cursor:pointer; font-family:var(--sans);
+  transition: all 0.2s;
+}
+.copy-btn:hover { color:var(--green); border-color:var(--green); }
+.copy-btn.copied{ color:var(--green); border-color:var(--green); }
+
+/* ── CHECKLIST ── */
+.checklist { list-style:none; margin:8px 0; }
+.checklist li {
+  display:flex; align-items:flex-start; gap:10px;
+  padding:7px 0; border-bottom:1px solid rgba(255,255,255,0.03);
+  font-size:0.86em; cursor:pointer; user-select:none;
+}
+.checklist li:last-child { border-bottom:none; }
+.check-box {
+  width:18px; height:18px; border-radius:4px;
+  border:2px solid var(--border2); background:transparent;
+  flex-shrink:0; margin-top:1px; display:flex;
+  align-items:center; justify-content:center;
+  transition:all 0.2s;
+}
+.checklist li.done .check-box {
+  background: var(--green); border-color:var(--green); color:#060910; font-size:0.7em;
+}
+.checklist li.done .check-label { text-decoration:line-through; color:var(--muted); }
+
+/* ── TABS ── */
+.tabs { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
+.tab-btn {
+  padding:8px 18px; border-radius:7px;
+  border: 1px solid var(--border);
+  background: transparent; color: var(--muted);
+  font-family: var(--sans); font-size:0.83em; font-weight:600;
+  cursor:pointer; transition:all 0.2s;
+}
+.tab-btn:hover { color:var(--text); border-color:var(--border2); }
+.tab-btn.active { background:var(--blue-dim); border-color:rgba(77,166,255,0.4); color:var(--blue); }
+.tab-panel { display:none; }
+.tab-panel.active { display:block; }
+
+/* ── TOPOLOGIA SVG ── */
+.topo-wrap {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius:12px; padding:24px;
+  margin:14px 0 20px; text-align:center;
+}
+.topo-wrap svg { max-width:100%; }
+
+/* ── QUIZ ── */
+.quiz-prog { background:rgba(255,255,255,0.05); border-radius:100px; height:4px; margin-bottom:14px; overflow:hidden; }
+.quiz-prog-fill { height:100%; background:linear-gradient(90deg, var(--blue), var(--cyan)); border-radius:100px; transition:width 0.4s; width:0%; }
+.quiz-count { font-size:0.75em; color:var(--muted); margin-bottom:12px; font-family:var(--mono); }
+.quiz-card { background:var(--code-bg); border:1px solid var(--border); border-radius:10px; padding:18px; margin-bottom:14px; display:none; }
+.quiz-card.active { display:block; }
+.quiz-card h4 { font-size:0.93em; margin-bottom:14px; line-height:1.5; font-weight:700; }
+.quiz-card h4 code { font-family:var(--mono); background:rgba(255,140,66,0.1); color:var(--orange); padding:1px 6px; border-radius:4px; }
+.q-opts { display:flex; flex-direction:column; gap:8px; }
+.q-opt {
+  text-align:left; padding:10px 14px; border:1px solid var(--border);
+  border-radius:7px; background:rgba(255,255,255,0.02); color:var(--text);
+  font-family:var(--sans); font-size:0.84em; cursor:pointer; transition:all 0.2s;
+}
+.q-opt:hover:not(:disabled) { border-color:var(--blue); background:var(--blue-dim); }
+.q-opt.correct { border-color:var(--green); background:var(--green-dim); color:var(--green); }
+.q-opt.wrong   { border-color:var(--red); background:var(--red-dim); color:var(--red); }
+.q-feedback { display:none; padding:11px 14px; border-radius:7px; font-size:0.83em; margin-top:10px; line-height:1.5; }
+.q-feedback.show { display:block; }
+.q-feedback.ok   { background:var(--green-dim); border:1px solid rgba(0,229,160,0.3); color:#90f0c8; }
+.q-feedback.fail { background:var(--red-dim); border:1px solid rgba(255,92,122,0.3); color:#ffb0c0; }
+.q-next { display:none; margin-top:12px; justify-content:flex-end; }
+.q-next.show { display:flex; }
+.q-next-btn { background:var(--blue-dim); border:1px solid rgba(77,166,255,0.4); color:var(--blue); padding:8px 18px; border-radius:6px; cursor:pointer; font-size:0.83em; font-weight:700; font-family:var(--sans); }
+.quiz-result { display:none; text-align:center; padding:28px; }
+.quiz-result.show { display:block; }
+.quiz-score { font-size:2.8em; font-weight:800; color:var(--blue); font-family:var(--mono); }
+
+/* ── SIMULADOR ROTA ── */
+.sim-panel {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius:10px; padding:16px; margin:12px 0;
+}
+.sim-row { display:flex; gap:10px; margin-bottom:12px; flex-wrap:wrap; align-items:center; }
+.sim-input {
+  background: rgba(255,255,255,0.04); border:1px solid var(--border);
+  border-radius:7px; padding:9px 12px; color:var(--text);
+  font-family:var(--mono); font-size:0.84em; flex:1; min-width:140px;
+}
+.sim-input:focus { outline:none; border-color:var(--blue); }
+.sim-btn {
+  background:var(--blue-dim); border:1px solid rgba(77,166,255,0.4);
+  color:var(--blue); padding:9px 18px; border-radius:7px;
+  cursor:pointer; font-family:var(--sans); font-size:0.84em; font-weight:700;
+  transition:all 0.2s;
+}
+.sim-btn:hover { background:rgba(77,166,255,0.16); }
+.sim-btn.green-btn { background:var(--green-dim); border-color:rgba(0,229,160,0.4); color:var(--green); }
+.sim-btn.green-btn:hover { background:rgba(0,229,160,0.15); }
+.sim-output {
+  background: rgba(0,0,0,0.4);
+  border: 1px solid var(--border);
+  border-radius:8px; padding:14px;
+  font-family:var(--mono); font-size:0.79em; line-height:1.9;
+  min-height:80px; white-space:pre-wrap;
+}
+
+/* ── TOAST ── */
+.toast {
+  position:fixed; bottom:24px; right:24px;
+  background:var(--card2); border:1px solid rgba(77,166,255,0.4);
+  border-radius:10px; padding:12px 18px; font-size:0.84em; color:var(--text);
+  display:flex; align-items:center; gap:10px;
+  transform:translateY(100px); opacity:0;
+  transition:all 0.35s; z-index:9000; max-width:300px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+}
+.toast.show { transform:translateY(0); opacity:1; }
+.toast-icon { font-size:1.4em; }
+
+/* ── TAG ── */
+.tag {
+  display:inline-block; padding:2px 9px; border-radius:4px;
+  font-size:0.75em; font-weight:700; vertical-align:middle;
+  font-family:var(--mono);
+}
+.tag-blue   { background:var(--blue-dim);   color:var(--blue);   border:1px solid rgba(77,166,255,0.3); }
+.tag-green  { background:var(--green-dim);  color:var(--green);  border:1px solid rgba(0,229,160,0.3); }
+.tag-orange { background:var(--orange-dim); color:var(--orange); border:1px solid rgba(255,140,66,0.3); }
+
+/* ── PROGRESS TRACKER ── */
+.progress-tracker {
+  position:fixed; right:20px; top:50%;
+  transform:translateY(-50%);
+  display:flex; flex-direction:column; gap:8px; z-index:100;
+}
+@media(max-width:900px){ .progress-tracker { display:none; } }
+.prog-dot {
+  width:10px; height:10px; border-radius:50%;
+  background:var(--border2); border:2px solid var(--border2);
+  cursor:pointer; transition:all 0.3s; position:relative;
+}
+.prog-dot.active { background:var(--blue); border-color:var(--blue); box-shadow:0 0 8px rgba(77,166,255,0.6); }
+.prog-dot.done   { background:var(--green); border-color:var(--green); }
+.prog-dot:hover::after {
+  content: attr(data-label);
+  position:absolute; right:18px; top:50%; transform:translateY(-50%);
+  background:var(--card2); border:1px solid var(--border);
+  padding:3px 8px; border-radius:5px; white-space:nowrap;
+  font-size:0.7em; color:var(--text); font-family:var(--sans);
+}
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-icon" id="t-icon">✅</span>
+  <span id="t-msg">Pronto!</span>
+</div>
+
+<!-- PROGRESS TRACKER -->
+<div class="progress-tracker" id="progTracker">
+  <div class="prog-dot active" data-label="Objetivo" onclick="scrollTo('#s0')"></div>
+  <div class="prog-dot" data-label="Topologia" onclick="scrollTo('#s1')"></div>
+  <div class="prog-dot" data-label="Pré-requisitos" onclick="scrollTo('#s2')"></div>
+  <div class="prog-dot" data-label="Ubuntu Server" onclick="scrollTo('#s3')"></div>
+  <div class="prog-dot" data-label="Ubuntu Desktop" onclick="scrollTo('#s4')"></div>
+  <div class="prog-dot" data-label="Teste Final" onclick="scrollTo('#s5')"></div>
+  <div class="prog-dot" data-label="Simulador" onclick="scrollTo('#s6')"></div>
+  <div class="prog-dot" data-label="Quiz" onclick="scrollTo('#s7')"></div>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-inner">
+    <div class="logo">🌐</div>
+    <div class="header-meta">
+      <div class="header-badge">ISO-103 · SEMANA 5.1</div>
+      <h1>Saída pela Internet via Firewall (Gateway NAT)</h1>
+      <div class="header-sub">Servidor + Desktop roteando tráfego pelo firewall da Semana 5.2</div>
+    </div>
+    <a href="index.html" class="back-link">← Índice</a>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ── OBJETIVO ── -->
+<div id="s0" class="obj-banner">
+  <h2>🎯 Objetivo da Aula</h2>
+  <p>Nesta aula você vai configurar o <strong>ubuntu-server</strong> e o <strong>ubuntu-desktop</strong> para que
+  ambos consigam acessar a internet usando o <strong>firewall como gateway NAT</strong>
+  (configurado na Semana 5.2). Ao final, um simples <code>ping 8.8.8.8</code> em ambas as máquinas
+  deve funcionar — tráfego saindo pela VM de firewall.</p>
+</div>
+
+<!-- ── TOPOLOGIA ── -->
+<div id="s1" class="section">
+  <div class="section-title">
+    <div class="section-num">T</div>
+    Topologia da Rede
+  </div>
+
+  <div class="topo-wrap">
+    <svg viewBox="0 0 720 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:720px;">
+      <!-- Internet -->
+      <rect x="300" y="10" width="120" height="44" rx="8" fill="rgba(77,166,255,0.08)" stroke="rgba(77,166,255,0.4)" stroke-width="1.5"/>
+      <text x="360" y="28" text-anchor="middle" font-size="10" fill="#4da6ff" font-family="Space Mono">INTERNET</text>
+      <text x="360" y="44" text-anchor="middle" font-size="9" fill="#4a5878" font-family="Space Mono">8.8.8.8</text>
+
+      <!-- Arrow internet → firewall -->
+      <line x1="360" y1="54" x2="360" y2="90" stroke="#4da6ff" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <polygon points="356,88 364,88 360,96" fill="#4da6ff"/>
+
+      <!-- Firewall VM -->
+      <rect x="260" y="96" width="200" height="64" rx="10" fill="rgba(255,140,66,0.07)" stroke="rgba(255,140,66,0.5)" stroke-width="2"/>
+      <text x="360" y="117" text-anchor="middle" font-size="11" fill="#ff8c42" font-family="Space Mono" font-weight="bold">🔥 FIREWALL VM</text>
+      <text x="360" y="132" text-anchor="middle" font-size="9" fill="#8a9bb8" font-family="Space Mono">enp0s3 (NAT) · 10.0.2.15</text>
+      <text x="360" y="146" text-anchor="middle" font-size="9" fill="#8a9bb8" font-family="Space Mono">enp0s8 (HostOnly) · 192.168.56.1</text>
+
+      <!-- Arrow firewall → left (server) -->
+      <line x1="260" y1="128" x2="180" y2="168" stroke="#ff8c42" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <polygon points="176,165 184,172 178,176" fill="#ff8c42"/>
+
+      <!-- Arrow firewall → right (desktop) -->
+      <line x1="460" y1="128" x2="540" y2="168" stroke="#ff8c42" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <polygon points="536,165 544,165 540,173" fill="#ff8c42"/>
+
+      <!-- Server VM -->
+      <rect x="60" y="174" width="180" height="74" rx="10" fill="rgba(77,166,255,0.07)" stroke="rgba(77,166,255,0.4)" stroke-width="1.5"/>
+      <text x="150" y="196" text-anchor="middle" font-size="11" fill="#4da6ff" font-family="Space Mono" font-weight="bold">🖥 ubuntu-server</text>
+      <text x="150" y="212" text-anchor="middle" font-size="9" fill="#8a9bb8" font-family="Space Mono">192.168.56.10</text>
+      <text x="150" y="226" text-anchor="middle" font-size="9" fill="#00e5a0" font-family="Space Mono">user: ubuntu-server</text>
+      <text x="150" y="239" text-anchor="middle" font-size="9" fill="#4a5878" font-family="Space Mono">GW → 192.168.56.1</text>
+
+      <!-- Desktop VM -->
+      <rect x="480" y="174" width="180" height="74" rx="10" fill="rgba(0,229,160,0.07)" stroke="rgba(0,229,160,0.4)" stroke-width="1.5"/>
+      <text x="570" y="196" text-anchor="middle" font-size="11" fill="#00e5a0" font-family="Space Mono" font-weight="bold">🖥 ubuntu-desktop</text>
+      <text x="570" y="212" text-anchor="middle" font-size="9" fill="#8a9bb8" font-family="Space Mono">192.168.56.20</text>
+      <text x="570" y="226" text-anchor="middle" font-size="9" fill="#00e5a0" font-family="Space Mono">user: ubuntu-desktop</text>
+      <text x="570" y="239" text-anchor="middle" font-size="9" fill="#4a5878" font-family="Space Mono">GW → 192.168.56.1</text>
+    </svg>
+    <p style="margin-top:10px;font-size:0.76em;color:var(--muted);">
+      Toda saída para internet passa pelo firewall (enp0s8 → enp0s3 → NAT VirtualBox)
+    </p>
+  </div>
+
+  <div class="box box-info">
+    <strong>📌 Lembre-se:</strong> o firewall (Semana 5.2) já tem IP Forwarding ativo e regras NAT (masquerading) configuradas.
+    O que fazemos aqui é dizer para o servidor e para o desktop: <code>"quando precisar sair para a internet, use o firewall como gateway"</code>.
+  </div>
+</div>
+
+<!-- ── PRÉ-REQUISITOS ── -->
+<div id="s2" class="section">
+  <div class="section-title">
+    <div class="section-num">0</div>
+    Pré-Requisitos — Verifique Antes de Começar
+  </div>
+
+  <div class="card">
+    <div class="card-head">✅ Checklist de Pré-Requisitos</div>
+    <div class="card-body">
+      <ul class="checklist" id="pre-checklist">
+        <li onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <span class="check-label">A VM de Firewall (Semana 5.2) está <strong>ligada e configurada</strong> (IP Forwarding + UFW + NAT)</span>
+        </li>
+        <li onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <span class="check-label">A VM de firewall tem a interface <code>enp0s8</code> em modo <strong>Host-Only</strong> com IP <code>192.168.56.1</code></span>
+        </li>
+        <li onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <span class="check-label">A VM ubuntu-server está com a placa de rede em modo <strong>Host-Only</strong> (mesma rede interna)</span>
+        </li>
+        <li onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <span class="check-label">A VM ubuntu-desktop está com a placa de rede em modo <strong>Host-Only</strong> (mesma rede interna)</span>
+        </li>
+        <li onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <span class="check-label">Você sabe fazer login: servidor (<code>ubuntu-server / Fatec2026</code>) e desktop (<code>ubuntu-desktop / Fatec2026</code>)</span>
+        </li>
+      </ul>
+      <div class="box box-warn" style="margin-top:12px;">
+        <strong>⚠️ Se o firewall não estiver configurado:</strong> volte para a <a href="semana05_02.html" style="color:var(--orange);">Semana 5.2</a> e complete a configuração antes de continuar.
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabela de IPs -->
+  <div class="card" style="margin-top:0;">
+    <div class="card-head">📋 Tabela de Referência — IPs e Credenciais</div>
+    <div class="card-body" style="padding:0;">
+      <table style="width:100%;border-collapse:collapse;font-size:0.83em;">
+        <thead>
+          <tr style="background:rgba(255,255,255,0.02);">
+            <th style="padding:10px 14px;text-align:left;color:var(--muted);border-bottom:1px solid var(--border);font-family:var(--mono);font-size:0.82em;">VM</th>
+            <th style="padding:10px 14px;text-align:left;color:var(--muted);border-bottom:1px solid var(--border);font-family:var(--mono);font-size:0.82em;">IP (Host-Only)</th>
+            <th style="padding:10px 14px;text-align:left;color:var(--muted);border-bottom:1px solid var(--border);font-family:var(--mono);font-size:0.82em;">Usuário</th>
+            <th style="padding:10px 14px;text-align:left;color:var(--muted);border-bottom:1px solid var(--border);font-family:var(--mono);font-size:0.82em;">Senha</th>
+            <th style="padding:10px 14px;text-align:left;color:var(--muted);border-bottom:1px solid var(--border);font-family:var(--mono);font-size:0.82em;">Gateway</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.03);color:var(--orange);">🔥 Firewall</td>
+            <td style="padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.03);font-family:var(--mono);color:var(--cyan);">192.168.56.1</td>
+            <td style="padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.03);font-family:var(--mono);">ubuntu-fw</td>
+            <td style="padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.03);font-family:var(--mono);">Fatec2026</td>
+            <td style="padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.03);color:var(--muted);">— (é o GW)</td>
+          </tr>
+          <tr>
+            <td style="padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.03);color:var(--blue);">🖥 Ubuntu Server</td>
+            <td style="padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.03);font-family:var(--mono);color:var(--cyan);">192.168.56.10</td>
+            <td style="padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.03);font-family:var(--mono);">ubuntu-server</td>
+            <td style="padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.03);font-family:var(--mono);">Fatec2026</td>
+            <td style="padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.03);font-family:var(--mono);color:var(--orange);">192.168.56.1</td>
+          </tr>
+          <tr>
+            <td style="padding:10px 14px;color:var(--green);">🖥 Ubuntu Desktop</td>
+            <td style="padding:10px 14px;font-family:var(--mono);color:var(--cyan);">192.168.56.20</td>
+            <td style="padding:10px 14px;font-family:var(--mono);">ubuntu-desktop</td>
+            <td style="padding:10px 14px;font-family:var(--mono);">Fatec2026</td>
+            <td style="padding:10px 14px;font-family:var(--mono);color:var(--orange);">192.168.56.1</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ── UBUNTU SERVER ── -->
+<div id="s3" class="section">
+  <div class="section-title">
+    <div class="section-num">1</div>
+    Configurar o Ubuntu Server
+  </div>
+
+  <div class="box box-info">
+    <strong>🖥 Contexto:</strong> Faça login na VM <strong>ubuntu-server</strong> com usuário <code>ubuntu-server</code> e senha <code>Fatec2026</code>.
+    Vamos configurar o IP estático e o gateway via Netplan.
+  </div>
+
+  <!-- PASSO 1.1 -->
+  <div class="step-block">
+    <div class="step-block-header">
+      <div class="step-num">1</div>
+      <div>
+        <div class="step-title">Verificar o nome da interface de rede</div>
+        <div class="step-subtitle">Precisamos saber o nome exato da placa (pode ser enp0s3, enp0s8, eth0…)</div>
+      </div>
+    </div>
+    <div class="step-block-body">
+      <p>Execute o comando abaixo e anote o nome da interface conectada à rede Host-Only:</p>
+      <div class="code-block" id="cb_s1">
+        <button class="copy-btn" onclick="copyCode('cb_s1',this)">📋 Copiar</button>
+<span class="prompt">ubuntu-server@server:~$</span> <span class="cmd">ip addr show</span>
+      </div>
+      <div class="result-block">
+        <div class="result-label">Saída esperada (exemplo)</div>
+<span class="r-ok">2: enp0s3:</span> <span class="r-dim">&lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel state UP</span>
+    <span class="r-dim">inet</span> <span class="r-num">192.168.56.10</span><span class="r-dim">/24 brd 192.168.56.255 scope global enp0s3</span>
+      </div>
+      <div class="box box-tip">
+        <strong>💡 Dica:</strong> Se aparecer <code>enp0s3</code>, <code>enp0s8</code> ou <code>eth0</code>, use esse nome nos próximos passos. Aqui usaremos <code>enp0s3</code> como exemplo.
+      </div>
+    </div>
+  </div>
+
+  <!-- PASSO 1.2 -->
+  <div class="step-block">
+    <div class="step-block-header">
+      <div class="step-num">2</div>
+      <div>
+        <div class="step-title">Editar o arquivo Netplan</div>
+        <div class="step-subtitle">Configurar IP estático + gateway apontando para o firewall</div>
+      </div>
+    </div>
+    <div class="step-block-body">
+      <p>Abra o arquivo de configuração do Netplan:</p>
+      <div class="code-block" id="cb_s2">
+        <button class="copy-btn" onclick="copyCode('cb_s2',this)">📋 Copiar</button>
+<span class="prompt">ubuntu-server@server:~$</span> <span class="cmd">sudo nano /etc/netplan/00-installer-config.yaml</span>
+      </div>
+      <p style="margin-top:10px;">Substitua o conteúdo pelo seguinte (cuidado com a indentação — use <strong>espaços, nunca Tab</strong>):</p>
+      <div class="code-block" id="cb_s3">
+        <button class="copy-btn" onclick="copyCode('cb_s3',this)">📋 Copiar</button>
+<span class="key">network:</span>
+  <span class="key">version:</span> <span class="val">2</span>
+  <span class="key">ethernets:</span>
+    <span class="key">enp0s3:</span>               <span class="comment"># ← troque pelo nome da SUA interface</span>
+      <span class="key">addresses:</span>
+        - <span class="val">192.168.56.10/24</span>    <span class="comment"># IP estático do servidor</span>
+      <span class="key">routes:</span>
+        - <span class="key">to:</span> <span class="val">default</span>
+          <span class="key">via:</span> <span class="val">192.168.56.1</span>   <span class="comment"># ← IP do firewall (gateway)</span>
+      <span class="key">nameservers:</span>
+        <span class="key">addresses:</span>
+          - <span class="val">8.8.8.8</span>              <span class="comment"># DNS Google</span>
+          - <span class="val">1.1.1.1</span>              <span class="comment"># DNS Cloudflare</span>
+      </div>
+      <div class="box box-warn">
+        <strong>⚠️ Atenção:</strong> No Netplan, cada nível de indentação usa <strong>2 espaços</strong>. Um erro de espaçamento faz o arquivo ser rejeitado. Verifique com cuidado antes de salvar.
+      </div>
+      <p>Para salvar no nano: pressione <strong>Ctrl+X</strong> → <strong>Y</strong> → <strong>Enter</strong>.</p>
+    </div>
+  </div>
+
+  <!-- PASSO 1.3 -->
+  <div class="step-block">
+    <div class="step-block-header">
+      <div class="step-num">3</div>
+      <div>
+        <div class="step-title">Aplicar as configurações</div>
+        <div class="step-subtitle">Ativar o Netplan e verificar se o gateway foi aplicado</div>
+      </div>
+    </div>
+    <div class="step-block-body">
+      <div class="code-block" id="cb_s4">
+        <button class="copy-btn" onclick="copyCode('cb_s4',this)">📋 Copiar</button>
+<span class="prompt">ubuntu-server@server:~$</span> <span class="cmd">sudo netplan apply</span>
+<span class="dim">                                              <span class="comment"># aguarde alguns segundos</span></span>
+<span class="prompt">ubuntu-server@server:~$</span> <span class="cmd">ip route show</span>
+      </div>
+      <div class="result-block">
+        <div class="result-label">Saída esperada</div>
+<span class="r-ok">default via 192.168.56.1 dev enp0s3 proto static</span>
+<span class="r-val">192.168.56.0/24 dev enp0s3 proto kernel scope link src 192.168.56.10</span>
+      </div>
+      <div class="box box-ok">
+        <strong>✅ Sucesso:</strong> A linha <code>default via 192.168.56.1</code> confirma que o firewall é o gateway padrão. Todo tráfego destinado à internet vai passar por ele.
+      </div>
+    </div>
+  </div>
+
+  <!-- PASSO 1.4 -->
+  <div class="step-block">
+    <div class="step-block-header">
+      <div class="step-num green">4</div>
+      <div>
+        <div class="step-title">Testar a saída pela internet</div>
+        <div class="step-subtitle">Ping para o DNS do Google e teste de resolução de nomes</div>
+      </div>
+    </div>
+    <div class="step-block-body">
+      <div class="code-block" id="cb_s5">
+        <button class="copy-btn" onclick="copyCode('cb_s5',this)">📋 Copiar</button>
+<span class="prompt">ubuntu-server@server:~$</span> <span class="cmd">ping -c 4 8.8.8.8</span>
+<span class="dim">                                              <span class="comment"># testa conectividade IP</span></span>
+<span class="prompt">ubuntu-server@server:~$</span> <span class="cmd">ping -c 4 google.com</span>
+<span class="dim">                                              <span class="comment"># testa resolução de nomes (DNS)</span></span>
+<span class="prompt">ubuntu-server@server:~$</span> <span class="cmd">curl -s ifconfig.me</span>
+<span class="dim">                                              <span class="comment"># mostra o IP público de saída</span></span>
+      </div>
+      <div class="result-block">
+        <div class="result-label">Saída esperada — ping</div>
+<span class="r-ok">PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.</span>
+<span class="r-val">64 bytes from 8.8.8.8: icmp_seq=1 ttl=117 time=12.4 ms</span>
+<span class="r-val">64 bytes from 8.8.8.8: icmp_seq=2 ttl=117 time=11.9 ms</span>
+<span class="r-ok">4 packets transmitted, 4 received, 0% packet loss</span>
+      </div>
+      <div class="box box-danger" style="margin-top:8px;">
+        <strong>❌ Se o ping falhar:</strong> verifique se o firewall está ligado (<code>sudo ufw status</code> no firewall deve mostrar <code>active</code>) e se o IP Forwarding está ativo (<code>cat /proc/sys/net/ipv4/ip_forward</code> deve retornar <code>1</code>).
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── UBUNTU DESKTOP ── -->
+<div id="s4" class="section">
+  <div class="section-title">
+    <div class="section-num">2</div>
+    Configurar o Ubuntu Desktop
+  </div>
+
+  <div class="box box-ok">
+    <strong>🖥 Contexto:</strong> Faça login na VM <strong>ubuntu-desktop</strong> com usuário <code>ubuntu-desktop</code> e senha <code>Fatec2026</code>.
+    No Desktop, podemos configurar via interface gráfica <strong>OU</strong> via Netplan (terminal). Veja as duas opções:
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('dtab','netplan',this)">⌨️ Via Terminal (Netplan)</button>
+    <button class="tab-btn" onclick="showTab('dtab','gui',this)">🖱️ Via Interface Gráfica</button>
+  </div>
+
+  <!-- TAB NETPLAN -->
+  <div id="dtab-netplan" class="tab-panel active">
+
+    <div class="step-block">
+      <div class="step-block-header">
+        <div class="step-num">1</div>
+        <div>
+          <div class="step-title">Verificar interface de rede</div>
+          <div class="step-subtitle">Abra um terminal no Desktop (Ctrl+Alt+T)</div>
+        </div>
+      </div>
+      <div class="step-block-body">
+        <div class="code-block" id="cb_d1">
+          <button class="copy-btn" onclick="copyCode('cb_d1',this)">📋 Copiar</button>
+<span class="prompt green-p" style="color:var(--green)">ubuntu-desktop@desktop:~$</span> <span class="cmd">ip addr show</span>
+<span class="dim">                                                <span class="comment"># anote o nome da interface</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-block-header">
+        <div class="step-num">2</div>
+        <div>
+          <div class="step-title">Editar o Netplan do Desktop</div>
+          <div class="step-subtitle">IP estático 192.168.56.20 com gateway apontando para o firewall</div>
+        </div>
+      </div>
+      <div class="step-block-body">
+        <div class="code-block" id="cb_d2">
+          <button class="copy-btn" onclick="copyCode('cb_d2',this)">📋 Copiar</button>
+<span class="prompt" style="color:var(--green)">ubuntu-desktop@desktop:~$</span> <span class="cmd">sudo nano /etc/netplan/01-network-manager-all.yaml</span>
+        </div>
+        <div class="box box-tip" style="margin:8px 0;">
+          <strong>💡 Dica:</strong> No Ubuntu Desktop o arquivo pode se chamar <code>01-network-manager-all.yaml</code>. Use <code>ls /etc/netplan/</code> para confirmar o nome.
+        </div>
+        <p style="margin-bottom:8px;">Conteúdo a inserir:</p>
+        <div class="code-block" id="cb_d3">
+          <button class="copy-btn" onclick="copyCode('cb_d3',this)">📋 Copiar</button>
+<span class="key">network:</span>
+  <span class="key">version:</span> <span class="val">2</span>
+  <span class="key">renderer:</span> <span class="val">NetworkManager</span>
+  <span class="key">ethernets:</span>
+    <span class="key">enp0s3:</span>               <span class="comment"># ← troque pelo nome da SUA interface</span>
+      <span class="key">addresses:</span>
+        - <span class="val">192.168.56.20/24</span>    <span class="comment"># IP estático do desktop</span>
+      <span class="key">routes:</span>
+        - <span class="key">to:</span> <span class="val">default</span>
+          <span class="key">via:</span> <span class="val">192.168.56.1</span>   <span class="comment"># ← IP do firewall (gateway)</span>
+      <span class="key">nameservers:</span>
+        <span class="key">addresses:</span>
+          - <span class="val">8.8.8.8</span>
+          - <span class="val">1.1.1.1</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-block-header">
+        <div class="step-num green">3</div>
+        <div>
+          <div class="step-title">Aplicar e testar</div>
+        </div>
+      </div>
+      <div class="step-block-body">
+        <div class="code-block" id="cb_d4">
+          <button class="copy-btn" onclick="copyCode('cb_d4',this)">📋 Copiar</button>
+<span class="prompt" style="color:var(--green)">ubuntu-desktop@desktop:~$</span> <span class="cmd">sudo netplan apply</span>
+<span class="prompt" style="color:var(--green)">ubuntu-desktop@desktop:~$</span> <span class="cmd">ip route show</span>
+<span class="prompt" style="color:var(--green)">ubuntu-desktop@desktop:~$</span> <span class="cmd">ping -c 4 8.8.8.8</span>
+        </div>
+        <div class="result-block">
+          <div class="result-label">Saída esperada — rota</div>
+<span class="r-ok">default via 192.168.56.1 dev enp0s3 proto static</span>
+<span class="r-val">192.168.56.0/24 dev enp0s3 proto kernel scope link src 192.168.56.20</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB GUI -->
+  <div id="dtab-gui" class="tab-panel">
+    <div class="card">
+      <div class="card-head">🖱️ Configurar via Configurações de Rede (GUI)</div>
+      <div class="card-body">
+        <div class="step-block" style="margin-bottom:10px;">
+          <div class="step-block-header">
+            <div class="step-num green">1</div>
+            <div><div class="step-title">Abrir Configurações → Rede</div></div>
+          </div>
+          <div class="step-block-body">
+            <p>Clique no ícone de rede na barra superior → <strong>Configurações de Rede</strong> (ou acesse via <em>Configurações do Sistema → Rede</em>).</p>
+          </div>
+        </div>
+        <div class="step-block" style="margin-bottom:10px;">
+          <div class="step-block-header">
+            <div class="step-num green">2</div>
+            <div><div class="step-title">Editar a conexão com fio</div></div>
+          </div>
+          <div class="step-block-body">
+            <p>Clique na engrenagem ⚙️ ao lado da conexão com fio ativa.</p>
+          </div>
+        </div>
+        <div class="step-block" style="margin-bottom:10px;">
+          <div class="step-block-header">
+            <div class="step-num green">3</div>
+            <div><div class="step-title">Aba IPv4 → Modo Manual</div></div>
+          </div>
+          <div class="step-block-body">
+            <p>Preencha os campos:</p>
+            <div class="code-block" id="cb_gui">
+              <button class="copy-btn" onclick="copyCode('cb_gui',this)">📋 Copiar</button>
+<span class="key">Endereço:</span>  <span class="val">192.168.56.20</span>
+<span class="key">Máscara:</span>   <span class="val">255.255.255.0</span>   <span class="comment">(ou /24)</span>
+<span class="key">Gateway:</span>   <span class="val">192.168.56.1</span>    <span class="comment">(← IP do firewall)</span>
+<span class="key">DNS:</span>       <span class="val">8.8.8.8, 1.1.1.1</span>
+            </div>
+            <p>Clique em <strong>Aplicar</strong> e reconecte a interface.</p>
+          </div>
+        </div>
+        <div class="box box-warn">
+          <strong>⚠️ Atenção:</strong> Após aplicar via GUI, verifique no terminal com <code>ip route show</code> se o gateway <code>192.168.56.1</code> aparece como rota padrão.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── TESTE FINAL ── -->
+<div id="s5" class="section">
+  <div class="section-title">
+    <div class="section-num">3</div>
+    Teste Final — Ambas as Máquinas na Internet
+  </div>
+
+  <div class="box box-purple">
+    <strong>🔬 Momento da verdade:</strong> Execute estes testes em ambas as VMs para confirmar que tudo funciona corretamente.
+  </div>
+
+  <div class="card">
+    <div class="card-head">🧪 Bateria de Testes Completa</div>
+    <div class="card-body">
+
+      <!-- Servidor -->
+      <div class="user-context">
+        <div class="user-context-header">
+          🖥 <span class="server-col">ubuntu-server</span> — execute em cada VM
+        </div>
+        <div class="user-context-body">
+          <div class="code-block" id="cb_test">
+            <button class="copy-btn" onclick="copyCode('cb_test',this)">📋 Copiar</button>
+<span class="comment"># Teste 1 — Conectividade com o firewall (gateway)</span>
+<span class="prompt">$</span> <span class="cmd">ping -c 2 192.168.56.1</span>
+
+<span class="comment"># Teste 2 — Saída para internet (IP)</span>
+<span class="prompt">$</span> <span class="cmd">ping -c 4 8.8.8.8</span>
+
+<span class="comment"># Teste 3 — Resolução de nomes (DNS)</span>
+<span class="prompt">$</span> <span class="cmd">ping -c 2 google.com</span>
+
+<span class="comment"># Teste 4 — Verificar rota padrão</span>
+<span class="prompt">$</span> <span class="cmd">ip route show | grep default</span>
+
+<span class="comment"># Teste 5 — Traceroute (mostra o caminho)</span>
+<span class="prompt">$</span> <span class="cmd">traceroute -m 5 8.8.8.8</span>
+<span class="comment">#           ↑ primeiro hop deve ser 192.168.56.1 (o firewall!)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="result-block" style="margin-top:14px;">
+        <div class="result-label">Resultado esperado — traceroute</div>
+<span class="r-val">traceroute to 8.8.8.8 (8.8.8.8), 5 hops max</span>
+<span class="r-ok"> 1  192.168.56.1   1.2 ms</span>   <span class="r-dim">← firewall (gateway interno)</span>
+<span class="r-num"> 2  10.0.2.2       2.1 ms</span>    <span class="r-dim">← gateway VirtualBox (NAT)</span>
+<span class="r-num"> 3  ...            x.x ms</span>    <span class="r-dim">← roteadores da internet</span>
+      </div>
+
+      <div class="box box-ok" style="margin-top:8px;">
+        <strong>✅ Prova de conceito:</strong> Se o <strong>primeiro hop do traceroute é 192.168.56.1</strong>, confirma que o tráfego está passando pelo firewall antes de sair para a internet. Missão cumprida!
+      </div>
+    </div>
+  </div>
+
+  <!-- Troubleshooting -->
+  <div class="card">
+    <div class="card-head">🔧 Troubleshooting — O que fazer se não funcionar</div>
+    <div class="card-body">
+      <div class="step-block">
+        <div class="step-block-header">
+          <div class="step-num" style="background:rgba(255,92,122,0.15);border-color:var(--red);color:var(--red);">!</div>
+          <div><div class="step-title">Ping para 8.8.8.8 falha — sem resposta</div></div>
+        </div>
+        <div class="step-block-body">
+          <p>Verifique no firewall:</p>
+          <div class="code-block" id="cb_tr1">
+            <button class="copy-btn" onclick="copyCode('cb_tr1',this)">📋 Copiar</button>
+<span class="comment"># No FIREWALL — verificar IP Forwarding</span>
+<span class="prompt">fw$</span> <span class="cmd">cat /proc/sys/net/ipv4/ip_forward</span>
+<span class="comment"># deve retornar: 1</span>
+
+<span class="comment"># No FIREWALL — verificar regras NAT</span>
+<span class="prompt">fw$</span> <span class="cmd">sudo iptables -t nat -L -n --line-numbers</span>
+<span class="comment"># deve ter uma linha MASQUERADE para a rede 192.168.56.0/24</span>
+
+<span class="comment"># No FIREWALL — verificar status UFW</span>
+<span class="prompt">fw$</span> <span class="cmd">sudo ufw status verbose</span>
+          </div>
+        </div>
+      </div>
+      <div class="step-block">
+        <div class="step-block-header">
+          <div class="step-num" style="background:rgba(255,92,122,0.15);border-color:var(--red);color:var(--red);">!</div>
+          <div><div class="step-title">Ping para IP funciona mas DNS não resolve</div></div>
+        </div>
+        <div class="step-block-body">
+          <div class="code-block" id="cb_tr2">
+            <button class="copy-btn" onclick="copyCode('cb_tr2',this)">📋 Copiar</button>
+<span class="comment"># Testar resolução de DNS manualmente</span>
+<span class="prompt">$</span> <span class="cmd">nslookup google.com 8.8.8.8</span>
+
+<span class="comment"># Verificar /etc/resolv.conf</span>
+<span class="prompt">$</span> <span class="cmd">cat /etc/resolv.conf</span>
+<span class="comment"># deve conter: nameserver 8.8.8.8</span>
+
+<span class="comment"># Liberar porta 53 no firewall (se bloqueada)</span>
+<span class="prompt">fw$</span> <span class="cmd">sudo ufw allow out 53/udp</span>
+          </div>
+        </div>
+      </div>
+      <div class="step-block">
+        <div class="step-block-header">
+          <div class="step-num" style="background:rgba(255,92,122,0.15);border-color:var(--red);color:var(--red);">!</div>
+          <div><div class="step-title">Rota padrão não aparece ou está errada</div></div>
+        </div>
+        <div class="step-block-body">
+          <div class="code-block" id="cb_tr3">
+            <button class="copy-btn" onclick="copyCode('cb_tr3',this)">📋 Copiar</button>
+<span class="comment"># Verificar o arquivo netplan</span>
+<span class="prompt">$</span> <span class="cmd">cat /etc/netplan/00-installer-config.yaml</span>
+
+<span class="comment"># Testar sintaxe do netplan</span>
+<span class="prompt">$</span> <span class="cmd">sudo netplan try</span>
+<span class="comment"># se der erro, ele reverte automaticamente em 120s</span>
+
+<span class="comment"># Adicionar rota manualmente (temporário — para testar)</span>
+<span class="prompt">$</span> <span class="cmd">sudo ip route add default via 192.168.56.1</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SIMULADOR ── -->
+<div id="s6" class="section">
+  <div class="section-title">
+    <div class="section-num">4</div>
+    Simulador — Validador de Configuração Netplan
+  </div>
+
+  <div class="box box-info">
+    <strong>🧪 Como usar:</strong> Cole abaixo um trecho do seu arquivo Netplan e clique em <strong>Validar</strong>. O simulador verificará os campos essenciais: IP, máscara, gateway e DNS.
+  </div>
+
+  <div class="sim-panel">
+    <div style="margin-bottom:10px;">
+      <label style="font-size:0.8em;color:var(--muted);font-family:var(--mono);display:block;margin-bottom:6px;">COLE SEU NETPLAN AQUI:</label>
+      <textarea id="netplan-input" rows="12" style="width:100%;background:rgba(0,0,0,0.4);border:1px solid var(--border);border-radius:8px;padding:12px;color:var(--text);font-family:var(--mono);font-size:0.8em;resize:vertical;line-height:1.8;"
+        placeholder="network:
+  version: 2
+  ethernets:
+    enp0s3:
+      addresses:
+        - 192.168.56.10/24
+      routes:
+        - to: default
+          via: 192.168.56.1
+      nameservers:
+        addresses:
+          - 8.8.8.8"></textarea>
+    </div>
+    <div class="sim-row">
+      <button class="sim-btn green-btn" onclick="validateNetplan()">🔍 Validar Configuração</button>
+      <button class="sim-btn" onclick="document.getElementById('netplan-input').value='';document.getElementById('sim-result').innerHTML='';toast('🔄','Limpo!')">🗑️ Limpar</button>
+    </div>
+    <div class="sim-output" id="sim-result" style="display:none;"></div>
+  </div>
+</div>
+
+<!-- ── QUIZ ── -->
+<div id="s7" class="section">
+  <div class="section-title">
+    <div class="section-num">5</div>
+    Quiz — Fixação do Conteúdo
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="quiz-prog"><div class="quiz-prog-fill" id="qprog"></div></div>
+      <div class="quiz-count" id="qcount">Pergunta 0 de 5</div>
+
+      <!-- Q0 -->
+      <div class="quiz-card active" id="qc0">
+        <h4>❓ Para que o ubuntu-server acesse a internet pelo firewall, qual campo do Netplan deve apontar para o IP do firewall (<code>192.168.56.1</code>)?</h4>
+        <div class="q-opts">
+          <button class="q-opt" onclick="ansQ(0,0,2)">O campo <code>addresses</code></button>
+          <button class="q-opt" onclick="ansQ(0,1,2)">O campo <code>nameservers</code></button>
+          <button class="q-opt" onclick="ansQ(0,2,2)">O campo <code>via</code> dentro de <code>routes</code> (gateway padrão)</button>
+          <button class="q-opt" onclick="ansQ(0,3,2)">O campo <code>version</code></button>
+        </div>
+        <div class="q-feedback" id="qf0"></div>
+        <div class="q-next" id="qn0"><button class="q-next-btn" onclick="nextQ(1)">Próxima →</button></div>
+      </div>
+
+      <!-- Q1 -->
+      <div class="quiz-card" id="qc1">
+        <h4>❓ O comando <code>ip route show | grep default</code> retornou <code>default via 192.168.56.1 dev enp0s3</code>. O que isso significa?</h4>
+        <div class="q-opts">
+          <button class="q-opt" onclick="ansQ(1,0,1)">O IP do servidor é 192.168.56.1</button>
+          <button class="q-opt" onclick="ansQ(1,1,1)">Todo tráfego destinado à internet será encaminhado para 192.168.56.1 (o firewall)</button>
+          <button class="q-opt" onclick="ansQ(1,2,1)">A máscara de rede é 192.168.56.1</button>
+          <button class="q-opt" onclick="ansQ(1,3,1)">O DNS primário é 192.168.56.1</button>
+        </div>
+        <div class="q-feedback" id="qf1"></div>
+        <div class="q-next" id="qn1"><button class="q-next-btn" onclick="nextQ(2)">Próxima →</button></div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-card" id="qc2">
+        <h4>❓ Ao executar <code>traceroute 8.8.8.8</code> no servidor, qual deve ser o primeiro hop (salto) se o roteamento pelo firewall estiver correto?</h4>
+        <div class="q-opts">
+          <button class="q-opt" onclick="ansQ(2,0,0)">192.168.56.1 (o IP do firewall)</button>
+          <button class="q-opt" onclick="ansQ(2,1,0)">8.8.8.8 (o destino final)</button>
+          <button class="q-opt" onclick="ansQ(2,2,0)">192.168.56.10 (o próprio servidor)</button>
+          <button class="q-opt" onclick="ansQ(2,3,0)">10.0.2.2 (gateway do VirtualBox)</button>
+        </div>
+        <div class="q-feedback" id="qf2"></div>
+        <div class="q-next" id="qn2"><button class="q-next-btn" onclick="nextQ(3)">Próxima →</button></div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-card" id="qc3">
+        <h4>❓ O ping para <code>8.8.8.8</code> funciona, mas <code>ping google.com</code> falha com "Name or service not known". Qual é o problema?</h4>
+        <div class="q-opts">
+          <button class="q-opt" onclick="ansQ(3,0,2)">O firewall está bloqueando ICMP</button>
+          <button class="q-opt" onclick="ansQ(3,1,2)">O IP estático está errado</button>
+          <button class="q-opt" onclick="ansQ(3,2,2)">O DNS não está configurado corretamente (campo <code>nameservers</code> no Netplan)</button>
+          <button class="q-opt" onclick="ansQ(3,3,2)">O gateway está errado</button>
+        </div>
+        <div class="q-feedback" id="qf3"></div>
+        <div class="q-next" id="qn3"><button class="q-next-btn" onclick="nextQ(4)">Próxima →</button></div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-card" id="qc4">
+        <h4>❓ Por que o ubuntu-desktop usa <code>renderer: NetworkManager</code> no Netplan, enquanto o ubuntu-server não precisa dessa linha?</h4>
+        <div class="q-opts">
+          <button class="q-opt" onclick="ansQ(4,0,3)">Porque o Desktop tem menos memória RAM</button>
+          <button class="q-opt" onclick="ansQ(4,1,3)">Porque o Desktop usa kernel diferente</button>
+          <button class="q-opt" onclick="ansQ(4,2,3)">Porque o Netplan no Desktop é mais antigo</button>
+          <button class="q-opt" onclick="ansQ(4,3,3)">Porque o Desktop usa o NetworkManager como backend de rede (interface gráfica), enquanto o Server usa systemd-networkd diretamente</button>
+        </div>
+        <div class="q-feedback" id="qf4"></div>
+        <div class="q-next" id="qn4"><button class="q-next-btn" onclick="showResult()">Ver Resultado →</button></div>
+      </div>
+
+      <!-- RESULTADO -->
+      <div class="quiz-result" id="qresult">
+        <div class="quiz-score" id="qscore">0/5</div>
+        <p id="qmsg" style="color:var(--muted);margin:8px 0 16px;font-size:0.95em;"></p>
+        <div style="font-size:0.82em;color:var(--muted);margin-bottom:16px;" id="qxp"></div>
+        <button onclick="resetQuiz()" style="background:var(--blue-dim);border:1px solid rgba(77,166,255,0.4);color:var(--blue);padding:10px 22px;border-radius:8px;cursor:pointer;font-size:0.88em;font-weight:700;font-family:var(--sans);">🔄 Tentar Novamente</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RODAPÉ -->
+<div style="text-align:center;padding:24px 0;font-size:0.76em;color:var(--muted);border-top:1px solid var(--border);margin-top:24px;">
+  ISO-103 · Infraestrutura e Sistemas Operacionais · Semana 5.1 · Tecnólogo em Segurança da Informação
+  <span style="margin:0 12px;">·</span>
+  <a href="semana05_02.html" style="color:var(--orange);text-decoration:none;">🔥 Ver Semana 5.2 (Firewall)</a>
+</div>
+
+</div><!-- /container -->
+
+<script>
+// ── TABS ──
+function showTab(group, panel, btn) {
+  document.querySelectorAll('[id^="'+group+'-"]').forEach(p => p.classList.remove('active'));
+  document.getElementById(group+'-'+panel).classList.add('active');
+  btn.closest('.tabs').querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  toast('✅', 'Conteúdo carregado!');
+}
+
+// ── COPY ──
+function copyCode(id, btn) {
+  const el = document.getElementById(id);
+  let text = el.innerText;
+  // Remove copy button text
+  text = text.replace(/^📋 Copiar\n?/, '').replace(/📋 Copiar\n?/, '').trim();
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✅ Copiado!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '📋 Copiar'; btn.classList.remove('copied'); }, 2000);
+    toast('📋', 'Código copiado!');
+  });
+}
+
+// ── TOAST ──
+function toast(icon, msg) {
+  document.getElementById('t-icon').textContent = icon;
+  document.getElementById('t-msg').textContent = msg;
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  clearTimeout(window._toastT);
+  window._toastT = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ── CHECKLIST ──
+function toggleCheck(li) {
+  li.classList.toggle('done');
+  const done = document.querySelectorAll('#pre-checklist li.done').length;
+  const total = document.querySelectorAll('#pre-checklist li').length;
+  if (done === total) toast('🎉', 'Todos os pré-requisitos confirmados!');
+  else toast('✅', done + '/' + total + ' pré-requisitos confirmados');
+}
+
+// ── SCROLL ──
+function scrollTo(id) {
+  const el = document.querySelector(id);
+  if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+// ── PROGRESS DOTS ──
+const sections = ['s0','s1','s2','s3','s4','s5','s6','s7'];
+const dots = document.querySelectorAll('.prog-dot');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const idx = sections.indexOf(e.target.id);
+      if (idx >= 0) {
+        dots.forEach((d,i) => {
+          d.classList.toggle('active', i === idx);
+          if (i < idx) d.classList.add('done');
+        });
+      }
+    }
+  });
+}, { threshold: 0.3 });
+sections.forEach(id => {
+  const el = document.getElementById(id);
+  if (el) observer.observe(el);
+});
+
+// ── VALIDADOR NETPLAN ──
+function validateNetplan() {
+  const text = document.getElementById('netplan-input').value.trim();
+  const out = document.getElementById('sim-result');
+  out.style.display = 'block';
+
+  if (!text) {
+    out.innerHTML = '<span style="color:var(--red)">❌ Cole seu arquivo Netplan acima para validar.</span>';
+    return;
+  }
+
+  const checks = [
+    { label: 'version: 2',           pass: /version:\s*2/.test(text),                tip: 'Adicione "version: 2" no bloco "network:"' },
+    { label: 'ethernets (interface)', pass: /ethernets:/.test(text),                  tip: 'Adicione o bloco "ethernets:" com o nome da interface' },
+    { label: 'addresses (IP/máscara)',pass: /addresses:/.test(text) && /\/\d+/.test(text), tip: 'Adicione endereço com máscara: "- 192.168.56.x/24"' },
+    { label: 'routes / gateway',      pass: /routes:/.test(text) && /via:/.test(text), tip: 'Adicione o bloco routes com "via: 192.168.56.1"' },
+    { label: 'gateway aponta para firewall (192.168.56.1)', pass: /via:\s*192\.168\.56\.1/.test(text), tip: 'O campo "via:" deve ser "192.168.56.1" (IP do firewall)' },
+    { label: 'nameservers / DNS',     pass: /nameservers:/.test(text) && /8\.8\.8\.8|1\.1\.1\.1/.test(text), tip: 'Adicione "nameservers: addresses: [8.8.8.8, 1.1.1.1]"' },
+  ];
+
+  let passCount = 0;
+  let html = '';
+  checks.forEach(c => {
+    if (c.pass) {
+      passCount++;
+      html += `<span style="color:var(--green)">✅ ${c.label}</span>\n`;
+    } else {
+      html += `<span style="color:var(--red)">❌ ${c.label}</span>  <span style="color:var(--muted)">← ${c.tip}</span>\n`;
+    }
+  });
+
+  const total = checks.length;
+  const score = passCount + '/' + total;
+  let summary;
+  if (passCount === total) {
+    summary = `\n<span style="color:var(--green);font-weight:700">🎉 PERFEITO! ${score} — Configuração válida! Pode executar: sudo netplan apply</span>`;
+    toast('🎉', 'Netplan válido! ' + score + ' verificações OK');
+  } else if (passCount >= 4) {
+    summary = `\n<span style="color:var(--yellow)">⚠️ QUASE! ${score} — Corrija os itens marcados com ❌</span>`;
+    toast('⚠️', passCount + '/' + total + ' verificações OK');
+  } else {
+    summary = `\n<span style="color:var(--red)">❌ INCOMPLETO ${score} — Revise a configuração antes de aplicar</span>`;
+    toast('❌', 'Configuração incompleta: ' + passCount + '/' + total);
+  }
+
+  out.innerHTML = html + summary;
+}
+
+// ── QUIZ ──
+const QFB = [
+  '✅ Correto! O campo "via" dentro de "routes" define o gateway padrão. Quando o sistema precisar enviar um pacote para qualquer IP fora da rede local, ele encaminhará para o endereço especificado no "via" — que é o firewall.',
+  '✅ Exato! "default via 192.168.56.1" significa que a rota padrão (para qualquer destino desconhecido, incluindo a internet) passa pelo firewall. O tráfego sai do servidor, chega ao firewall, que faz o NAT e encaminha à internet.',
+  '✅ Perfeito! O primeiro hop do traceroute sempre é o gateway padrão. Se está configurado corretamente, deve aparecer 192.168.56.1 — confirmando que o tráfego passa pelo firewall antes de sair para a internet.',
+  '✅ Correto! Quando o ping para IP funciona mas o nome falha, é um problema de DNS. O campo "nameservers" no Netplan configura os servidores DNS. Sem DNS correto, o sistema não consegue resolver nomes de domínio.',
+  '✅ Exato! O Ubuntu Desktop usa o NetworkManager como backend de rede (necessário para a interface gráfica funcionar). O Netplan com "renderer: NetworkManager" delega o gerenciamento da interface ao NM. Já o Server usa diretamente o systemd-networkd.',
+];
+const QERR = [
+  '❌ Errado. O campo "addresses" define o IP do próprio servidor — não o gateway. O campo "via" dentro de "routes" é quem define para onde o tráfego deve ser encaminhado quando o destino não está na rede local.',
+  '❌ Errado. "default via 192.168.56.1" indica que a rota padrão (gateway) é 192.168.56.1 — ou seja, todo tráfego para a internet passa pelo firewall. Não é o IP do servidor nem a máscara.',
+  '❌ Errado. O traceroute mostra o caminho hop a hop. O primeiro hop é sempre o gateway padrão da máquina — que deve ser 192.168.56.1 (o firewall). O destino final (8.8.8.8) aparece nos últimos hops.',
+  '❌ Errado. Se o ping para 8.8.8.8 (IP) funciona, o roteamento e o firewall estão OK. O problema é que o sistema não consegue converter "google.com" em IP — isso é função do DNS, configurado em "nameservers" no Netplan.',
+  '❌ Errado. A diferença não tem relação com memória ou kernel, mas com o backend de rede. O Desktop usa NetworkManager (que integra com a interface gráfica), enquanto o Server usa systemd-networkd diretamente. O Netplan define qual backend usar.',
+];
+let qCorrect = 0, qDone = {};
+
+function ansQ(qi, chosen, correct) {
+  if (qDone[qi] !== undefined) return;
+  qDone[qi] = chosen === correct;
+  const card = document.getElementById('qc'+qi);
+  const opts = card.querySelectorAll('.q-opt');
+  opts.forEach(o => o.disabled = true);
+  opts[chosen].classList.add(chosen === correct ? 'correct' : 'wrong');
+  if (chosen !== correct) opts[correct].classList.add('correct');
+  const fb = document.getElementById('qf'+qi);
+  const ok = chosen === correct;
+  if (ok) qCorrect++;
+  fb.textContent = ok ? QFB[qi] : QERR[qi];
+  fb.className = 'q-feedback show ' + (ok ? 'ok' : 'fail');
+  document.getElementById('qn'+qi).classList.add('show');
+  document.getElementById('qprog').style.width = ((Object.keys(qDone).length / 5) * 100) + '%';
+  document.getElementById('qcount').textContent = 'Pergunta ' + Object.keys(qDone).length + ' de 5';
+  toast(ok ? '🎯' : '💡', ok ? 'Resposta correta!' : 'Veja a explicação abaixo');
+}
+
+function nextQ(n) {
+  document.getElementById('qc'+(n-1)).classList.remove('active');
+  document.getElementById('qc'+n).classList.add('active');
+}
+
+function showResult() {
+  document.getElementById('qc4').classList.remove('active');
+  const r = document.getElementById('qresult');
+  r.classList.add('show');
+  document.getElementById('qscore').textContent = qCorrect + '/5';
+  const msgs = ['Revise o conteúdo! 📚','Progredindo! 💪','Bom trabalho! 👍','Muito bom! 🌟','🔥 Perfeito! Gateway Expert!'];
+  document.getElementById('qmsg').textContent = msgs[Math.min(qCorrect, 4)];
+  document.getElementById('qxp').textContent = qCorrect >= 4 ? '🏆 Você domina roteamento e gateway NAT!' : 'Revise os tópicos marcados com ❌ e tente novamente.';
+  document.getElementById('qprog').style.width = '100%';
+  document.getElementById('qcount').textContent = 'Quiz concluído!';
+  toast(qCorrect >= 4 ? '🏆' : '📚', qCorrect + '/5 acertos!');
+}
+
+function resetQuiz() {
+  qCorrect = 0; qDone = {};
+  document.getElementById('qresult').classList.remove('show');
+  document.getElementById('qprog').style.width = '0%';
+  document.getElementById('qcount').textContent = 'Pergunta 0 de 5';
+  for (let i = 0; i < 5; i++) {
+    const c = document.getElementById('qc'+i);
+    c.classList.toggle('active', i === 0);
+    c.querySelectorAll('.q-opt').forEach(o => { o.disabled = false; o.classList.remove('correct','wrong'); });
+    document.getElementById('qf'+i).className = 'q-feedback';
+    document.getElementById('qn'+i).classList.remove('show');
+  }
+}
+
+setTimeout(() => toast('👋', 'Bem-vindo à Semana 5.1! Comece pelos pré-requisitos ↑'), 700);
+</script>
+</body>
+</html>
