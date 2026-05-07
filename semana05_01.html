@@ -709,7 +709,22 @@ body::before {
           - <span class="val">1.1.1.1</span>              <span class="comment"># DNS Cloudflare</span>
       </div>
       <div class="box box-warn">
-        <strong>⚠️ Atenção:</strong> No Netplan, cada nível de indentação usa <strong>2 espaços</strong>. Um erro de espaçamento faz o arquivo ser rejeitado. Verifique com cuidado antes de salvar.
+        📐 <strong>Mapa de espaços — conte exatamente assim:</strong><br><br>
+        <span style="font-family:var(--mono);font-size:0.88em;line-height:2.4;display:block;">
+          <span style="color:var(--green);">network:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 0 — <strong>sem espaço</strong> antes</span><br>
+          <span style="color:var(--purple);">··</span><span style="color:var(--orange);">version: 2</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 1 — <strong>2 espaços</strong> antes</span><br>
+          <span style="color:var(--purple);">··</span><span style="color:var(--orange);">ethernets:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 1 — <strong>2 espaços</strong> antes</span><br>
+          <span style="color:var(--purple);">····</span><span style="color:var(--orange);">enp0s3:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 2 — <strong>4 espaços</strong> antes</span><br>
+          <span style="color:var(--purple);">······</span><span style="color:var(--orange);">addresses:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 3 — <strong>6 espaços</strong> antes</span><br>
+          <span style="color:var(--purple);">········</span><span style="color:var(--blue);">- 192.168.56.10/24</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 4 — <strong>8 espaços</strong> + traço</span><br>
+          <span style="color:var(--purple);">······</span><span style="color:var(--orange);">routes:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 3 — <strong>6 espaços</strong> antes</span><br>
+          <span style="color:var(--purple);">········</span><span style="color:var(--blue);">- to: default</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 4 — <strong>8 espaços</strong> + traço</span><br>
+          <span style="color:var(--purple);">··········</span><span style="color:var(--blue);">via: 192.168.56.1</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 5 — <strong>10 espaços</strong> antes</span><br>
+          <span style="color:var(--purple);">······</span><span style="color:var(--orange);">nameservers:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 3 — <strong>6 espaços</strong> antes</span><br>
+          <span style="color:var(--purple);">········</span><span style="color:var(--orange);">addresses:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 4 — <strong>8 espaços</strong> antes</span><br>
+          <span style="color:var(--purple);">··········</span><span style="color:var(--blue);">- 8.8.8.8</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 5 — <strong>10 espaços</strong> + traço</span>
+        </span>
+        <br>⚠️ Use <strong>espaços</strong>, nunca a tecla Tab. Um espaço errado causa erro ao aplicar.
       </div>
       <p>Para salvar no nano: pressione <strong>Ctrl+X</strong> → <strong>Y</strong> → <strong>Enter</strong>.</p>
     </div>
@@ -845,6 +860,25 @@ body::before {
         <span class="key">addresses:</span>
           - <span class="val">8.8.8.8</span>
           - <span class="val">1.1.1.1</span>
+        </div>
+        <div class="box box-warn" style="margin-top:10px;">
+          📐 <strong>Mapa de espaços — conte exatamente assim:</strong><br><br>
+          <span style="font-family:var(--mono);font-size:0.88em;line-height:2.4;display:block;">
+            <span style="color:var(--green);">network:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 0 — <strong>sem espaço</strong> antes</span><br>
+            <span style="color:var(--purple);">··</span><span style="color:var(--orange);">version: 2</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 1 — <strong>2 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">··</span><span style="color:var(--orange);">renderer: NetworkManager</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 1 — <strong>2 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">··</span><span style="color:var(--orange);">ethernets:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 1 — <strong>2 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">····</span><span style="color:var(--orange);">enp0s3:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 2 — <strong>4 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">······</span><span style="color:var(--orange);">addresses:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 3 — <strong>6 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">········</span><span style="color:var(--blue);">- 192.168.56.20/24</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 4 — <strong>8 espaços</strong> + traço</span><br>
+            <span style="color:var(--purple);">······</span><span style="color:var(--orange);">routes:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 3 — <strong>6 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">········</span><span style="color:var(--blue);">- to: default</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 4 — <strong>8 espaços</strong> + traço</span><br>
+            <span style="color:var(--purple);">··········</span><span style="color:var(--blue);">via: 192.168.56.1</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 5 — <strong>10 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">······</span><span style="color:var(--orange);">nameservers:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 3 — <strong>6 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">········</span><span style="color:var(--orange);">addresses:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 4 — <strong>8 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">··········</span><span style="color:var(--blue);">- 8.8.8.8</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 5 — <strong>10 espaços</strong> + traço</span>
+          </span>
+          <br>⚠️ Use <strong>espaços</strong>, nunca a tecla Tab. Um espaço errado causa erro ao aplicar.
         </div>
       </div>
     </div>
