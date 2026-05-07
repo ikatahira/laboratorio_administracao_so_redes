@@ -795,12 +795,16 @@ body::before {
 <span class="indent">    </span><span class="key">enp0s3:</span>
 <span class="indent">      </span><span class="key">dhcp4:</span> <span class="val">true</span>
         </div>
-        <div class="box box-tip">📐 <strong>Mapa de espaços:</strong><br>
-          <code>network:</code> → sem espaços antes<br>
-          <code>  version: 2</code> → 2 espaços antes<br>
-          <code>  ethernets:</code> → 2 espaços antes<br>
-          <code>    enp0s3:</code> → 4 espaços antes<br>
-          <code>      dhcp4: true</code> → 6 espaços antes
+        <div class="box box-warn">
+          📐 <strong>Mapa de espaços — conte exatamente assim:</strong><br><br>
+          <span style="font-family:var(--mono);font-size:0.88em;line-height:2.4;display:block;">
+            <span style="color:var(--green);">network:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 0 — <strong>sem espaço</strong> antes</span><br>
+            <span style="color:var(--purple);">··</span><span style="color:var(--orange);">version: 2</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 1 — <strong>2 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">··</span><span style="color:var(--orange);">ethernets:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 1 — <strong>2 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">····</span><span style="color:var(--orange);">enp0s3:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 2 — <strong>4 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">······</span><span style="color:var(--orange);">dhcp4: true</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 3 — <strong>6 espaços</strong> antes</span>
+          </span>
+          <br>⚠️ Use <strong>espaços</strong>, nunca a tecla Tab. Um espaço errado causa erro ao aplicar.
         </div>
       </div>
     </div>
@@ -936,14 +940,14 @@ PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
         </div>
         <div class="box box-warn" style="margin-top:10px;">
           📐 <strong>Mapa de espaços — conte exatamente assim:</strong><br><br>
-          <span style="font-family:var(--mono);font-size:0.88em;line-height:2.2;display:block;">
-            <span style="color:var(--green);">network:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 0 — sem espaço antes</span><br>
-            <span style="color:var(--purple);">··</span><span style="color:var(--orange);">version: 2</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 1 — <strong>2 espaços</strong> antes</span><br>
-            <span style="color:var(--purple);">··</span><span style="color:var(--orange);">ethernets:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 1 — <strong>2 espaços</strong> antes</span><br>
-            <span style="color:var(--purple);">····</span><span style="color:var(--orange);">enp0s8:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 2 — <strong>4 espaços</strong> antes</span><br>
-            <span style="color:var(--purple);">······</span><span style="color:var(--orange);">dhcp4: false</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 3 — <strong>6 espaços</strong> antes</span><br>
-            <span style="color:var(--purple);">······</span><span style="color:var(--orange);">addresses:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 3 — <strong>6 espaços</strong> antes</span><br>
-            <span style="color:var(--purple);">········</span><span style="color:var(--blue);">- 192.168.10.1/24</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;← nível 4 — <strong>8 espaços</strong> + traço</span>
+          <span style="font-family:var(--mono);font-size:0.88em;line-height:2.4;display:block;">
+            <span style="color:var(--green);">network:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 0 — <strong>sem espaço</strong> antes</span><br>
+            <span style="color:var(--purple);">··</span><span style="color:var(--orange);">version: 2</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 1 — <strong>2 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">··</span><span style="color:var(--orange);">ethernets:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 1 — <strong>2 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">····</span><span style="color:var(--orange);">enp0s8:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 2 — <strong>4 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">······</span><span style="color:var(--orange);">dhcp4: false</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 3 — <strong>6 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">······</span><span style="color:var(--orange);">addresses:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 3 — <strong>6 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">········</span><span style="color:var(--blue);">- 192.168.10.1/24</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 4 — <strong>8 espaços</strong> + traço</span>
           </span>
           <br>⚠️ Use <strong>espaços</strong>, nunca a tecla Tab. Um espaço errado causa erro ao aplicar.
         </div>
@@ -1066,8 +1070,21 @@ PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
 <span class="indent">      </span><span class="key">addresses:</span>
 <span class="indent">        </span>- <span class="val">192.168.10.1/24</span>   <span class="comment">  # Gateway da rede interna</span>
         </div>
-      </div>
-    </div>
+        <div class="box box-warn" style="margin-top:10px;">
+          📐 <strong>Mapa de espaços — conte exatamente assim:</strong><br><br>
+          <span style="font-family:var(--mono);font-size:0.88em;line-height:2.4;display:block;">
+            <span style="color:var(--green);">network:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 0 — <strong>sem espaço</strong> antes</span><br>
+            <span style="color:var(--purple);">··</span><span style="color:var(--orange);">version: 2</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 1 — <strong>2 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">··</span><span style="color:var(--orange);">ethernets:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 1 — <strong>2 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">····</span><span style="color:var(--orange);">enp0s3:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 2 — <strong>4 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">······</span><span style="color:var(--orange);">dhcp4: true</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 3 — <strong>6 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">····</span><span style="color:var(--orange);">enp0s8:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 2 — <strong>4 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">······</span><span style="color:var(--orange);">dhcp4: false</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 3 — <strong>6 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">······</span><span style="color:var(--orange);">addresses:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 3 — <strong>6 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">········</span><span style="color:var(--blue);">- 192.168.10.1/24</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 4 — <strong>8 espaços</strong> + traço</span>
+          </span>
+          <br>⚠️ Use <strong>espaços</strong>, nunca a tecla Tab. Um espaço errado causa erro ao aplicar.
+        </div>
 
     <div class="step-block">
       <div class="step-block-header">
