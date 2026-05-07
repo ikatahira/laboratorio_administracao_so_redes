@@ -4,343 +4,472 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Semana 5.2 — Netplan + Firewall UFW | ISO-103</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0f1117;
-  --card: #1a1d27;
-  --border: #2a2f3e;
-  --green: #22c55e;
-  --green-dim: rgba(34,197,94,0.12);
-  --blue: #38bdf8;
-  --blue-dim: rgba(56,189,248,0.12);
-  --orange: #fb923c;
-  --orange-dim: rgba(251,146,60,0.12);
-  --red: #f87171;
-  --red-dim: rgba(248,113,113,0.12);
-  --yellow: #facc15;
-  --yellow-dim: rgba(250,204,21,0.1);
-  --purple: #a78bfa;
-  --text: #e2e8f0;
-  --muted: #64748b;
-  --code-bg: #090c14;
+  --bg: #080b12;
+  --card: #0f1320;
+  --card2: #131826;
+  --border: #1e2640;
+  --border2: #252d45;
+  --green: #00e5a0;
+  --green-dim: rgba(0,229,160,0.08);
+  --green-glow: rgba(0,229,160,0.25);
+  --blue: #4da6ff;
+  --blue-dim: rgba(77,166,255,0.1);
+  --orange: #ff8c42;
+  --orange-dim: rgba(255,140,66,0.1);
+  --red: #ff5c7a;
+  --red-dim: rgba(255,92,122,0.1);
+  --yellow: #ffd060;
+  --yellow-dim: rgba(255,208,96,0.08);
+  --purple: #b48eff;
+  --cyan: #00d4ff;
+  --text: #d8e4f0;
+  --text2: #8a9bb8;
+  --muted: #4a5878;
+  --code-bg: #060910;
+  --mono: 'Space Mono', monospace;
+  --sans: 'Sora', sans-serif;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 html { scroll-behavior: smooth; }
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--sans);
   background: var(--bg);
   color: var(--text);
-  line-height: 1.6;
+  line-height: 1.65;
+  font-size: 15px;
 }
 
-/* HEADER */
+/* ── SCAN LINES OVERLAY ── */
+body::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+  pointer-events:none;
+  z-index:9999;
+}
+
+/* ── HEADER ── */
 .header {
-  background: var(--card);
-  border-bottom: 2px solid var(--green);
-  padding: 16px 24px;
-  display: flex; align-items: center; gap: 12px;
-  position: sticky; top: 0; z-index: 100;
-}
-.header-badge {
-  background: var(--green-dim);
-  border: 1px solid var(--green);
-  color: var(--green);
-  border-radius: 6px;
-  padding: 4px 12px;
-  font-size: 0.75em; font-weight: 700;
-  letter-spacing: 1px;
-}
-.header h1 { font-size: 1em; font-weight: 700; color: var(--text); }
-.header p { font-size: 0.78em; color: var(--muted); }
-
-/* LAYOUT */
-.container { max-width: 860px; margin: 0 auto; padding: 28px 20px; }
-
-/* SECTION */
-.section { margin-bottom: 36px; }
-.section-title {
-  display: flex; align-items: center; gap: 10px;
-  font-size: 1.05em; font-weight: 700; color: var(--text);
-  margin-bottom: 16px;
-  padding-bottom: 10px;
+  background: linear-gradient(135deg, #0a0e1a 0%, #0f1525 100%);
   border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  position: sticky; top: 0; z-index: 200;
+}
+.header-inner {
+  max-width: 920px; margin: 0 auto;
+  display: flex; align-items: center; gap: 16px;
+  padding: 14px 0;
+}
+.logo {
+  width: 42px; height: 42px; border-radius: 10px;
+  background: linear-gradient(135deg, var(--green), var(--cyan));
+  display:flex; align-items:center; justify-content:center;
+  font-size: 1.3em; flex-shrink:0;
+  box-shadow: 0 0 16px var(--green-glow);
+}
+.header-meta { flex:1; }
+.header-badge {
+  display: inline-block;
+  background: var(--green-dim);
+  border: 1px solid rgba(0,229,160,0.3);
+  color: var(--green);
+  border-radius: 4px;
+  padding: 2px 10px;
+  font-size: 0.68em; font-weight: 700;
+  letter-spacing: 1.5px; font-family: var(--mono);
+  margin-bottom: 2px;
+}
+.header h1 { font-size: 1em; font-weight: 700; color: var(--text); line-height:1.2; }
+.header-sub { font-size: 0.75em; color: var(--muted); }
+
+/* ── LAYOUT ── */
+.container { max-width: 920px; margin: 0 auto; padding: 32px 20px 60px; }
+
+/* ── RETOMADA BANNER ── */
+.retomada-banner {
+  background: linear-gradient(135deg, rgba(77,166,255,0.06) 0%, rgba(0,229,160,0.06) 100%);
+  border: 1px solid var(--border2);
+  border-left: 4px solid var(--cyan);
+  border-radius: 12px;
+  padding: 22px 24px;
+  margin-bottom: 28px;
+}
+.retomada-banner h2 {
+  font-size: 0.95em; font-weight: 700; color: var(--cyan);
+  margin-bottom: 14px; display:flex; align-items:center; gap:8px;
+  font-family: var(--mono);
+}
+.retomada-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+}
+@media(max-width:600px){ .retomada-grid { grid-template-columns: 1fr; } }
+.retomada-item {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border);
+  border-radius: 8px; padding: 12px 14px;
+}
+.retomada-item .ri-title {
+  font-size: 0.78em; font-weight: 700; color: var(--text2);
+  text-transform: uppercase; letter-spacing: 0.8px;
+  margin-bottom: 6px;
+}
+.retomada-item p { font-size: 0.84em; color: var(--text); line-height:1.5; }
+.retomada-item code {
+  font-family: var(--mono);
+  background: rgba(0,229,160,0.08);
+  color: var(--green);
+  padding: 1px 6px; border-radius: 4px; font-size:0.9em;
+}
+
+/* ── IMPORTÂNCIA SI BANNER ── */
+.si-banner {
+  background: linear-gradient(135deg, rgba(255,140,66,0.06) 0%, rgba(255,92,122,0.06) 100%);
+  border: 1px solid var(--border2);
+  border-left: 4px solid var(--orange);
+  border-radius: 12px;
+  padding: 22px 24px;
+  margin-bottom: 28px;
+}
+.si-banner h2 {
+  font-size: 0.95em; font-weight: 700; color: var(--orange);
+  margin-bottom: 12px; display:flex; align-items:center; gap:8px;
+  font-family: var(--mono);
+}
+.si-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
+@media(max-width:700px){ .si-grid { grid-template-columns:1fr; } }
+.si-card {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border);
+  border-radius: 8px; padding: 12px 14px; text-align:center;
+}
+.si-card .si-icon { font-size:1.5em; margin-bottom:6px; }
+.si-card .si-label { font-size:0.78em; font-weight:700; color:var(--orange); margin-bottom:4px; }
+.si-card p { font-size:0.79em; color:var(--text2); line-height:1.4; }
+
+/* ── SECTION ── */
+.section { margin-bottom: 40px; }
+.section-title {
+  display:flex; align-items:center; gap:12px;
+  font-size: 1em; font-weight: 800; color: var(--text);
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono);
 }
 .section-num {
-  width: 28px; height: 28px; border-radius: 50%;
-  background: var(--green); color: #0f1117;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.8em; font-weight: 700; flex-shrink: 0;
+  width: 30px; height: 30px; border-radius: 8px;
+  background: linear-gradient(135deg, var(--green), var(--cyan));
+  color: #060910; display:flex; align-items:center; justify-content:center;
+  font-size: 0.82em; font-weight: 700; flex-shrink:0;
+  box-shadow: 0 0 12px var(--green-glow);
 }
 
-/* CARDS */
+/* ── CARDS ── */
 .card {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 12px;
-  overflow: hidden;
+  border-radius: 12px; overflow:hidden;
   margin-bottom: 14px;
 }
 .card-head {
   padding: 13px 18px;
   border-bottom: 1px solid var(--border);
-  font-size: 0.85em; font-weight: 700; color: var(--text);
-  display: flex; align-items: center; gap: 8px;
+  font-size: 0.84em; font-weight: 700; color: var(--text);
+  display:flex; align-items:center; gap:8px;
+  background: rgba(255,255,255,0.02);
 }
 .card-body { padding: 18px; }
 
-/* ALERT BOXES */
+/* ── CAIXA DE CONTEXTO COM USUÁRIO ── */
+.user-context {
+  background: var(--code-bg);
+  border: 1px solid var(--border2);
+  border-radius: 10px; padding: 0; margin: 12px 0;
+  overflow:hidden;
+}
+.user-context-header {
+  background: rgba(255,255,255,0.03);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 16px;
+  font-size: 0.78em; font-weight: 700; color: var(--muted);
+  font-family: var(--mono);
+  display:flex; align-items:center; gap:8px;
+}
+.user-context-header span { color: var(--green); }
+.user-context-body { padding: 14px 16px; }
+.login-line {
+  display:flex; align-items:baseline; gap:8px;
+  margin-bottom: 6px; font-family: var(--mono); font-size: 0.84em;
+}
+.login-prompt { color: var(--green); flex-shrink:0; }
+.login-cmd { color: var(--text); }
+.login-comment { color: var(--muted); font-size:0.85em; }
+
+/* ── ALERT BOXES ── */
 .box {
-  border-radius: 8px;
-  padding: 13px 16px;
-  margin-bottom: 14px;
-  font-size: 0.88em;
-  line-height: 1.6;
-  border-left: 4px solid;
+  border-radius: 9px; padding: 13px 16px;
+  margin-bottom: 12px; font-size: 0.86em; line-height: 1.65;
+  border-left: 3px solid;
 }
-.box-info { background: var(--blue-dim); border-color: var(--blue); color: #bae6fd; }
-.box-warn { background: var(--orange-dim); border-color: var(--orange); color: #fed7aa; }
-.box-danger { background: var(--red-dim); border-color: var(--red); color: #fecaca; }
-.box-ok { background: var(--green-dim); border-color: var(--green); color: #bbf7d0; }
-.box-tip { background: var(--yellow-dim); border-color: var(--yellow); color: #fef08a; }
-
-/* CODE BLOCK */
-.code-block {
-  background: var(--code-bg);
-  border: 1px solid #1e2535;
-  border-radius: 9px;
-  padding: 16px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.82em;
-  line-height: 1.8;
-  margin: 10px 0;
-  overflow-x: auto;
-  position: relative;
-}
-.code-block .prompt { color: var(--green); }
-.code-block .cmd { color: #e2e8f0; }
-.code-block .comment { color: #3d5066; }
-.code-block .key { color: var(--orange); }
-.code-block .val { color: var(--blue); }
-.code-block .indent { color: var(--purple); }
-.code-block .ok { color: var(--green); }
-
-/* COPY BTN */
-.copy-btn {
-  position: absolute; top: 10px; right: 10px;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.1);
-  color: var(--muted);
-  padding: 3px 10px; border-radius: 5px;
-  font-size: 0.7em; cursor: pointer;
-  font-family: 'Inter', sans-serif;
-  transition: all 0.2s;
-}
-.copy-btn:hover { color: var(--green); border-color: var(--green); }
-.copy-btn.copied { color: var(--green); border-color: var(--green); }
-
-/* STEPS */
-.step {
-  display: flex; gap: 12px; margin-bottom: 12px; align-items: flex-start;
-}
-.step-n {
-  width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
-  background: rgba(34,197,94,0.15); border: 1px solid var(--green);
-  color: var(--green); display: flex; align-items: center; justify-content: center;
-  font-size: 0.72em; font-weight: 700; margin-top: 1px;
-}
-.step-body { font-size: 0.88em; color: var(--text); }
-.step-body code {
-  font-family: 'JetBrains Mono', monospace;
-  background: rgba(251,146,60,0.12); color: var(--orange);
-  padding: 1px 6px; border-radius: 4px; font-size: 0.9em;
+.box-info  { background: var(--blue-dim);   border-color: var(--blue);   color: #a8d0ff; }
+.box-warn  { background: var(--orange-dim); border-color: var(--orange); color: #ffd0a8; }
+.box-danger{ background: var(--red-dim);    border-color: var(--red);    color: #ffb0c0; }
+.box-ok    { background: var(--green-dim);  border-color: var(--green);  color: #a0f0d8; }
+.box-tip   { background: var(--yellow-dim); border-color: var(--yellow); color: #ffe8a0; }
+.box-purple{ background: rgba(180,142,255,0.08); border-color: var(--purple); color: #d4beff; }
+.box strong { font-weight: 700; }
+.box code {
+  font-family: var(--mono);
+  background: rgba(255,255,255,0.1);
+  padding: 1px 6px; border-radius: 4px; font-size:0.9em;
 }
 
-/* DIAGRAM */
-.diagram-wrap {
-  background: var(--code-bg);
+/* ── PASSO DETALHADO ── */
+.step-block {
+  background: var(--card2);
   border: 1px solid var(--border);
   border-radius: 10px;
-  padding: 16px;
-  margin: 12px 0;
-  text-align: center;
+  margin-bottom: 10px;
+  overflow:hidden;
 }
-.diagram-wrap p { font-size: 0.75em; color: var(--muted); margin-top: 8px; }
-
-/* TABS */
-.tabs { display: flex; gap: 8px; margin-bottom: 16px; }
-.tab-btn {
-  padding: 8px 18px; border-radius: 7px;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--muted);
-  font-family: 'Inter', sans-serif;
-  font-size: 0.84em; font-weight: 600;
-  cursor: pointer; transition: all 0.2s;
-}
-.tab-btn:hover { color: var(--text); border-color: #3a4050; }
-.tab-btn.active { background: var(--green-dim); border-color: var(--green); color: var(--green); }
-.tab-panel { display: none; }
-.tab-panel.active { display: block; }
-
-/* DIFF TABLE */
-.diff-table { width: 100%; border-collapse: collapse; font-size: 0.86em; }
-.diff-table th {
-  padding: 10px 14px; text-align: left;
-  background: rgba(255,255,255,0.04);
-  color: var(--muted); font-weight: 600;
+.step-block-header {
+  padding: 11px 16px;
+  background: rgba(255,255,255,0.025);
   border-bottom: 1px solid var(--border);
+  display:flex; align-items:center; gap:10px;
 }
-.diff-table td {
-  padding: 10px 14px;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
-  color: var(--text);
-  vertical-align: top;
-}
-.diff-table tr:last-child td { border-bottom: none; }
-.green-t { color: var(--green); font-weight: 700; }
-.orange-t { color: var(--orange); font-weight: 700; }
-.blue-t { color: var(--blue); }
-
-/* PORT TABLE */
-.port-table { width: 100%; border-collapse: collapse; font-size: 0.84em; }
-.port-table th {
-  padding: 8px 12px; text-align: left;
-  background: rgba(255,255,255,0.04);
-  color: var(--muted); font-size: 0.82em;
-  border-bottom: 1px solid var(--border);
-}
-.port-table td { padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.04); }
-.port-table tr:last-child td { border-bottom: none; }
-
-/* SIMULATOR */
-.sim-row {
-  display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap;
-}
-.sim-input {
-  background: var(--code-bg);
-  border: 1px solid var(--border);
-  border-radius: 7px; padding: 9px 12px;
-  color: var(--text); font-family: 'JetBrains Mono', monospace;
-  font-size: 0.85em; width: 130px;
-}
-.sim-input:focus { outline: none; border-color: var(--green); }
-.sim-select {
-  background: var(--code-bg);
-  border: 1px solid var(--border);
-  border-radius: 7px; padding: 9px 12px;
-  color: var(--text); font-family: 'Inter', sans-serif;
-  font-size: 0.85em; cursor: pointer;
-}
-.sim-select:focus { outline: none; border-color: var(--green); }
-.sim-btn {
-  background: var(--green-dim);
+.step-num {
+  width: 22px; height: 22px; border-radius: 50%; flex-shrink:0;
+  background: rgba(0,229,160,0.15);
   border: 1px solid var(--green);
-  color: var(--green); padding: 9px 18px;
-  border-radius: 7px; cursor: pointer;
-  font-family: 'Inter', sans-serif;
-  font-size: 0.85em; font-weight: 700;
+  color: var(--green);
+  display:flex; align-items:center; justify-content:center;
+  font-size: 0.7em; font-weight: 700;
+  font-family: var(--mono);
+}
+.step-title { font-size:0.88em; font-weight:700; color:var(--text); }
+.step-subtitle { font-size:0.78em; color:var(--text2); margin-top:2px; }
+.step-block-body { padding: 14px 16px; }
+.step-block-body p { font-size:0.86em; color:var(--text); margin-bottom:8px; line-height:1.6; }
+.step-block-body code {
+  font-family: var(--mono);
+  background: rgba(255,140,66,0.1);
+  color: var(--orange);
+  padding: 1px 6px; border-radius:4px; font-size:0.9em;
+}
+
+/* ── CODE BLOCK ── */
+.code-block {
+  background: var(--code-bg);
+  border: 1px solid #131c2e;
+  border-radius: 9px; padding: 16px;
+  font-family: var(--mono); font-size: 0.8em;
+  line-height: 1.9; margin: 10px 0;
+  overflow-x: auto; position:relative;
+}
+.code-block .prompt { color: var(--green); }
+.code-block .cmd    { color: var(--text); }
+.code-block .comment{ color: #2d3f5e; }
+.code-block .key    { color: var(--orange); }
+.code-block .val    { color: var(--blue); }
+.code-block .indent { color: var(--purple); }
+.code-block .ok     { color: var(--green); }
+.code-block .err    { color: var(--red); }
+.code-block .hl     { color: var(--yellow); }
+
+/* resultado esperado */
+.result-block {
+  background: rgba(0,229,160,0.04);
+  border: 1px solid rgba(0,229,160,0.2);
+  border-radius: 8px; padding: 12px 14px;
+  margin: 8px 0 12px;
+  font-family: var(--mono); font-size:0.79em;
+  line-height:1.8;
+}
+.result-label {
+  font-size:0.7em; font-weight:700; color:var(--green);
+  text-transform:uppercase; letter-spacing:1px;
+  margin-bottom:6px; font-family:var(--sans);
+}
+.result-block .r-ok  { color: var(--green); }
+.result-block .r-num { color: var(--cyan); }
+.result-block .r-path{ color: var(--orange); }
+.result-block .r-key { color: var(--blue); }
+.result-block .r-val { color: var(--text); }
+.result-block .r-dim { color: var(--muted); }
+
+/* copy btn */
+.copy-btn {
+  position:absolute; top:10px; right:10px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--muted); padding: 3px 10px; border-radius:5px;
+  font-size:0.7em; cursor:pointer; font-family:var(--sans);
   transition: all 0.2s;
 }
-.sim-btn:hover { background: rgba(34,197,94,0.22); }
-.sim-btn.danger { background: var(--red-dim); border-color: var(--red); color: var(--red); }
-.sim-btn.danger:hover { background: rgba(248,113,113,0.2); }
-.fw-output {
-  background: var(--code-bg);
-  border: 1px solid var(--border);
-  border-radius: 8px; padding: 14px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.8em; line-height: 1.9;
-  min-height: 140px;
-}
-.fw-line { display: block; }
-.fw-line.hdr { color: var(--muted); }
-.fw-line.allow { color: var(--green); }
-.fw-line.deny { color: var(--red); }
-.fw-status { font-size: 0.78em; color: var(--muted); margin-top: 8px; }
+.copy-btn:hover { color:var(--green); border-color:var(--green); }
+.copy-btn.copied{ color:var(--green); border-color:var(--green); }
 
-/* QUIZ */
-.quiz-card {
-  background: var(--code-bg);
+/* ── TABS ── */
+.tabs { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
+.tab-btn {
+  padding:8px 18px; border-radius:7px;
   border: 1px solid var(--border);
-  border-radius: 10px; padding: 18px;
-  margin-bottom: 14px; display: none;
+  background: transparent; color: var(--muted);
+  font-family: var(--sans); font-size:0.83em; font-weight:600;
+  cursor:pointer; transition:all 0.2s;
 }
-.quiz-card.active { display: block; }
-.quiz-card h4 { font-size: 0.95em; margin-bottom: 14px; line-height: 1.5; }
-.q-opts { display: flex; flex-direction: column; gap: 8px; }
-.q-opt {
-  text-align: left; padding: 10px 14px;
-  border: 1px solid var(--border); border-radius: 7px;
+.tab-btn:hover { color:var(--text); border-color:var(--border2); }
+.tab-btn.active { background:var(--green-dim); border-color:rgba(0,229,160,0.4); color:var(--green); }
+.tab-panel { display:none; }
+.tab-panel.active { display:block; }
+
+/* ── DIFF TABLE ── */
+.diff-table { width:100%; border-collapse:collapse; font-size:0.84em; }
+.diff-table th {
+  padding:10px 14px; text-align:left;
   background: rgba(255,255,255,0.03);
-  color: var(--text); font-family: 'Inter', sans-serif;
-  font-size: 0.86em; cursor: pointer; transition: all 0.2s;
+  color:var(--muted); font-weight:700;
+  border-bottom: 1px solid var(--border);
+  font-family:var(--mono); font-size:0.82em;
 }
-.q-opt:hover:not(:disabled) { border-color: var(--blue); background: var(--blue-dim); }
-.q-opt.correct { border-color: var(--green); background: var(--green-dim); color: var(--green); }
-.q-opt.wrong { border-color: var(--red); background: var(--red-dim); color: var(--red); }
-.q-feedback {
-  display: none; padding: 11px 14px;
-  border-radius: 7px; font-size: 0.84em;
-  margin-top: 10px; line-height: 1.5;
+.diff-table td {
+  padding:10px 14px;
+  border-bottom:1px solid rgba(255,255,255,0.03);
+  color:var(--text); vertical-align:top;
 }
-.q-feedback.show { display: block; }
-.q-feedback.ok { background: var(--green-dim); border: 1px solid var(--green); color: #bbf7d0; }
-.q-feedback.fail { background: var(--red-dim); border: 1px solid var(--red); color: #fecaca; }
-.q-next { display: none; margin-top: 12px; justify-content: flex-end; }
-.q-next.show { display: flex; }
-.q-next-btn {
-  background: var(--blue-dim); border: 1px solid var(--blue);
-  color: var(--blue); padding: 8px 18px; border-radius: 6px;
-  cursor: pointer; font-size: 0.84em; font-weight: 700;
-  font-family: 'Inter', sans-serif;
-}
-.quiz-result { display: none; text-align: center; padding: 24px; }
-.quiz-result.show { display: block; }
-.quiz-score { font-size: 2.8em; font-weight: 700; color: var(--green); }
-.quiz-prog {
-  background: rgba(255,255,255,0.06); border-radius: 100px;
-  height: 5px; margin-bottom: 14px; overflow: hidden;
-}
-.quiz-prog-fill { height: 100%; background: var(--green); border-radius: 100px; transition: width 0.4s; width: 0%; }
+.diff-table tr:last-child td { border-bottom:none; }
+.diff-table code { font-family:var(--mono); font-size:0.9em; }
+.c-green { color:var(--green); font-weight:700; }
+.c-orange{ color:var(--orange); font-weight:700; }
+.c-blue  { color:var(--blue); }
+.c-red   { color:var(--red); font-weight:700; }
+.c-muted { color:var(--muted); }
 
-/* TOAST */
-.toast {
-  position: fixed; bottom: 24px; right: 24px;
-  background: var(--card); border: 1px solid var(--green);
-  border-radius: 10px; padding: 12px 18px;
-  font-size: 0.85em; color: var(--text);
-  display: flex; align-items: center; gap: 10px;
-  transform: translateY(100px); opacity: 0;
-  transition: all 0.35s; z-index: 999;
-  max-width: 280px;
-}
-.toast.show { transform: translateY(0); opacity: 1; }
-.toast-icon { font-size: 1.4em; }
+/* ── PORT TABLE ── */
+.port-table { width:100%; border-collapse:collapse; font-size:0.83em; }
+.port-table th { padding:9px 12px; text-align:left; background:rgba(255,255,255,0.03); color:var(--muted); border-bottom:1px solid var(--border); font-family:var(--mono); font-size:0.8em; }
+.port-table td { padding:9px 12px; border-bottom:1px solid rgba(255,255,255,0.03); }
+.port-table tr:last-child td { border-bottom:none; }
 
-/* PROGRESS BAR */
-.xp-bar-wrap {
-  background: rgba(255,255,255,0.06);
-  border-radius: 100px; height: 6px;
-  margin: 8px 0; overflow: hidden;
-}
-.xp-bar { height: 100%; background: linear-gradient(90deg, var(--green), var(--blue)); border-radius: 100px; transition: width 0.6s; }
-
-/* HIGHLIGHT TAG */
+/* ── TAGS ── */
 .tag {
-  display: inline-block;
-  padding: 2px 9px; border-radius: 5px;
-  font-size: 0.78em; font-weight: 700;
-  vertical-align: middle;
+  display:inline-block; padding:2px 9px; border-radius:4px;
+  font-size:0.75em; font-weight:700; vertical-align:middle;
+  font-family:var(--mono);
 }
-.tag-green { background: var(--green-dim); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
-.tag-orange { background: var(--orange-dim); color: var(--orange); border: 1px solid rgba(251,146,60,0.3); }
-.tag-blue { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(56,189,248,0.3); }
-.tag-red { background: var(--red-dim); color: var(--red); border: 1px solid rgba(248,113,113,0.3); }
+.tag-green  { background:var(--green-dim);  color:var(--green);  border:1px solid rgba(0,229,160,0.3); }
+.tag-orange { background:var(--orange-dim); color:var(--orange); border:1px solid rgba(255,140,66,0.3); }
+.tag-red    { background:var(--red-dim);    color:var(--red);    border:1px solid rgba(255,92,122,0.3); }
 
-@media (max-width: 600px) {
-  .tabs { flex-wrap: wrap; }
-  .sim-input { width: 100%; }
+/* ── SIMULADOR UFW ── */
+.sim-row { display:flex; gap:10px; margin-bottom:12px; flex-wrap:wrap; }
+.sim-input {
+  background:var(--code-bg); border:1px solid var(--border);
+  border-radius:7px; padding:9px 12px; color:var(--text);
+  font-family:var(--mono); font-size:0.84em; width:140px;
+}
+.sim-input:focus { outline:none; border-color:var(--green); }
+.sim-select {
+  background:var(--code-bg); border:1px solid var(--border);
+  border-radius:7px; padding:9px 12px; color:var(--text);
+  font-family:var(--sans); font-size:0.84em; cursor:pointer;
+}
+.sim-select:focus { outline:none; border-color:var(--green); }
+.sim-btn {
+  background:var(--green-dim); border:1px solid rgba(0,229,160,0.4);
+  color:var(--green); padding:9px 18px; border-radius:7px;
+  cursor:pointer; font-family:var(--sans); font-size:0.84em; font-weight:700;
+  transition:all 0.2s;
+}
+.sim-btn:hover { background:rgba(0,229,160,0.16); }
+.sim-btn.danger { background:var(--red-dim); border-color:rgba(255,92,122,0.4); color:var(--red); }
+.fw-output {
+  background:var(--code-bg); border:1px solid var(--border);
+  border-radius:8px; padding:14px; font-family:var(--mono);
+  font-size:0.79em; line-height:2; min-height:140px;
+}
+.fw-line { display:block; }
+.fw-line.hdr   { color:var(--muted); }
+.fw-line.allow { color:var(--green); }
+.fw-line.deny  { color:var(--red); }
+.fw-status { font-size:0.76em; color:var(--muted); margin-top:8px; }
+
+/* ── QUIZ ── */
+.quiz-prog { background:rgba(255,255,255,0.05); border-radius:100px; height:4px; margin-bottom:14px; overflow:hidden; }
+.quiz-prog-fill { height:100%; background:linear-gradient(90deg, var(--green), var(--cyan)); border-radius:100px; transition:width 0.4s; width:0%; }
+.quiz-card { background:var(--code-bg); border:1px solid var(--border); border-radius:10px; padding:18px; margin-bottom:14px; display:none; }
+.quiz-card.active { display:block; }
+.quiz-card h4 { font-size:0.93em; margin-bottom:14px; line-height:1.5; font-weight:700; }
+.quiz-card h4 code { font-family:var(--mono); background:rgba(255,140,66,0.1); color:var(--orange); padding:1px 6px; border-radius:4px; }
+.q-opts { display:flex; flex-direction:column; gap:8px; }
+.q-opt {
+  text-align:left; padding:10px 14px; border:1px solid var(--border);
+  border-radius:7px; background:rgba(255,255,255,0.02); color:var(--text);
+  font-family:var(--sans); font-size:0.84em; cursor:pointer; transition:all 0.2s;
+}
+.q-opt:hover:not(:disabled) { border-color:var(--blue); background:var(--blue-dim); }
+.q-opt.correct { border-color:var(--green); background:var(--green-dim); color:var(--green); }
+.q-opt.wrong   { border-color:var(--red); background:var(--red-dim); color:var(--red); }
+.q-feedback { display:none; padding:11px 14px; border-radius:7px; font-size:0.83em; margin-top:10px; line-height:1.5; }
+.q-feedback.show { display:block; }
+.q-feedback.ok   { background:var(--green-dim); border:1px solid rgba(0,229,160,0.3); color:#90f0c8; }
+.q-feedback.fail { background:var(--red-dim); border:1px solid rgba(255,92,122,0.3); color:#ffb0c0; }
+.q-next { display:none; margin-top:12px; justify-content:flex-end; }
+.q-next.show { display:flex; }
+.q-next-btn { background:var(--blue-dim); border:1px solid rgba(77,166,255,0.4); color:var(--blue); padding:8px 18px; border-radius:6px; cursor:pointer; font-size:0.83em; font-weight:700; font-family:var(--sans); }
+.quiz-result { display:none; text-align:center; padding:28px; }
+.quiz-result.show { display:block; }
+.quiz-score { font-size:2.8em; font-weight:800; color:var(--green); font-family:var(--mono); }
+
+/* ── DIAGRAM ── */
+.diagram-wrap {
+  background: var(--code-bg); border:1px solid var(--border);
+  border-radius:10px; padding:16px; margin:12px 0; text-align:center;
+}
+.diagram-wrap p { font-size:0.73em; color:var(--muted); margin-top:8px; }
+
+/* ── TOAST ── */
+.toast {
+  position:fixed; bottom:24px; right:24px;
+  background:var(--card2); border:1px solid rgba(0,229,160,0.4);
+  border-radius:10px; padding:12px 18px; font-size:0.84em; color:var(--text);
+  display:flex; align-items:center; gap:10px;
+  transform:translateY(100px); opacity:0;
+  transition:all 0.35s; z-index:9000; max-width:280px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+}
+.toast.show { transform:translateY(0); opacity:1; }
+.toast-icon { font-size:1.4em; }
+
+/* ── CHECKLIST ── */
+.checklist { list-style:none; margin:8px 0; }
+.checklist li {
+  display:flex; gap:10px; align-items:flex-start;
+  font-size:0.86em; padding:6px 0;
+  border-bottom:1px solid rgba(255,255,255,0.04);
+  color:var(--text);
+}
+.checklist li:last-child { border-bottom:none; }
+.checklist li::before { content:'✓'; color:var(--green); font-weight:700; flex-shrink:0; font-family:var(--mono); }
+
+/* ── USER / GRUPO TABLE ── */
+.ug-table { width:100%; border-collapse:collapse; font-size:0.83em; }
+.ug-table th { padding:9px 12px; text-align:left; background:rgba(255,255,255,0.03); color:var(--muted); border-bottom:1px solid var(--border); font-family:var(--mono); font-size:0.8em; }
+.ug-table td { padding:9px 12px; border-bottom:1px solid rgba(255,255,255,0.03); vertical-align:top; }
+.ug-table tr:last-child td { border-bottom:none; }
+.ug-table code { font-family:var(--mono); background:rgba(0,229,160,0.08); color:var(--green); padding:1px 6px; border-radius:4px; }
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px){
+  .tabs { flex-wrap:wrap; }
+  .sim-input { width:100%; }
+  .retomada-grid { grid-template-columns:1fr; }
+  .si-grid { grid-template-columns:1fr; }
 }
 </style>
 </head>
@@ -354,16 +483,224 @@ body {
 
 <!-- HEADER -->
 <header class="header">
-  <div>
-    <div class="header-badge">ISO-103 · SEM 5.2</div>
-    <h1 style="margin-top:4px;">🌐 Netplan + 🔥 Firewall UFW</h1>
-    <p>Ubuntu Server no VirtualBox — configuração de rede e firewall</p>
+  <div class="header-inner">
+    <div class="logo">🔒</div>
+    <div class="header-meta">
+      <div class="header-badge">ISO-103 · SEM 5.2</div>
+      <h1 style="margin-top:3px;">🌐 Netplan + 🔥 UFW — Rede e Firewall</h1>
+      <div class="header-sub">Ubuntu Server no VirtualBox · Tecnólogo em Segurança da Informação</div>
+    </div>
   </div>
 </header>
 
 <div class="container">
 
-<!-- ===================== SEÇÃO 1 — NETPLAN ===================== -->
+<!-- ════════════════════════════════════════════
+     RETOMADA DA AULA ANTERIOR
+════════════════════════════════════════════ -->
+<div class="retomada-banner">
+  <h2>📋 RETOMADA — O que fizemos na última aula</h2>
+  <div class="retomada-grid">
+
+    <div class="retomada-item">
+      <div class="ri-title">🌐 Configuração NAT do Servidor</div>
+      <p>Configuramos o arquivo de rede no Ubuntu Server, dentro da pasta <code>/etc/netplan/</code>. A placa em modo <strong>NAT</strong> foi definida com <code>dhcp4: true</code> para receber IP automático do VirtualBox e ter acesso à internet. Aplicamos com <code>sudo netplan apply</code>.</p>
+    </div>
+
+    <div class="retomada-item">
+      <div class="ri-title">👥 Usuários, Grupos e Permissões</div>
+      <p>Criamos um usuário para cada aluno da turma. Os prints estão no <strong>Google Sala de Aula</strong> na seção "Usuários, Grupos e Permissões do Linux". Usamos os comandos <code>adduser</code>, <code>usermod</code> e <code>groups</code> para gerenciar acessos.</p>
+    </div>
+
+    <div class="retomada-item">
+      <div class="ri-title">🗄️ Como entrar no servidor</div>
+      <p>Para acessar o Ubuntu Server no VirtualBox, abrimos o terminal da VM e fizemos login com o usuário e senha criados. Para SSH: <code>ssh usuario@192.168.x.x</code> — onde o IP é o da placa interna.</p>
+    </div>
+
+    <div class="retomada-item">
+      <div class="ri-title">📁 Estrutura de Arquivos Linux</div>
+      <p>Revisamos que <code>/etc/</code> é onde ficam os arquivos de configuração do sistema. <code>/etc/netplan/</code> contém o arquivo YAML da rede. <code>/etc/passwd</code> lista os usuários do sistema.</p>
+    </div>
+
+  </div>
+
+  <!-- Retomada: comandos de usuário -->
+  <div style="margin-top:16px;">
+    <div class="box box-info" style="margin-bottom:10px;">
+      💡 <strong>Resumo rápido dos comandos de usuário que já usamos:</strong>
+    </div>
+    <div class="code-block">
+<span class="comment"># Criar novo usuário (pedirá senha e dados)</span>
+<span class="prompt">$</span> <span class="cmd">sudo adduser nome_do_usuario</span>
+<span class="comment"># Exemplo: sudo adduser joaosilva</span>
+
+<span class="comment"># Verificar que o usuário foi criado</span>
+<span class="prompt">$</span> <span class="cmd">cat /etc/passwd | grep nome_do_usuario</span>
+<span class="comment"># Saída esperada: joaosilva:x:1001:1001::/home/joaosilva:/bin/bash</span>
+
+<span class="comment"># Adicionar usuário ao grupo sudo (para dar permissão de administrador)</span>
+<span class="prompt">$</span> <span class="cmd">sudo usermod -aG sudo nome_do_usuario</span>
+
+<span class="comment"># Ver os grupos de um usuário</span>
+<span class="prompt">$</span> <span class="cmd">groups nome_do_usuario</span>
+<span class="comment"># Saída: nome_do_usuario : nome_do_usuario sudo</span>
+
+<span class="comment"># Trocar para outro usuário</span>
+<span class="prompt">$</span> <span class="cmd">su - nome_do_usuario</span>
+<span class="comment"># Digite a senha quando pedido</span>
+
+<span class="comment"># Sair do usuário e voltar para o anterior</span>
+<span class="prompt">$</span> <span class="cmd">exit</span>
+    </div>
+
+    <div class="box box-ok">
+      ✅ <strong>Onde estão os prints?</strong> Acesse o Google Sala de Aula → seção <strong>"Usuários, Grupos e Permissões do Linux"</strong> para ver os prints de cada etapa que fizemos juntos.
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     IMPORTÂNCIA PARA SEGURANÇA DA INFORMAÇÃO
+════════════════════════════════════════════ -->
+<div class="si-banner">
+  <h2>🛡️ POR QUE ESTA AULA É ESSENCIAL PARA O TECNÓLOGO EM SEGURANÇA DA INFORMAÇÃO?</h2>
+  <div class="si-grid">
+    <div class="si-card">
+      <div class="si-icon">🌐</div>
+      <div class="si-label">Controle de Rede</div>
+      <p>Saber configurar interfaces de rede é pré-requisito para qualquer atuação em infraestrutura segura. Sem rede, não há comunicação; sem controle, não há segurança.</p>
+    </div>
+    <div class="si-card">
+      <div class="si-icon">🔥</div>
+      <div class="si-label">Firewall é a 1ª Linha de Defesa</div>
+      <p>O UFW implementa o conceito de <strong>Defesa em Profundidade</strong> — bloquear portas desnecessárias reduz a superfície de ataque. É o que separa um servidor exposto de um servidor protegido.</p>
+    </div>
+    <div class="si-card">
+      <div class="si-icon">🏢</div>
+      <div class="si-label">Mercado de Trabalho</div>
+      <p>Analistas de SI, pentesters e administradores de redes usam esses comandos diariamente. Dominar Linux e firewalls é requisito básico para cargos como Analista de Segurança e SOC Analyst.</p>
+    </div>
+    <div class="si-card">
+      <div class="si-icon">🔒</div>
+      <div class="si-label">Princípio do Menor Privilégio</div>
+      <p>Bloquear tudo e liberar apenas o necessário (<code>deny incoming</code> + <code>allow 22/tcp</code>) é o princípio fundamental da segurança: nunca exponha o que não precisa.</p>
+    </div>
+    <div class="si-card">
+      <div class="si-icon">🕵️</div>
+      <div class="si-label">Análise de Vulnerabilidades</div>
+      <p>Entender portas e protocolos é base para ferramentas como Nmap, Nessus e Wireshark. Saber o que deve estar aberto (e fechado) é o primeiro passo de qualquer pentest.</p>
+    </div>
+    <div class="si-card">
+      <div class="si-icon">📜</div>
+      <div class="si-label">Normas e Compliance</div>
+      <p>A norma ISO 27001 e o LGPD exigem controles de acesso a sistemas. Configurar firewall e usuários corretamente é parte da conformidade com essas normas.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     SEÇÃO 0 — COMO ACESSAR O SERVIDOR
+════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">
+    <div class="section-num">0</div>
+    🖥️ Antes de Começar — Como Acessar o Servidor
+  </div>
+
+  <div class="box box-info">
+    💡 Todo o laboratório é feito dentro do <strong>Ubuntu Server</strong> instalado no VirtualBox. Você vai precisar estar logado no terminal da VM antes de qualquer comando.
+  </div>
+
+  <!-- Login na VM -->
+  <div class="step-block">
+    <div class="step-block-header">
+      <div class="step-num">1</div>
+      <div>
+        <div class="step-title">Abrir o VirtualBox e iniciar a VM do servidor</div>
+        <div class="step-subtitle">Certifique-se que a VM do Ubuntu Server está rodando</div>
+      </div>
+    </div>
+    <div class="step-block-body">
+      <p>Abra o <strong>VirtualBox</strong> no computador → clique na VM do Ubuntu Server → clique em <strong>Iniciar</strong>. Aguarde o boot completo até aparecer a tela de login.</p>
+    </div>
+  </div>
+
+  <!-- Login com usuário -->
+  <div class="step-block">
+    <div class="step-block-header">
+      <div class="step-num">2</div>
+      <div>
+        <div class="step-title">Fazer login com seu usuário e senha</div>
+        <div class="step-subtitle">Use o usuário criado na aula anterior</div>
+      </div>
+    </div>
+    <div class="step-block-body">
+      <p>Na tela do terminal, você verá:</p>
+      <div class="user-context">
+        <div class="user-context-header">🖥️ Terminal do Ubuntu Server — <span>tela de login</span></div>
+        <div class="user-context-body">
+          <div class="login-line">
+            <span class="login-comment"># Exemplo: o servidor pede o nome de usuário</span>
+          </div>
+          <div class="login-line">
+            <span class="login-prompt">Ubuntu 22.04.3 LTS servidor tty1</span>
+          </div>
+          <div class="login-line">
+            <span class="login-prompt">servidor login:</span>
+            <span class="login-cmd">joaosilva</span>
+            <span class="login-comment">← digite seu usuário e pressione Enter</span>
+          </div>
+          <div class="login-line">
+            <span class="login-prompt">Password:</span>
+            <span class="login-cmd">••••••••</span>
+            <span class="login-comment">← digite a senha (não aparece na tela) e pressione Enter</span>
+          </div>
+          <div class="login-line" style="margin-top:8px;">
+            <span class="login-prompt ok" style="color:var(--green);">joaosilva@servidor:~$</span>
+            <span class="login-cmd"> _</span>
+            <span class="login-comment">← você está dentro! Pronto para os comandos</span>
+          </div>
+        </div>
+      </div>
+      <div class="box box-warn" style="margin-top:8px;">⚠️ <strong>A senha não aparece na tela</strong> enquanto você digita — isso é normal no Linux. Digite a senha normalmente e pressione Enter.</div>
+    </div>
+  </div>
+
+  <!-- Verificar IP -->
+  <div class="step-block">
+    <div class="step-block-header">
+      <div class="step-num">3</div>
+      <div>
+        <div class="step-title">Verificar o IP atual da máquina</div>
+        <div class="step-subtitle">Antes de configurar, veja como está a rede agora</div>
+      </div>
+    </div>
+    <div class="step-block-body">
+      <p>Execute o comando abaixo para ver todas as interfaces de rede e seus IPs:</p>
+      <div class="code-block" id="code-ip0">
+<button class="copy-btn" onclick="copyCode('code-ip0',this)">📋 Copiar</button>
+<span class="prompt">$</span> <span class="cmd">ip addr show</span>
+<span class="comment"># ou o formato mais curto:</span>
+<span class="prompt">$</span> <span class="cmd">ip a</span>
+      </div>
+      <div class="result-label">📺 Resultado esperado:</div>
+      <div class="result-block">
+<span class="r-num">1:</span> <span class="r-key">lo</span>: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue
+    <span class="r-key">inet</span> <span class="r-val">127.0.0.1/8</span> scope host lo  <span class="r-dim">← loopback (a própria máquina)</span>
+<span class="r-num">2:</span> <span class="r-key">enp0s3</span>: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt;
+    <span class="r-key">inet</span> <span class="r-val">10.0.2.15/24</span> brd 10.0.2.255 scope global enp0s3  <span class="r-dim">← NAT (internet)</span>
+<span class="r-num">3:</span> <span class="r-key">enp0s8</span>: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt;
+    <span class="r-key">inet</span> <span class="r-val">192.168.10.1/24</span> brd 192.168.10.255 scope global enp0s8  <span class="r-dim">← Rede Interna</span>
+      </div>
+      <div class="box box-info">💡 <strong>enp0s3</strong> = placa NAT (saída para internet). <strong>enp0s8</strong> = placa Rede Interna (comunicação entre VMs). Se não apareceu <code>enp0s8</code>, a configuração será feita nos próximos passos.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ════════════════════════════════════════════
+     SEÇÃO 1 — NETPLAN
+════════════════════════════════════════════ -->
 <div class="section">
   <div class="section-title">
     <div class="section-num">1</div>
@@ -372,50 +709,83 @@ body {
 
   <div class="box box-info">
     💡 <strong>O que é o Netplan?</strong><br>
-    O Netplan é a ferramenta do Ubuntu para configurar interfaces de rede. O arquivo de configuração fica em <code style="background:rgba(56,189,248,0.15);color:var(--blue);padding:1px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;">/etc/netplan/</code> e usa o formato <strong>YAML</strong> — que exige recuo (indentação) com espaços.
+    O Netplan é a ferramenta do Ubuntu para configurar interfaces de rede. O arquivo de configuração fica em <code>/etc/netplan/</code> e usa o formato <strong>YAML</strong> — que exige recuo (indentação) com espaços exatos. Um erro de espaço quebra tudo!
   </div>
 
-  <!-- DIAGRAMA: DHCP vs IP Fixo -->
+  <!-- Diagrama DHCP vs IP Fixo -->
   <div class="diagram-wrap">
     <svg viewBox="0 0 700 200" width="100%" xmlns="http://www.w3.org/2000/svg" style="max-width:680px;">
-      <!-- DHCP side -->
-      <rect x="20" y="20" width="300" height="160" rx="12" fill="rgba(56,189,248,0.07)" stroke="#38bdf8" stroke-width="1.5"/>
-      <text x="170" y="50" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="#38bdf8">🔄 DHCP (automático)</text>
-      <text x="170" y="75" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="11" fill="#7dd3fc">Placa NAT (enp0s3)</text>
-      <rect x="50" y="90" width="240" height="70" rx="8" fill="#090c14" stroke="#1e2535" stroke-width="1"/>
-      <text x="170" y="108" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10" fill="#64748b">dhcp4: true</text>
-      <text x="170" y="124" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10" fill="#64748b">→ IP atribuído automaticamente</text>
-      <text x="170" y="140" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10" fill="#64748b">→ Acesso à internet (NAT)</text>
-      <text x="170" y="170" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#38bdf8">✅ Não precisa configurar IP</text>
+      <rect x="20" y="20" width="300" height="160" rx="12" fill="rgba(77,166,255,0.07)" stroke="#4da6ff" stroke-width="1.5"/>
+      <text x="170" y="50" text-anchor="middle" font-family="Sora,sans-serif" font-size="13" font-weight="700" fill="#4da6ff">🔄 DHCP (automático)</text>
+      <text x="170" y="72" text-anchor="middle" font-family="Space Mono,monospace" font-size="11" fill="#7dd3fc">Placa NAT (enp0s3)</text>
+      <rect x="50" y="88" width="240" height="72" rx="8" fill="#060910" stroke="#131c2e" stroke-width="1"/>
+      <text x="170" y="108" text-anchor="middle" font-family="Space Mono,monospace" font-size="10" fill="#4a5878">dhcp4: true</text>
+      <text x="170" y="124" text-anchor="middle" font-family="Space Mono,monospace" font-size="10" fill="#4a5878">→ IP recebido automaticamente</text>
+      <text x="170" y="140" text-anchor="middle" font-family="Space Mono,monospace" font-size="10" fill="#4a5878">→ Acesso à internet (NAT)</text>
+      <text x="170" y="170" text-anchor="middle" font-family="Sora,sans-serif" font-size="10" fill="#4da6ff">✅ VirtualBox distribui o IP</text>
 
-      <!-- IP Fixo side -->
-      <rect x="380" y="20" width="300" height="160" rx="12" fill="rgba(34,197,94,0.07)" stroke="#22c55e" stroke-width="1.5"/>
-      <text x="530" y="50" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="#22c55e">📌 IP Fixo (estático)</text>
-      <text x="530" y="75" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="11" fill="#86efac">Placa Rede Interna (enp0s8)</text>
-      <rect x="410" y="90" width="240" height="70" rx="8" fill="#090c14" stroke="#1e2535" stroke-width="1"/>
-      <text x="530" y="108" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10" fill="#64748b">addresses: [192.168.10.1/24]</text>
-      <text x="530" y="124" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10" fill="#64748b">→ IP sempre o mesmo</text>
-      <text x="530" y="140" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10" fill="#64748b">→ Gateway da rede interna</text>
-      <text x="530" y="170" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#22c55e">✅ VMs internas usam este IP</text>
+      <rect x="380" y="20" width="300" height="160" rx="12" fill="rgba(0,229,160,0.07)" stroke="#00e5a0" stroke-width="1.5"/>
+      <text x="530" y="50" text-anchor="middle" font-family="Sora,sans-serif" font-size="13" font-weight="700" fill="#00e5a0">📌 IP Fixo (estático)</text>
+      <text x="530" y="72" text-anchor="middle" font-family="Space Mono,monospace" font-size="11" fill="#86efac">Placa Rede Interna (enp0s8)</text>
+      <rect x="410" y="88" width="240" height="72" rx="8" fill="#060910" stroke="#131c2e" stroke-width="1"/>
+      <text x="530" y="108" text-anchor="middle" font-family="Space Mono,monospace" font-size="10" fill="#4a5878">addresses: [192.168.10.1/24]</text>
+      <text x="530" y="124" text-anchor="middle" font-family="Space Mono,monospace" font-size="10" fill="#4a5878">→ IP sempre o mesmo</text>
+      <text x="530" y="140" text-anchor="middle" font-family="Space Mono,monospace" font-size="10" fill="#4a5878">→ Gateway da rede interna</text>
+      <text x="530" y="170" text-anchor="middle" font-family="Sora,sans-serif" font-size="10" fill="#00e5a0">✅ VMs internas usam este IP</text>
     </svg>
     <p>Figura: Placa NAT usa DHCP · Placa Interna usa IP fixo classe C</p>
   </div>
 
-  <!-- TABS: DHCP | IP FIXO | OS DOIS -->
+  <!-- TABS -->
   <div class="tabs">
-    <button class="tab-btn active" onclick="showTab('netplan','dhcp',this)">🔄 Só DHCP</button>
+    <button class="tab-btn active" onclick="showTab('netplan','dhcp',this)">🔄 Só DHCP (NAT)</button>
     <button class="tab-btn" onclick="showTab('netplan','fixo',this)">📌 Só IP Fixo</button>
     <button class="tab-btn" onclick="showTab('netplan','ambos',this)">🌐 As Duas Placas</button>
   </div>
 
   <!-- Tab DHCP -->
   <div class="tab-panel active" id="netplan-dhcp">
-    <div class="box box-info">Esta configuração é usada quando a placa está conectada em <strong>NAT</strong> — o roteador/VirtualBox atribui o IP automaticamente.</div>
-    <div class="step"><div class="step-n">1</div><div class="step-body">Abra o arquivo netplan para editar:<br>
-      <code>sudo nano /etc/netplan/00-installer-config.yaml</code>
-    </div></div>
-    <div class="step"><div class="step-n">2</div><div class="step-body">Cole o conteúdo abaixo — <strong>respeite exatamente os espaços!</strong></div></div>
-    <div class="code-block" id="code-dhcp">
+    <div class="box box-info">Esta configuração é para a placa em modo <strong>NAT</strong> — o VirtualBox atribui o IP automaticamente.</div>
+
+    <div class="step-block">
+      <div class="step-block-header">
+        <div class="step-num">1</div>
+        <div>
+          <div class="step-title">Acessar o arquivo de configuração da rede</div>
+          <div class="step-subtitle">Caminho: /etc/netplan/</div>
+        </div>
+      </div>
+      <div class="step-block-body">
+        <p>Primeiro, veja qual arquivo existe dentro da pasta netplan:</p>
+        <div class="code-block" id="code-ls-netplan">
+<button class="copy-btn" onclick="copyCode('code-ls-netplan',this)">📋 Copiar</button>
+<span class="prompt">$</span> <span class="cmd">ls /etc/netplan/</span>
+        </div>
+        <div class="result-label">📺 Resultado esperado:</div>
+        <div class="result-block">
+<span class="r-path">00-installer-config.yaml</span>
+        </div>
+        <p style="margin-top:8px;">Agora abra o arquivo para editar com o nano:</p>
+        <div class="code-block" id="code-nano-dhcp">
+<button class="copy-btn" onclick="copyCode('code-nano-dhcp',this)">📋 Copiar</button>
+<span class="prompt">$</span> <span class="cmd">sudo nano /etc/netplan/00-installer-config.yaml</span>
+<span class="comment"># O nano abrirá o arquivo. Você verá o conteúdo atual na tela.</span>
+        </div>
+        <div class="box box-warn">⚠️ O comando começa com <code>sudo</code> porque editar arquivos em <code>/etc/</code> requer permissão de administrador. O sistema pode pedir sua senha.</div>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-block-header">
+        <div class="step-num">2</div>
+        <div>
+          <div class="step-title">Digitar a configuração DHCP</div>
+          <div class="step-subtitle">Atenção: use ESPAÇOS, nunca Tab!</div>
+        </div>
+      </div>
+      <div class="step-block-body">
+        <p>Apague o conteúdo atual (se houver) e cole/digite exatamente assim:</p>
+        <div class="code-block" id="code-dhcp">
 <button class="copy-btn" onclick="copyCode('code-dhcp',this)">📋 Copiar</button>
 <span class="comment"># /etc/netplan/00-installer-config.yaml</span>
 <span class="key">network:</span>
@@ -423,21 +793,136 @@ body {
 <span class="indent">  </span><span class="key">ethernets:</span>
 <span class="indent">    </span><span class="key">enp0s3:</span>
 <span class="indent">      </span><span class="key">dhcp4:</span> <span class="val">true</span>
+        </div>
+        <div class="box box-tip">📐 <strong>Mapa de espaços:</strong><br>
+          <code>network:</code> → sem espaços antes<br>
+          <code>  version: 2</code> → 2 espaços antes<br>
+          <code>  ethernets:</code> → 2 espaços antes<br>
+          <code>    enp0s3:</code> → 4 espaços antes<br>
+          <code>      dhcp4: true</code> → 6 espaços antes
+        </div>
+      </div>
     </div>
-    <div class="step"><div class="step-n">3</div><div class="step-body">Salve: <code>Ctrl+X</code> → <code>Y</code> → <code>Enter</code></div></div>
-    <div class="step"><div class="step-n">4</div><div class="step-body">Aplique: <code>sudo netplan apply</code></div></div>
-    <div class="step"><div class="step-n">5</div><div class="step-body">Verifique o IP recebido: <code>ip addr show enp0s3</code></div></div>
-    <div class="box box-ok" style="margin-top:10px;">✅ <strong>Resultado esperado:</strong> você verá uma linha <code>inet 10.0.2.15/24</code> (ou similar) — isso significa que o DHCP funcionou!</div>
+
+    <div class="step-block">
+      <div class="step-block-header">
+        <div class="step-num">3</div>
+        <div>
+          <div class="step-title">Salvar o arquivo no nano</div>
+          <div class="step-subtitle">Sequência de teclas: Ctrl+X → Y → Enter</div>
+        </div>
+      </div>
+      <div class="step-block-body">
+        <p>No nano, use esta sequência para salvar e sair:</p>
+        <ul class="checklist">
+          <li>Pressione <code>Ctrl + X</code> → o nano pergunta se deseja salvar</li>
+          <li>Pressione <code>Y</code> (Yes) → confirmar que quer salvar</li>
+          <li>Pressione <code>Enter</code> → confirmar o nome do arquivo</li>
+        </ul>
+        <p>Você voltará para o terminal normal.</p>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-block-header">
+        <div class="step-num">4</div>
+        <div>
+          <div class="step-title">Aplicar a configuração</div>
+          <div class="step-subtitle">Sem reiniciar a máquina!</div>
+        </div>
+      </div>
+      <div class="step-block-body">
+        <div class="code-block" id="code-apply-dhcp">
+<button class="copy-btn" onclick="copyCode('code-apply-dhcp',this)">📋 Copiar</button>
+<span class="prompt">$</span> <span class="cmd">sudo netplan apply</span>
+<span class="comment"># Aguarde alguns segundos. Se não aparecer erro, está correto.</span>
+        </div>
+        <div class="box box-warn">⚠️ <strong>Se aparecer um erro</strong> como "invalid YAML", provavelmente há um problema de indentação. Abra o arquivo novamente com nano e verifique os espaços.</div>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-block-header">
+        <div class="step-num">5</div>
+        <div>
+          <div class="step-title">Verificar se o IP foi recebido</div>
+          <div class="step-subtitle">Confirmar que o DHCP funcionou</div>
+        </div>
+      </div>
+      <div class="step-block-body">
+        <div class="code-block" id="code-verify-dhcp">
+<button class="copy-btn" onclick="copyCode('code-verify-dhcp',this)">📋 Copiar</button>
+<span class="prompt">$</span> <span class="cmd">ip addr show enp0s3</span>
+        </div>
+        <div class="result-label">📺 Resultado esperado (sucesso):</div>
+        <div class="result-block">
+<span class="r-num">2:</span> <span class="r-key">enp0s3</span>: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt;
+    link/ether 08:00:27:xx:xx:xx brd ff:ff:ff:ff:ff:ff
+    <span class="r-key">inet</span> <span class="r-val">10.0.2.15/24</span> brd 10.0.2.255 scope global dynamic enp0s3  <span class="r-dim">← ✅ IP recebido!</span>
+       valid_lft 86391sec preferred_lft 86391sec
+        </div>
+        <div class="box box-ok">✅ <strong>Você verá uma linha</strong> <code>inet 10.0.2.15/24</code> (ou similar começando com 10.0.2.) — isso significa que o DHCP funcionou e sua placa NAT tem acesso à internet!</div>
+        <p style="margin-top:10px;">Teste a conexão com a internet:</p>
+        <div class="code-block" id="code-ping-dhcp">
+<button class="copy-btn" onclick="copyCode('code-ping-dhcp',this)">📋 Copiar</button>
+<span class="prompt">$</span> <span class="cmd">ping -c 4 8.8.8.8</span>
+<span class="comment"># Envia 4 pacotes para o DNS do Google. Se responder, há internet!</span>
+        </div>
+        <div class="result-label">📺 Resultado esperado:</div>
+        <div class="result-block">
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+<span class="r-ok">64 bytes from 8.8.8.8: icmp_seq=1 ttl=118 time=12.4 ms</span>
+<span class="r-ok">64 bytes from 8.8.8.8: icmp_seq=2 ttl=118 time=11.8 ms</span>
+--- 8.8.8.8 ping statistics ---
+<span class="r-ok">4 packets transmitted, 4 received, 0% packet loss</span>  <span class="r-dim">← ✅ perfeito!</span>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Tab IP FIXO -->
   <div class="tab-panel" id="netplan-fixo">
-    <div class="box box-warn">Esta configuração é para a placa conectada em <strong>Rede Interna</strong>. O IP fica fixo e as outras VMs da rede interna apontarão para este endereço como gateway.</div>
-    <div class="step"><div class="step-n">1</div><div class="step-body">Abra o arquivo netplan:<br>
-      <code>sudo nano /etc/netplan/00-installer-config.yaml</code>
-    </div></div>
-    <div class="step"><div class="step-n">2</div><div class="step-body">Configure o IP fixo <strong>192.168.10.1</strong> com máscara /24 (classe C):</div></div>
-    <div class="code-block" id="code-fixo">
+    <div class="box box-warn">Esta configuração é para a placa <strong>Rede Interna</strong>. O IP fixo permite que outras VMs usem esse servidor como gateway.</div>
+
+    <div class="step-block">
+      <div class="step-block-header">
+        <div class="step-num">1</div>
+        <div>
+          <div class="step-title">Descobrir o nome da interface de rede interna</div>
+          <div class="step-subtitle">Pode ser enp0s8 ou outro nome</div>
+        </div>
+      </div>
+      <div class="step-block-body">
+        <div class="code-block" id="code-link-show">
+<button class="copy-btn" onclick="copyCode('code-link-show',this)">📋 Copiar</button>
+<span class="prompt">$</span> <span class="cmd">ip link show</span>
+<span class="comment"># Procure pelas interfaces que NÃO são lo (loopback)</span>
+        </div>
+        <div class="result-label">📺 Resultado esperado:</div>
+        <div class="result-block">
+<span class="r-num">1:</span> <span class="r-key">lo</span>: &lt;LOOPBACK&gt; ...           <span class="r-dim">← ignorar (loopback)</span>
+<span class="r-num">2:</span> <span class="r-key">enp0s3</span>: &lt;BROADCAST...&gt; ...  <span class="r-dim">← placa NAT</span>
+<span class="r-num">3:</span> <span class="r-key">enp0s8</span>: &lt;BROADCAST...&gt; ...  <span class="r-dim">← ✅ placa Rede Interna</span>
+        </div>
+        <div class="box box-info">💡 O nome pode ser diferente no seu computador (ex: <code>eth1</code>, <code>ens8</code>). Anote o nome correto e use-o no próximo passo.</div>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-block-header">
+        <div class="step-num">2</div>
+        <div>
+          <div class="step-title">Editar o arquivo netplan com IP fixo</div>
+          <div class="step-subtitle">IP: 192.168.10.1 — Classe C privada</div>
+        </div>
+      </div>
+      <div class="step-block-body">
+        <div class="code-block" id="code-nano-fixo">
+<button class="copy-btn" onclick="copyCode('code-nano-fixo',this)">📋 Copiar</button>
+<span class="prompt">$</span> <span class="cmd">sudo nano /etc/netplan/00-installer-config.yaml</span>
+        </div>
+        <p style="margin-top:8px;">Digite a configuração abaixo (substitua <code>enp0s8</code> pelo nome da sua interface se for diferente):</p>
+        <div class="code-block" id="code-fixo">
 <button class="copy-btn" onclick="copyCode('code-fixo',this)">📋 Copiar</button>
 <span class="comment"># /etc/netplan/00-installer-config.yaml</span>
 <span class="key">network:</span>
@@ -447,65 +932,111 @@ body {
 <span class="indent">      </span><span class="key">dhcp4:</span> <span class="val">false</span>
 <span class="indent">      </span><span class="key">addresses:</span>
 <span class="indent">        </span>- <span class="val">192.168.10.1/24</span>
+        </div>
+        <div class="box box-tip">📐 <strong>Por que 192.168.10.1/24?</strong> O IP <code>192.168.10.1</code> é o gateway da rede interna. O <code>/24</code> significa máscara <code>255.255.255.0</code> — ou seja, todos os IPs de <code>192.168.10.1</code> a <code>192.168.10.254</code> estão na mesma rede.</div>
+      </div>
     </div>
-    <div class="box box-tip">⚠️ <strong>Atenção à indentação!</strong> Cada nível usa <strong>2 espaços</strong> — nunca Tab. O YAML é sensível a isso. Se errar, o <code>netplan apply</code> vai mostrar um erro.</div>
-    <div class="step"><div class="step-n">3</div><div class="step-body">Aplique: <code>sudo netplan apply</code></div></div>
-    <div class="step"><div class="step-n">4</div><div class="step-body">Verifique: <code>ip addr show enp0s8</code> — deve aparecer <code>inet 192.168.10.1/24</code></div></div>
-    <div class="box box-ok" style="margin-top:10px;">✅ As outras VMs da Rede Interna devem usar <strong>192.168.10.1</strong> como gateway e DNS.</div>
+
+    <div class="step-block">
+      <div class="step-block-header">
+        <div class="step-num">3</div>
+        <div>
+          <div class="step-title">Salvar e aplicar</div>
+        </div>
+      </div>
+      <div class="step-block-body">
+        <div class="code-block" id="code-apply-fixo">
+<button class="copy-btn" onclick="copyCode('code-apply-fixo',this)">📋 Copiar</button>
+<span class="comment"># Salvar no nano: Ctrl+X → Y → Enter</span>
+<span class="comment"># Depois aplicar:</span>
+<span class="prompt">$</span> <span class="cmd">sudo netplan apply</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-block-header">
+        <div class="step-num">4</div>
+        <div>
+          <div class="step-title">Verificar se o IP fixo foi atribuído</div>
+        </div>
+      </div>
+      <div class="step-block-body">
+        <div class="code-block" id="code-verify-fixo">
+<button class="copy-btn" onclick="copyCode('code-verify-fixo',this)">📋 Copiar</button>
+<span class="prompt">$</span> <span class="cmd">ip addr show enp0s8</span>
+        </div>
+        <div class="result-label">📺 Resultado esperado (sucesso):</div>
+        <div class="result-block">
+<span class="r-num">3:</span> <span class="r-key">enp0s8</span>: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt;
+    link/ether 08:00:27:yy:yy:yy brd ff:ff:ff:ff:ff:ff
+    <span class="r-key">inet</span> <span class="r-val">192.168.10.1/24</span> scope global enp0s8  <span class="r-dim">← ✅ IP fixo configurado!</span>
+        </div>
+        <div class="box box-ok">✅ As outras VMs da Rede Interna devem apontar para <strong>192.168.10.1</strong> como gateway e DNS — esse é o endereço do nosso servidor!</div>
+      </div>
+    </div>
   </div>
 
   <!-- Tab AMBOS -->
   <div class="tab-panel" id="netplan-ambos">
-    <div class="box box-info">Esta é a configuração completa: <strong>enp0s3 via DHCP</strong> (saída para internet via NAT) e <strong>enp0s8 com IP fixo</strong> (rede interna das VMs).</div>
+    <div class="box box-info">Configuração completa: <strong>enp0s3 via DHCP</strong> (internet) + <strong>enp0s8 com IP fixo</strong> (rede interna).</div>
 
-    <!-- Diagrama das duas placas -->
     <div class="diagram-wrap">
       <svg viewBox="0 0 700 230" width="100%" xmlns="http://www.w3.org/2000/svg" style="max-width:680px;">
-        <!-- Internet -->
-        <ellipse cx="120" cy="115" rx="80" ry="40" fill="rgba(56,189,248,0.08)" stroke="#38bdf8" stroke-width="1.5"/>
-        <text x="120" y="110" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#38bdf8">🌐 Internet</text>
-        <text x="120" y="128" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10" fill="#64748b">NAT / VirtualBox</text>
-
-        <!-- Arrow left -->
-        <line x1="200" y1="115" x2="260" y2="115" stroke="#38bdf8" stroke-width="2" marker-end="url(#arr1)"/>
-        <text x="230" y="108" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#38bdf8">DHCP</text>
-        <text x="230" y="130" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#64748b">enp0s3</text>
-
-        <!-- Firewall VM -->
-        <rect x="260" y="60" width="180" height="110" rx="10" fill="rgba(251,146,60,0.08)" stroke="#fb923c" stroke-width="2"/>
-        <text x="350" y="90" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#fb923c">🔥 Ubuntu Server</text>
-        <text x="350" y="108" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#fed7aa">Firewall / Gateway</text>
-        <text x="350" y="125" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#64748b">enp0s3 → 10.0.2.15</text>
-        <text x="350" y="140" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#86efac">enp0s8 → 192.168.10.1</text>
-        <text x="350" y="158" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#fb923c">UFW ativo</text>
-
-        <!-- Arrow right -->
-        <line x1="440" y1="115" x2="500" y2="115" stroke="#22c55e" stroke-width="2" marker-end="url(#arr2)"/>
-        <text x="470" y="108" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#22c55e">IP Fixo</text>
-        <text x="470" y="130" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#64748b">enp0s8</text>
-
-        <!-- LAN -->
-        <rect x="500" y="65" width="165" height="100" rx="10" fill="rgba(34,197,94,0.07)" stroke="#22c55e" stroke-width="1.5"/>
-        <text x="582" y="90" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#22c55e">🖥 Rede Interna</text>
-        <text x="582" y="108" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#64748b">192.168.10.0/24</text>
-        <text x="582" y="124" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#86efac">VM1: .10  VM2: .20</text>
-        <text x="582" y="140" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#64748b">GW: 192.168.10.1</text>
-        <text x="582" y="156" text-anchor="middle" font-family="Inter,sans-serif" font-size="8" fill="#22c55e">Rede Interna "Intranet"</text>
-
+        <ellipse cx="100" cy="115" rx="80" ry="40" fill="rgba(77,166,255,0.07)" stroke="#4da6ff" stroke-width="1.5"/>
+        <text x="100" y="110" text-anchor="middle" font-family="Sora,sans-serif" font-size="12" fill="#4da6ff">🌐 Internet</text>
+        <text x="100" y="128" text-anchor="middle" font-family="Space Mono,monospace" font-size="10" fill="#4a5878">NAT/VirtualBox</text>
+        <line x1="180" y1="115" x2="250" y2="115" stroke="#4da6ff" stroke-width="2" marker-end="url(#arr1b)"/>
+        <text x="215" y="108" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#4da6ff">DHCP</text>
+        <text x="215" y="130" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#4a5878">enp0s3</text>
+        <rect x="250" y="60" width="200" height="110" rx="10" fill="rgba(255,140,66,0.07)" stroke="#ff8c42" stroke-width="2"/>
+        <text x="350" y="90" text-anchor="middle" font-family="Sora,sans-serif" font-size="12" font-weight="700" fill="#ff8c42">🔥 Ubuntu Server</text>
+        <text x="350" y="108" text-anchor="middle" font-family="Sora,sans-serif" font-size="10" fill="#ffd0a8">Firewall / Gateway</text>
+        <text x="350" y="124" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#4a5878">enp0s3 → 10.0.2.15</text>
+        <text x="350" y="140" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#86efac">enp0s8 → 192.168.10.1</text>
+        <text x="350" y="158" text-anchor="middle" font-family="Sora,sans-serif" font-size="9" fill="#ff8c42">UFW ativo</text>
+        <line x1="450" y1="115" x2="520" y2="115" stroke="#00e5a0" stroke-width="2" marker-end="url(#arr2b)"/>
+        <text x="485" y="108" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#00e5a0">IP Fixo</text>
+        <text x="485" y="130" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#4a5878">enp0s8</text>
+        <rect x="520" y="65" width="160" height="100" rx="10" fill="rgba(0,229,160,0.06)" stroke="#00e5a0" stroke-width="1.5"/>
+        <text x="600" y="90" text-anchor="middle" font-family="Sora,sans-serif" font-size="11" font-weight="700" fill="#00e5a0">🖥 Rede Interna</text>
+        <text x="600" y="108" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#4a5878">192.168.10.0/24</text>
+        <text x="600" y="124" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#86efac">VM1: .10  VM2: .20</text>
+        <text x="600" y="140" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#4a5878">GW: 192.168.10.1</text>
         <defs>
-          <marker id="arr1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#38bdf8"/></marker>
-          <marker id="arr2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#22c55e"/></marker>
+          <marker id="arr1b" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#4da6ff"/></marker>
+          <marker id="arr2b" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#00e5a0"/></marker>
         </defs>
       </svg>
-      <p>Figura: Firewall com duas placas — NAT (internet) e Rede Interna (VMs)</p>
+      <p>Figura: Servidor com duas placas — NAT (internet) e Rede Interna (VMs)</p>
     </div>
 
-    <div class="step"><div class="step-n">1</div><div class="step-body">Abra o arquivo netplan:<br>
-      <code>sudo nano /etc/netplan/00-installer-config.yaml</code>
-    </div></div>
-    <div class="step"><div class="step-n">2</div><div class="step-body">Veja os nomes das suas interfaces primeiro: <code>ip link show</code> — procure por <code>enp0s3</code> e <code>enp0s8</code> (ou similares)</div></div>
-    <div class="step"><div class="step-n">3</div><div class="step-body">Configuração completa com <strong>as duas placas</strong>:</div></div>
-    <div class="code-block" id="code-ambos">
+    <div class="step-block">
+      <div class="step-block-header">
+        <div class="step-num">1</div>
+        <div><div class="step-title">Ver os nomes das interfaces disponíveis</div></div>
+      </div>
+      <div class="step-block-body">
+        <div class="code-block" id="code-link-ambos">
+<button class="copy-btn" onclick="copyCode('code-link-ambos',this)">📋 Copiar</button>
+<span class="prompt">$</span> <span class="cmd">ip link show</span>
+<span class="comment"># Anote os nomes das placas (ex: enp0s3 e enp0s8)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-block-header">
+        <div class="step-num">2</div>
+        <div><div class="step-title">Editar o arquivo netplan com as duas placas</div></div>
+      </div>
+      <div class="step-block-body">
+        <div class="code-block" id="code-nano-ambos">
+<button class="copy-btn" onclick="copyCode('code-nano-ambos',this)">📋 Copiar</button>
+<span class="prompt">$</span> <span class="cmd">sudo nano /etc/netplan/00-installer-config.yaml</span>
+        </div>
+        <p style="margin-top:8px;">Configuração completa com as duas placas:</p>
+        <div class="code-block" id="code-ambos">
 <button class="copy-btn" onclick="copyCode('code-ambos',this)">📋 Copiar</button>
 <span class="comment"># /etc/netplan/00-installer-config.yaml</span>
 <span class="comment"># ATENÇÃO: use ESPAÇOS, nunca Tab!</span>
@@ -513,73 +1044,71 @@ body {
 <span class="indent">  </span><span class="key">version:</span> <span class="val">2</span>
 <span class="indent">  </span><span class="key">ethernets:</span>
 
-<span class="indent">    </span><span class="key">enp0s3:</span>          <span class="comment">  # Placa 1 — NAT (internet)</span>
-<span class="indent">      </span><span class="key">dhcp4:</span> <span class="val">true</span>    <span class="comment">  # IP automático</span>
+<span class="indent">    </span><span class="key">enp0s3:</span>            <span class="comment">  # Placa 1 — NAT (internet)</span>
+<span class="indent">      </span><span class="key">dhcp4:</span> <span class="val">true</span>      <span class="comment">  # IP automático via DHCP</span>
 
-<span class="indent">    </span><span class="key">enp0s8:</span>          <span class="comment">  # Placa 2 — Rede Interna</span>
-<span class="indent">      </span><span class="key">dhcp4:</span> <span class="val">false</span>   <span class="comment">  # IP fixo</span>
+<span class="indent">    </span><span class="key">enp0s8:</span>            <span class="comment">  # Placa 2 — Rede Interna</span>
+<span class="indent">      </span><span class="key">dhcp4:</span> <span class="val">false</span>     <span class="comment">  # IP fixo — não usa DHCP</span>
 <span class="indent">      </span><span class="key">addresses:</span>
-<span class="indent">        </span>- <span class="val">192.168.10.1/24</span>  <span class="comment">  # Classe C — gateway</span>
+<span class="indent">        </span>- <span class="val">192.168.10.1/24</span>   <span class="comment">  # Gateway da rede interna</span>
+        </div>
+      </div>
     </div>
 
-    <!-- Diagrama de indentação -->
-    <div class="box box-warn" style="margin-top:10px;">
-      📐 <strong>Como ler a indentação:</strong><br><br>
-      <span style="font-family:'JetBrains Mono',monospace;font-size:0.9em;line-height:2;">
-        <span style="color:#22c55e;">network:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#3d5066;">← nível 0 (sem espaço)</span><br>
-        <span style="color:#fb923c;">··version: 2</span>&nbsp;&nbsp;&nbsp;<span style="color:#3d5066;">← nível 1 (2 espaços)</span><br>
-        <span style="color:#fb923c;">··ethernets:</span>&nbsp;&nbsp;&nbsp;<span style="color:#3d5066;">← nível 1 (2 espaços)</span><br>
-        <span style="color:#a78bfa;">····enp0s3:</span>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#3d5066;">← nível 2 (4 espaços)</span><br>
-        <span style="color:#a78bfa;">······dhcp4:</span>&nbsp;&nbsp;&nbsp;<span style="color:#3d5066;">← nível 3 (6 espaços)</span>
-      </span>
+    <div class="step-block">
+      <div class="step-block-header">
+        <div class="step-num">3</div>
+        <div><div class="step-title">Salvar e aplicar a configuração</div></div>
+      </div>
+      <div class="step-block-body">
+        <div class="code-block" id="code-apply-ambos">
+<button class="copy-btn" onclick="copyCode('code-apply-ambos',this)">📋 Copiar</button>
+<span class="comment"># Ctrl+X → Y → Enter para salvar no nano</span>
+<span class="prompt">$</span> <span class="cmd">sudo netplan apply</span>
+        </div>
+      </div>
     </div>
 
-    <div class="step"><div class="step-n">4</div><div class="step-body">Salve: <code>Ctrl+X</code> → <code>Y</code> → <code>Enter</code></div></div>
-    <div class="step"><div class="step-n">5</div><div class="step-body">Aplique a configuração: <code>sudo netplan apply</code></div></div>
-    <div class="step"><div class="step-n">6</div><div class="step-body">Verifique as duas interfaces:<br>
-      <code>ip addr show enp0s3</code> → deve ter IP tipo <code>10.0.2.x</code><br>
-      <code>ip addr show enp0s8</code> → deve ter <code>192.168.10.1/24</code>
-    </div></div>
-    <div class="box box-ok" style="margin-top:10px;">✅ Se ambas apareceram com IP, a rede está configurada! Agora pode ir para a próxima etapa.</div>
-  </div>
+    <div class="step-block">
+      <div class="step-block-header">
+        <div class="step-num">4</div>
+        <div><div class="step-title">Verificar as duas interfaces</div></div>
+      </div>
+      <div class="step-block-body">
+        <div class="code-block" id="code-verify-ambos">
+<button class="copy-btn" onclick="copyCode('code-verify-ambos',this)">📋 Copiar</button>
+<span class="comment"># Verificar a placa NAT</span>
+<span class="prompt">$</span> <span class="cmd">ip addr show enp0s3</span>
+<span class="comment"># → deve mostrar inet 10.0.2.x/24</span>
 
-  <!-- Tabela de comparação DHCP x IP Fixo -->
-  <div class="card" style="margin-top:16px;">
-    <div class="card-head">📊 DHCP vs IP Fixo — Quando usar cada um?</div>
-    <div class="card-body" style="padding:0;">
-      <table class="diff-table">
-        <tr><th></th><th>🔄 DHCP</th><th>📌 IP Fixo (Estático)</th></tr>
-        <tr>
-          <td style="color:var(--muted);font-size:0.82em;">Configuração</td>
-          <td><span class="green-t">Automática</span></td>
-          <td><span class="orange-t">Manual no netplan</span></td>
-        </tr>
-        <tr>
-          <td style="color:var(--muted);font-size:0.82em;">IP muda?</td>
-          <td><span class="blue-t">Pode mudar</span></td>
-          <td><span class="green-t">Nunca muda</span></td>
-        </tr>
-        <tr>
-          <td style="color:var(--muted);font-size:0.82em;">Ideal para</td>
-          <td>Placa NAT (internet)</td>
-          <td>Gateway, servidor, firewall</td>
-        </tr>
-        <tr>
-          <td style="color:var(--muted);font-size:0.82em;">No netplan</td>
-          <td><code style="font-family:'JetBrains Mono',monospace;font-size:0.82em;color:var(--green);">dhcp4: true</code></td>
-          <td><code style="font-family:'JetBrains Mono',monospace;font-size:0.82em;color:var(--orange);">addresses: [192.168.10.1/24]</code></td>
-        </tr>
-        <tr>
-          <td style="color:var(--muted);font-size:0.82em;">Classe C</td>
-          <td>—</td>
-          <td><span class="green-t">192.168.x.x/24</span> ✅</td>
-        </tr>
-      </table>
+<span class="comment"># Verificar a placa Rede Interna</span>
+<span class="prompt">$</span> <span class="cmd">ip addr show enp0s8</span>
+<span class="comment"># → deve mostrar inet 192.168.10.1/24</span>
+        </div>
+        <div class="box box-ok">✅ Se ambas apareceram com IP, a rede está configurada! Prossiga para a próxima seção.</div>
+      </div>
+    </div>
+
+    <!-- Tabela DHCP vs IP Fixo -->
+    <div class="card" style="margin-top:16px;">
+      <div class="card-head">📊 DHCP vs IP Fixo — resumo</div>
+      <div class="card-body" style="padding:0;">
+        <table class="diff-table">
+          <tr><th></th><th>🔄 DHCP</th><th>📌 IP Fixo</th></tr>
+          <tr><td class="c-muted" style="font-size:0.82em;">Configuração</td><td><span class="c-green">Automática</span></td><td><span class="c-orange">Manual no netplan</span></td></tr>
+          <tr><td class="c-muted" style="font-size:0.82em;">IP muda?</td><td><span class="c-blue">Pode mudar</span></td><td><span class="c-green">Nunca muda</span></td></tr>
+          <tr><td class="c-muted" style="font-size:0.82em;">Ideal para</td><td>Placa NAT (internet)</td><td>Gateway, servidor, firewall</td></tr>
+          <tr><td class="c-muted" style="font-size:0.82em;">No netplan</td><td><code class="c-green" style="font-family:var(--mono);font-size:0.9em;">dhcp4: true</code></td><td><code class="c-orange" style="font-family:var(--mono);font-size:0.9em;">addresses: [192.168.10.1/24]</code></td></tr>
+        </table>
+      </div>
     </div>
   </div>
+
 </div>
 
-<!-- ===================== SEÇÃO 2 — IP FORWARDING ===================== -->
+<!-- ════════════════════════════════════════════
+     SEÇÃO 2 — IP FORWARDING
+════════════════════════════════════════════ -->
 <div class="section">
   <div class="section-title">
     <div class="section-num">2</div>
@@ -588,31 +1117,92 @@ body {
 
   <div class="box box-info">
     💡 <strong>O que é IP Forwarding?</strong><br>
-    Permite que o Ubuntu "repasse" pacotes entre as interfaces. Sem isso, a VM não funciona como roteador/gateway — os pacotes chegam pela Rede Interna mas não saem pela NAT (e vice-versa).
+    Permite que o Ubuntu "repasse" pacotes entre interfaces. Sem isso, a VM não funciona como roteador/gateway — os pacotes chegam pela Rede Interna mas não saem pela NAT. É como habilitar a "função de roteador" no servidor.
   </div>
 
-  <div class="step"><div class="step-n">1</div><div class="step-body">Edite o arquivo de configuração do kernel:<br>
-    <code>sudo nano /etc/sysctl.conf</code>
-  </div></div>
+  <div class="step-block">
+    <div class="step-block-header">
+      <div class="step-num">1</div>
+      <div>
+        <div class="step-title">Abrir o arquivo de configuração do kernel</div>
+        <div class="step-subtitle">Arquivo: /etc/sysctl.conf</div>
+      </div>
+    </div>
+    <div class="step-block-body">
+      <div class="code-block" id="code-sysctl-nano">
+<button class="copy-btn" onclick="copyCode('code-sysctl-nano',this)">📋 Copiar</button>
+<span class="prompt">$</span> <span class="cmd">sudo nano /etc/sysctl.conf</span>
+<span class="comment"># O arquivo é longo. Use Ctrl+W para buscar a linha que precisa</span>
+      </div>
+    </div>
+  </div>
 
-  <div class="step"><div class="step-n">2</div><div class="step-body">Procure a linha abaixo e <strong>remova o # do início</strong> (ou adicione se não existir):</div></div>
+  <div class="step-block">
+    <div class="step-block-header">
+      <div class="step-num">2</div>
+      <div>
+        <div class="step-title">Buscar e descomentar a linha correta</div>
+        <div class="step-subtitle">Use Ctrl+W no nano para buscar</div>
+      </div>
+    </div>
+    <div class="step-block-body">
+      <p>No nano, pressione <code>Ctrl + W</code>, digite <code>ip_forward</code> e pressione Enter. Você encontrará esta linha:</p>
+      <div class="code-block">
+<span class="comment"># Antes (linha comentada — o # bloqueia):</span>
+<span class="err">#net.ipv4.ip_forward=1</span>
 
-  <div class="code-block" id="code-sysctl">
-<button class="copy-btn" onclick="copyCode('code-sysctl',this)">📋 Copiar</button>
-<span class="comment"># Habilitar encaminhamento de pacotes IPv4</span>
+<span class="comment"># Depois (remova o # do início):</span>
 <span class="key">net.ipv4.ip_forward</span>=<span class="val">1</span>
+      </div>
+      <div class="box box-warn">⚠️ <strong>Remova apenas o #</strong> da linha <code>net.ipv4.ip_forward=1</code>. Não altere mais nada no arquivo. Se a linha não existir, adicione-a no final do arquivo.</div>
+    </div>
   </div>
 
-  <div class="step"><div class="step-n">3</div><div class="step-body">Aplique sem reiniciar: <code>sudo sysctl -p</code></div></div>
+  <div class="step-block">
+    <div class="step-block-header">
+      <div class="step-num">3</div>
+      <div>
+        <div class="step-title">Salvar e aplicar sem reiniciar</div>
+      </div>
+    </div>
+    <div class="step-block-body">
+      <div class="code-block" id="code-sysctl">
+<button class="copy-btn" onclick="copyCode('code-sysctl',this)">📋 Copiar</button>
+<span class="comment"># Salvar no nano: Ctrl+X → Y → Enter</span>
+<span class="comment"># Aplicar as mudanças imediatamente (sem reiniciar):</span>
+<span class="prompt">$</span> <span class="cmd">sudo sysctl -p</span>
+      </div>
+      <div class="result-label">📺 Resultado esperado:</div>
+      <div class="result-block">
+<span class="r-key">net.ipv4.ip_forward</span> = <span class="r-val">1</span>   <span class="r-dim">← ✅ confirmado que está ativo!</span>
+      </div>
+    </div>
+  </div>
 
-  <div class="step"><div class="step-n">4</div><div class="step-body">Verifique se está ativo (deve mostrar <code>1</code>):<br>
-    <code>cat /proc/sys/net/ipv4/ip_forward</code>
-  </div></div>
-
-  <div class="box box-ok">✅ <strong>Saída esperada:</strong> <code>1</code> — isso confirma que o forwarding está ativo.</div>
+  <div class="step-block">
+    <div class="step-block-header">
+      <div class="step-num">4</div>
+      <div>
+        <div class="step-title">Confirmar que está ativo</div>
+      </div>
+    </div>
+    <div class="step-block-body">
+      <div class="code-block" id="code-check-forward">
+<button class="copy-btn" onclick="copyCode('code-check-forward',this)">📋 Copiar</button>
+<span class="prompt">$</span> <span class="cmd">cat /proc/sys/net/ipv4/ip_forward</span>
+      </div>
+      <div class="result-label">📺 Resultado esperado:</div>
+      <div class="result-block">
+<span class="r-val">1</span>   <span class="r-dim">← ✅ 1 = ativo, 0 = inativo</span>
+      </div>
+      <div class="box box-ok">✅ O valor <code>1</code> confirma que o IP Forwarding está ativo. O servidor agora consegue rotear pacotes entre a internet (NAT) e a rede interna.</div>
+    </div>
+  </div>
 </div>
 
-<!-- ===================== SEÇÃO 3 — UFW ===================== -->
+<!-- ════════════════════════════════════════════
+     SEÇÃO 3 — UFW FIREWALL
+════════════════════════════════════════════ -->
 <div class="section">
   <div class="section-title">
     <div class="section-num">3</div>
@@ -621,90 +1211,140 @@ body {
 
   <div class="box box-info">
     💡 <strong>O que é o UFW?</strong><br>
-    O UFW (Uncomplicated Firewall) é a ferramenta do Ubuntu para controlar o firewall de forma simples. Ele decide quais conexões entram e saem da máquina com comandos fáceis.
+    UFW = <em>Uncomplicated Firewall</em>. É a ferramenta do Ubuntu para controlar quais conexões entram e saem do servidor. Ele cria uma "parede de fogo" virtual que filtra o tráfego de rede por portas e protocolos.
   </div>
 
-  <!-- Diagrama UFW -->
   <div class="diagram-wrap">
     <svg viewBox="0 0 680 180" width="100%" xmlns="http://www.w3.org/2000/svg" style="max-width:660px;">
-      <!-- Internet -->
-      <ellipse cx="80" cy="90" rx="65" ry="45" fill="rgba(56,189,248,0.07)" stroke="#38bdf8" stroke-width="1.5"/>
-      <text x="80" y="87" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#38bdf8">🌐 Internet</text>
-      <text x="80" y="104" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#64748b">Qualquer IP</text>
-
-      <!-- Arrow -->
-      <line x1="145" y1="90" x2="215" y2="90" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="4"/>
-
-      <!-- UFW Shield -->
-      <rect x="215" y="45" width="250" height="90" rx="10" fill="rgba(251,146,60,0.08)" stroke="#fb923c" stroke-width="2"/>
-      <text x="340" y="72" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="#fb923c">🔥 UFW — Firewall</text>
-      <text x="280" y="95" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10" fill="#22c55e">✅ ALLOW 22/tcp</text>
-      <text x="280" y="111" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10" fill="#22c55e">✅ ALLOW 80/tcp</text>
-      <text x="400" y="95" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10" fill="#f87171">🚫 DENY 23/tcp</text>
-      <text x="400" y="111" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10" fill="#f87171">🚫 DENY 21/tcp</text>
-      <text x="340" y="127" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#fed7aa">Padrão: bloquear entrada</text>
-
-      <!-- Arrow -->
-      <line x1="465" y1="90" x2="535" y2="90" stroke="#22c55e" stroke-width="1.5"/>
-
-      <!-- Server -->
-      <rect x="535" y="55" width="130" height="70" rx="10" fill="rgba(34,197,94,0.07)" stroke="#22c55e" stroke-width="1.5"/>
-      <text x="600" y="82" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#22c55e">🖥 Servidor</text>
-      <text x="600" y="99" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10" fill="#64748b">Protegido pelo</text>
-      <text x="600" y="114" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10" fill="#64748b">UFW</text>
+      <ellipse cx="80" cy="90" rx="65" ry="45" fill="rgba(77,166,255,0.07)" stroke="#4da6ff" stroke-width="1.5"/>
+      <text x="80" y="87" text-anchor="middle" font-family="Sora,sans-serif" font-size="12" fill="#4da6ff">🌐 Internet</text>
+      <text x="80" y="104" text-anchor="middle" font-family="Sora,sans-serif" font-size="10" fill="#4a5878">Qualquer IP</text>
+      <line x1="145" y1="90" x2="215" y2="90" stroke="#4da6ff" stroke-width="1.5" stroke-dasharray="4"/>
+      <rect x="215" y="45" width="250" height="90" rx="10" fill="rgba(255,140,66,0.08)" stroke="#ff8c42" stroke-width="2"/>
+      <text x="340" y="72" text-anchor="middle" font-family="Sora,sans-serif" font-size="13" font-weight="700" fill="#ff8c42">🔥 UFW — Firewall</text>
+      <text x="280" y="95" text-anchor="middle" font-family="Space Mono,monospace" font-size="10" fill="#00e5a0">✅ ALLOW 22/tcp</text>
+      <text x="280" y="111" text-anchor="middle" font-family="Space Mono,monospace" font-size="10" fill="#00e5a0">✅ ALLOW 80/tcp</text>
+      <text x="400" y="95" text-anchor="middle" font-family="Space Mono,monospace" font-size="10" fill="#ff5c7a">🚫 DENY 23/tcp</text>
+      <text x="400" y="111" text-anchor="middle" font-family="Space Mono,monospace" font-size="10" fill="#ff5c7a">🚫 DENY 21/tcp</text>
+      <text x="340" y="127" text-anchor="middle" font-family="Sora,sans-serif" font-size="9" fill="#ffd0a8">Padrão: bloquear entrada</text>
+      <line x1="465" y1="90" x2="535" y2="90" stroke="#00e5a0" stroke-width="1.5"/>
+      <rect x="535" y="55" width="130" height="70" rx="10" fill="rgba(0,229,160,0.06)" stroke="#00e5a0" stroke-width="1.5"/>
+      <text x="600" y="82" text-anchor="middle" font-family="Sora,sans-serif" font-size="12" font-weight="700" fill="#00e5a0">🖥 Servidor</text>
+      <text x="600" y="99" text-anchor="middle" font-family="Space Mono,monospace" font-size="10" fill="#4a5878">Protegido pelo</text>
+      <text x="600" y="114" text-anchor="middle" font-family="Space Mono,monospace" font-size="10" fill="#4a5878">UFW</text>
     </svg>
     <p>Figura: O UFW filtra o tráfego antes de chegar ao servidor</p>
   </div>
 
-  <!-- Passo a passo UFW -->
+  <!-- Passo a passo UFW completo -->
   <div class="card">
     <div class="card-head">🔐 Passo a passo — Configurar o UFW do zero</div>
     <div class="card-body">
 
-      <div class="box box-danger">🚨 <strong>CUIDADO ANTES DE TUDO:</strong> Se você vai acessar via SSH, <strong>libere a porta 22 ANTES de ativar o UFW</strong>. Senão você perde o acesso à máquina!</div>
+      <div class="box box-danger">🚨 <strong>CUIDADO CRÍTICO:</strong> Se você acessa o servidor via SSH, <strong>LIBERE A PORTA 22 ANTES de ativar o UFW</strong>. Se você ativar o UFW sem liberar a porta 22, você perde o acesso remoto e precisará acessar fisicamente a máquina!</div>
 
-      <div class="step"><div class="step-n">1</div><div class="step-body"><strong>Libere o SSH primeiro</strong> (porta 22) — isso é obrigatório!<br>
-        <code>sudo ufw allow 22/tcp</code>
-      </div></div>
-
-      <div class="code-block" id="code-ufw1">
+      <div class="step-block">
+        <div class="step-block-header">
+          <div class="step-num">1</div>
+          <div>
+            <div class="step-title">OBRIGATÓRIO: Liberar SSH (porta 22) antes de tudo</div>
+            <div class="step-subtitle">Sem isso, você perde o acesso à máquina!</div>
+          </div>
+        </div>
+        <div class="step-block-body">
+          <div class="code-block" id="code-ufw1">
 <button class="copy-btn" onclick="copyCode('code-ufw1',this)">📋 Copiar</button>
-<span class="comment"># PASSO 1 — Libere SSH ANTES de qualquer coisa</span>
+<span class="comment"># ⚠️ FAÇA ISSO PRIMEIRO — liberar acesso SSH</span>
 <span class="prompt">$</span> <span class="cmd">sudo ufw allow 22/tcp</span>
-<span class="ok">Rules updated</span>
-<span class="ok">Rules updated (v6)</span>
-
-<span class="comment"># PASSO 2 — Defina política padrão: bloquear tudo que entra</span>
-<span class="prompt">$</span> <span class="cmd">sudo ufw default deny incoming</span>
-<span class="prompt">$</span> <span class="cmd">sudo ufw default allow outgoing</span>
-
-<span class="comment"># PASSO 3 — Ative o UFW</span>
-<span class="prompt">$</span> <span class="cmd">sudo ufw enable</span>
-<span class="ok">Command may disrupt existing ssh connections. Proceed with operation (y|n)? y</span>
-<span class="ok">Firewall is active and enabled on system startup</span>
+          </div>
+          <div class="result-label">📺 Resultado esperado:</div>
+          <div class="result-block">
+<span class="r-ok">Rules updated</span>
+<span class="r-ok">Rules updated (v6)</span>   <span class="r-dim">← ✅ regra criada para IPv4 e IPv6</span>
+          </div>
+        </div>
       </div>
 
-      <div class="step"><div class="step-n">2</div><div class="step-body"><strong>Libere outras portas</strong> conforme necessário:</div></div>
+      <div class="step-block">
+        <div class="step-block-header">
+          <div class="step-num">2</div>
+          <div>
+            <div class="step-title">Definir a política padrão</div>
+            <div class="step-subtitle">Bloquear tudo que entra, permitir tudo que sai</div>
+          </div>
+        </div>
+        <div class="step-block-body">
+          <div class="code-block" id="code-ufw-policy">
+<button class="copy-btn" onclick="copyCode('code-ufw-policy',this)">📋 Copiar</button>
+<span class="comment"># Bloquear tudo que vem de fora (incoming)</span>
+<span class="prompt">$</span> <span class="cmd">sudo ufw default deny incoming</span>
+<span class="comment"># Permitir que a máquina se conecte a outros serviços</span>
+<span class="prompt">$</span> <span class="cmd">sudo ufw default allow outgoing</span>
+          </div>
+          <div class="box box-purple">🛡️ <strong>Conceito de Segurança:</strong> "Bloquear tudo e liberar apenas o necessário" é o <strong>Princípio do Menor Privilégio</strong> — fundamental na Segurança da Informação. Começamos negando tudo e abrimos apenas o que precisamos.</div>
+        </div>
+      </div>
 
-      <div class="code-block" id="code-ufw2">
+      <div class="step-block">
+        <div class="step-block-header">
+          <div class="step-num">3</div>
+          <div>
+            <div class="step-title">Ativar o UFW</div>
+          </div>
+        </div>
+        <div class="step-block-body">
+          <div class="code-block" id="code-ufw-enable">
+<button class="copy-btn" onclick="copyCode('code-ufw-enable',this)">📋 Copiar</button>
+<span class="prompt">$</span> <span class="cmd">sudo ufw enable</span>
+          </div>
+          <div class="result-label">📺 O sistema vai perguntar:</div>
+          <div class="result-block">
+Command may disrupt existing ssh connections. Proceed with operation (y|n)? <span class="r-ok">y</span>   <span class="r-dim">← digite y e Enter</span>
+<span class="r-ok">Firewall is active and enabled on system startup</span>   <span class="r-dim">← ✅ UFW ativado!</span>
+          </div>
+          <div class="box box-ok">✅ O UFW agora está ativo e iniciará automaticamente toda vez que o servidor ligar.</div>
+        </div>
+      </div>
+
+      <div class="step-block">
+        <div class="step-block-header">
+          <div class="step-num">4</div>
+          <div>
+            <div class="step-title">Liberar portas necessárias</div>
+          </div>
+        </div>
+        <div class="step-block-body">
+          <div class="code-block" id="code-ufw2">
 <button class="copy-btn" onclick="copyCode('code-ufw2',this)">📋 Copiar</button>
-<span class="comment"># Liberar HTTP e HTTPS (servidores web)</span>
+<span class="comment"># Liberar HTTP (sites sem criptografia)</span>
 <span class="prompt">$</span> <span class="cmd">sudo ufw allow 80/tcp</span>
+
+<span class="comment"># Liberar HTTPS (sites com criptografia — o correto!)</span>
 <span class="prompt">$</span> <span class="cmd">sudo ufw allow 443/tcp</span>
 
-<span class="comment"># Bloquear Telnet (inseguro — sem criptografia)</span>
+<span class="comment"># Bloquear Telnet (porta 23 — transmite tudo sem criptografia!)</span>
 <span class="prompt">$</span> <span class="cmd">sudo ufw deny 23/tcp</span>
 
-<span class="comment"># Bloquear FTP (inseguro)</span>
+<span class="comment"># Bloquear FTP (porta 21 — protocolo de transferência inseguro)</span>
 <span class="prompt">$</span> <span class="cmd">sudo ufw deny 21/tcp</span>
 
-<span class="comment"># Bloquear RDP — acesso remoto Windows</span>
+<span class="comment"># Bloquear RDP (porta 3389 — área de trabalho remota Windows)</span>
 <span class="prompt">$</span> <span class="cmd">sudo ufw deny 3389/tcp</span>
+          </div>
+          <div class="box box-info">💡 <strong>Por que bloquear Telnet (porta 23)?</strong> O Telnet transmite usuário, senha e todos os dados em <strong>texto puro</strong> — qualquer pessoa na rede pode interceptar com o Wireshark. O SSH (porta 22) é o substituto seguro com criptografia.</div>
+        </div>
       </div>
 
-      <div class="step"><div class="step-n">3</div><div class="step-body"><strong>Ver o status</strong> — verifique todas as regras:</div></div>
-
-      <div class="code-block" id="code-ufw3">
+      <div class="step-block">
+        <div class="step-block-header">
+          <div class="step-num">5</div>
+          <div>
+            <div class="step-title">Ver o status das regras</div>
+            <div class="step-subtitle">Verificar tudo que está configurado</div>
+          </div>
+        </div>
+        <div class="step-block-body">
+          <div class="code-block" id="code-ufw3">
 <button class="copy-btn" onclick="copyCode('code-ufw3',this)">📋 Copiar</button>
 <span class="comment"># Ver status básico</span>
 <span class="prompt">$</span> <span class="cmd">sudo ufw status</span>
@@ -712,35 +1352,50 @@ body {
 <span class="comment"># Ver com mais detalhes (recomendado)</span>
 <span class="prompt">$</span> <span class="cmd">sudo ufw status verbose</span>
 
-<span class="comment"># Ver regras numeradas (para remover depois)</span>
+<span class="comment"># Ver regras numeradas (útil para remover depois)</span>
 <span class="prompt">$</span> <span class="cmd">sudo ufw status numbered</span>
+          </div>
+          <div class="result-label">📺 Resultado esperado após configuração completa:</div>
+          <div class="result-block">
+Status: <span class="r-ok">active</span>
+
+     To           Action      From
+     --           ------      ----
+<span class="r-ok">[ 1] 22/tcp       ALLOW IN    Anywhere</span>      <span class="r-dim">← SSH liberado</span>
+<span class="r-ok">[ 2] 80/tcp       ALLOW IN    Anywhere</span>      <span class="r-dim">← HTTP liberado</span>
+<span class="r-ok">[ 3] 443/tcp      ALLOW IN    Anywhere</span>      <span class="r-dim">← HTTPS liberado</span>
+<span class="err">[ 4] 23/tcp       DENY IN     Anywhere</span>      <span class="r-dim">← Telnet bloqueado</span>
+<span class="err">[ 5] 21/tcp       DENY IN     Anywhere</span>      <span class="r-dim">← FTP bloqueado</span>
+<span class="err">[ 6] 3389/tcp     DENY IN     Anywhere</span>      <span class="r-dim">← RDP bloqueado</span>
+          </div>
+        </div>
       </div>
 
-      <div class="box box-ok">✅ <strong>O que você verá:</strong><br><br>
-        <code style="font-family:'JetBrains Mono',monospace;font-size:0.82em;line-height:2;">
-          Status: active<br>
-          To&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Action&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;From<br>
-          22/tcp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ALLOW IN&nbsp;&nbsp;&nbsp;Anywhere<br>
-          80/tcp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ALLOW IN&nbsp;&nbsp;&nbsp;Anywhere<br>
-          23/tcp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DENY IN&nbsp;&nbsp;&nbsp;&nbsp;Anywhere
-        </code>
-      </div>
-
-      <div class="step" style="margin-top:14px;"><div class="step-n">4</div><div class="step-body"><strong>Remover uma regra</strong> se errar:</div></div>
-
-      <div class="code-block" id="code-ufw4">
+      <div class="step-block">
+        <div class="step-block-header">
+          <div class="step-num">6</div>
+          <div>
+            <div class="step-title">Como remover uma regra se errar</div>
+          </div>
+        </div>
+        <div class="step-block-body">
+          <div class="code-block" id="code-ufw4">
 <button class="copy-btn" onclick="copyCode('code-ufw4',this)">📋 Copiar</button>
-<span class="comment"># Ver regras com número</span>
+<span class="comment"># Passo 1: ver regras com número</span>
 <span class="prompt">$</span> <span class="cmd">sudo ufw status numbered</span>
-<span class="comment"># [ 1] 22/tcp   ALLOW IN  Anywhere</span>
-<span class="comment"># [ 2] 80/tcp   ALLOW IN  Anywhere</span>
+<span class="comment"># Passo 2: deletar a regra pelo número (exemplo: deletar regra 4)</span>
+<span class="prompt">$</span> <span class="cmd">sudo ufw delete 4</span>
+<span class="comment"># Passo 3: confirmar com y</span>
 
-<span class="comment"># Deletar a regra número 2</span>
-<span class="prompt">$</span> <span class="cmd">sudo ufw delete 2</span>
+<span class="comment"># Se precisar desativar o UFW completamente (emergência):</span>
+<span class="prompt">$</span> <span class="cmd">sudo ufw disable</span>
 
-<span class="comment"># Recarregar se necessário</span>
-<span class="prompt">$</span> <span class="cmd">sudo ufw reload</span>
+<span class="comment"># Para reativar depois:</span>
+<span class="prompt">$</span> <span class="cmd">sudo ufw enable</span>
+          </div>
+        </div>
       </div>
+
     </div>
   </div>
 
@@ -750,75 +1405,74 @@ body {
     <div class="card-body" style="padding:0;">
       <table class="port-table">
         <tr>
-          <th>Porta</th>
-          <th>Serviço</th>
-          <th>UFW</th>
-          <th>Por quê?</th>
+          <th>Porta</th><th>Serviço</th><th>UFW</th><th>Por quê?</th>
         </tr>
         <tr>
-          <td><code style="font-family:'JetBrains Mono',monospace;color:var(--green);">22/tcp</code></td>
+          <td><code style="font-family:var(--mono);color:var(--green);">22/tcp</code></td>
           <td>SSH</td>
           <td><span class="tag tag-green">✅ ALLOW</span></td>
-          <td style="color:var(--muted);font-size:0.84em;">Acesso remoto seguro</td>
+          <td style="color:var(--text2);font-size:0.83em;">Acesso remoto <strong>criptografado</strong> — substituto seguro do Telnet</td>
         </tr>
         <tr>
-          <td><code style="font-family:'JetBrains Mono',monospace;color:var(--green);">80/tcp</code></td>
+          <td><code style="font-family:var(--mono);color:var(--green);">80/tcp</code></td>
           <td>HTTP</td>
           <td><span class="tag tag-green">✅ ALLOW</span></td>
-          <td style="color:var(--muted);font-size:0.84em;">Web sem criptografia</td>
+          <td style="color:var(--text2);font-size:0.83em;">Servidores web sem criptografia (sites comuns)</td>
         </tr>
         <tr>
-          <td><code style="font-family:'JetBrains Mono',monospace;color:var(--green);">443/tcp</code></td>
+          <td><code style="font-family:var(--mono);color:var(--green);">443/tcp</code></td>
           <td>HTTPS</td>
           <td><span class="tag tag-green">✅ ALLOW</span></td>
-          <td style="color:var(--muted);font-size:0.84em;">Web com criptografia (seguro)</td>
+          <td style="color:var(--text2);font-size:0.83em;">Web com criptografia TLS/SSL — o correto para sites modernos</td>
         </tr>
         <tr>
-          <td><code style="font-family:'JetBrains Mono',monospace;color:var(--red);">23/tcp</code></td>
+          <td><code style="font-family:var(--mono);color:var(--red);">23/tcp</code></td>
           <td>Telnet</td>
           <td><span class="tag tag-red">🚫 DENY</span></td>
-          <td style="color:var(--muted);font-size:0.84em;">Sem criptografia — tudo em texto claro</td>
+          <td style="color:var(--text2);font-size:0.83em;"><strong>Sem criptografia</strong> — senha aparece em texto claro. Qualquer um na rede intercepta com Wireshark.</td>
         </tr>
         <tr>
-          <td><code style="font-family:'JetBrains Mono',monospace;color:var(--red);">21/tcp</code></td>
+          <td><code style="font-family:var(--mono);color:var(--red);">21/tcp</code></td>
           <td>FTP</td>
           <td><span class="tag tag-red">🚫 DENY</span></td>
-          <td style="color:var(--muted);font-size:0.84em;">Transferência de arquivo insegura</td>
+          <td style="color:var(--text2);font-size:0.83em;">Transferência de arquivo insegura — use SFTP (porta 22) no lugar</td>
         </tr>
         <tr>
-          <td><code style="font-family:'JetBrains Mono',monospace;color:var(--red);">3389/tcp</code></td>
+          <td><code style="font-family:var(--mono);color:var(--red);">3389/tcp</code></td>
           <td>RDP</td>
           <td><span class="tag tag-red">🚫 DENY</span></td>
-          <td style="color:var(--muted);font-size:0.84em;">Área de trabalho remota Windows</td>
+          <td style="color:var(--text2);font-size:0.83em;">Área de trabalho remota Windows — alvo frequente de ataques de força bruta</td>
         </tr>
         <tr>
-          <td><code style="font-family:'JetBrains Mono',monospace;color:var(--muted);">3306/tcp</code></td>
+          <td><code style="font-family:var(--mono);color:var(--muted);">3306/tcp</code></td>
           <td>MySQL</td>
           <td><span class="tag tag-orange">⚠️ CUIDADO</span></td>
-          <td style="color:var(--muted);font-size:0.84em;">Só abrir se necessário e com restrição</td>
+          <td style="color:var(--text2);font-size:0.83em;">Só abrir para IPs específicos — nunca expor direto à internet</td>
         </tr>
       </table>
     </div>
   </div>
 </div>
 
-<!-- ===================== SEÇÃO 4 — SIMULADOR ===================== -->
+<!-- ════════════════════════════════════════════
+     SEÇÃO 4 — SIMULADOR UFW
+════════════════════════════════════════════ -->
 <div class="section">
   <div class="section-title">
     <div class="section-num">4</div>
     🛡️ Simulador de Regras UFW
   </div>
 
-  <div class="box box-tip">🎮 Pratique aqui! Adicione regras de allow ou deny e veja o resultado como se fosse o terminal real.</div>
+  <div class="box box-tip">🎮 Pratique aqui! Adicione regras e veja o resultado como se fosse o terminal real. Nenhuma mudança é feita na máquina real.</div>
 
   <div class="card">
-    <div class="card-head">➕ Adicionar Regra</div>
+    <div class="card-head">➕ Adicionar Regra ao Simulador</div>
     <div class="card-body">
       <div class="sim-row">
         <input type="number" class="sim-input" id="s-porta" placeholder="Porta (ex: 8080)" min="1" max="65535"/>
         <select class="sim-select" id="s-proto">
-          <option value="tcp">tcp</option>
-          <option value="udp">udp</option>
+          <option value="tcp">TCP</option>
+          <option value="udp">UDP</option>
         </select>
         <select class="sim-select" id="s-action">
           <option value="allow">ALLOW</option>
@@ -833,7 +1487,9 @@ body {
   </div>
 </div>
 
-<!-- ===================== SEÇÃO 5 — QUIZ ===================== -->
+<!-- ════════════════════════════════════════════
+     SEÇÃO 5 — QUIZ
+════════════════════════════════════════════ -->
 <div class="section">
   <div class="section-title">
     <div class="section-num">5</div>
@@ -845,7 +1501,7 @@ body {
 
   <!-- Q0 -->
   <div class="quiz-card active" id="qc0">
-    <h4>❓ Qual arquivo você edita para configurar a rede no Ubuntu Server?</h4>
+    <h4>❓ Qual é o caminho completo do arquivo de configuração de rede no Ubuntu Server?</h4>
     <div class="q-opts">
       <button class="q-opt" onclick="ansQ(0,0,2)">/etc/network/interfaces</button>
       <button class="q-opt" onclick="ansQ(0,1,2)">/etc/hosts</button>
@@ -871,7 +1527,7 @@ body {
 
   <!-- Q2 -->
   <div class="quiz-card" id="qc2">
-    <h4>❓ Você vai ativar o UFW mas acessa a máquina via SSH. O que você deve fazer ANTES de executar <code>sudo ufw enable</code>?</h4>
+    <h4>❓ Você vai ativar o UFW mas acessa a máquina via SSH. O que você deve fazer ANTES de <code>sudo ufw enable</code>?</h4>
     <div class="q-opts">
       <button class="q-opt" onclick="ansQ(2,0,2)">Reiniciar o servidor</button>
       <button class="q-opt" onclick="ansQ(2,1,2)">Executar sudo ufw default allow incoming</button>
@@ -897,7 +1553,7 @@ body {
 
   <!-- Q4 -->
   <div class="quiz-card" id="qc4">
-    <h4>❓ Qual é a faixa de IPs da classe C usada em redes internas privadas?</h4>
+    <h4>❓ Qual é a faixa de IPs da Classe C usada em redes internas privadas?</h4>
     <div class="q-opts">
       <button class="q-opt" onclick="ansQ(4,0,2)">10.0.0.0 a 10.255.255.255</button>
       <button class="q-opt" onclick="ansQ(4,1,2)">172.16.0.0 a 172.31.255.255</button>
@@ -913,19 +1569,19 @@ body {
     <div class="quiz-score" id="qscore">0/5</div>
     <p id="qmsg" style="color:var(--muted);margin:8px 0 16px;font-size:0.95em;"></p>
     <div style="font-size:0.82em;color:var(--muted);margin-bottom:16px;" id="qxp"></div>
-    <button onclick="resetQuiz()" style="background:var(--blue-dim);border:1px solid var(--blue);color:var(--blue);padding:10px 22px;border-radius:8px;cursor:pointer;font-size:0.88em;font-weight:700;font-family:'Inter',sans-serif;">🔄 Tentar Novamente</button>
+    <button onclick="resetQuiz()" style="background:var(--blue-dim);border:1px solid rgba(77,166,255,0.4);color:var(--blue);padding:10px 22px;border-radius:8px;cursor:pointer;font-size:0.88em;font-weight:700;font-family:var(--sans);">🔄 Tentar Novamente</button>
   </div>
 </div>
 
 <!-- RODAPÉ -->
-<div style="text-align:center;padding:24px 0;font-size:0.78em;color:var(--muted);">
-  ISO-103 · Infraestrutura e Sistemas Operacionais · Semana 5.2
+<div style="text-align:center;padding:24px 0;font-size:0.76em;color:var(--muted);border-top:1px solid var(--border);margin-top:24px;">
+  ISO-103 · Infraestrutura e Sistemas Operacionais · Semana 5.2 · Tecnólogo em Segurança da Informação
 </div>
 
 </div><!-- /container -->
 
 <script>
-// ===== TABS =====
+// ── TABS ──
 function showTab(group, panel, btn) {
   document.querySelectorAll('[id^="'+group+'-"]').forEach(p => p.classList.remove('active'));
   document.getElementById(group+'-'+panel).classList.add('active');
@@ -934,19 +1590,19 @@ function showTab(group, panel, btn) {
   toast('✅', 'Conteúdo carregado!');
 }
 
-// ===== COPY CODE =====
+// ── COPY ──
 function copyCode(id, btn) {
   const el = document.getElementById(id);
-  const text = el.innerText.replace(/^📋 Copiar\n/, '');
+  const text = el.innerText.replace(/^📋 Copiar\n/, '').replace(/📋 Copiar\n/, '');
   navigator.clipboard.writeText(text).then(() => {
     btn.textContent = '✅ Copiado!';
     btn.classList.add('copied');
     setTimeout(() => { btn.textContent = '📋 Copiar'; btn.classList.remove('copied'); }, 2000);
-    toast('📋', 'Código copiado para a área de transferência!');
+    toast('📋', 'Código copiado!');
   });
 }
 
-// ===== TOAST =====
+// ── TOAST ──
 function toast(icon, msg) {
   document.getElementById('t-icon').textContent = icon;
   document.getElementById('t-msg').textContent = msg;
@@ -956,7 +1612,7 @@ function toast(icon, msg) {
   window._toastT = setTimeout(() => t.classList.remove('show'), 2800);
 }
 
-// ===== SIMULADOR UFW =====
+// ── SIMULADOR UFW ──
 let fwRules = [
   {port:'22',proto:'tcp',action:'allow',label:'SSH'},
   {port:'80',proto:'tcp',action:'allow',label:'HTTP'},
@@ -970,15 +1626,15 @@ function renderSim() {
   const out = document.getElementById('fw-out');
   const lines = [
     '<span class="fw-line hdr">Status: active · Padrão: deny (incoming), allow (outgoing)</span>',
-    '<span class="fw-line hdr">──────────────────────────────────────────────</span>',
-    '<span class="fw-line hdr">  Porta/Proto    Ação        De</span>',
+    '<span class="fw-line hdr">────────────────────────────────────────────────</span>',
+    '<span class="fw-line hdr">  Porta/Proto      Ação           De</span>',
     '<span class="fw-line hdr">  ──────────────────────────────────────────</span>',
   ];
   fwRules.forEach(r => {
     const col = r.action === 'allow' ? 'allow' : 'deny';
-    const act = r.action === 'allow' ? '✅ ALLOW IN' : '🚫 DENY IN ';
+    const act = r.action === 'allow' ? '✅ ALLOW IN  ' : '🚫 DENY IN   ';
     const lbl = r.label ? '  ('+r.label+')' : '';
-    lines.push(`<span class="fw-line ${col}">  ${(r.port+'/'+r.proto).padEnd(14)}${act}  Anywhere${lbl}</span>`);
+    lines.push(`<span class="fw-line ${col}">  ${(r.port+'/'+r.proto).padEnd(16)}${act}Anywhere${lbl}</span>`);
   });
   out.innerHTML = lines.join('\n');
   document.getElementById('fw-count').textContent = fwRules.length + ' regra(s) ativa(s)';
@@ -1010,25 +1666,24 @@ function simReset() {
     {port:'3389',proto:'tcp',action:'deny',label:'RDP'},
   ];
   renderSim();
-  toast('🔄', 'Simulador resetado ao padrão');
+  toast('🔄', 'Simulador resetado');
 }
-
 renderSim();
 
-// ===== QUIZ =====
+// ── QUIZ ──
 const QFB = [
-  '✅ Correto! O arquivo de configuração do Netplan fica em /etc/netplan/ — geralmente chamado de 00-installer-config.yaml.',
-  '✅ Exato! No Netplan, "dhcp4: true" diz ao sistema para obter o IP automaticamente via DHCP.',
-  '✅ Perfeito! Sem liberar a porta 22 antes, você perde o acesso SSH assim que o UFW ativar. Sempre: allow 22 primeiro!',
-  '✅ Correto! O Telnet é perigoso porque envia login, senha e todos os dados em texto claro — qualquer um na rede pode interceptar.',
-  '✅ Exato! A classe C privada é 192.168.0.0 a 192.168.255.255, com máscara /24 (255.255.255.0).',
+  '✅ Correto! O arquivo de configuração do Netplan fica em /etc/netplan/ — geralmente chamado de 00-installer-config.yaml. Você pode listá-lo com: ls /etc/netplan/',
+  '✅ Exato! No Netplan, "dhcp4: true" diz ao sistema para obter o IP automaticamente via DHCP. Lembre-se: use espaços, nunca Tab!',
+  '✅ Perfeito! Liberar a porta 22 ANTES de ativar é obrigatório quando o acesso é via SSH. Sem isso, você perde o acesso à máquina.',
+  '✅ Correto! O Telnet (porta 23) é perigoso porque envia login, senha e dados em texto claro — qualquer um na rede pode interceptar com Wireshark. Use sempre SSH (porta 22).',
+  '✅ Exato! Classe C privada: 192.168.0.0 a 192.168.255.255, com máscara /24. Classe A = 10.x.x.x · Classe B = 172.16-31.x.x',
 ];
 const QERR = [
-  '❌ Errado. O arquivo correto é /etc/netplan/00-installer-config.yaml (ou similar dentro de /etc/netplan/).',
-  '❌ Errado. A sintaxe correta no Netplan é "dhcp4: true" — não há outra forma válida.',
-  '❌ Errado! Você DEVE liberar a porta 22 com "sudo ufw allow 22/tcp" antes de ativar. Caso contrário, você perde o acesso SSH.',
-  '❌ Errado. O Telnet é inseguro por não usar criptografia — não tem relação com velocidade ou compatibilidade.',
-  '❌ Errado. A classe C privada é 192.168.x.x. Classe A é 10.x.x.x e Classe B é 172.16-31.x.x.',
+  '❌ Errado. O arquivo /etc/network/interfaces era usado em versões antigas do Ubuntu. No Ubuntu Server 20.04+ o arquivo correto é /etc/netplan/00-installer-config.yaml.',
+  '❌ Errado. A sintaxe correta no Netplan é "dhcp4: true" — não há "dhcp: enabled" ou "auto-ip: true" neste formato.',
+  '❌ Errado! Você DEVE liberar a porta 22 com "sudo ufw allow 22/tcp" ANTES de "sudo ufw enable". Caso contrário, você perde o acesso SSH e precisará acessar a máquina fisicamente.',
+  '❌ Errado. O Telnet é inseguro especificamente porque não usa criptografia — não tem relação com velocidade, compatibilidade ou memória.',
+  '❌ Errado. A Classe C privada é 192.168.x.x/24. A Classe A é 10.x.x.x/8 e a Classe B é 172.16-31.x.x/12.',
 ];
 let qCorrect = 0, qDone = {};
 
@@ -1061,9 +1716,9 @@ function showResult() {
   const r = document.getElementById('qresult');
   r.classList.add('show');
   document.getElementById('qscore').textContent = qCorrect + '/5';
-  const msgs = ['Estude mais e tente novamente! 📚','Progredindo! Continue! 💪','Bom trabalho! 👍','Muito bom domínio! 🌟','🔥 Perfeito! Você é um expert!'];
+  const msgs = ['Continue estudando! 📚','Progredindo! 💪','Bom trabalho! 👍','Muito bom! 🌟','🔥 Perfeito! Expert!'];
   document.getElementById('qmsg').textContent = msgs[Math.min(qCorrect, 4)];
-  document.getElementById('qxp').textContent = qCorrect >= 4 ? '🏆 Parabéns! Você dominou o conteúdo!' : 'Revise os erros e tente novamente.';
+  document.getElementById('qxp').textContent = qCorrect >= 4 ? '🏆 Você dominou o conteúdo desta semana!' : 'Revise os tópicos errados e tente novamente.';
   document.getElementById('qprog').style.width = '100%';
   document.getElementById('qcount').textContent = 'Quiz concluído!';
   toast(qCorrect >= 4 ? '🏆' : '📚', qCorrect + '/5 acertos!');
@@ -1083,8 +1738,7 @@ function resetQuiz() {
   }
 }
 
-// Boas-vindas
-setTimeout(() => toast('👋', 'Bem-vindo! Comece pela Seção 1 — Netplan'), 600);
+setTimeout(() => toast('👋', 'Bem-vindo! Comece pela retomada da aula anterior ↑'), 700);
 </script>
 </body>
 </html>
