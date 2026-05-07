@@ -514,7 +514,7 @@ body::before {
 
     <div class="retomada-item">
       <div class="ri-title">🗄️ Como entrar no servidor</div>
-      <p>Para acessar o Ubuntu Server no VirtualBox, abrimos o terminal da VM e fizemos login com o usuário e senha criados. Para SSH: <code>ssh usuario@192.168.x.x</code> — onde o IP é o da placa interna.</p>
+      <p>Para acessar o Ubuntu Server no VirtualBox, abrimos o terminal da VM <strong>ubuntu-firewall</strong> e fizemos login com usuário <code>ubuntu-firewall</code> e senha <code>Fatec2026</code>. Para SSH: <code>ssh ubuntu-firewall@192.168.x.x</code> — onde o IP é o da placa interna.</p>
     </div>
 
     <div class="retomada-item">
@@ -532,11 +532,11 @@ body::before {
     <div class="code-block">
 <span class="comment"># Criar novo usuário (pedirá senha e dados)</span>
 <span class="prompt">$</span> <span class="cmd">sudo adduser nome_do_usuario</span>
-<span class="comment"># Exemplo: sudo adduser joaosilva</span>
+<span class="comment"># Exemplo: sudo adduser ubuntu-firewall</span>
 
 <span class="comment"># Verificar que o usuário foi criado</span>
 <span class="prompt">$</span> <span class="cmd">cat /etc/passwd | grep nome_do_usuario</span>
-<span class="comment"># Saída esperada: joaosilva:x:1001:1001::/home/joaosilva:/bin/bash</span>
+<span class="comment"># Saída esperada: ubuntu-firewall:x:1001:1001::/home/ubuntu-firewall:/bin/bash</span>
 
 <span class="comment"># Adicionar usuário ao grupo sudo (para dar permissão de administrador)</span>
 <span class="prompt">$</span> <span class="cmd">sudo usermod -aG sudo nome_do_usuario</span>
@@ -621,7 +621,7 @@ body::before {
       </div>
     </div>
     <div class="step-block-body">
-      <p>Abra o <strong>VirtualBox</strong> no computador → clique na VM do Ubuntu Server → clique em <strong>Iniciar</strong>. Aguarde o boot completo até aparecer a tela de login.</p>
+      <p>Abra o <strong>VirtualBox</strong> no computador → clique na VM <strong>ubuntu-firewall</strong> → clique em <strong>Iniciar</strong>. Aguarde o boot completo até aparecer a tela de login.</p>
     </div>
   </div>
 
@@ -631,7 +631,7 @@ body::before {
       <div class="step-num">2</div>
       <div>
         <div class="step-title">Fazer login com seu usuário e senha</div>
-        <div class="step-subtitle">Use o usuário criado na aula anterior</div>
+        <div class="step-subtitle">Usuário: ubuntu-firewall · Senha: Fatec2026</div>
       </div>
     </div>
     <div class="step-block-body">
@@ -640,29 +640,30 @@ body::before {
         <div class="user-context-header">🖥️ Terminal do Ubuntu Server — <span>tela de login</span></div>
         <div class="user-context-body">
           <div class="login-line">
-            <span class="login-comment"># Exemplo: o servidor pede o nome de usuário</span>
+            <span class="login-comment"># A VM se chama ubuntu-firewall — use as credenciais abaixo</span>
           </div>
           <div class="login-line">
-            <span class="login-prompt">Ubuntu 22.04.3 LTS servidor tty1</span>
+            <span class="login-prompt">Ubuntu 22.04.3 LTS ubuntu-firewall tty1</span>
           </div>
           <div class="login-line">
-            <span class="login-prompt">servidor login:</span>
-            <span class="login-cmd">joaosilva</span>
-            <span class="login-comment">← digite seu usuário e pressione Enter</span>
+            <span class="login-prompt">ubuntu-firewall login:</span>
+            <span class="login-cmd">ubuntu-firewall</span>
+            <span class="login-comment">← usuário padrão da turma</span>
           </div>
           <div class="login-line">
             <span class="login-prompt">Password:</span>
-            <span class="login-cmd">••••••••</span>
-            <span class="login-comment">← digite a senha (não aparece na tela) e pressione Enter</span>
+            <span class="login-cmd">••••••••••</span>
+            <span class="login-comment">← senha: Fatec2026 (não aparece na tela)</span>
           </div>
           <div class="login-line" style="margin-top:8px;">
-            <span class="login-prompt ok" style="color:var(--green);">joaosilva@servidor:~$</span>
+            <span class="login-prompt ok" style="color:var(--green);">ubuntu-firewall@ubuntu-firewall:~$</span>
             <span class="login-cmd"> _</span>
             <span class="login-comment">← você está dentro! Pronto para os comandos</span>
           </div>
         </div>
       </div>
       <div class="box box-warn" style="margin-top:8px;">⚠️ <strong>A senha não aparece na tela</strong> enquanto você digita — isso é normal no Linux. Digite a senha normalmente e pressione Enter.</div>
+      <div class="box box-ok" style="margin-top:8px;">🔑 <strong>Credenciais da turma:</strong><br>Usuário: <code>ubuntu-firewall</code> &nbsp;·&nbsp; Senha: <code>Fatec2026</code></div>
     </div>
   </div>
 
