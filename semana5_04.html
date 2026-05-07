@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semana 5.4 — Acesso à Internet via Firewall | ISO-103</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080b12;
+  --card: #0f1320;
+  --card2: #131826;
+  --border: #1e2640;
+  --border2: #252d45;
+  --green: #00e5a0;
+  --green-dim: rgba(0,229,160,0.08);
+  --green-glow: rgba(0,229,160,0.25);
+  --blue: #4da6ff;
+  --blue-dim: rgba(77,166,255,0.1);
+  --orange: #ff8c42;
+  --orange-dim: rgba(255,140,66,0.1);
+  --red: #ff5c7a;
+  --red-dim: rgba(255,92,122,0.1);
+  --yellow: #ffd060;
+  --yellow-dim: rgba(255,208,96,0.08);
+  --purple: #b48eff;
+  --cyan: #00d4ff;
+  --text: #d8e4f0;
+  --text2: #8a9bb8;
+  --muted: #4a5878;
+  --code-bg: #060910;
+  --mono: 'Space Mono', monospace;
+  --sans: 'Sora', sans-serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.65;
+  font-size: 15px;
+}
+body::before {
+  content:'';
+  position:fixed; inset:0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+  pointer-events:none; z-index:9999;
+}
+
+/* ── HEADER ── */
+.header {
+  background: linear-gradient(135deg, #0a0e1a 0%, #0f1525 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  position: sticky; top: 0; z-index: 200;
+}
+.header-inner {
+  max-width: 960px; margin: 0 auto;
+  display: flex; align-items: center; gap: 16px;
+  padding: 14px 0;
+}
+.logo {
+  width: 42px; height: 42px; border-radius: 10px;
+  background: linear-gradient(135deg, #ff8c42, #ff5c7a);
+  display:flex; align-items:center; justify-content:center;
+  font-size: 1.3em; flex-shrink:0;
+  box-shadow: 0 0 16px rgba(255,140,66,0.3);
+}
+.header-meta { flex:1; }
+.header-badge {
+  display: inline-block;
+  background: rgba(255,140,66,0.1);
+  border: 1px solid rgba(255,140,66,0.3);
+  color: var(--orange);
+  border-radius: 4px;
+  padding: 2px 10px;
+  font-size: 0.68em; font-weight: 700;
+  letter-spacing: 1.5px; font-family: var(--mono);
+  margin-bottom: 2px;
+}
+.header h1 { font-size: 1em; font-weight: 700; color: var(--text); line-height:1.2; }
+.header-sub { font-size: 0.75em; color: var(--muted); }
+.back-link {
+  font-size: 0.78em; color: var(--muted);
+  text-decoration: none; font-family: var(--mono);
+  padding: 6px 12px; border-radius: 6px;
+  border: 1px solid var(--border);
+  transition: all 0.2s; white-space:nowrap;
+}
+.back-link:hover { color:var(--orange); border-color:var(--orange); }
+
+/* ── LAYOUT ── */
+.container { max-width: 960px; margin: 0 auto; padding: 32px 20px 60px; }
+
+/* ── RETOMADA BANNER ── */
+.retomada-banner {
+  background: linear-gradient(135deg, rgba(255,140,66,0.06) 0%, rgba(180,142,255,0.06) 100%);
+  border: 1px solid var(--border2);
+  border-left: 4px solid var(--orange);
+  border-radius: 12px;
+  padding: 22px 24px;
+  margin-bottom: 28px;
+}
+.retomada-banner h2 {
+  font-size: 0.95em; font-weight: 700; color: var(--orange);
+  margin-bottom: 14px; display:flex; align-items:center; gap:8px;
+  font-family: var(--mono);
+}
+.retomada-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+}
+@media(max-width:600px){ .retomada-grid { grid-template-columns: 1fr; } }
+.retomada-item {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border);
+  border-radius: 8px; padding: 12px 14px;
+}
+.retomada-item .ri-title {
+  font-size: 0.78em; font-weight: 700; color: var(--text2);
+  text-transform: uppercase; letter-spacing: 0.8px;
+  margin-bottom: 6px;
+}
+.retomada-item p { font-size: 0.84em; color: var(--text); line-height:1.5; }
+.retomada-item code {
+  font-family: var(--mono);
+  background: rgba(255,140,66,0.1);
+  color: var(--orange);
+  padding: 1px 6px; border-radius: 4px; font-size:0.9em;
+}
+
+/* ── OBJ BANNER ── */
+.obj-banner {
+  background: linear-gradient(135deg, rgba(77,166,255,0.07) 0%, rgba(0,229,160,0.05) 100%);
+  border: 1px solid var(--border2);
+  border-left: 4px solid var(--cyan);
+  border-radius: 12px;
+  padding: 22px 24px;
+  margin-bottom: 28px;
+}
+.obj-banner h2 {
+  font-size: 0.95em; font-weight: 700; color: var(--cyan);
+  margin-bottom: 12px; display:flex; align-items:center; gap:8px;
+  font-family: var(--mono);
+}
+.obj-banner p { font-size:0.88em; color:var(--text2); line-height:1.65; }
+.obj-banner strong { color: var(--text); }
+
+/* ── SECTION ── */
+.section { margin-bottom: 40px; }
+.section-title {
+  display:flex; align-items:center; gap:12px;
+  font-size: 1em; font-weight: 800; color: var(--text);
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono);
+}
+.section-num {
+  width: 30px; height: 30px; border-radius: 8px;
+  background: linear-gradient(135deg, var(--orange), var(--red));
+  color: #fff; display:flex; align-items:center; justify-content:center;
+  font-size: 0.82em; font-weight: 700; flex-shrink:0;
+  box-shadow: 0 0 12px rgba(255,140,66,0.3);
+}
+.section-num.blue {
+  background: linear-gradient(135deg, var(--blue), var(--cyan));
+  color: #060910;
+  box-shadow: 0 0 12px rgba(77,166,255,0.3);
+}
+.section-num.green {
+  background: linear-gradient(135deg, var(--green), var(--cyan));
+  color: #060910;
+  box-shadow: 0 0 12px var(--green-glow);
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px; overflow:hidden;
+  margin-bottom: 14px;
+}
+.card-head {
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.84em; font-weight: 700; color: var(--text);
+  display:flex; align-items:center; gap:8px;
+  background: rgba(255,255,255,0.02);
+}
+.card-body { padding: 18px; }
+
+/* ── BOXES ── */
+.box {
+  border-radius: 9px; padding: 13px 16px;
+  margin-bottom: 12px; font-size: 0.86em; line-height: 1.65;
+  border-left: 3px solid;
+}
+.box-info  { background: var(--blue-dim);   border-color: var(--blue);   color: #a8d0ff; }
+.box-warn  { background: var(--orange-dim); border-color: var(--orange); color: #ffd0a8; }
+.box-danger{ background: var(--red-dim);    border-color: var(--red);    color: #ffb0c0; }
+.box-ok    { background: var(--green-dim);  border-color: var(--green);  color: #a0f0d8; }
+.box-tip   { background: var(--yellow-dim); border-color: var(--yellow); color: #ffe8a0; }
+.box-purple{ background: rgba(180,142,255,0.08); border-color: var(--purple); color: #d4beff; }
+.box strong { font-weight: 700; }
+.box code {
+  font-family: var(--mono);
+  background: rgba(255,255,255,0.1);
+  padding: 1px 6px; border-radius: 4px; font-size:0.9em;
+}
+
+/* ── STEP BLOCK ── */
+.step-block {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 10px;
+  overflow:hidden;
+}
+.step-block-header {
+  padding: 11px 16px;
+  background: rgba(255,255,255,0.025);
+  border-bottom: 1px solid var(--border);
+  display:flex; align-items:center; gap:10px;
+}
+.step-num {
+  width: 22px; height: 22px; border-radius: 50%; flex-shrink:0;
+  background: rgba(255,140,66,0.15);
+  border: 1px solid var(--orange);
+  color: var(--orange);
+  display:flex; align-items:center; justify-content:center;
+  font-size: 0.7em; font-weight: 700; font-family: var(--mono);
+}
+.step-num.blue {
+  background: rgba(77,166,255,0.15);
+  border-color: var(--blue); color: var(--blue);
+}
+.step-num.green {
+  background: rgba(0,229,160,0.15);
+  border-color: var(--green); color: var(--green);
+}
+.step-title  { font-size:0.88em; font-weight:700; color:var(--text); }
+.step-subtitle { font-size:0.78em; color:var(--text2); margin-top:2px; }
+.step-block-body { padding: 14px 16px; }
+.step-block-body p { font-size:0.86em; color:var(--text); margin-bottom:8px; line-height:1.6; }
+.step-block-body code {
+  font-family: var(--mono);
+  background: rgba(255,140,66,0.1);
+  color: var(--orange);
+  padding: 1px 6px; border-radius:4px; font-size:0.9em;
+}
+
+/* ── CODE BLOCK ── */
+.code-block {
+  background: var(--code-bg);
+  border: 1px solid #131c2e;
+  border-radius: 9px; padding: 16px;
+  font-family: var(--mono); font-size: 0.8em;
+  line-height: 1.9; margin: 10px 0;
+  overflow-x: auto; position:relative;
+}
+.code-block .prompt        { color: var(--green); }
+.code-block .prompt.blue   { color: var(--blue); }
+.code-block .prompt.orange { color: var(--orange); }
+.code-block .cmd     { color: var(--text); }
+.code-block .comment { color: #2d3f5e; }
+.code-block .key     { color: var(--orange); }
+.code-block .val     { color: var(--blue); }
+.code-block .ok      { color: var(--green); }
+.code-block .err     { color: var(--red); }
+.code-block .hl      { color: var(--yellow); }
+.code-block .dim     { color: var(--muted); }
+
+/* resultado */
+.result-block {
+  background: rgba(0,229,160,0.04);
+  border: 1px solid rgba(0,229,160,0.2);
+  border-radius: 8px; padding: 12px 14px;
+  margin: 8px 0 12px;
+  font-family: var(--mono); font-size:0.79em; line-height:1.8;
+}
+.result-label {
+  font-size:0.7em; font-weight:700; color:var(--green);
+  text-transform:uppercase; letter-spacing:1px;
+  margin-bottom:6px; font-family:var(--sans);
+}
+.result-block .r-ok  { color: var(--green); }
+.result-block .r-num { color: var(--cyan); }
+.result-block .r-val { color: var(--text); }
+.result-block .r-dim { color: var(--muted); }
+.result-block .r-err { color: var(--red); }
+
+/* copy btn */
+.copy-btn {
+  position:absolute; top:10px; right:10px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--muted); padding: 3px 10px; border-radius:5px;
+  font-size:0.7em; cursor:pointer; font-family:var(--sans);
+  transition: all 0.2s;
+}
+.copy-btn:hover  { color:var(--green); border-color:var(--green); }
+.copy-btn.copied { color:var(--green); border-color:var(--green); }
+
+/* ── TABS ── */
+.tabs { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
+.tab-btn {
+  padding:8px 18px; border-radius:7px;
+  border: 1px solid var(--border);
+  background: transparent; color: var(--muted);
+  font-family: var(--sans); font-size:0.83em; font-weight:600;
+  cursor:pointer; transition:all 0.2s;
+}
+.tab-btn:hover { color:var(--text); border-color:var(--border2); }
+.tab-btn.active.orange { background:var(--orange-dim); border-color:rgba(255,140,66,0.4); color:var(--orange); }
+.tab-btn.active.blue   { background:var(--blue-dim);   border-color:rgba(77,166,255,0.4);  color:var(--blue); }
+.tab-btn.active.green  { background:var(--green-dim);  border-color:rgba(0,229,160,0.4);   color:var(--green); }
+.tab-panel { display:none; }
+.tab-panel.active { display:block; }
+
+/* ── CHECKLIST ── */
+.checklist { list-style:none; margin:8px 0; }
+.checklist li {
+  display:flex; align-items:flex-start; gap:10px;
+  padding:7px 0; border-bottom:1px solid rgba(255,255,255,0.03);
+  font-size:0.86em; cursor:pointer; user-select:none;
+}
+.checklist li:last-child { border-bottom:none; }
+.check-box {
+  width:18px; height:18px; border-radius:4px;
+  border:2px solid var(--border2); background:transparent;
+  flex-shrink:0; margin-top:1px; display:flex;
+  align-items:center; justify-content:center;
+  transition:all 0.2s;
+}
+.checklist li.done .check-box  { background:var(--green); border-color:var(--green); color:#060910; font-size:0.7em; }
+.checklist li.done .check-label{ text-decoration:line-through; color:var(--muted); }
+
+/* ── TOPO DIAGRAMA ── */
+.topo-wrap {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius:12px; padding:24px;
+  margin:14px 0 20px; text-align:center;
+}
+.topo-wrap svg { max-width:100%; }
+
+/* ── QUIZ ── */
+.quiz-prog { background:rgba(255,255,255,0.05); border-radius:100px; height:4px; margin-bottom:14px; overflow:hidden; }
+.quiz-prog-fill { height:100%; background:linear-gradient(90deg,var(--orange),var(--red)); border-radius:100px; transition:width 0.4s; width:0%; }
+.quiz-count { font-size:0.75em; color:var(--muted); margin-bottom:12px; font-family:var(--mono); }
+.quiz-card { background:var(--code-bg); border:1px solid var(--border); border-radius:10px; padding:18px; margin-bottom:14px; display:none; }
+.quiz-card.active { display:block; }
+.quiz-card h4 { font-size:0.93em; margin-bottom:14px; line-height:1.5; font-weight:700; }
+.quiz-card h4 code { font-family:var(--mono); background:rgba(255,140,66,0.1); color:var(--orange); padding:1px 6px; border-radius:4px; }
+.q-opts { display:flex; flex-direction:column; gap:8px; }
+.q-opt {
+  text-align:left; padding:10px 14px; border:1px solid var(--border);
+  border-radius:7px; background:rgba(255,255,255,0.02); color:var(--text);
+  font-family:var(--sans); font-size:0.84em; cursor:pointer; transition:all 0.2s;
+}
+.q-opt:hover:not(:disabled) { border-color:var(--orange); background:var(--orange-dim); }
+.q-opt.correct { border-color:var(--green); background:var(--green-dim); color:var(--green); }
+.q-opt.wrong   { border-color:var(--red);   background:var(--red-dim);   color:var(--red); }
+.q-feedback { display:none; padding:11px 14px; border-radius:7px; font-size:0.83em; margin-top:10px; line-height:1.5; }
+.q-feedback.show { display:block; }
+.q-feedback.ok   { background:var(--green-dim); border:1px solid rgba(0,229,160,0.3); color:#90f0c8; }
+.q-feedback.fail { background:var(--red-dim);   border:1px solid rgba(255,92,122,0.3); color:#ffb0c0; }
+.q-next { display:none; margin-top:12px; justify-content:flex-end; }
+.q-next.show { display:flex; }
+.q-next-btn { background:var(--orange-dim); border:1px solid rgba(255,140,66,0.4); color:var(--orange); padding:8px 18px; border-radius:6px; cursor:pointer; font-size:0.83em; font-weight:700; font-family:var(--sans); }
+.quiz-result { display:none; text-align:center; padding:28px; }
+.quiz-result.show { display:block; }
+.quiz-score { font-size:2.8em; font-weight:800; color:var(--orange); font-family:var(--mono); }
+
+/* ── TOAST ── */
+.toast {
+  position:fixed; bottom:24px; right:24px;
+  background:var(--card2); border:1px solid rgba(255,140,66,0.4);
+  border-radius:10px; padding:12px 18px; font-size:0.84em; color:var(--text);
+  display:flex; align-items:center; gap:10px;
+  transform:translateY(100px); opacity:0;
+  transition:all 0.35s; z-index:9000; max-width:300px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+}
+.toast.show { transform:translateY(0); opacity:1; }
+.toast-icon { font-size:1.4em; }
+
+/* ── PROGRESS TRACKER ── */
+.progress-tracker {
+  position:fixed; right:20px; top:50%;
+  transform:translateY(-50%);
+  display:flex; flex-direction:column; gap:8px; z-index:100;
+}
+@media(max-width:900px){ .progress-tracker { display:none; } }
+.prog-dot {
+  width:10px; height:10px; border-radius:50%;
+  background:var(--border2); border:2px solid var(--border2);
+  cursor:pointer; transition:all 0.3s; position:relative;
+}
+.prog-dot.active { background:var(--orange); border-color:var(--orange); box-shadow:0 0 8px rgba(255,140,66,0.6); }
+.prog-dot.done   { background:var(--green); border-color:var(--green); }
+.prog-dot:hover::after {
+  content: attr(data-label);
+  position:absolute; right:18px; top:50%; transform:translateY(-50%);
+  background:var(--card2); border:1px solid var(--border);
+  padding:3px 8px; border-radius:5px; white-space:nowrap;
+  font-size:0.7em; color:var(--text); font-family:var(--sans);
+}
+
+/* ── IP TABLE ── */
+.ip-table { width:100%; border-collapse:collapse; font-size:0.83em; }
+.ip-table th { padding:10px 14px; text-align:left; background:rgba(255,255,255,0.03); color:var(--muted); border-bottom:1px solid var(--border); font-family:var(--mono); font-size:0.82em; }
+.ip-table td { padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.03); vertical-align:middle; }
+.ip-table tr:last-child td { border-bottom:none; }
+.ip-table code { font-family:var(--mono); font-size:0.9em; }
+
+/* ── VM BADGE ── */
+.vm-badge {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:3px 10px; border-radius:5px; font-size:0.8em; font-weight:700;
+  font-family:var(--mono);
+}
+.vm-fw     { background:rgba(255,140,66,0.12); color:var(--orange); border:1px solid rgba(255,140,66,0.3); }
+.vm-srv    { background:rgba(77,166,255,0.12);  color:var(--blue);   border:1px solid rgba(77,166,255,0.3); }
+.vm-desk   { background:rgba(0,229,160,0.12);   color:var(--green);  border:1px solid rgba(0,229,160,0.3); }
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-icon" id="t-icon">✅</span>
+  <span id="t-msg">Pronto!</span>
+</div>
+
+<!-- PROGRESS TRACKER -->
+<div class="progress-tracker" id="progTracker">
+  <div class="prog-dot active" data-label="Retomada"      onclick="goTo('#s0')"></div>
+  <div class="prog-dot"        data-label="Objetivo"       onclick="goTo('#s1')"></div>
+  <div class="prog-dot"        data-label="Topologia"      onclick="goTo('#s2')"></div>
+  <div class="prog-dot"        data-label="Pré-requisitos" onclick="goTo('#s3')"></div>
+  <div class="prog-dot"        data-label="Firewall"       onclick="goTo('#s4')"></div>
+  <div class="prog-dot"        data-label="Server"         onclick="goTo('#s5')"></div>
+  <div class="prog-dot"        data-label="Desktop"        onclick="goTo('#s6')"></div>
+  <div class="prog-dot"        data-label="Testes"         onclick="goTo('#s7')"></div>
+  <div class="prog-dot"        data-label="Quiz"           onclick="goTo('#s8')"></div>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-inner">
+    <div class="logo">🌐</div>
+    <div class="header-meta">
+      <div class="header-badge">ISO-103 · SEMANA 5.4</div>
+      <h1>Acesso à Internet via Firewall — Configuração de IP nas VMs</h1>
+      <div class="header-sub">Retomada da semana anterior · Desktop e Server acessando internet pelo ubuntu-firewall</div>
+    </div>
+    <a href="index.html" class="back-link">← Índice</a>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ══════════════════════════════════════════
+     RETOMADA
+══════════════════════════════════════════ -->
+<div id="s0" class="retomada-banner">
+  <h2>🔄 Retomada — O que fizemos na semana anterior</h2>
+  <div class="retomada-grid">
+    <div class="retomada-item">
+      <div class="ri-title">🔥 Ubuntu Firewall — duas placas</div>
+      <p>Configuramos o <strong>ubuntu-firewall</strong> com duas interfaces de rede: <code>enp0s3</code> em modo <strong>NAT</strong> (saída para internet) e <code>enp0s8</code> em modo <strong>Rede Interna</strong> com IP fixo <code>192.168.10.1</code>.</p>
+    </div>
+    <div class="retomada-item">
+      <div class="ri-title">⚡ IP Forwarding ativado</div>
+      <p>Habilitamos o repasse de pacotes entre interfaces editando <code>/etc/sysctl.conf</code> e definindo <code>net.ipv4.ip_forward=1</code> — sem isso o firewall não funciona como gateway.</p>
+    </div>
+    <div class="retomada-item">
+      <div class="ri-title">🔒 UFW + regras NAT</div>
+      <p>Ativamos o <strong>UFW</strong> com política padrão de bloqueio e adicionamos a regra de <strong>MASQUERADE</strong> no <code>/etc/ufw/before.rules</code> para traduzir os IPs da rede interna ao sair.</p>
+    </div>
+    <div class="retomada-item">
+      <div class="ri-title">📋 O que faltou</div>
+      <p>O firewall estava pronto para rotear, mas o <strong>ubuntu-server</strong> e o <strong>ubuntu-desktop</strong> ainda não sabiam usar o firewall como gateway. <strong>É exatamente isso que faremos hoje.</strong></p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     OBJETIVO
+══════════════════════════════════════════ -->
+<div id="s1" class="obj-banner">
+  <h2>🎯 Objetivo desta aula</h2>
+  <p>
+    Configurar o <strong>ubuntu-server</strong> e o <strong>ubuntu-desktop</strong> para que ambos consigam
+    acessar a internet <strong>roteando o tráfego pelo ubuntu-firewall</strong>.
+    Para isso, cada VM precisa receber um <strong>IP fixo na rede interna</strong> e apontar
+    o <strong>gateway padrão</strong> para o IP do firewall (<code>192.168.10.1</code>).
+    Ao final, um <code>ping 8.8.8.8</code> em qualquer uma das duas VMs deve funcionar —
+    passando obrigatoriamente pelo firewall antes de sair para a internet.
+  </p>
+</div>
+
+<!-- ══════════════════════════════════════════
+     TOPOLOGIA
+══════════════════════════════════════════ -->
+<div id="s2" class="section">
+  <div class="section-title">
+    <div class="section-num" style="font-size:0.75em;">🗺</div>
+    Topologia Completa da Rede
+  </div>
+
+  <div class="topo-wrap">
+    <svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:760px;">
+      <!-- Internet -->
+      <rect x="310" y="12" width="140" height="50" rx="9"
+            fill="rgba(77,166,255,0.08)" stroke="rgba(77,166,255,0.45)" stroke-width="1.5"/>
+      <text x="380" y="32" text-anchor="middle" font-size="11" fill="#4da6ff" font-family="Space Mono" font-weight="bold">INTERNET</text>
+      <text x="380" y="50" text-anchor="middle" font-size="9"  fill="#4a5878" font-family="Space Mono">8.8.8.8 / 1.1.1.1</text>
+
+      <!-- seta internet ↔ FW (enp0s3 NAT) -->
+      <line x1="380" y1="62" x2="380" y2="100" stroke="#4da6ff" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <polygon points="376,98 384,98 380,106" fill="#4da6ff"/>
+      <text x="392" y="85" font-size="8" fill="#4da6ff" font-family="Space Mono">NAT</text>
+      <text x="392" y="96" font-size="8" fill="#4a5878" font-family="Space Mono">enp0s3</text>
+
+      <!-- Firewall VM -->
+      <rect x="240" y="106" width="280" height="76" rx="10"
+            fill="rgba(255,140,66,0.07)" stroke="rgba(255,140,66,0.55)" stroke-width="2"/>
+      <text x="380" y="128" text-anchor="middle" font-size="12" fill="#ff8c42" font-family="Space Mono" font-weight="bold">🔥 ubuntu-firewall</text>
+      <text x="380" y="146" text-anchor="middle" font-size="9"  fill="#8a9bb8" font-family="Space Mono">enp0s3 → DHCP (NAT VirtualBox)</text>
+      <text x="380" y="162" text-anchor="middle" font-size="9"  fill="#00d4ff" font-family="Space Mono">enp0s8 → 192.168.10.1/24  (Rede Interna)</text>
+
+      <!-- seta FW → esquerda (server) -->
+      <line x1="240" y1="144" x2="148" y2="194" stroke="#ff8c42" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <polygon points="144,190 152,197 145,201" fill="#ff8c42"/>
+      <text x="162" y="176" font-size="8" fill="#ff8c42" font-family="Space Mono">Rede Interna</text>
+      <text x="162" y="187" font-size="8" fill="#4a5878" font-family="Space Mono">enp0s8</text>
+
+      <!-- seta FW → direita (desktop) -->
+      <line x1="520" y1="144" x2="612" y2="194" stroke="#ff8c42" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <polygon points="608,190 616,190 612,198" fill="#ff8c42"/>
+      <text x="540" y="176" font-size="8" fill="#ff8c42" font-family="Space Mono">Rede Interna</text>
+      <text x="548" y="187" font-size="8" fill="#4a5878" font-family="Space Mono">enp0s8</text>
+
+      <!-- Server VM -->
+      <rect x="20" y="200" width="220" height="85" rx="10"
+            fill="rgba(77,166,255,0.07)" stroke="rgba(77,166,255,0.45)" stroke-width="1.5"/>
+      <text x="130" y="222" text-anchor="middle" font-size="11" fill="#4da6ff" font-family="Space Mono" font-weight="bold">🖥 ubuntu-server</text>
+      <text x="130" y="240" text-anchor="middle" font-size="9"  fill="#8a9bb8" font-family="Space Mono">IP: 192.168.10.10/24</text>
+      <text x="130" y="256" text-anchor="middle" font-size="9"  fill="#00e5a0" font-family="Space Mono">GW: 192.168.10.1</text>
+      <text x="130" y="271" text-anchor="middle" font-size="9"  fill="#00e5a0" font-family="Space Mono">user: ubuntu-server / Fatec2026</text>
+
+      <!-- Desktop VM -->
+      <rect x="520" y="200" width="220" height="85" rx="10"
+            fill="rgba(0,229,160,0.07)" stroke="rgba(0,229,160,0.45)" stroke-width="1.5"/>
+      <text x="630" y="222" text-anchor="middle" font-size="11" fill="#00e5a0" font-family="Space Mono" font-weight="bold">🖥 ubuntu-desktop</text>
+      <text x="630" y="240" text-anchor="middle" font-size="9"  fill="#8a9bb8" font-family="Space Mono">IP: 192.168.10.20/24</text>
+      <text x="630" y="256" text-anchor="middle" font-size="9"  fill="#00e5a0" font-family="Space Mono">GW: 192.168.10.1</text>
+      <text x="630" y="271" text-anchor="middle" font-size="9"  fill="#00e5a0" font-family="Space Mono">user: ubuntu-desktop / Fatec2026</text>
+    </svg>
+    <p style="margin-top:10px;font-size:0.76em;color:var(--muted);">
+      Todo tráfego de internet do server e do desktop passa pelo firewall (enp0s8 → enp0s3 → NAT VirtualBox → Internet)
+    </p>
+  </div>
+
+  <!-- Tabela de referência -->
+  <div class="card">
+    <div class="card-head">📋 Tabela de Referência Rápida</div>
+    <div class="card-body" style="padding:0;">
+      <table class="ip-table">
+        <thead>
+          <tr>
+            <th>VM</th>
+            <th>Interface (Rede Interna)</th>
+            <th>IP Fixo</th>
+            <th>Gateway</th>
+            <th>DNS</th>
+            <th>Usuário / Senha</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="vm-badge vm-fw">🔥 ubuntu-firewall</span></td>
+            <td style="font-family:var(--mono);color:var(--cyan);">enp0s8</td>
+            <td style="font-family:var(--mono);color:var(--orange);">192.168.10.1/24</td>
+            <td style="color:var(--muted);">— (é o GW)</td>
+            <td style="color:var(--muted);">—</td>
+            <td style="font-family:var(--mono);font-size:0.85em;">ubuntu-fw / Fatec2026</td>
+          </tr>
+          <tr>
+            <td><span class="vm-badge vm-srv">🖥 ubuntu-server</span></td>
+            <td style="font-family:var(--mono);color:var(--cyan);">enp0s3</td>
+            <td style="font-family:var(--mono);color:var(--blue);">192.168.10.10/24</td>
+            <td style="font-family:var(--mono);color:var(--orange);">192.168.10.1</td>
+            <td style="font-family:var(--mono);">8.8.8.8</td>
+            <td style="font-family:var(--mono);font-size:0.85em;">ubuntu-server / Fatec2026</td>
+          </tr>
+          <tr>
+            <td><span class="vm-badge vm-desk">🖥 ubuntu-desktop</span></td>
+            <td style="font-family:var(--mono);color:var(--cyan);">enp0s3</td>
+            <td style="font-family:var(--mono);color:var(--green);">192.168.10.20/24</td>
+            <td style="font-family:var(--mono);color:var(--orange);">192.168.10.1</td>
+            <td style="font-family:var(--mono);">8.8.8.8</td>
+            <td style="font-family:var(--mono);font-size:0.85em;">ubuntu-desktop / Fatec2026</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="box box-tip">
+    <strong>💡 Por que IP fixo nas VMs?</strong> O gateway precisa saber para qual IP encaminhar a resposta da internet. Se o IP do server ou do desktop mudar (DHCP), o roteamento pode falhar. Com IP fixo, a comunicação é sempre previsível.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PRÉ-REQUISITOS
+══════════════════════════════════════════ -->
+<div id="s3" class="section">
+  <div class="section-title">
+    <div class="section-num" style="font-size:0.7em;">PRÉ</div>
+    Pré-Requisitos — Confirme Antes de Começar
+  </div>
+
+  <div class="card">
+    <div class="card-head">✅ Checklist — O que deve estar pronto</div>
+    <div class="card-body">
+      <ul class="checklist" id="pre-cl">
+        <li onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <span class="check-label">A VM <strong>ubuntu-firewall</strong> está ligada e com as duas interfaces configuradas (enp0s3 NAT + enp0s8 Rede Interna)</span>
+        </li>
+        <li onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <span class="check-label">O <strong>IP Forwarding</strong> está ativo no firewall — <code>cat /proc/sys/net/ipv4/ip_forward</code> retorna <code>1</code></span>
+        </li>
+        <li onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <span class="check-label">As regras de <strong>NAT (MASQUERADE)</strong> estão configuradas no <code>/etc/ufw/before.rules</code> do firewall</span>
+        </li>
+        <li onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <span class="check-label">O <strong>UFW</strong> está ativo no firewall — <code>sudo ufw status</code> mostra <code>Status: active</code></span>
+        </li>
+        <li onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <span class="check-label">A placa de rede do <strong>ubuntu-server</strong> está em modo <strong>Rede Interna</strong> no VirtualBox</span>
+        </li>
+        <li onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <span class="check-label">A placa de rede do <strong>ubuntu-desktop</strong> está em modo <strong>Rede Interna</strong> no VirtualBox</span>
+        </li>
+      </ul>
+      <div class="box box-danger" style="margin-top:12px;">
+        <strong>⛔ Firewall não configurado?</strong> Volte para a <a href="semana05_02.html" style="color:var(--red);">Semana 5.2</a> e complete a configuração antes de continuar. Sem o firewall pronto, nenhuma das VMs conseguirá sair para a internet.
+      </div>
+    </div>
+  </div>
+
+  <!-- Verificação rápida no firewall -->
+  <div class="card">
+    <div class="card-head">🔍 Verificação Rápida no Firewall (execute antes de tudo)</div>
+    <div class="card-body">
+      <p style="font-size:0.86em;color:var(--text2);margin-bottom:12px;">No terminal do <span class="vm-badge vm-fw" style="font-size:0.9em;">🔥 ubuntu-firewall</span>, rode estes comandos para confirmar que está tudo ok:</p>
+      <div class="code-block" id="cb_pre">
+        <button class="copy-btn" onclick="copyCode('cb_pre',this)">📋 Copiar</button>
+<span class="comment"># 1 — IP Forwarding ativo?</span>
+<span class="prompt orange">fw@firewall:~$</span> <span class="cmd">cat /proc/sys/net/ipv4/ip_forward</span>
+<span class="ok">1</span>  <span class="dim">← deve ser 1. Se for 0, volte para a Semana 5.2</span>
+
+<span class="comment"># 2 — UFW ativo?</span>
+<span class="prompt orange">fw@firewall:~$</span> <span class="cmd">sudo ufw status</span>
+<span class="ok">Status: active</span>  <span class="dim">← deve aparecer active</span>
+
+<span class="comment"># 3 — Regra NAT existe?</span>
+<span class="prompt orange">fw@firewall:~$</span> <span class="cmd">sudo iptables -t nat -L POSTROUTING -n</span>
+<span class="ok">MASQUERADE</span>  <span class="dim">all  --  192.168.10.0/24  0.0.0.0/0  ← deve aparecer</span>
+
+<span class="comment"># 4 — Interface interna tem IP?</span>
+<span class="prompt orange">fw@firewall:~$</span> <span class="cmd">ip addr show enp0s8</span>
+<span class="dim">    inet </span><span class="ok">192.168.10.1/24</span><span class="dim"> ... ← deve aparecer</span>
+      </div>
+      <div class="box box-ok">
+        <strong>✅ Todos retornaram correto?</strong> Ótimo — o firewall está pronto. Agora vamos configurar o server e o desktop.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SEÇÃO FIREWALL — REVISÃO DA CONFIGURAÇÃO
+══════════════════════════════════════════ -->
+<div id="s4" class="section">
+  <div class="section-title">
+    <div class="section-num">🔥</div>
+    Revisão — Como o Firewall Está Configurado
+  </div>
+
+  <div class="box box-purple">
+    <strong>📚 Por que revisar?</strong> Antes de configurar as VMs clientes, é importante entender o que o firewall faz com os pacotes que chegam da rede interna. Isso ajuda a diagnosticar problemas quando algo não funcionar.
+  </div>
+
+  <div class="card">
+    <div class="card-head">🔄 O caminho de um pacote da internet</div>
+    <div class="card-body">
+      <div class="topo-wrap" style="padding:16px 20px;">
+        <svg viewBox="0 0 700 90" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:700px;">
+          <!-- VMs -->
+          <rect x="0" y="20" width="120" height="50" rx="8" fill="rgba(77,166,255,0.08)" stroke="rgba(77,166,255,0.4)" stroke-width="1.5"/>
+          <text x="60" y="42" text-anchor="middle" font-size="10" fill="#4da6ff" font-family="Space Mono" font-weight="bold">server/desktop</text>
+          <text x="60" y="58" text-anchor="middle" font-size="8" fill="#8a9bb8" font-family="Space Mono">192.168.10.x</text>
+
+          <!-- seta 1 -->
+          <line x1="120" y1="45" x2="168" y2="45" stroke="#ff8c42" stroke-width="1.5"/>
+          <polygon points="165,41 173,45 165,49" fill="#ff8c42"/>
+          <text x="144" y="38" text-anchor="middle" font-size="8" fill="#ff8c42" font-family="Space Mono">enp0s8</text>
+
+          <!-- Firewall box -->
+          <rect x="170" y="10" width="160" height="70" rx="8" fill="rgba(255,140,66,0.08)" stroke="rgba(255,140,66,0.5)" stroke-width="2"/>
+          <text x="250" y="32" text-anchor="middle" font-size="10" fill="#ff8c42" font-family="Space Mono" font-weight="bold">🔥 FIREWALL</text>
+          <text x="250" y="48" text-anchor="middle" font-size="8" fill="#8a9bb8" font-family="Space Mono">IP Forward + MASQUERADE</text>
+          <text x="250" y="64" text-anchor="middle" font-size="8" fill="#4a5878" font-family="Space Mono">troca IP origem → enp0s3 IP</text>
+
+          <!-- seta 2 -->
+          <line x1="330" y1="45" x2="378" y2="45" stroke="#4da6ff" stroke-width="1.5"/>
+          <polygon points="375,41 383,45 375,49" fill="#4da6ff"/>
+          <text x="354" y="38" text-anchor="middle" font-size="8" fill="#4da6ff" font-family="Space Mono">enp0s3</text>
+
+          <!-- NAT box -->
+          <rect x="380" y="20" width="120" height="50" rx="8" fill="rgba(77,166,255,0.07)" stroke="rgba(77,166,255,0.35)" stroke-width="1.5"/>
+          <text x="440" y="42" text-anchor="middle" font-size="10" fill="#4da6ff" font-family="Space Mono" font-weight="bold">NAT VirtualBox</text>
+          <text x="440" y="58" text-anchor="middle" font-size="8" fill="#8a9bb8" font-family="Space Mono">10.0.2.x</text>
+
+          <!-- seta 3 -->
+          <line x1="500" y1="45" x2="548" y2="45" stroke="#00e5a0" stroke-width="1.5"/>
+          <polygon points="545,41 553,45 545,49" fill="#00e5a0"/>
+
+          <!-- Internet -->
+          <rect x="550" y="20" width="130" height="50" rx="8" fill="rgba(0,229,160,0.07)" stroke="rgba(0,229,160,0.35)" stroke-width="1.5"/>
+          <text x="615" y="42" text-anchor="middle" font-size="10" fill="#00e5a0" font-family="Space Mono" font-weight="bold">INTERNET</text>
+          <text x="615" y="58" text-anchor="middle" font-size="8" fill="#8a9bb8" font-family="Space Mono">8.8.8.8</text>
+        </svg>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px;">
+        <div class="box box-info" style="margin:0;">
+          <strong>📥 Chegada (enp0s8)</strong><br>
+          Pacote chega com IP de origem <code>192.168.10.10</code> (server) ou <code>192.168.10.20</code> (desktop). O firewall recebe pelo enp0s8 e, por ter IP Forwarding ativo, encaminha para o enp0s3.
+        </div>
+        <div class="box box-ok" style="margin:0;">
+          <strong>📤 Saída (enp0s3 + MASQUERADE)</strong><br>
+          O MASQUERADE troca o IP de origem interno pelo IP externo do enp0s3. Para a internet, parece que o próprio firewall fez o pedido. A resposta volta ao firewall, que repassa à VM correta.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SEÇÃO 1 — UBUNTU SERVER
+══════════════════════════════════════════ -->
+<div id="s5" class="section">
+  <div class="section-title">
+    <div class="section-num blue">1</div>
+    Configurar o ubuntu-server
+  </div>
+
+  <div class="box box-info">
+    <strong>🖥 Contexto:</strong> Faça login na VM <span class="vm-badge vm-srv" style="font-size:0.9em;">🖥 ubuntu-server</span> com usuário <code>ubuntu-server</code> e senha <code>Fatec2026</code>. Vamos configurar IP fixo e gateway via Netplan.
+  </div>
+
+  <!-- PASSO 1 -->
+  <div class="step-block">
+    <div class="step-block-header">
+      <div class="step-num blue">1</div>
+      <div>
+        <div class="step-title">Verificar o nome da interface de rede</div>
+        <div class="step-subtitle">A interface pode se chamar enp0s3, enp0s8, eth0 ou outro nome</div>
+      </div>
+    </div>
+    <div class="step-block-body">
+      <div class="code-block" id="cb_s1">
+        <button class="copy-btn" onclick="copyCode('cb_s1',this)">📋 Copiar</button>
+<span class="prompt blue">ubuntu-server@server:~$</span> <span class="cmd">ip link show</span>
+      </div>
+      <div class="result-block">
+        <div class="result-label">Saída esperada</div>
+<span class="r-num">1:</span> <span class="r-val">lo:</span> <span class="r-dim">&lt;LOOPBACK&gt; ...                  ← ignorar</span>
+<span class="r-num">2:</span> <span class="r-ok">enp0s3:</span> <span class="r-dim">&lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt;  ← esta é a nossa interface</span>
+      </div>
+      <div class="box box-tip">
+        <strong>💡 Anote o nome:</strong> se aparecer <code>enp0s3</code>, <code>enp0s8</code> ou <code>eth0</code>, use esse nome nos próximos passos. Nos exemplos usaremos <code>enp0s3</code>.
+      </div>
+    </div>
+  </div>
+
+  <!-- PASSO 2 -->
+  <div class="step-block">
+    <div class="step-block-header">
+      <div class="step-num blue">2</div>
+      <div>
+        <div class="step-title">Verificar o arquivo Netplan existente</div>
+        <div class="step-subtitle">Confirmar o nome do arquivo antes de editar</div>
+      </div>
+    </div>
+    <div class="step-block-body">
+      <div class="code-block" id="cb_s2">
+        <button class="copy-btn" onclick="copyCode('cb_s2',this)">📋 Copiar</button>
+<span class="prompt blue">ubuntu-server@server:~$</span> <span class="cmd">ls /etc/netplan/</span>
+      </div>
+      <div class="result-block">
+        <div class="result-label">Saída esperada</div>
+<span class="r-ok">00-installer-config.yaml</span>   <span class="r-dim">← este é o arquivo a editar</span>
+      </div>
+      <div class="box box-warn">
+        <strong>⚠️ Nome diferente?</strong> Pode aparecer <code>01-netcfg.yaml</code> ou outro nome. Use o nome que aparecer no seu sistema.
+      </div>
+    </div>
+  </div>
+
+  <!-- PASSO 3 -->
+  <div class="step-block">
+    <div class="step-block-header">
+      <div class="step-num blue">3</div>
+      <div>
+        <div class="step-title">Editar o arquivo Netplan — IP fixo + gateway</div>
+        <div class="step-subtitle">IP: 192.168.10.10 · Gateway: 192.168.10.1 (firewall)</div>
+      </div>
+    </div>
+    <div class="step-block-body">
+      <div class="code-block" id="cb_s3">
+        <button class="copy-btn" onclick="copyCode('cb_s3',this)">📋 Copiar</button>
+<span class="prompt blue">ubuntu-server@server:~$</span> <span class="cmd">sudo nano /etc/netplan/00-installer-config.yaml</span>
+      </div>
+      <p style="margin-top:10px;">Apague o conteúdo atual e cole o seguinte:</p>
+      <div class="code-block" id="cb_s4">
+        <button class="copy-btn" onclick="copyCode('cb_s4',this)">📋 Copiar</button>
+<span class="key">network:</span>
+<span class="dim">  </span><span class="key">version:</span> <span class="val">2</span>
+<span class="dim">  </span><span class="key">ethernets:</span>
+<span class="dim">    </span><span class="key">enp0s3:</span>                   <span class="comment"> # ← troque pelo nome da SUA interface</span>
+<span class="dim">      </span><span class="key">dhcp4:</span> <span class="val">false</span>            <span class="comment"> # desabilita DHCP — usaremos IP fixo</span>
+<span class="dim">      </span><span class="key">addresses:</span>
+<span class="dim">        </span>- <span class="val">192.168.10.10/24</span>     <span class="comment"> # IP fixo do servidor na rede interna</span>
+<span class="dim">      </span><span class="key">routes:</span>
+<span class="dim">        </span>- <span class="key">to:</span> <span class="val">default</span>
+<span class="dim">          </span><span class="key">via:</span> <span class="val">192.168.10.1</span>    <span class="comment"> # ← gateway = IP do firewall</span>
+<span class="dim">      </span><span class="key">nameservers:</span>
+<span class="dim">        </span><span class="key">addresses:</span>
+<span class="dim">          </span>- <span class="val">8.8.8.8</span>             <span class="comment"> # DNS Google</span>
+<span class="dim">          </span>- <span class="val">1.1.1.1</span>             <span class="comment"> # DNS Cloudflare</span>
+      </div>
+
+      <div class="box box-warn">
+        📐 <strong>Mapa de espaços — conte exatamente assim:</strong><br><br>
+        <span style="font-family:var(--mono);font-size:0.88em;line-height:2.4;display:block;">
+          <span style="color:var(--green);">network:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 0 — <strong>sem espaço</strong> antes</span><br>
+          <span style="color:var(--purple);">··</span><span style="color:var(--orange);">version: 2</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 1 — <strong>2 espaços</strong> antes</span><br>
+          <span style="color:var(--purple);">··</span><span style="color:var(--orange);">ethernets:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 1 — <strong>2 espaços</strong> antes</span><br>
+          <span style="color:var(--purple);">····</span><span style="color:var(--orange);">enp0s3:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 2 — <strong>4 espaços</strong> antes</span><br>
+          <span style="color:var(--purple);">······</span><span style="color:var(--orange);">dhcp4: false</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 3 — <strong>6 espaços</strong> antes</span><br>
+          <span style="color:var(--purple);">······</span><span style="color:var(--orange);">addresses:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 3 — <strong>6 espaços</strong> antes</span><br>
+          <span style="color:var(--purple);">········</span><span style="color:var(--blue);">- 192.168.10.10/24</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 4 — <strong>8 espaços</strong> + traço</span><br>
+          <span style="color:var(--purple);">······</span><span style="color:var(--orange);">routes:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 3 — <strong>6 espaços</strong> antes</span><br>
+          <span style="color:var(--purple);">········</span><span style="color:var(--blue);">- to: default</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 4 — <strong>8 espaços</strong> + traço</span><br>
+          <span style="color:var(--purple);">··········</span><span style="color:var(--blue);">via: 192.168.10.1</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 5 — <strong>10 espaços</strong> antes</span><br>
+          <span style="color:var(--purple);">······</span><span style="color:var(--orange);">nameservers:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 3 — <strong>6 espaços</strong> antes</span><br>
+          <span style="color:var(--purple);">········</span><span style="color:var(--orange);">addresses:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 4 — <strong>8 espaços</strong> antes</span><br>
+          <span style="color:var(--purple);">··········</span><span style="color:var(--blue);">- 8.8.8.8</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 5 — <strong>10 espaços</strong> + traço</span>
+        </span>
+        <br>⚠️ Use <strong>espaços</strong>, nunca a tecla Tab. Um espaço errado causa erro ao aplicar.
+      </div>
+      <p>Para salvar no nano: <strong>Ctrl+X</strong> → <strong>Y</strong> → <strong>Enter</strong>.</p>
+    </div>
+  </div>
+
+  <!-- PASSO 4 -->
+  <div class="step-block">
+    <div class="step-block-header">
+      <div class="step-num blue">4</div>
+      <div>
+        <div class="step-title">Aplicar a configuração</div>
+        <div class="step-subtitle">Sem precisar reiniciar a VM</div>
+      </div>
+    </div>
+    <div class="step-block-body">
+      <div class="code-block" id="cb_s5">
+        <button class="copy-btn" onclick="copyCode('cb_s5',this)">📋 Copiar</button>
+<span class="comment"># Testar sintaxe antes de aplicar (opcional mas recomendado)</span>
+<span class="prompt blue">ubuntu-server@server:~$</span> <span class="cmd">sudo netplan try</span>
+<span class="dim">                        <span class="comment"># se der erro, reverte sozinho em 120s</span></span>
+
+<span class="comment"># Aplicar definitivamente</span>
+<span class="prompt blue">ubuntu-server@server:~$</span> <span class="cmd">sudo netplan apply</span>
+      </div>
+      <div class="box box-warn">
+        <strong>⚠️ Se aparecer "invalid YAML":</strong> há um erro de indentação. Abra o arquivo novamente com <code>sudo nano</code> e use o mapa de espaços acima para corrigir.
+      </div>
+    </div>
+  </div>
+
+  <!-- PASSO 5 -->
+  <div class="step-block">
+    <div class="step-block-header">
+      <div class="step-num green">5</div>
+      <div>
+        <div class="step-title">Verificar se a configuração foi aplicada</div>
+        <div class="step-subtitle">Confirmar IP, rota e testar a saída</div>
+      </div>
+    </div>
+    <div class="step-block-body">
+      <div class="code-block" id="cb_s6">
+        <button class="copy-btn" onclick="copyCode('cb_s6',this)">📋 Copiar</button>
+<span class="comment"># Ver IP atribuído</span>
+<span class="prompt blue">ubuntu-server@server:~$</span> <span class="cmd">ip addr show enp0s3</span>
+
+<span class="comment"># Verificar rota padrão (gateway)</span>
+<span class="prompt blue">ubuntu-server@server:~$</span> <span class="cmd">ip route show</span>
+
+<span class="comment"># Testar alcance até o gateway (firewall)</span>
+<span class="prompt blue">ubuntu-server@server:~$</span> <span class="cmd">ping -c 2 192.168.10.1</span>
+
+<span class="comment"># Testar saída para a internet</span>
+<span class="prompt blue">ubuntu-server@server:~$</span> <span class="cmd">ping -c 4 8.8.8.8</span>
+
+<span class="comment"># Testar resolução de nomes (DNS)</span>
+<span class="prompt blue">ubuntu-server@server:~$</span> <span class="cmd">ping -c 2 google.com</span>
+      </div>
+      <div class="result-block">
+        <div class="result-label">Saída esperada — ip route show</div>
+<span class="r-ok">default via 192.168.10.1 dev enp0s3 proto static</span>   <span class="r-dim">← gateway = firewall ✅</span>
+<span class="r-val">192.168.10.0/24 dev enp0s3 proto kernel scope link src 192.168.10.10</span>
+      </div>
+      <div class="box box-ok">
+        <strong>✅ Sucesso!</strong> A linha <code>default via 192.168.10.1</code> confirma que o firewall é o gateway padrão do servidor. Todo tráfego externo passa por ele.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SEÇÃO 2 — UBUNTU DESKTOP
+══════════════════════════════════════════ -->
+<div id="s6" class="section">
+  <div class="section-title">
+    <div class="section-num green">2</div>
+    Configurar o ubuntu-desktop
+  </div>
+
+  <div class="box box-ok">
+    <strong>🖥 Contexto:</strong> Faça login na VM <span class="vm-badge vm-desk" style="font-size:0.9em;">🖥 ubuntu-desktop</span> com usuário <code>ubuntu-desktop</code> e senha <code>Fatec2026</code>. A configuração é idêntica à do servidor, apenas com IP diferente (<code>192.168.10.20</code>). Escolha como prefere configurar:
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active orange" onclick="showTab('dtab','terminal',this,'orange')">⌨️ Via Terminal (Netplan)</button>
+    <button class="tab-btn" onclick="showTab('dtab','gui',this,'green')">🖱️ Via Interface Gráfica</button>
+  </div>
+
+  <!-- TAB TERMINAL -->
+  <div id="dtab-terminal" class="tab-panel active">
+
+    <div class="step-block">
+      <div class="step-block-header">
+        <div class="step-num green">1</div>
+        <div>
+          <div class="step-title">Abrir terminal e verificar interface</div>
+          <div class="step-subtitle">Pressione Ctrl+Alt+T para abrir o terminal no Desktop</div>
+        </div>
+      </div>
+      <div class="step-block-body">
+        <div class="code-block" id="cb_d1">
+          <button class="copy-btn" onclick="copyCode('cb_d1',this)">📋 Copiar</button>
+<span class="prompt">ubuntu-desktop@desktop:~$</span> <span class="cmd">ip link show</span>
+<span class="dim">                         <span class="comment"># anote o nome da interface</span></span>
+<span class="prompt">ubuntu-desktop@desktop:~$</span> <span class="cmd">ls /etc/netplan/</span>
+<span class="dim">                         <span class="comment"># veja o nome do arquivo yaml</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-block-header">
+        <div class="step-num green">2</div>
+        <div>
+          <div class="step-title">Editar o Netplan do Desktop</div>
+          <div class="step-subtitle">IP: 192.168.10.20 · Gateway: 192.168.10.1</div>
+        </div>
+      </div>
+      <div class="step-block-body">
+        <div class="code-block" id="cb_d2">
+          <button class="copy-btn" onclick="copyCode('cb_d2',this)">📋 Copiar</button>
+<span class="prompt">ubuntu-desktop@desktop:~$</span> <span class="cmd">sudo nano /etc/netplan/01-network-manager-all.yaml</span>
+        </div>
+        <div class="box box-tip" style="margin:8px 0;">
+          <strong>💡</strong> No Ubuntu Desktop o arquivo pode se chamar <code>01-network-manager-all.yaml</code>. Confirme com <code>ls /etc/netplan/</code> antes.
+        </div>
+        <p style="margin-bottom:8px;">Conteúdo a inserir:</p>
+        <div class="code-block" id="cb_d3">
+          <button class="copy-btn" onclick="copyCode('cb_d3',this)">📋 Copiar</button>
+<span class="key">network:</span>
+<span class="dim">  </span><span class="key">version:</span> <span class="val">2</span>
+<span class="dim">  </span><span class="key">renderer:</span> <span class="val">NetworkManager</span>  <span class="comment"> # ← Desktop usa NetworkManager</span>
+<span class="dim">  </span><span class="key">ethernets:</span>
+<span class="dim">    </span><span class="key">enp0s3:</span>                   <span class="comment"> # ← troque pelo nome da SUA interface</span>
+<span class="dim">      </span><span class="key">dhcp4:</span> <span class="val">false</span>
+<span class="dim">      </span><span class="key">addresses:</span>
+<span class="dim">        </span>- <span class="val">192.168.10.20/24</span>     <span class="comment"> # IP fixo do desktop na rede interna</span>
+<span class="dim">      </span><span class="key">routes:</span>
+<span class="dim">        </span>- <span class="key">to:</span> <span class="val">default</span>
+<span class="dim">          </span><span class="key">via:</span> <span class="val">192.168.10.1</span>    <span class="comment"> # ← gateway = IP do firewall</span>
+<span class="dim">      </span><span class="key">nameservers:</span>
+<span class="dim">        </span><span class="key">addresses:</span>
+<span class="dim">          </span>- <span class="val">8.8.8.8</span>
+<span class="dim">          </span>- <span class="val">1.1.1.1</span>
+        </div>
+
+        <div class="box box-warn">
+          📐 <strong>Mapa de espaços — conte exatamente assim:</strong><br><br>
+          <span style="font-family:var(--mono);font-size:0.88em;line-height:2.4;display:block;">
+            <span style="color:var(--green);">network:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 0 — <strong>sem espaço</strong> antes</span><br>
+            <span style="color:var(--purple);">··</span><span style="color:var(--orange);">version: 2</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 1 — <strong>2 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">··</span><span style="color:var(--orange);">renderer: NetworkManager</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 1 — <strong>2 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">··</span><span style="color:var(--orange);">ethernets:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 1 — <strong>2 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">····</span><span style="color:var(--orange);">enp0s3:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 2 — <strong>4 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">······</span><span style="color:var(--orange);">dhcp4: false</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 3 — <strong>6 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">······</span><span style="color:var(--orange);">addresses:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 3 — <strong>6 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">········</span><span style="color:var(--blue);">- 192.168.10.20/24</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 4 — <strong>8 espaços</strong> + traço</span><br>
+            <span style="color:var(--purple);">······</span><span style="color:var(--orange);">routes:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 3 — <strong>6 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">········</span><span style="color:var(--blue);">- to: default</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 4 — <strong>8 espaços</strong> + traço</span><br>
+            <span style="color:var(--purple);">··········</span><span style="color:var(--blue);">via: 192.168.10.1</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 5 — <strong>10 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">······</span><span style="color:var(--orange);">nameservers:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 3 — <strong>6 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">········</span><span style="color:var(--orange);">addresses:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 4 — <strong>8 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">··········</span><span style="color:var(--blue);">- 8.8.8.8</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 5 — <strong>10 espaços</strong> + traço</span>
+          </span>
+          <br>⚠️ Use <strong>espaços</strong>, nunca a tecla Tab. Um espaço errado causa erro ao aplicar.
+        </div>
+        <p>Para salvar: <strong>Ctrl+X</strong> → <strong>Y</strong> → <strong>Enter</strong>.</p>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-block-header">
+        <div class="step-num green">3</div>
+        <div>
+          <div class="step-title">Aplicar e verificar</div>
+        </div>
+      </div>
+      <div class="step-block-body">
+        <div class="code-block" id="cb_d4">
+          <button class="copy-btn" onclick="copyCode('cb_d4',this)">📋 Copiar</button>
+<span class="prompt">ubuntu-desktop@desktop:~$</span> <span class="cmd">sudo netplan apply</span>
+<span class="prompt">ubuntu-desktop@desktop:~$</span> <span class="cmd">ip route show</span>
+<span class="prompt">ubuntu-desktop@desktop:~$</span> <span class="cmd">ping -c 4 8.8.8.8</span>
+        </div>
+        <div class="result-block">
+          <div class="result-label">Saída esperada — ip route show</div>
+<span class="r-ok">default via 192.168.10.1 dev enp0s3 proto static</span>   <span class="r-dim">← gateway = firewall ✅</span>
+<span class="r-val">192.168.10.0/24 dev enp0s3 proto kernel scope link src 192.168.10.20</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB GUI -->
+  <div id="dtab-gui" class="tab-panel">
+    <div class="step-block">
+      <div class="step-block-header">
+        <div class="step-num green">1</div>
+        <div><div class="step-title">Abrir Configurações → Rede</div></div>
+      </div>
+      <div class="step-block-body">
+        <p>Clique no ícone de rede na barra superior direita → <strong>Configurações de Rede</strong>.</p>
+        <p>Ou acesse pelo menu: <strong>Configurações do Sistema → Rede</strong>.</p>
+      </div>
+    </div>
+    <div class="step-block">
+      <div class="step-block-header">
+        <div class="step-num green">2</div>
+        <div><div class="step-title">Editar a conexão com fio — aba IPv4</div></div>
+      </div>
+      <div class="step-block-body">
+        <p>Clique na engrenagem ⚙️ ao lado da conexão com fio ativa. Vá para a aba <strong>IPv4</strong> e selecione <strong>Manual</strong>.</p>
+        <div class="code-block" id="cb_gui">
+          <button class="copy-btn" onclick="copyCode('cb_gui',this)">📋 Copiar</button>
+<span class="key">Endereço:</span>  <span class="val">192.168.10.20</span>
+<span class="key">Máscara:</span>   <span class="val">255.255.255.0</span>    <span class="comment"> (equivalente a /24)</span>
+<span class="key">Gateway:</span>   <span class="val">192.168.10.1</span>     <span class="comment"> ← IP do firewall</span>
+<span class="key">DNS:</span>       <span class="val">8.8.8.8, 1.1.1.1</span>
+        </div>
+        <p>Clique em <strong>Aplicar</strong> e desligue/ligue a interface para reconectar.</p>
+        <div class="box box-warn">
+          <strong>⚠️ Confirme no terminal:</strong> após aplicar pela GUI, verifique com <code>ip route show</code> se o gateway <code>192.168.10.1</code> aparece na rota padrão.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SEÇÃO 3 — TESTES FINAIS
+══════════════════════════════════════════ -->
+<div id="s7" class="section">
+  <div class="section-title">
+    <div class="section-num green">3</div>
+    Testes Finais — Validar Tudo
+  </div>
+
+  <div class="box box-purple">
+    <strong>🔬 Execute em ambas as VMs</strong> (server e desktop). Todos os testes devem passar para confirmar que o roteamento via firewall está funcionando corretamente.
+  </div>
+
+  <div class="card">
+    <div class="card-head">🧪 Bateria Completa de Testes</div>
+    <div class="card-body">
+      <div class="code-block" id="cb_tests">
+        <button class="copy-btn" onclick="copyCode('cb_tests',this)">📋 Copiar</button>
+<span class="comment"># ── TESTE 1 — IP da própria VM</span>
+<span class="prompt">$</span> <span class="cmd">ip addr show | grep inet</span>
+<span class="dim">  → server deve mostrar 192.168.10.10  |  desktop: 192.168.10.20</span>
+
+<span class="comment"># ── TESTE 2 — Rota padrão aponta para o firewall</span>
+<span class="prompt">$</span> <span class="cmd">ip route show | grep default</span>
+<span class="dim">  → deve mostrar: default via 192.168.10.1</span>
+
+<span class="comment"># ── TESTE 3 — Alcança o firewall (gateway)</span>
+<span class="prompt">$</span> <span class="cmd">ping -c 2 192.168.10.1</span>
+<span class="dim">  → deve responder sem perda de pacotes</span>
+
+<span class="comment"># ── TESTE 4 — Saída para a internet (IP)</span>
+<span class="prompt">$</span> <span class="cmd">ping -c 4 8.8.8.8</span>
+<span class="dim">  → deve responder: 0% packet loss</span>
+
+<span class="comment"># ── TESTE 5 — Resolução DNS (nomes)</span>
+<span class="prompt">$</span> <span class="cmd">ping -c 2 google.com</span>
+<span class="dim">  → deve resolver o nome e responder</span>
+
+<span class="comment"># ── TESTE 6 — Traceroute (prova o caminho)</span>
+<span class="prompt">$</span> <span class="cmd">traceroute -m 4 8.8.8.8</span>
+<span class="dim">  → 1º hop DEVE ser 192.168.10.1 (o firewall)</span>
+      </div>
+
+      <div class="result-block" style="margin-top:14px;">
+        <div class="result-label">Resultado esperado — traceroute</div>
+<span class="r-val">traceroute to 8.8.8.8 (8.8.8.8), 4 hops max</span>
+<span class="r-ok"> 1  192.168.10.1    1.1 ms</span>   <span class="r-dim">← firewall (gateway interno) ✅</span>
+<span class="r-num"> 2  10.0.2.2        2.0 ms</span>   <span class="r-dim">← gateway NAT do VirtualBox</span>
+<span class="r-num"> 3  ...             x.x ms</span>   <span class="r-dim">← roteadores da internet</span>
+      </div>
+
+      <div class="box box-ok">
+        <strong>✅ Prova definitiva:</strong> o <strong>1º hop do traceroute sendo 192.168.10.1</strong> confirma que o tráfego sai da VM, passa pelo firewall e então vai para a internet. O cenário está 100% funcional.
+      </div>
+    </div>
+  </div>
+
+  <!-- Troubleshooting -->
+  <div class="card">
+    <div class="card-head">🔧 Troubleshooting — O que fazer se algo não funcionar</div>
+    <div class="card-body">
+
+      <div class="step-block">
+        <div class="step-block-header">
+          <div class="step-num" style="background:rgba(255,92,122,0.15);border-color:var(--red);color:var(--red);">!</div>
+          <div>
+            <div class="step-title">Ping para 192.168.10.1 falha (não alcança nem o firewall)</div>
+          </div>
+        </div>
+        <div class="step-block-body">
+          <div class="code-block" id="cb_tr1">
+            <button class="copy-btn" onclick="copyCode('cb_tr1',this)">📋 Copiar</button>
+<span class="comment"># Na VM com problema — ver se o IP foi atribuído</span>
+<span class="prompt">$</span> <span class="cmd">ip addr show enp0s3</span>
+<span class="dim">  → se não aparecer inet 192.168.10.x, o netplan não foi aplicado</span>
+
+<span class="comment"># Reaplicar o netplan</span>
+<span class="prompt">$</span> <span class="cmd">sudo netplan apply</span>
+
+<span class="comment"># No VirtualBox — confirmar que a placa está em "Rede Interna"</span>
+<span class="dim">  → desligue a VM, vá em Configurações → Rede → Placa 1 → Modo: Rede Interna</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-block">
+        <div class="step-block-header">
+          <div class="step-num" style="background:rgba(255,92,122,0.15);border-color:var(--red);color:var(--red);">!</div>
+          <div>
+            <div class="step-title">Alcança o firewall mas não sai para a internet</div>
+          </div>
+        </div>
+        <div class="step-block-body">
+          <div class="code-block" id="cb_tr2">
+            <button class="copy-btn" onclick="copyCode('cb_tr2',this)">📋 Copiar</button>
+<span class="comment"># No FIREWALL — verificar IP Forwarding</span>
+<span class="prompt orange">fw$</span> <span class="cmd">cat /proc/sys/net/ipv4/ip_forward</span>
+<span class="dim">  → deve retornar 1. Se for 0:</span>
+<span class="prompt orange">fw$</span> <span class="cmd">sudo sysctl -w net.ipv4.ip_forward=1</span>
+
+<span class="comment"># No FIREWALL — verificar regra NAT</span>
+<span class="prompt orange">fw$</span> <span class="cmd">sudo iptables -t nat -L POSTROUTING -n -v</span>
+<span class="dim">  → deve ter MASQUERADE para 192.168.10.0/24</span>
+
+<span class="comment"># No FIREWALL — verificar se o UFW está ativo</span>
+<span class="prompt orange">fw$</span> <span class="cmd">sudo ufw status verbose</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-block">
+        <div class="step-block-header">
+          <div class="step-num" style="background:rgba(255,92,122,0.15);border-color:var(--red);color:var(--red);">!</div>
+          <div>
+            <div class="step-title">Ping para IP funciona mas DNS não resolve (google.com falha)</div>
+          </div>
+        </div>
+        <div class="step-block-body">
+          <div class="code-block" id="cb_tr3">
+            <button class="copy-btn" onclick="copyCode('cb_tr3',this)">📋 Copiar</button>
+<span class="comment"># Testar DNS manualmente</span>
+<span class="prompt">$</span> <span class="cmd">nslookup google.com 8.8.8.8</span>
+
+<span class="comment"># Verificar se o resolv.conf tem nameserver</span>
+<span class="prompt">$</span> <span class="cmd">cat /etc/resolv.conf</span>
+<span class="dim">  → deve ter: nameserver 8.8.8.8</span>
+
+<span class="comment"># Liberar porta DNS no firewall (se necessário)</span>
+<span class="prompt orange">fw$</span> <span class="cmd">sudo ufw allow out 53/udp</span>
+<span class="prompt orange">fw$</span> <span class="cmd">sudo ufw allow out 53/tcp</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-block">
+        <div class="step-block-header">
+          <div class="step-num" style="background:rgba(255,92,122,0.15);border-color:var(--red);color:var(--red);">!</div>
+          <div>
+            <div class="step-title">Erro "invalid YAML" ao executar netplan apply</div>
+          </div>
+        </div>
+        <div class="step-block-body">
+          <div class="code-block" id="cb_tr4">
+            <button class="copy-btn" onclick="copyCode('cb_tr4',this)">📋 Copiar</button>
+<span class="comment"># Ver o erro detalhado</span>
+<span class="prompt">$</span> <span class="cmd">sudo netplan --debug apply</span>
+
+<span class="comment"># Abrir e corrigir o arquivo</span>
+<span class="prompt">$</span> <span class="cmd">sudo nano /etc/netplan/00-installer-config.yaml</span>
+<span class="dim">  → use o Mapa de Espaços da seção anterior</span>
+<span class="dim">  → verifique cada linha: 2 / 4 / 6 / 8 / 10 espaços conforme o nível</span>
+<span class="dim">  → NUNCA use Tab — apenas barra de espaço</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     QUIZ
+══════════════════════════════════════════ -->
+<div id="s8" class="section">
+  <div class="section-title">
+    <div class="section-num" style="font-size:0.7em;">❓</div>
+    Quiz — Fixação do Conteúdo
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="quiz-prog"><div class="quiz-prog-fill" id="qprog"></div></div>
+      <div class="quiz-count" id="qcount">Pergunta 1 de 6</div>
+
+      <!-- Q0 -->
+      <div class="quiz-card active" id="qc0">
+        <h4>❓ Por que configuramos IP <strong>fixo</strong> no ubuntu-server e ubuntu-desktop em vez de usar DHCP?</h4>
+        <div class="q-opts">
+          <button class="q-opt" onclick="ansQ(0,0,2)">Porque DHCP é mais lento</button>
+          <button class="q-opt" onclick="ansQ(0,1,2)">Porque o VirtualBox não suporta DHCP em Rede Interna</button>
+          <button class="q-opt" onclick="ansQ(0,2,2)">Para que o gateway sempre saiba para qual IP encaminhar a resposta — IP fixo garante previsibilidade no roteamento</button>
+          <button class="q-opt" onclick="ansQ(0,3,2)">Porque o Netplan não suporta DHCP</button>
+        </div>
+        <div class="q-feedback" id="qf0"></div>
+        <div class="q-next" id="qn0"><button class="q-next-btn" onclick="nextQ(1)">Próxima →</button></div>
+      </div>
+
+      <!-- Q1 -->
+      <div class="quiz-card" id="qc1">
+        <h4>❓ No Netplan, qual campo define o <strong>gateway padrão</strong> (o caminho para a internet)?</h4>
+        <div class="q-opts">
+          <button class="q-opt" onclick="ansQ(1,0,1)">O campo <code>addresses</code></button>
+          <button class="q-opt" onclick="ansQ(1,1,1)">O campo <code>via</code> dentro de <code>routes</code></button>
+          <button class="q-opt" onclick="ansQ(1,2,1)">O campo <code>nameservers</code></button>
+          <button class="q-opt" onclick="ansQ(1,3,1)">O campo <code>dhcp4</code></button>
+        </div>
+        <div class="q-feedback" id="qf1"></div>
+        <div class="q-next" id="qn1"><button class="q-next-btn" onclick="nextQ(2)">Próxima →</button></div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-card" id="qc2">
+        <h4>❓ Qual é a diferença entre configurar o Netplan no <strong>ubuntu-server</strong> e no <strong>ubuntu-desktop</strong>?</h4>
+        <div class="q-opts">
+          <button class="q-opt" onclick="ansQ(2,0,0)">O Desktop acrescenta <code>renderer: NetworkManager</code> porque usa esse backend para a interface gráfica; o Server usa systemd-networkd diretamente</button>
+          <button class="q-opt" onclick="ansQ(2,1,0)">O Desktop usa DHCP e o Server usa IP fixo</button>
+          <button class="q-opt" onclick="ansQ(2,2,0)">O Desktop não precisa de gateway</button>
+          <button class="q-opt" onclick="ansQ(2,3,0)">O Server usa <code>renderer: NetworkManager</code> e o Desktop não</button>
+        </div>
+        <div class="q-feedback" id="qf2"></div>
+        <div class="q-next" id="qn2"><button class="q-next-btn" onclick="nextQ(3)">Próxima →</button></div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-card" id="qc3">
+        <h4>❓ O <code>ping 8.8.8.8</code> funciona no server, mas o <code>ping google.com</code> falha com "Name or service not known". O que está errado?</h4>
+        <div class="q-opts">
+          <button class="q-opt" onclick="ansQ(3,0,3)">O gateway está apontando para o IP errado</button>
+          <button class="q-opt" onclick="ansQ(3,1,3)">O IP fixo do servidor está incorreto</button>
+          <button class="q-opt" onclick="ansQ(3,2,3)">O IP Forwarding está desativado no firewall</button>
+          <button class="q-opt" onclick="ansQ(3,3,3)">O campo <code>nameservers</code> não foi configurado corretamente — o sistema não consegue resolver nomes de domínio</button>
+        </div>
+        <div class="q-feedback" id="qf3"></div>
+        <div class="q-next" id="qn3"><button class="q-next-btn" onclick="nextQ(4)">Próxima →</button></div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-card" id="qc4">
+        <h4>❓ Ao executar <code>traceroute 8.8.8.8</code> no server, o primeiro hop foi <code>192.168.10.1</code>. O que isso comprova?</h4>
+        <div class="q-opts">
+          <button class="q-opt" onclick="ansQ(4,0,0)">Que o tráfego passa pelo firewall antes de sair para a internet — confirmando que o roteamento via gateway está correto</button>
+          <button class="q-opt" onclick="ansQ(4,1,0)">Que o server tem o IP 192.168.10.1</button>
+          <button class="q-opt" onclick="ansQ(4,2,0)">Que o Google está em 192.168.10.1</button>
+          <button class="q-opt" onclick="ansQ(4,3,0)">Que o MASQUERADE não está funcionando</button>
+        </div>
+        <div class="q-feedback" id="qf4"></div>
+        <div class="q-next" id="qn4"><button class="q-next-btn" onclick="nextQ(5)">Próxima →</button></div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-card" id="qc5">
+        <h4>❓ O que o <strong>MASQUERADE</strong> faz no firewall quando um pacote do server (<code>192.168.10.10</code>) vai para a internet?</h4>
+        <div class="q-opts">
+          <button class="q-opt" onclick="ansQ(5,0,2)">Bloqueia o pacote</button>
+          <button class="q-opt" onclick="ansQ(5,1,2)">Encaminha sem alterar nada</button>
+          <button class="q-opt" onclick="ansQ(5,2,2)">Substitui o IP de origem (<code>192.168.10.10</code>) pelo IP externo do firewall — para a internet parece que o pedido veio do próprio firewall</button>
+          <button class="q-opt" onclick="ansQ(5,3,2)">Duplica o pacote para redundância</button>
+        </div>
+        <div class="q-feedback" id="qf5"></div>
+        <div class="q-next" id="qn5"><button class="q-next-btn" onclick="showResult()">Ver Resultado →</button></div>
+      </div>
+
+      <!-- RESULTADO -->
+      <div class="quiz-result" id="qresult">
+        <div class="quiz-score" id="qscore">0/6</div>
+        <p id="qmsg" style="color:var(--muted);margin:8px 0 16px;font-size:0.95em;"></p>
+        <div id="qxp" style="font-size:0.82em;color:var(--muted);margin-bottom:16px;"></div>
+        <button onclick="resetQuiz()" style="background:var(--orange-dim);border:1px solid rgba(255,140,66,0.4);color:var(--orange);padding:10px 22px;border-radius:8px;cursor:pointer;font-size:0.88em;font-weight:700;font-family:var(--sans);">🔄 Tentar Novamente</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RODAPÉ -->
+<div style="text-align:center;padding:24px 0;font-size:0.76em;color:var(--muted);border-top:1px solid var(--border);margin-top:24px;">
+  ISO-103 · Infraestrutura e Sistemas Operacionais · Semana 5.4 · Tecnólogo em Segurança da Informação
+  <span style="margin:0 10px;">·</span>
+  <a href="semana05_02.html" style="color:var(--orange);text-decoration:none;">🔥 Semana 5.2 (Firewall)</a>
+  <span style="margin:0 10px;">·</span>
+  <a href="semana05_01.html" style="color:var(--blue);text-decoration:none;">🌐 Semana 5.1 (Roteamento)</a>
+</div>
+
+</div><!-- /container -->
+
+<script>
+// ── TABS ──
+function showTab(group, panel, btn, color) {
+  document.querySelectorAll('[id^="'+group+'-"]').forEach(p => p.classList.remove('active'));
+  document.getElementById(group+'-'+panel).classList.add('active');
+  btn.closest('.tabs').querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.remove('active','orange','blue','green');
+  });
+  btn.classList.add('active', color);
+  toast('✅', 'Modo selecionado!');
+}
+
+// ── COPY ──
+function copyCode(id, btn) {
+  const el = document.getElementById(id);
+  let text = el.innerText.replace(/^📋 Copiar\n?/, '').trim();
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✅ Copiado!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '📋 Copiar'; btn.classList.remove('copied'); }, 2000);
+    toast('📋', 'Código copiado!');
+  });
+}
+
+// ── TOAST ──
+function toast(icon, msg) {
+  document.getElementById('t-icon').textContent = icon;
+  document.getElementById('t-msg').textContent = msg;
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  clearTimeout(window._toastT);
+  window._toastT = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ── CHECKLIST ──
+function toggleCheck(li) {
+  li.classList.toggle('done');
+  const done = document.querySelectorAll('#pre-cl li.done').length;
+  const total = document.querySelectorAll('#pre-cl li').length;
+  if (done === total) toast('🎉', 'Todos os pré-requisitos confirmados!');
+  else toast('✅', done + '/' + total + ' confirmados');
+}
+
+// ── SCROLL ──
+function goTo(id) {
+  const el = document.querySelector(id);
+  if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+// ── PROGRESS DOTS ──
+const sections = ['s0','s1','s2','s3','s4','s5','s6','s7','s8'];
+const dots = document.querySelectorAll('.prog-dot');
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const idx = sections.indexOf(e.target.id);
+      if (idx >= 0) {
+        dots.forEach((d,i) => {
+          d.classList.toggle('active', i === idx);
+          if (i < idx) d.classList.add('done');
+        });
+      }
+    }
+  });
+}, { threshold: 0.3 });
+sections.forEach(id => { const el = document.getElementById(id); if (el) obs.observe(el); });
+
+// ── QUIZ ──
+const QFB = [
+  '✅ Correto! Com IP fixo, o gateway sabe exatamente para qual endereço encaminhar a resposta que volta da internet. Com DHCP, o IP poderia mudar e a tabela de roteamento/NAT perderia o rastreamento da conexão.',
+  '✅ Exato! O campo "via" dentro de "routes" define o gateway padrão — o endereço para onde os pacotes devem ser enviados quando o destino não está na rede local. Aqui, sempre será o IP do firewall (192.168.10.1).',
+  '✅ Correto! O Ubuntu Desktop usa o NetworkManager como backend de rede (necessário para a interface gráfica funcionar). A linha "renderer: NetworkManager" instrui o Netplan a delegar o gerenciamento ao NM. O Server usa o systemd-networkd diretamente.',
+  '✅ Exato! Quando o ping para IP funciona mas o nome falha, o problema é o DNS. O campo "nameservers" no Netplan define os servidores de resolução de nomes. Sem ele, o sistema consegue enviar pacotes por IP mas não converte nomes de domínio.',
+  '✅ Perfeito! O primeiro hop do traceroute é sempre o gateway padrão da máquina. Se aparece 192.168.10.1, confirma que o tráfego está saindo pela interface correta, chegando ao firewall e sendo encaminhado para a internet.',
+  '✅ Correto! O MASQUERADE (NAT de saída) substitui o IP de origem interno pelo IP externo do firewall (enp0s3). Isso permite que vários dispositivos da rede interna compartilhem um único IP para acessar a internet, e que as respostas voltem para o firewall que as repassa ao dispositivo certo.',
+];
+const QERR = [
+  '❌ Errado. A velocidade não é o motivo. O DHCP poderia funcionar em Rede Interna se houvesse um servidor DHCP configurado. Usamos IP fixo porque o gateway precisa de endereços previsíveis para manter o rastreamento das conexões NAT.',
+  '❌ Errado. O campo "addresses" define o IP da própria máquina. O campo "nameservers" define os servidores DNS. O "dhcp4" controla se o IP é automático. O gateway fica no campo "via" dentro do bloco "routes".',
+  '❌ Errado. A diferença não está em qual usa DHCP — ambos usam IP fixo nesta configuração. A diferença está no "renderer": o Desktop precisa do NetworkManager para a interface gráfica funcionar; o Server usa systemd-networkd diretamente.',
+  '❌ Errado. Se o ping para 8.8.8.8 funciona, o gateway e o IP Forwarding estão corretos. O erro "Name or service not known" é específico de resolução DNS — o sistema não consegue transformar "google.com" em um endereço IP.',
+  '❌ Errado. O traceroute mostra o caminho hop a hop da origem ao destino. O primeiro hop é sempre o gateway padrão da máquina — que deve ser 192.168.10.1 (o firewall). Isso prova que os pacotes saem pela rota correta.',
+  '❌ Errado. O MASQUERADE não bloqueia nem duplica pacotes. Sua função é fazer NAT de saída: trocar o IP de origem interno pelo IP externo do firewall, permitindo que a rede interna inteira acesse a internet com um único IP público.',
+];
+let qCorrect = 0, qDone = {};
+
+function ansQ(qi, chosen, correct) {
+  if (qDone[qi] !== undefined) return;
+  qDone[qi] = chosen === correct;
+  const card = document.getElementById('qc'+qi);
+  const opts = card.querySelectorAll('.q-opt');
+  opts.forEach(o => o.disabled = true);
+  opts[chosen].classList.add(chosen === correct ? 'correct' : 'wrong');
+  if (chosen !== correct) opts[correct].classList.add('correct');
+  const ok = chosen === correct;
+  if (ok) qCorrect++;
+  const fb = document.getElementById('qf'+qi);
+  fb.textContent = ok ? QFB[qi] : QERR[qi];
+  fb.className = 'q-feedback show ' + (ok ? 'ok' : 'fail');
+  document.getElementById('qn'+qi).classList.add('show');
+  const total = 6;
+  document.getElementById('qprog').style.width = ((Object.keys(qDone).length / total) * 100) + '%';
+  document.getElementById('qcount').textContent = 'Pergunta ' + Object.keys(qDone).length + ' de ' + total;
+  toast(ok ? '🎯' : '💡', ok ? 'Resposta correta!' : 'Veja a explicação abaixo');
+}
+
+function nextQ(n) {
+  document.getElementById('qc'+(n-1)).classList.remove('active');
+  document.getElementById('qc'+n).classList.add('active');
+}
+
+function showResult() {
+  document.getElementById('qc5').classList.remove('active');
+  const r = document.getElementById('qresult');
+  r.classList.add('show');
+  document.getElementById('qscore').textContent = qCorrect + '/6';
+  const msgs = ['Revise o conteúdo! 📚', 'Continue estudando! 💪', 'Indo bem! 👍', 'Muito bom! 🌟', 'Ótimo! Quase perfeito 🔥', '🏆 Perfeito! Gateway Expert!', '🏆 Perfeito! Gateway Expert!'];
+  document.getElementById('qmsg').textContent = msgs[qCorrect];
+  document.getElementById('qxp').textContent = qCorrect >= 5 ? '🏆 Você domina roteamento, gateway e NAT!' : 'Revise os tópicos marcados com ❌ e tente novamente.';
+  document.getElementById('qprog').style.width = '100%';
+  document.getElementById('qcount').textContent = 'Quiz concluído!';
+  toast(qCorrect >= 5 ? '🏆' : '📚', qCorrect + '/6 acertos!');
+}
+
+function resetQuiz() {
+  qCorrect = 0; qDone = {};
+  document.getElementById('qresult').classList.remove('show');
+  document.getElementById('qprog').style.width = '0%';
+  document.getElementById('qcount').textContent = 'Pergunta 1 de 6';
+  for (let i = 0; i < 6; i++) {
+    const c = document.getElementById('qc'+i);
+    c.classList.toggle('active', i === 0);
+    c.querySelectorAll('.q-opt').forEach(o => { o.disabled = false; o.classList.remove('correct','wrong'); });
+    document.getElementById('qf'+i).className = 'q-feedback';
+    document.getElementById('qn'+i).classList.remove('show');
+  }
+}
+
+setTimeout(() => toast('👋', 'Bem-vindo à Semana 5.4! Comece pela Retomada ↑'), 700);
+</script>
+</body>
+</html>
