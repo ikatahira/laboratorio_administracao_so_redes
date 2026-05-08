@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercício Dirigido — Semana 06 | ISO-103 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+:root {
+  --black: #111;
+  --green: #00ff88;
+  --bg: #f0f0f0;
+  --white: #fff;
+  --gray-light: #f5f5f5;
+  --gray-mid: #ccc;
+  --gray-dark: #555;
+  --resolve-bg: #001a0d;
+  --resolve-border: #00cc66;
+  --resolve-text: #b3ffd9;
+  --resolve-code: #00ff88;
+  --warn-bg: #fff8e1;
+  --warn-border: #f59e0b;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  background: var(--bg);
+  margin: 0;
+  padding: 20px;
+  color: var(--black);
+}
+
+/* ─── TOP BAR ─────────────────────── */
+.top-bar {
+  max-width: 860px;
+  margin: 0 auto 18px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.btn {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: .78em;
+  font-weight: 700;
+  letter-spacing: .06em;
+  cursor: pointer;
+  padding: 9px 22px;
+  border: 2px solid;
+  transition: all .18s;
+}
+.btn-primary { background: var(--black); color: var(--green); border-color: var(--green); }
+.btn-primary:hover { background: var(--green); color: var(--black); }
+.btn-toggle { background: transparent; color: var(--black); border-color: #999; }
+.btn-toggle:hover { background: var(--black); color: var(--white); border-color: var(--black); }
+.top-note { font-family: 'IBM Plex Mono', monospace; font-size: .7em; color: #666; }
+
+/* ─── PAGE WRAPPER ─────────────────── */
+.page {
+  max-width: 860px;
+  margin: 0 auto 28px;
+  background: var(--white);
+  box-shadow: 0 4px 24px rgba(0,0,0,.14);
+  padding: 30px 36px 40px;
+}
+
+/* ─── PAGE HEADER ──────────────────── */
+.page-header {
+  border-bottom: 3px solid var(--black);
+  padding-bottom: 12px;
+  margin-bottom: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+}
+.badge {
+  display: inline-block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: .68em;
+  font-weight: 700;
+  background: var(--black);
+  color: var(--green);
+  padding: 3px 10px;
+  letter-spacing: .12em;
+  margin-bottom: 6px;
+}
+.page-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 1.22em;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.page-sub {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: .72em;
+  color: #555;
+  margin-top: 3px;
+}
+.page-meta {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: .7em;
+  color: #666;
+  text-align: right;
+  line-height: 1.8;
+  white-space: nowrap;
+}
+
+/* ─── INSTRUÇÃO ────────────────────── */
+.instrucao {
+  background: var(--gray-light);
+  border: 1px solid var(--gray-mid);
+  border-left: 4px solid var(--black);
+  padding: 8px 14px;
+  margin-bottom: 18px;
+  font-size: .82em;
+  font-family: 'IBM Plex Mono', monospace;
+  color: #333;
+  line-height: 1.6;
+}
+.instrucao strong { color: var(--black); }
+
+/* ─── SEÇÃO ────────────────────────── */
+.secao-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 22px 0 12px;
+  border-bottom: 1.5px solid #999;
+  padding-bottom: 5px;
+}
+.secao-letra {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: .7em;
+  font-weight: 700;
+  background: var(--black);
+  color: var(--white);
+  padding: 3px 9px;
+  letter-spacing: .1em;
+}
+.secao-titulo {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: .85em;
+  font-weight: 700;
+  flex: 1;
+}
+.secao-pts {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: .72em;
+  color: #666;
+  border: 1px solid #999;
+  padding: 1px 8px;
+}
+
+/* ─── QUESTÃO (TEÓRICA) ────────────── */
+.questao {
+  margin-bottom: 0;
+  border: 1px solid #ddd;
+  overflow: hidden;
+}
+.questao + .questao { margin-top: 10px; }
+
+.q-head {
+  background: var(--black);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+}
+.q-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: .78em;
+  font-weight: 700;
+  letter-spacing: .06em;
+}
+.q-tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: .62em;
+  border: 1px solid #555;
+  padding: 1px 6px;
+  color: #aaa;
+}
+.q-pts {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: .65em;
+  color: #888;
+  margin-left: auto;
+}
+
+.q-body {
+  padding: 10px 14px 8px;
+}
+.q-texto {
+  font-size: .88em;
+  line-height: 1.55;
+  margin-bottom: 8px;
+  color: var(--black);
+}
+.q-texto code, .q-texto .perm-box {
+  font-family: 'IBM Plex Mono', monospace;
+  background: #f0f0f0;
+  border: 1px solid #ddd;
+  padding: 0 4px;
+  font-size: .93em;
+}
+
+.alternativas {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 6px;
+}
+.alternativas li {
+  font-size: .84em;
+  padding: 3px 0 3px 22px;
+  position: relative;
+  line-height: 1.45;
+  color: #222;
+  border-bottom: 1px dotted #eee;
+}
+.alternativas li:last-child { border-bottom: none; }
+.alternativas li::before {
+  content: attr(data-l) ')';
+  position: absolute;
+  left: 0;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 700;
+  font-size: .8em;
+}
+.alternativas li code {
+  font-family: 'IBM Plex Mono', monospace;
+  background: #f0f0f0;
+  border: 1px solid #ddd;
+  padding: 0 3px;
+  font-size: .91em;
+}
+
+/* ─── TAREFA (PRÁTICA) ─────────────── */
+.tarefa {
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.tarefa-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--black);
+  color: var(--white);
+  padding: 7px 12px;
+}
+.tarefa-n {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: .78em;
+  font-weight: 700;
+  letter-spacing: .06em;
+}
+.tarefa-titulo {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: .78em;
+  font-weight: 600;
+  flex: 1;
+}
+.tarefa-pts {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: .7em;
+  color: #aaa;
+}
+.tarefa-body {
+  padding: 10px 14px 8px;
+}
+.tarefa-context {
+  font-size: .84em;
+  line-height: 1.55;
+  color: #444;
+  margin-bottom: 8px;
+  padding: 6px 10px;
+  background: #fafafa;
+  border-left: 3px solid #999;
+  font-style: italic;
+}
+.tarefa-enunciado {
+  font-size: .86em;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.tarefa-enunciado code {
+  font-family: 'IBM Plex Mono', monospace;
+  background: #f0f0f0;
+  border: 1px solid #ddd;
+  padding: 0 4px;
+  font-size: .92em;
+  font-weight: 400;
+}
+
+.passos {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 8px;
+}
+.passos li {
+  font-size: .84em;
+  padding: 4px 0 4px 22px;
+  position: relative;
+  line-height: 1.55;
+  color: #222;
+  border-bottom: 1px dotted #eee;
+}
+.passos li:last-child { border-bottom: none; }
+.passos li::before {
+  content: attr(data-n) '.';
+  position: absolute;
+  left: 0;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 700;
+  font-size: .8em;
+  color: var(--black);
+}
+.passos li code {
+  font-family: 'IBM Plex Mono', monospace;
+  background: #f0f0f0;
+  border: 1px solid #ddd;
+  padding: 0 3px;
+  font-size: .9em;
+}
+
+/* ─── GABARITO INLINE ──────────────── */
+.gabarito {
+  display: none;
+  background: var(--resolve-bg);
+  border-top: 2px solid var(--resolve-border);
+  padding: 12px 16px 14px;
+}
+.gabarito.visible { display: block; }
+
+.gab-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: .65em;
+  color: var(--green);
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.gab-label::before {
+  content: '';
+  display: inline-block;
+  width: 18px;
+  height: 2px;
+  background: var(--green);
+}
+
+.gab-resposta {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: .96em;
+  font-weight: 700;
+  color: var(--green);
+  margin-bottom: 5px;
+}
+.gab-exp {
+  font-size: .82em;
+  color: var(--resolve-text);
+  line-height: 1.6;
+}
+.gab-exp code {
+  font-family: 'IBM Plex Mono', monospace;
+  color: var(--resolve-code);
+  background: rgba(0,255,136,.08);
+  border: 1px solid rgba(0,255,136,.2);
+  padding: 0 4px;
+  font-size: .92em;
+}
+.gab-exp strong { color: var(--green); font-weight: 700; }
+.gab-exp em { color: #8df5c6; font-style: normal; }
+
+.gab-cmd {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: .82em;
+  background: rgba(0,0,0,.4);
+  border: 1px solid rgba(0,255,136,.15);
+  color: #e0e0e0;
+  padding: 6px 10px;
+  margin: 5px 0;
+  line-height: 1.8;
+  border-radius: 2px;
+}
+.gab-cmd .prompt { color: var(--green); }
+.gab-cmd .comment { color: #555; }
+.gab-cmd .out { color: #8df5c6; font-style: italic; }
+.gab-cmd .hi { color: var(--green); font-weight: 600; }
+
+.gab-nota {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: .75em;
+  color: #f59e0b;
+  background: rgba(245,158,11,.08);
+  border: 1px solid rgba(245,158,11,.25);
+  padding: 4px 10px;
+  margin-top: 6px;
+  line-height: 1.5;
+}
+
+/* ─── BOTÃO REVELAR ────────────────── */
+.reveal-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: .72em;
+  font-weight: 700;
+  letter-spacing: .06em;
+  background: transparent;
+  color: #00aa55;
+  border: 1.5px solid #00aa55;
+  padding: 4px 14px;
+  cursor: pointer;
+  margin-top: 6px;
+  transition: all .15s;
+}
+.reveal-btn:hover { background: #00aa55; color: var(--black); }
+.reveal-btn .arrow { transition: transform .2s; display: inline-block; }
+.reveal-btn.open .arrow { transform: rotate(180deg); }
+
+/* ─── TREE ─────────────────────────── */
+.tree {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: .78em;
+  color: #333;
+  background: #f8f8f8;
+  border: 1px solid #ddd;
+  padding: 6px 10px;
+  margin: 5px 0;
+  line-height: 1.7;
+}
+.tree .t-pasta { color: var(--black); font-weight: 700; }
+.tree .t-arquivo { color: #555; }
+.tree .t-i1 { padding-left: 16px; display: block; }
+.tree .t-i2 { padding-left: 32px; display: block; }
+
+/* ─── AVISO ────────────────────────── */
+.aviso {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: .74em;
+  color: #444;
+  border: 1px dashed #bbb;
+  padding: 5px 10px;
+  margin: 6px 0;
+  background: #fafafa;
+  line-height: 1.5;
+}
+.aviso.destaque { border-color: var(--black); background: #f0f0f0; color: var(--black); font-weight: 600; }
+
+/* ─── GRID 2 COL ───────────────────── */
+.duas-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* ─── CHECKLIST ────────────────────── */
+.check-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: .7em;
+  font-weight: 700;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  display: block;
+  margin: 6px 0 3px;
+}
+.checklist { list-style: none; padding: 0; margin: 0; }
+.checklist li {
+  font-size: .8em;
+  padding: 2px 0 2px 18px;
+  position: relative;
+  line-height: 1.5;
+  color: #333;
+}
+.checklist li::before { content: '☐'; position: absolute; left: 0; font-size: .85em; color: #666; }
+
+/* ─── DIVISOR DE SEÇÕES ────────────── */
+.section-divider {
+  border: none;
+  border-top: 3px dashed #ccc;
+  margin: 32px 0 24px;
+}
+
+/* ─── TABELA DE PONTUAÇÃO ──────────── */
+.tabela-pts {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: .8em;
+  margin-top: 20px;
+}
+.tabela-pts th {
+  background: var(--black);
+  color: var(--white);
+  padding: 5px 10px;
+  border: 1px solid var(--black);
+  text-align: center;
+}
+.tabela-pts td {
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  text-align: center;
+  color: #333;
+}
+.tabela-pts td.left { text-align: left; }
+.tabela-pts tr.total td { font-weight: 700; background: var(--gray-light); }
+
+/* ─── PERM BOX ─────────────────────── */
+.perm-box {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: .88em;
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 2px 8px;
+  display: inline-block;
+  letter-spacing: .04em;
+}
+
+/* ─── PRINT ────────────────────────── */
+@media print {
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  body { background: #fff; padding: 0; }
+  .top-bar { display: none !important; }
+  .page { box-shadow: none; margin: 0 0 20px; padding: 20px 24px; max-width: 100%; }
+  .gabarito { display: block !important; }
+  .reveal-btn { display: none !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <button class="btn btn-primary" onclick="window.print()">🖨 Imprimir / Salvar PDF</button>
+  <button class="btn btn-toggle" onclick="toggleAll()">👁 Mostrar / Ocultar Todas as Resoluções</button>
+  <span class="top-note">Clique em "▶ VER RESOLUÇÃO" em cada questão/tarefa para revelar a resposta.</span>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     PARTE 1 — PROVA TEÓRICA
+══════════════════════════════════════════════════ -->
+<div class="page">
+
+  <div class="page-header">
+    <div>
+      <div class="badge">▶ EXERCÍCIO DIRIGIDO — PARTE TEÓRICA</div>
+      <div class="page-title">Usuários, Permissões &amp; Controle de Acesso no Linux</div>
+      <div class="page-sub">ISO-103 2026 · Segurança da Informação · Semanas 06 &amp; 06.1</div>
+    </div>
+    <div class="page-meta">20 questões · 5 pts cada<br>Total: 100 pontos<br>Duração: 50 min</div>
+  </div>
+
+  <div class="instrucao">
+    <strong>Como usar:</strong> Leia cada questão e escolha a alternativa correta. Depois clique em <strong>▶ VER RESOLUÇÃO</strong> para conferir a resposta e entender o porquê. Cada questão vale <strong>5 pontos</strong>.
+  </div>
+
+  <!-- ── SEÇÃO A ── -->
+  <div class="secao-header">
+    <span class="secao-letra">SEÇÃO A</span>
+    <span class="secao-titulo">Usuários &amp; Arquivos do Sistema Linux</span>
+    <span class="secao-pts">Q01–Q08 · 40 pts</span>
+  </div>
+
+  <!-- Q01 -->
+  <div class="questao" id="q01">
+    <div class="q-head">
+      <span class="q-num">QUESTÃO 01</span>
+      <span class="q-tag">Arquivos do Sistema</span>
+      <span class="q-pts">5 pts</span>
+    </div>
+    <div class="q-body">
+      <div class="q-texto">Qual arquivo Linux armazena a <strong>lista de todos os usuários</strong> do sistema e pode ser lido por qualquer usuário?</div>
+      <ul class="alternativas">
+        <li data-l="A"><code>/etc/shadow</code></li>
+        <li data-l="B"><code>/etc/passwd</code></li>
+        <li data-l="C"><code>/etc/group</code></li>
+        <li data-l="D"><code>/etc/sudoers</code></li>
+      </ul>
+      <button class="reveal-btn" onclick="reveal('gab-q01', this)"><span class="arrow">▶</span> VER RESOLUÇÃO</button>
+    </div>
+    <div class="gabarito" id="gab-q01">
+      <div class="gab-label">Resolução</div>
+      <div class="gab-resposta">✓ Resposta: B) /etc/passwd</div>
+      <div class="gab-exp">O arquivo <code>/etc/passwd</code> lista todos os usuários e é <strong>legível por qualquer um</strong>. Cada linha tem o formato:<br>
+      <em>login : x : UID : GID : comentário : /home/dir : /shell</em><br>
+      O campo <code>x</code> indica que a senha real está protegida no <code>/etc/shadow</code>. Os outros arquivos têm funções distintas: <code>/etc/shadow</code> guarda hashes de senha (acesso restrito), <code>/etc/group</code> lista grupos, e <code>/etc/sudoers</code> define quem pode usar sudo.</div>
+    </div>
+  </div>
+
+  <!-- Q02 -->
+  <div class="questao" id="q02">
+    <div class="q-head">
+      <span class="q-num">QUESTÃO 02</span>
+      <span class="q-tag">Senhas e Shadow</span>
+      <span class="q-pts">5 pts</span>
+    </div>
+    <div class="q-body">
+      <div class="q-texto">O arquivo <code>/etc/shadow</code> armazena os hashes de senha. Quem tem permissão para <strong>ler</strong> esse arquivo?</div>
+      <ul class="alternativas">
+        <li data-l="A">Qualquer usuário do sistema</li>
+        <li data-l="B">Apenas usuários do grupo "users"</li>
+        <li data-l="C">Apenas o root (e o grupo shadow)</li>
+        <li data-l="D">Apenas o root e o próprio dono da conta</li>
+      </ul>
+      <button class="reveal-btn" onclick="reveal('gab-q02', this)"><span class="arrow">▶</span> VER RESOLUÇÃO</button>
+    </div>
+    <div class="gabarito" id="gab-q02">
+      <div class="gab-label">Resolução</div>
+      <div class="gab-resposta">✓ Resposta: C) Apenas root e grupo shadow</div>
+      <div class="gab-exp">O <code>/etc/shadow</code> tem permissão <code>640</code> (ou <code>000</code> em alguns sistemas): apenas <strong>root</strong> e membros do grupo <strong>shadow</strong> podem ler. Isso protege os hashes de ataques de força bruta e dicionário. Se fosse legível por todos (como o passwd antigamente), qualquer usuário poderia tentar quebrar as senhas offline.</div>
+    </div>
+  </div>
+
+  <!-- Q03 -->
+  <div class="questao" id="q03">
+    <div class="q-head">
+      <span class="q-num">QUESTÃO 03</span>
+      <span class="q-tag">UID e Root</span>
+      <span class="q-pts">5 pts</span>
+    </div>
+    <div class="q-body">
+      <div class="q-texto">Como o Linux identifica que um usuário é o <strong>superusuário (root)</strong>?</div>
+      <ul class="alternativas">
+        <li data-l="A">Pelo nome "root" no arquivo <code>/etc/passwd</code></li>
+        <li data-l="B">Pelo UID igual a 0</li>
+        <li data-l="C">Pelo GID igual a 0</li>
+        <li data-l="D">Pelo shell <code>/bin/bash</code></li>
+      </ul>
+      <button class="reveal-btn" onclick="reveal('gab-q03', this)"><span class="arrow">▶</span> VER RESOLUÇÃO</button>
+    </div>
+    <div class="gabarito" id="gab-q03">
+      <div class="gab-label">Resolução</div>
+      <div class="gab-resposta">✓ Resposta: B) UID igual a 0</div>
+      <div class="gab-exp">O kernel Linux identifica o superusuário pelo número <strong>UID = 0</strong>, não pelo nome. Isso significa que renomear "root" para outro nome <em>não remove os privilégios</em> — o UID 0 continuará sendo superusuário. Por isso, segurança real exige controlar quem recebe UID 0, não apenas o nome da conta.</div>
+    </div>
+  </div>
+
+  <!-- Q04 -->
+  <div class="questao" id="q04">
+    <div class="q-head">
+      <span class="q-num">QUESTÃO 04</span>
+      <span class="q-tag">Criação de Usuário</span>
+      <span class="q-pts">5 pts</span>
+    </div>
+    <div class="q-body">
+      <div class="q-texto">Qual parâmetro do <code>useradd</code> cria automaticamente a pasta <code>/home/nomeusuario</code>?</div>
+      <ul class="alternativas">
+        <li data-l="A"><code>-s</code></li>
+        <li data-l="B"><code>-c</code></li>
+        <li data-l="C"><code>-G</code></li>
+        <li data-l="D"><code>-m</code></li>
+      </ul>
+      <button class="reveal-btn" onclick="reveal('gab-q04', this)"><span class="arrow">▶</span> VER RESOLUÇÃO</button>
+    </div>
+    <div class="gabarito" id="gab-q04">
+      <div class="gab-label">Resolução</div>
+      <div class="gab-resposta">✓ Resposta: D) -m</div>
+      <div class="gab-exp">O parâmetro <code>-m</code> (<em>make home</em>) instrui o <code>useradd</code> a criar o diretório <code>/home/nomeusuario</code> e copiar os arquivos de configuração padrão de <code>/etc/skel</code>. Sem <code>-m</code>, o usuário é criado mas não tem pasta pessoal — não consegue salvar configurações nem arquivos. Os outros parâmetros: <code>-s</code> define o shell, <code>-c</code> o comentário/nome completo, <code>-G</code> os grupos extras.</div>
+    </div>
+  </div>
+
+  <!-- Q05 -->
+  <div class="questao" id="q05">
+    <div class="q-head">
+      <span class="q-num">QUESTÃO 05</span>
+      <span class="q-tag">Shell do Usuário</span>
+      <span class="q-pts">5 pts</span>
+    </div>
+    <div class="q-body">
+      <div class="q-texto">Qual a função do parâmetro <code>-s /bin/bash</code> no comando <code>useradd</code>?</div>
+      <ul class="alternativas">
+        <li data-l="A">Define o nome completo do usuário</li>
+        <li data-l="B">Define o shell padrão, necessário para login interativo</li>
+        <li data-l="C">Cria a pasta pessoal do usuário</li>
+        <li data-l="D">Adiciona o usuário a grupos extras</li>
+      </ul>
+      <button class="reveal-btn" onclick="reveal('gab-q05', this)"><span class="arrow">▶</span> VER RESOLUÇÃO</button>
+    </div>
+    <div class="gabarito" id="gab-q05">
+      <div class="gab-label">Resolução</div>
+      <div class="gab-resposta">✓ Resposta: B) Define o shell padrão</div>
+      <div class="gab-exp">O parâmetro <code>-s</code> (<em>shell</em>) define qual programa é iniciado ao fazer login. Sem <code>-s /bin/bash</code>, o usuário pode receber um shell inválido (como <code>/bin/sh</code> ou nenhum), impedindo o login interativo. Para contas de serviço que <em>não devem</em> ter login, usa-se <code>-s /usr/sbin/nologin</code> ou <code>-s /bin/false</code>.</div>
+    </div>
+  </div>
+
+  <!-- Q06 -->
+  <div class="questao" id="q06">
+    <div class="q-head">
+      <span class="q-num">QUESTÃO 06</span>
+      <span class="q-tag">Formato /etc/passwd</span>
+      <span class="q-pts">5 pts</span>
+    </div>
+    <div class="q-body">
+      <div class="q-texto">Na linha abaixo do <code>/etc/passwd</code>, o que representa o campo <strong>"x"</strong>?<br>
+      <span class="perm-box">joao:x:1001:1001:Joao Silva:/home/joao:/bin/bash</span></div>
+      <ul class="alternativas">
+        <li data-l="A">Que o usuário está bloqueado</li>
+        <li data-l="B">Que a senha está armazenada em <code>/etc/shadow</code></li>
+        <li data-l="C">Que o usuário não tem senha</li>
+        <li data-l="D">Que o campo foi removido por segurança</li>
+      </ul>
+      <button class="reveal-btn" onclick="reveal('gab-q06', this)"><span class="arrow">▶</span> VER RESOLUÇÃO</button>
+    </div>
+    <div class="gabarito" id="gab-q06">
+      <div class="gab-label">Resolução</div>
+      <div class="gab-resposta">✓ Resposta: B) Senha em /etc/shadow</div>
+      <div class="gab-exp">Historicamente, o hash da senha ficava diretamente no <code>/etc/passwd</code> — visível para todos. Ao mover para o <code>/etc/shadow</code>, o campo da senha no <code>/etc/passwd</code> passou a exibir apenas <code>x</code> como marcador. <strong>Campos da linha:</strong> <em>login : x(senha) : UID : GID : comentário : /home : /shell</em>.</div>
+    </div>
+  </div>
+
+  <!-- Q07 -->
+  <div class="questao" id="q07">
+    <div class="q-head">
+      <span class="q-num">QUESTÃO 07</span>
+      <span class="q-tag">Grupos</span>
+      <span class="q-pts">5 pts</span>
+    </div>
+    <div class="q-body">
+      <div class="q-texto">Para adicionar o usuário "ana" ao grupo "rh" <strong>sem remover seus outros grupos</strong>, qual comando usar?</div>
+      <ul class="alternativas">
+        <li data-l="A"><code>usermod -G rh ana</code></li>
+        <li data-l="B"><code>groupadd ana rh</code></li>
+        <li data-l="C"><code>usermod -aG rh ana</code></li>
+        <li data-l="D"><code>addgroup rh ana</code></li>
+      </ul>
+      <button class="reveal-btn" onclick="reveal('gab-q07', this)"><span class="arrow">▶</span> VER RESOLUÇÃO</button>
+    </div>
+    <div class="gabarito" id="gab-q07">
+      <div class="gab-label">Resolução</div>
+      <div class="gab-resposta">✓ Resposta: C) usermod -aG rh ana</div>
+      <div class="gab-exp">A flag <code>-a</code> (<em>append</em>) é obrigatória! O <code>-G</code> sozinho <strong>substitui</strong> todos os grupos secundários. Se ana estiver no grupo <code>sudo</code> e você executar <code>usermod -G rh ana</code>, ela perde o acesso sudo imediatamente. O <code>-aG</code> <em>acrescenta</em> ao grupo sem remover os existentes.
+      <div class="gab-nota">⚠ Erro clássico: esquecer o "-a" antes do "-G" e remover privilégios acidentalmente!</div></div>
+    </div>
+  </div>
+
+  <!-- Q08 -->
+  <div class="questao" id="q08">
+    <div class="q-head">
+      <span class="q-num">QUESTÃO 08</span>
+      <span class="q-tag">Verificar Grupos</span>
+      <span class="q-pts">5 pts</span>
+    </div>
+    <div class="q-body">
+      <div class="q-texto">Qual comando exibe o <strong>UID, GID e grupos</strong> de um usuário no Linux?</div>
+      <ul class="alternativas">
+        <li data-l="A"><code>whoami joao</code></li>
+        <li data-l="B"><code>cat /etc/group joao</code></li>
+        <li data-l="C"><code>id joao</code></li>
+        <li data-l="D"><code>ls -la joao</code></li>
+      </ul>
+      <button class="reveal-btn" onclick="reveal('gab-q08', this)"><span class="arrow">▶</span> VER RESOLUÇÃO</button>
+    </div>
+    <div class="gabarito" id="gab-q08">
+      <div class="gab-label">Resolução</div>
+      <div class="gab-resposta">✓ Resposta: C) id joao</div>
+      <div class="gab-exp">O comando <code>id</code> exibe de forma compacta todas as informações de identidade do usuário. Exemplo de saída:
+      <div class="gab-cmd"><span class="out">uid=1001(joao) gid=1001(joao) groups=1001(joao),1002(ti),27(sudo)</span></div>
+      Mostra: UID numérico + nome, GID primário, e todos os grupos secundários. Sem argumento, mostra o usuário atual.</div>
+    </div>
+  </div>
+
+  <!-- ── SEÇÃO B ── -->
+  <div class="secao-header">
+    <span class="secao-letra">SEÇÃO B</span>
+    <span class="secao-titulo">Permissões rwx &amp; Comando chmod</span>
+    <span class="secao-pts">Q09–Q16 · 40 pts</span>
+  </div>
+
+  <!-- Q09 -->
+  <div class="questao" id="q09">
+    <div class="q-head">
+      <span class="q-num">QUESTÃO 09</span>
+      <span class="q-tag">Leitura de Permissões</span>
+      <span class="q-pts">5 pts</span>
+    </div>
+    <div class="q-body">
+      <div class="q-texto">Um arquivo tem a permissão <span class="perm-box">-rw-r--r--</span>. O que o <strong>grupo</strong> pode fazer?</div>
+      <ul class="alternativas">
+        <li data-l="A">Ler, escrever e executar</li>
+        <li data-l="B">Ler e escrever</li>
+        <li data-l="C">Apenas ler</li>
+        <li data-l="D">Nada — sem acesso</li>
+      </ul>
+      <button class="reveal-btn" onclick="reveal('gab-q09', this)"><span class="arrow">▶</span> VER RESOLUÇÃO</button>
+    </div>
+    <div class="gabarito" id="gab-q09">
+      <div class="gab-label">Resolução</div>
+      <div class="gab-resposta">✓ Resposta: C) Apenas ler</div>
+      <div class="gab-exp">Lendo <span class="perm-box" style="background:rgba(0,255,136,.08);border-color:#00cc66;color:#b3ffd9">-rw-r--r--</span> em 3 blocos de 3:<br>
+      • <strong>Dono</strong> (pos. 2-4): <code>rw-</code> → lê e escreve<br>
+      • <strong>Grupo</strong> (pos. 5-7): <code>r--</code> → somente lê<br>
+      • <strong>Outros</strong> (pos. 8-10): <code>r--</code> → somente lê<br>
+      Em octal: 6 (dono) + 4 (grupo) + 4 (outros) = <strong>644</strong>. Essa é a permissão padrão para a maioria dos arquivos de texto.</div>
+    </div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="questao" id="q10">
+    <div class="q-head">
+      <span class="q-num">QUESTÃO 10</span>
+      <span class="q-tag">chmod Octal</span>
+      <span class="q-pts">5 pts</span>
+    </div>
+    <div class="q-body">
+      <div class="q-texto">Qual é o resultado de executar <code>chmod 700 pasta/</code>?</div>
+      <ul class="alternativas">
+        <li data-l="A">Dono tem acesso total; grupo e outros não têm nenhum acesso</li>
+        <li data-l="B">Todos têm acesso total à pasta</li>
+        <li data-l="C">Dono lê e escreve; grupo e outros só leem</li>
+        <li data-l="D">Ninguém tem acesso</li>
+      </ul>
+      <button class="reveal-btn" onclick="reveal('gab-q10', this)"><span class="arrow">▶</span> VER RESOLUÇÃO</button>
+    </div>
+    <div class="gabarito" id="gab-q10">
+      <div class="gab-label">Resolução</div>
+      <div class="gab-resposta">✓ Resposta: A) Dono total; grupo e outros sem acesso</div>
+      <div class="gab-exp"><strong>Decodificando 700:</strong><br>
+      • 7 = 4(r) + 2(w) + 1(x) = <code>rwx</code> para o dono<br>
+      • 0 = <code>---</code> para o grupo<br>
+      • 0 = <code>---</code> para os outros<br>
+      Resultado: <span class="perm-box" style="background:rgba(0,255,136,.08);border-color:#00cc66;color:#b3ffd9">drwx------</span>. Ideal para diretórios pessoais e pastas com dados sigilosos.</div>
+    </div>
+  </div>
+
+  <!-- Q11 -->
+  <div class="questao" id="q11">
+    <div class="q-head">
+      <span class="q-num">QUESTÃO 11</span>
+      <span class="q-tag">chmod 600</span>
+      <span class="q-pts">5 pts</span>
+    </div>
+    <div class="q-body">
+      <div class="q-texto">Um administrador quer que <strong>somente o dono</strong> leia e escreva um arquivo, e ninguém mais tenha qualquer acesso. Qual <code>chmod</code> é correto?</div>
+      <ul class="alternativas">
+        <li data-l="A"><code>chmod 755 arquivo</code></li>
+        <li data-l="B"><code>chmod 644 arquivo</code></li>
+        <li data-l="C"><code>chmod 600 arquivo</code></li>
+        <li data-l="D"><code>chmod 440 arquivo</code></li>
+      </ul>
+      <button class="reveal-btn" onclick="reveal('gab-q11', this)"><span class="arrow">▶</span> VER RESOLUÇÃO</button>
+    </div>
+    <div class="gabarito" id="gab-q11">
+      <div class="gab-label">Resolução</div>
+      <div class="gab-resposta">✓ Resposta: C) chmod 600 arquivo</div>
+      <div class="gab-exp"><strong>600</strong> = <code>rw-</code>(dono) + <code>---</code>(grupo) + <code>---</code>(outros) = <span class="perm-box" style="background:rgba(0,255,136,.08);border-color:#00cc66;color:#b3ffd9">-rw-------</span><br>
+      Aplicações comuns: chaves SSH privadas (~/.ssh/id_rsa), arquivos .env com senhas, configurações de banco de dados.<br>
+      <strong>Por que não 644?</strong> O 644 deixa o grupo e outros <em>lerem</em> o arquivo — inaceitável para dados sigilosos.<br>
+      <strong>Por que não 440?</strong> Impediria o próprio dono de escrever no arquivo.</div>
+    </div>
+  </div>
+
+  <!-- Q12 -->
+  <div class="questao" id="q12">
+    <div class="q-head">
+      <span class="q-num">QUESTÃO 12</span>
+      <span class="q-tag">chmod Simbólico</span>
+      <span class="q-pts">5 pts</span>
+    </div>
+    <div class="q-body">
+      <div class="q-texto">O comando <code>chmod u+x script.sh</code> realiza qual ação?</div>
+      <ul class="alternativas">
+        <li data-l="A">Remove a permissão de execução de todos</li>
+        <li data-l="B">Adiciona permissão de execução para o grupo</li>
+        <li data-l="C">Adiciona permissão de execução para o dono do arquivo</li>
+        <li data-l="D">Torna o arquivo somente leitura</li>
+      </ul>
+      <button class="reveal-btn" onclick="reveal('gab-q12', this)"><span class="arrow">▶</span> VER RESOLUÇÃO</button>
+    </div>
+    <div class="gabarito" id="gab-q12">
+      <div class="gab-label">Resolução</div>
+      <div class="gab-resposta">✓ Resposta: C) Adiciona execução para o dono</div>
+      <div class="gab-exp"><strong>Sintaxe simbólica do chmod:</strong> <code>[quem][operação][permissão]</code><br>
+      • <code>u</code> = user (dono) | <code>g</code> = grupo | <code>o</code> = outros | <code>a</code> = all (todos)<br>
+      • <code>+</code> = adiciona | <code>-</code> = remove | <code>=</code> = define exatamente<br>
+      • <code>r</code> = leitura | <code>w</code> = escrita | <code>x</code> = execução<br>
+      Assim, <code>u+x</code> = adiciona execução somente para o dono. Não altera grupo nem outros.</div>
+    </div>
+  </div>
+
+  <!-- Q13 -->
+  <div class="questao" id="q13">
+    <div class="q-head">
+      <span class="q-num">QUESTÃO 13</span>
+      <span class="q-tag">Permissões Perigosas</span>
+      <span class="q-pts">5 pts</span>
+    </div>
+    <div class="q-body">
+      <div class="q-texto">Por que a permissão <code>chmod 777</code> em um arquivo de configuração é considerada <strong>perigosa</strong>?</div>
+      <ul class="alternativas">
+        <li data-l="A">Porque impede que o root leia o arquivo</li>
+        <li data-l="B">Porque qualquer usuário do sistema pode modificar o arquivo, facilitando ataques</li>
+        <li data-l="C">Porque o arquivo fica invisível para outros usuários</li>
+        <li data-l="D">Porque consome mais espaço em disco</li>
+      </ul>
+      <button class="reveal-btn" onclick="reveal('gab-q13', this)"><span class="arrow">▶</span> VER RESOLUÇÃO</button>
+    </div>
+    <div class="gabarito" id="gab-q13">
+      <div class="gab-label">Resolução</div>
+      <div class="gab-resposta">✓ Resposta: B) Qualquer usuário pode modificar</div>
+      <div class="gab-exp"><code>777</code> = <code>rwxrwxrwx</code> — <strong>todos os usuários</strong> do sistema têm permissão total. Em arquivos de configuração: qualquer um pode injetar parâmetros maliciosos. Em scripts: qualquer usuário pode substituir o conteúdo. Vetor clássico de <strong>escalada de privilégios</strong>: um atacante com conta comum modifica um script executado pelo root e obtém acesso total.
+      <div class="gab-nota">⚠ 777 quase nunca é correto. Em produção, sempre questione quem realmente precisa de escrita.</div></div>
+    </div>
+  </div>
+
+  <!-- Q14 -->
+  <div class="questao" id="q14">
+    <div class="q-head">
+      <span class="q-num">QUESTÃO 14</span>
+      <span class="q-tag">Permissões Comuns</span>
+      <span class="q-pts">5 pts</span>
+    </div>
+    <div class="q-body">
+      <div class="q-texto">Qual permissão octal é mais adequada para <strong>diretórios públicos</strong>, onde o dono pode editar, mas outros apenas acessam?</div>
+      <ul class="alternativas">
+        <li data-l="A"><code>600</code></li>
+        <li data-l="B"><code>644</code></li>
+        <li data-l="C"><code>755</code></li>
+        <li data-l="D"><code>777</code></li>
+      </ul>
+      <button class="reveal-btn" onclick="reveal('gab-q14', this)"><span class="arrow">▶</span> VER RESOLUÇÃO</button>
+    </div>
+    <div class="gabarito" id="gab-q14">
+      <div class="gab-label">Resolução</div>
+      <div class="gab-resposta">✓ Resposta: C) 755</div>
+      <div class="gab-exp"><strong>755</strong> = <code>rwx</code>(dono) + <code>r-x</code>(grupo) + <code>r-x</code>(outros)<br>
+      O dono pode ler, escrever e entrar (<code>rwx=7</code>). Grupo e outros podem ler e entrar no diretório (<code>r-x=5</code>), mas não criar/deletar arquivos dentro. Padrão para diretórios de servidores web, páginas públicas e softwares instalados.<br>
+      <strong>Por que não 644 em diretórios?</strong> O bit <code>x</code> em diretórios significa "entrar" — sem ele, ninguém lista o conteúdo.</div>
+    </div>
+  </div>
+
+  <!-- Q15 -->
+  <div class="questao" id="q15">
+    <div class="q-head">
+      <span class="q-num">QUESTÃO 15</span>
+      <span class="q-tag">Listagem de Permissões</span>
+      <span class="q-pts">5 pts</span>
+    </div>
+    <div class="q-body">
+      <div class="q-texto">Qual comando exibe as <strong>permissões detalhadas</strong> de arquivos e diretórios, incluindo dono e grupo?</div>
+      <ul class="alternativas">
+        <li data-l="A"><code>cat /etc/passwd</code></li>
+        <li data-l="B"><code>ls -la</code></li>
+        <li data-l="C"><code>chmod -v</code></li>
+        <li data-l="D"><code>id -l</code></li>
+      </ul>
+      <button class="reveal-btn" onclick="reveal('gab-q15', this)"><span class="arrow">▶</span> VER RESOLUÇÃO</button>
+    </div>
+    <div class="gabarito" id="gab-q15">
+      <div class="gab-label">Resolução</div>
+      <div class="gab-resposta">✓ Resposta: B) ls -la</div>
+      <div class="gab-exp">O <code>ls -l</code> exibe: tipo+permissões, links, dono, grupo, tamanho, data e nome. O <code>-a</code> inclui arquivos ocultos (iniciados com <code>.</code>). Exemplo de saída:
+      <div class="gab-cmd"><span class="out">-rw-r--r-- 1 carlos carlos  512 Mai 08 10:00 arquivo.txt</span><br><span class="out">drwx------ 2 carlos carlos 4096 Mai 08 10:00 privado/</span></div>
+      Essencial em auditorias de segurança para verificar quem tem acesso a quê.</div>
+    </div>
+  </div>
+
+  <!-- Q16 -->
+  <div class="questao" id="q16">
+    <div class="q-head">
+      <span class="q-num">QUESTÃO 16</span>
+      <span class="q-tag">Saída do ls -la</span>
+      <span class="q-pts">5 pts</span>
+    </div>
+    <div class="q-body">
+      <div class="q-texto">Na saída <span class="perm-box">-rwx------</span>, o que representa o primeiro caractere "<strong>-</strong>"?</div>
+      <ul class="alternativas">
+        <li data-l="A">Que o arquivo não tem dono</li>
+        <li data-l="B">Que o arquivo está bloqueado</li>
+        <li data-l="C">Que é um arquivo regular (não é diretório nem link)</li>
+        <li data-l="D">Que o arquivo tem permissão de execução negada</li>
+      </ul>
+      <button class="reveal-btn" onclick="reveal('gab-q16', this)"><span class="arrow">▶</span> VER RESOLUÇÃO</button>
+    </div>
+    <div class="gabarito" id="gab-q16">
+      <div class="gab-label">Resolução</div>
+      <div class="gab-resposta">✓ Resposta: C) Arquivo regular</div>
+      <div class="gab-exp"><strong>Primeiro caractere = tipo do arquivo:</strong><br>
+      • <code>-</code> = arquivo regular (texto, binário, script, etc.)<br>
+      • <code>d</code> = diretório<br>
+      • <code>l</code> = link simbólico<br>
+      • <code>b</code> = dispositivo de bloco (HD, pendrive)<br>
+      • <code>c</code> = dispositivo de caractere (teclado, serial)<br>
+      • <code>p</code> = pipe (FIFO)<br>
+      • <code>s</code> = socket</div>
+    </div>
+  </div>
+
+  <!-- ── SEÇÃO C ── -->
+  <div class="secao-header">
+    <span class="secao-letra">SEÇÃO C</span>
+    <span class="secao-titulo">Controle de Acesso Avançado</span>
+    <span class="secao-pts">Q17–Q20 · 20 pts</span>
+  </div>
+
+  <!-- Q17 -->
+  <div class="questao" id="q17">
+    <div class="q-head">
+      <span class="q-num">QUESTÃO 17</span>
+      <span class="q-tag">ACL</span>
+      <span class="q-pts">5 pts</span>
+    </div>
+    <div class="q-body">
+      <div class="q-texto">Um arquivo tem permissão <span class="perm-box">-rw-r-----+</span>. O que significa o "<strong>+</strong>" no final?</div>
+      <ul class="alternativas">
+        <li data-l="A">O arquivo tem o bit SUID ativo</li>
+        <li data-l="B">O arquivo está bloqueado para escrita</li>
+        <li data-l="C">O arquivo possui ACLs configuradas além das permissões padrão</li>
+        <li data-l="D">O arquivo pertence ao grupo root</li>
+      </ul>
+      <button class="reveal-btn" onclick="reveal('gab-q17', this)"><span class="arrow">▶</span> VER RESOLUÇÃO</button>
+    </div>
+    <div class="gabarito" id="gab-q17">
+      <div class="gab-label">Resolução</div>
+      <div class="gab-resposta">✓ Resposta: C) ACLs configuradas</div>
+      <div class="gab-exp">O <code>+</code> indica que o arquivo tem <strong>ACL (Access Control List)</strong> configurada — uma camada extra de permissões além do modelo tradicional rwx. Com ACL é possível conceder acesso a um usuário específico sem alterar dono/grupo. Para visualizar: <code>getfacl arquivo</code>. Para configurar: <code>setfacl -m u:fulano:r arquivo</code>.</div>
+    </div>
+  </div>
+
+  <!-- Q18 -->
+  <div class="questao" id="q18">
+    <div class="q-head">
+      <span class="q-num">QUESTÃO 18</span>
+      <span class="q-tag">chage</span>
+      <span class="q-pts">5 pts</span>
+    </div>
+    <div class="q-body">
+      <div class="q-texto">O que o comando <code>sudo chage -d 0 joao</code> faz?</div>
+      <ul class="alternativas">
+        <li data-l="A">Remove a conta joao após 0 dias</li>
+        <li data-l="B">Força joao a trocar a senha no próximo login</li>
+        <li data-l="C">Define que a senha de joao nunca expira</li>
+        <li data-l="D">Bloqueia a conta imediatamente</li>
+      </ul>
+      <button class="reveal-btn" onclick="reveal('gab-q18', this)"><span class="arrow">▶</span> VER RESOLUÇÃO</button>
+    </div>
+    <div class="gabarito" id="gab-q18">
+      <div class="gab-label">Resolução</div>
+      <div class="gab-resposta">✓ Resposta: B) Força troca de senha no próximo login</div>
+      <div class="gab-exp">O <code>chage -d 0</code> define a <em>data da última mudança de senha</em> como <strong>0</strong> (epoch Unix = 01/01/1970). O sistema interpreta que a senha está vencida desde sempre, forçando o usuário a criar uma nova senha imediatamente no próximo login. Muito útil ao criar contas: o admin define uma senha provisória e garante que o usuário a troque.</div>
+    </div>
+  </div>
+
+  <!-- Q19 -->
+  <div class="questao" id="q19">
+    <div class="q-head">
+      <span class="q-num">QUESTÃO 19</span>
+      <span class="q-tag">Auditoria</span>
+      <span class="q-pts">5 pts</span>
+    </div>
+    <div class="q-body">
+      <div class="q-texto">Por que o comando <code>find / -perm 0777 -type f</code> é importante em auditorias de segurança?</div>
+      <ul class="alternativas">
+        <li data-l="A">Localiza arquivos de configuração para backup</li>
+        <li data-l="B">Lista scripts que precisam de permissão de execução</li>
+        <li data-l="C">Identifica arquivos com permissão total para todos — possíveis vetores de ataque</li>
+        <li data-l="D">Encontra arquivos pertencentes ao root</li>
+      </ul>
+      <button class="reveal-btn" onclick="reveal('gab-q19', this)"><span class="arrow">▶</span> VER RESOLUÇÃO</button>
+    </div>
+    <div class="gabarito" id="gab-q19">
+      <div class="gab-label">Resolução</div>
+      <div class="gab-resposta">✓ Resposta: C) Vetores de ataque com permissão total</div>
+      <div class="gab-exp">Arquivos com permissão <code>777</code> são <strong>alvos prioritários em auditorias</strong>. Qualquer usuário do sistema pode escrever neles. Se um script com 777 é executado periodicamente por root (via cron, por exemplo), um atacante com conta comum pode injetar código malicioso e obter <strong>escalada de privilégios</strong>.
+      <div class="gab-cmd"><span class="prompt">$</span> find /tmp -perm 0777 -type f 2>/dev/null<br><span class="out">/tmp/arquivo_inseguro.sh</span><br><span class="out">/tmp/config_exposta.txt</span></div></div>
+    </div>
+  </div>
+
+  <!-- Q20 -->
+  <div class="questao" id="q20">
+    <div class="q-head">
+      <span class="q-num">QUESTÃO 20</span>
+      <span class="q-tag">Princípio do Menor Privilégio</span>
+      <span class="q-pts">5 pts</span>
+    </div>
+    <div class="q-body">
+      <div class="q-texto">Qual afirmação descreve corretamente o <strong>Princípio do Menor Privilégio</strong> aplicado a permissões Linux?</div>
+      <ul class="alternativas">
+        <li data-l="A">Todo usuário deve ter permissão de leitura em todos os arquivos do sistema</li>
+        <li data-l="B">Cada usuário ou processo deve ter apenas as permissões mínimas para executar sua função</li>
+        <li data-l="C">O root deve ser usado para todas as operações a fim de evitar erros de permissão</li>
+        <li data-l="D">Grupos devem ter sempre permissão rwx para facilitar o trabalho colaborativo</li>
+      </ul>
+      <button class="reveal-btn" onclick="reveal('gab-q20', this)"><span class="arrow">▶</span> VER RESOLUÇÃO</button>
+    </div>
+    <div class="gabarito" id="gab-q20">
+      <div class="gab-label">Resolução</div>
+      <div class="gab-resposta">✓ Resposta: B) Permissões mínimas para executar a função</div>
+      <div class="gab-exp"><strong>Princípio do Menor Privilégio (PoLP)</strong>: conceder apenas o acesso estritamente necessário, nada mais.<br>
+      • A ≠ — acesso irrestrito aumenta a superfície de ataque<br>
+      • C ≠ — usar root para tudo é perigoso; um erro derruba o sistema<br>
+      • D ≠ — rwx indiscriminado para grupos viola o princípio<br>
+      <strong>Por que importa:</strong> se uma conta é comprometida, o atacante só tem os privilégios daquela conta — o dano é limitado. Com root para tudo, a invasão seria total.</div>
+    </div>
+  </div>
+
+  <table class="tabela-pts" style="margin-top:24px">
+    <thead>
+      <tr><th>Seção</th><th>Questões</th><th>Pts/Q</th><th>Total</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>A — Usuários &amp; Arquivos do Sistema</td><td>01–08</td><td>5</td><td>40</td></tr>
+      <tr><td>B — Permissões rwx &amp; chmod</td><td>09–16</td><td>5</td><td>40</td></tr>
+      <tr><td>C — Controle de Acesso Avançado</td><td>17–20</td><td>5</td><td>20</td></tr>
+      <tr class="total"><td>TOTAL</td><td>20 questões</td><td>5</td><td>100</td></tr>
+    </tbody>
+  </table>
+
+</div><!-- /page teórica -->
+
+
+<!-- ══════════════════════════════════════════════════
+     PARTE 2 — AVALIAÇÃO PRÁTICA
+══════════════════════════════════════════════════ -->
+<div class="page">
+
+  <div class="page-header">
+    <div>
+      <div class="badge">▶ EXERCÍCIO DIRIGIDO — PARTE PRÁTICA</div>
+      <div class="page-title">Usuários &amp; Permissões no Linux — Terminal</div>
+      <div class="page-sub">ISO-103 2026 · Segurança da Informação · Semanas 06 &amp; 06.1</div>
+    </div>
+    <div class="page-meta">4 tarefas · 100 pontos<br>Duração: 60 min</div>
+  </div>
+
+  <div class="instrucao">
+    <strong>Como usar:</strong> Execute cada passo no terminal Linux e registre os outputs. Após executar, clique em <strong>▶ VER RESOLUÇÃO</strong> para comparar com a resposta esperada e entender cada comando. <strong>Total: 100 pontos.</strong>
+  </div>
+
+  <!-- ── SEÇÃO A ── -->
+  <div class="secao-header">
+    <span class="secao-letra">SEÇÃO A</span>
+    <span class="secao-titulo">Criação e Gerenciamento de Usuários</span>
+    <span class="secao-pts">Tarefa 01 · 30 pts</span>
+  </div>
+
+  <div class="tarefa">
+    <div class="tarefa-head">
+      <span class="tarefa-n">TAREFA 01</span>
+      <span class="tarefa-titulo">Criando Usuários e Verificando o Sistema</span>
+      <span class="tarefa-pts">30 pts</span>
+    </div>
+    <div class="tarefa-body">
+      <div class="tarefa-context">Você foi contratado como técnico de TI de uma pequena empresa. Antes de configurar o servidor, precisa criar contas para dois novos funcionários e verificar como o Linux organiza essas informações.</div>
+      <div class="tarefa-enunciado">Execute os passos abaixo no terminal e registre os outputs no documento de entrega:</div>
+      <ol class="passos">
+        <li data-n="1">Execute <code>cat /etc/passwd | head -5</code>. Identifique os campos: <strong>login, "x", UID, GID, comentário, home e shell</strong>.</li>
+        <li data-n="2">Crie o usuário <strong>carlos</strong> com pasta pessoal, shell bash e nome completo "Carlos Souza":<br><code>sudo useradd -m -s /bin/bash -c "Carlos Souza" carlos</code><br>Em seguida: <code>sudo passwd carlos</code></li>
+        <li data-n="3">Crie o usuário <strong>patricia</strong> da mesma forma e defina uma senha para ela.</li>
+        <li data-n="4">Execute <code>grep carlos /etc/passwd</code> e <code>grep patricia /etc/passwd</code>. Identifique o UID de cada um.</li>
+        <li data-n="5">Execute <code>ls -la /home/</code>. Confirme que as pastas de carlos e patricia foram criadas automaticamente.</li>
+      </ol>
+      <span class="check-label">☑ Checklist de entrega</span>
+      <ul class="checklist">
+        <li>Descrição do formato do /etc/passwd com os 7 campos identificados</li>
+        <li>Usuários carlos e patricia criados corretamente com -m e -s /bin/bash</li>
+        <li>Saída do grep mostrando as linhas dos dois usuários</li>
+        <li>UIDs de carlos e patricia anotados (esperado: ≥ 1000)</li>
+        <li>Print/saída do ls -la /home/ evidenciando as pastas criadas</li>
+      </ul>
+      <button class="reveal-btn" onclick="reveal('gab-t01', this)" style="margin-top:10px"><span class="arrow">▶</span> VER RESOLUÇÃO</button>
+    </div>
+    <div class="gabarito" id="gab-t01">
+      <div class="gab-label">Resolução — Tarefa 01</div>
+
+      <div class="gab-exp"><strong>Passo 1 — Formato do /etc/passwd:</strong></div>
+      <div class="gab-cmd"><span class="prompt">$</span> cat /etc/passwd | head -5<br>
+<span class="out">root:x:0:0:root:/root:/bin/bash</span><br>
+<span class="out">daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin</span><br>
+<span class="comment"># Campos: login : x(senha) : UID : GID : comentário : /home : /shell</span></div>
+
+      <div class="gab-exp" style="margin-top:8px"><strong>Passo 2 e 3 — Criar carlos e patricia:</strong></div>
+      <div class="gab-cmd"><span class="prompt">$</span> sudo useradd -m -s /bin/bash -c <span class="hi">"Carlos Souza"</span> carlos<br>
+<span class="comment"># Silêncio = sucesso no Linux</span><br>
+<span class="prompt">$</span> sudo passwd carlos<br>
+<span class="out">Nova senha: ****</span><br>
+<span class="out">Redigite a nova senha: ****</span><br>
+<span class="out">passwd: senha atualizada com sucesso</span><br><br>
+<span class="prompt">$</span> sudo useradd -m -s /bin/bash -c <span class="hi">"Patricia Lima"</span> patricia<br>
+<span class="prompt">$</span> sudo passwd patricia</div>
+
+      <div class="gab-exp" style="margin-top:8px"><strong>Passo 4 — Verificar no /etc/passwd:</strong></div>
+      <div class="gab-cmd"><span class="prompt">$</span> grep carlos /etc/passwd<br>
+<span class="out">carlos:x:<span class="hi">1001</span>:1001:Carlos Souza:/home/carlos:/bin/bash</span><br>
+<span class="prompt">$</span> grep patricia /etc/passwd<br>
+<span class="out">patricia:x:<span class="hi">1002</span>:1002:Patricia Lima:/home/patricia:/bin/bash</span></div>
+
+      <div class="gab-exp" style="margin-top:8px"><strong>Passo 5 — Confirmar as pastas pessoais:</strong></div>
+      <div class="gab-cmd"><span class="prompt">$</span> ls -la /home/<br>
+<span class="out">drwxr-xr-x  4 root     root     4096 Mai 08 10:00 .</span><br>
+<span class="out">drwx------ 15 <span class="hi">carlos</span>   carlos   4096 Mai 08 10:01 carlos</span><br>
+<span class="out">drwx------ 15 <span class="hi">patricia</span> patricia 4096 Mai 08 10:02 patricia</span></div>
+
+      <div class="gab-nota">💡 O -m cria o diretório home automaticamente. O dono da pasta é o próprio usuário (drwx------ = 700). Isso garante privacidade entre usuários do mesmo sistema.</div>
+    </div>
+  </div>
+
+  <!-- ── SEÇÃO B ── -->
+  <div class="secao-header">
+    <span class="secao-letra">SEÇÃO B</span>
+    <span class="secao-titulo">Grupos e Permissões de Acesso</span>
+    <span class="secao-pts">Tarefa 02 · 30 pts</span>
+  </div>
+
+  <div class="tarefa">
+    <div class="tarefa-head">
+      <span class="tarefa-n">TAREFA 02</span>
+      <span class="tarefa-titulo">Criando Grupos e Controlando o Acesso a Arquivos</span>
+      <span class="tarefa-pts">30 pts</span>
+    </div>
+    <div class="tarefa-body">
+      <div class="tarefa-context">A empresa tem dois departamentos: TI e RH. Crie grupos para cada setor, associe os usuários e garanta que arquivos sigilosos só sejam acessados pelo grupo correto.</div>
+      <ol class="passos">
+        <li data-n="1">Crie os grupos <strong>ti</strong> e <strong>rh</strong>:<br><code>sudo groupadd ti &amp;&amp; sudo groupadd rh</code></li>
+        <li data-n="2">Adicione <strong>carlos</strong> ao grupo <strong>ti</strong> e <strong>patricia</strong> ao grupo <strong>rh</strong> sem remover grupos originais:<br><code>sudo usermod -aG ti carlos</code><br><code>sudo usermod -aG rh patricia</code></li>
+        <li data-n="3">Execute <code>id carlos</code> e <code>id patricia</code>. Confirme os grupos e cole a saída.</li>
+        <li data-n="4">Crie um arquivo sigiloso com permissão somente para o dono:<br><code>touch /tmp/folha_pagamento.txt</code><br><code>chmod 600 /tmp/folha_pagamento.txt</code></li>
+        <li data-n="5">Execute <code>ls -la /tmp/folha_pagamento.txt</code>. Explique por escrito o que cada parte da permissão significa.</li>
+      </ol>
+      <span class="check-label">☑ Checklist de entrega</span>
+      <ul class="checklist">
+        <li>Grupos ti e rh criados com groupadd</li>
+        <li>carlos no grupo ti e patricia no grupo rh (via usermod -aG)</li>
+        <li>Saída do id de cada usuário confirmando os grupos</li>
+        <li>Arquivo /tmp/folha_pagamento.txt com chmod 600 aplicado</li>
+        <li>Saída do ls -la colada e permissão explicada por escrito</li>
+      </ul>
+      <button class="reveal-btn" onclick="reveal('gab-t02', this)" style="margin-top:10px"><span class="arrow">▶</span> VER RESOLUÇÃO</button>
+    </div>
+    <div class="gabarito" id="gab-t02">
+      <div class="gab-label">Resolução — Tarefa 02</div>
+
+      <div class="gab-exp"><strong>Passo 1 — Criar grupos:</strong></div>
+      <div class="gab-cmd"><span class="prompt">$</span> sudo groupadd ti &amp;&amp; sudo groupadd rh<br>
+<span class="comment"># Silêncio = grupos criados com sucesso</span><br>
+<span class="prompt">$</span> grep -E "^ti:|^rh:" /etc/group<br>
+<span class="out">ti:x:1003:</span><br>
+<span class="out">rh:x:1004:</span></div>
+
+      <div class="gab-exp" style="margin-top:8px"><strong>Passo 2 — Associar usuários aos grupos (CUIDADO com -aG):</strong></div>
+      <div class="gab-cmd"><span class="prompt">$</span> sudo usermod <span class="hi">-aG</span> ti carlos<br>
+<span class="prompt">$</span> sudo usermod <span class="hi">-aG</span> rh patricia<br>
+<span class="comment"># -a = append (acrescenta). Sem "a", substitui todos os grupos!</span></div>
+
+      <div class="gab-exp" style="margin-top:8px"><strong>Passo 3 — Verificar com id:</strong></div>
+      <div class="gab-cmd"><span class="prompt">$</span> id carlos<br>
+<span class="out">uid=1001(carlos) gid=1001(carlos) groups=1001(carlos),<span class="hi">1003(ti)</span></span><br>
+<span class="prompt">$</span> id patricia<br>
+<span class="out">uid=1002(patricia) gid=1002(patricia) groups=1002(patricia),<span class="hi">1004(rh)</span></span></div>
+
+      <div class="gab-exp" style="margin-top:8px"><strong>Passos 4 e 5 — Arquivo sigiloso com chmod 600:</strong></div>
+      <div class="gab-cmd"><span class="prompt">$</span> touch /tmp/folha_pagamento.txt<br>
+<span class="prompt">$</span> chmod 600 /tmp/folha_pagamento.txt<br>
+<span class="prompt">$</span> ls -la /tmp/folha_pagamento.txt<br>
+<span class="out"><span class="hi">-rw-------</span> 1 aluno aluno 0 Mai 08 10:05 /tmp/folha_pagamento.txt</span></div>
+
+      <div class="gab-exp" style="margin-top:6px"><strong>Explicação da permissão <code>-rw-------</code>:</strong><br>
+      • <code>-</code> → arquivo regular<br>
+      • <code>rw-</code> → dono: lê e escreve (sem execução)<br>
+      • <code>---</code> → grupo: sem acesso nenhum<br>
+      • <code>---</code> → outros: sem acesso nenhum<br>
+      Em octal: 6+0+0 = <strong>600</strong>. Ideal para folhas de pagamento, chaves SSH, e arquivos com senhas.</div>
+    </div>
+  </div>
+
+  <!-- ── SEÇÃO C ── -->
+  <div class="secao-header">
+    <span class="secao-letra">SEÇÃO C</span>
+    <span class="secao-titulo">Estrutura de Diretórios com Permissões Profissionais</span>
+    <span class="secao-pts">Tarefa 03 · 25 pts</span>
+  </div>
+
+  <div class="tarefa">
+    <div class="tarefa-head">
+      <span class="tarefa-n">TAREFA 03</span>
+      <span class="tarefa-titulo">Criando a Estrutura de Arquivos da Empresa com Permissões Corretas</span>
+      <span class="tarefa-pts">25 pts</span>
+    </div>
+    <div class="tarefa-body">
+      <div class="tarefa-context">Como administrador, crie uma estrutura de diretórios para o servidor da empresa com permissões conforme o nível de confidencialidade.</div>
+      <div class="tarefa-enunciado">Crie a estrutura abaixo em <code>/tmp/empresa/</code> e aplique as permissões indicadas:</div>
+      <div class="duas-col" style="gap:10px; margin:8px 0">
+        <div>
+          <div class="tree">
+            <span class="t-pasta">📁 /tmp/empresa/</span>
+            <span class="t-i1 t-pasta">📁 rh/</span>
+            <span class="t-i2 t-arquivo">📄 contrato_carlos.txt</span>
+            <span class="t-i2 t-arquivo">📄 folha_pagamento.txt</span>
+            <span class="t-i1 t-pasta">📁 ti/</span>
+            <span class="t-i2 t-arquivo">📄 inventario_servidores.txt</span>
+            <span class="t-i2 t-arquivo">📄 chamados_suporte.txt</span>
+            <span class="t-i1 t-pasta">📁 publico/</span>
+            <span class="t-i2 t-arquivo">📄 comunicado_geral.txt</span>
+          </div>
+        </div>
+        <div>
+          <div class="aviso destaque">⚠ Permissões obrigatórias:<br>
+          · rh/ → <strong>chmod 700</strong><br>
+          · ti/ → <strong>chmod 750</strong><br>
+          · publico/ → <strong>chmod 755</strong><br>
+          · Arquivos .txt → <strong>chmod 644</strong></div>
+        </div>
+      </div>
+      <ol class="passos">
+        <li data-n="1">Crie a estrutura: <code>mkdir -p /tmp/empresa/rh /tmp/empresa/ti /tmp/empresa/publico</code></li>
+        <li data-n="2">Crie os arquivos .txt com <code>touch</code> em cada pasta (sem espaços ou acentos nos nomes).</li>
+        <li data-n="3">Aplique as permissões indicadas em cada diretório e arquivo.</li>
+        <li data-n="4">Execute <code>ls -la /tmp/empresa/</code> e <code>ls -la /tmp/empresa/rh/</code>. Cole ambas as saídas.</li>
+        <li data-n="5">Responda por escrito: <strong>por que a pasta rh/ tem permissão 700 e não 755? Qual o risco de 755 no rh/?</strong></li>
+      </ol>
+      <span class="check-label">☑ Checklist de entrega</span>
+      <ul class="checklist">
+        <li>Estrutura de diretórios criada conforme o diagrama</li>
+        <li>Arquivos .txt criados com nomenclatura sem espaços/acentos</li>
+        <li>Permissões 700, 750 e 755 aplicadas nos diretórios corretos</li>
+        <li>Arquivos com chmod 644 aplicado</li>
+        <li>Saída do ls -la evidenciando as permissões</li>
+        <li>Justificativa escrita sobre o uso de 700 no diretório rh/</li>
+      </ul>
+      <button class="reveal-btn" onclick="reveal('gab-t03', this)" style="margin-top:10px"><span class="arrow">▶</span> VER RESOLUÇÃO</button>
+    </div>
+    <div class="gabarito" id="gab-t03">
+      <div class="gab-label">Resolução — Tarefa 03</div>
+
+      <div class="gab-exp"><strong>Passos 1 e 2 — Criar estrutura e arquivos:</strong></div>
+      <div class="gab-cmd"><span class="prompt">$</span> mkdir -p /tmp/empresa/rh /tmp/empresa/ti /tmp/empresa/publico<br>
+<span class="prompt">$</span> touch /tmp/empresa/rh/contrato_carlos.txt /tmp/empresa/rh/folha_pagamento.txt<br>
+<span class="prompt">$</span> touch /tmp/empresa/ti/inventario_servidores.txt /tmp/empresa/ti/chamados_suporte.txt<br>
+<span class="prompt">$</span> touch /tmp/empresa/publico/comunicado_geral.txt</div>
+
+      <div class="gab-exp" style="margin-top:8px"><strong>Passo 3 — Aplicar permissões nos diretórios:</strong></div>
+      <div class="gab-cmd"><span class="prompt">$</span> chmod <span class="hi">700</span> /tmp/empresa/rh/<br>
+<span class="prompt">$</span> chmod <span class="hi">750</span> /tmp/empresa/ti/<br>
+<span class="prompt">$</span> chmod <span class="hi">755</span> /tmp/empresa/publico/<br>
+<span class="prompt">$</span> chmod <span class="hi">644</span> /tmp/empresa/rh/*.txt /tmp/empresa/ti/*.txt /tmp/empresa/publico/*.txt</div>
+
+      <div class="gab-exp" style="margin-top:8px"><strong>Passo 4 — Verificar resultado:</strong></div>
+      <div class="gab-cmd"><span class="prompt">$</span> ls -la /tmp/empresa/<br>
+<span class="out">total 20</span><br>
+<span class="out"><span class="hi">drwx------</span> 2 aluno aluno 4096 Mai 08  rh/</span><br>
+<span class="out"><span class="hi">drwxr-x---</span> 2 aluno aluno 4096 Mai 08  ti/</span><br>
+<span class="out"><span class="hi">drwxr-xr-x</span> 2 aluno aluno 4096 Mai 08  publico/</span><br><br>
+<span class="prompt">$</span> ls -la /tmp/empresa/rh/<br>
+<span class="out"><span class="hi">-rw-r--r--</span> 1 aluno aluno 0 Mai 08 contrato_carlos.txt</span><br>
+<span class="out"><span class="hi">-rw-r--r--</span> 1 aluno aluno 0 Mai 08 folha_pagamento.txt</span></div>
+
+      <div class="gab-exp" style="margin-top:8px"><strong>Passo 5 — Justificativa:</strong><br>
+      O diretório <code>rh/</code> recebe <strong>700</strong> (drwx------) porque contém dados sigilosos: salários, contratos, dados pessoais. Com permissão <strong>755</strong>, qualquer usuário do sistema poderia <em>entrar no diretório e listar os arquivos</em> — mesmo sem poder lê-los diretamente, já saberia quais arquivos existem, o que viola a confidencialidade. A permissão 700 garante que apenas o dono (administrador) possa acessar o diretório.</div>
+    </div>
+  </div>
+
+  <!-- ── SEÇÃO D ── -->
+  <div class="secao-header">
+    <span class="secao-letra">SEÇÃO D</span>
+    <span class="secao-titulo">Auditoria e Segurança de Permissões</span>
+    <span class="secao-pts">Tarefa 04 · 15 pts</span>
+  </div>
+
+  <div class="tarefa">
+    <div class="tarefa-head">
+      <span class="tarefa-n">TAREFA 04</span>
+      <span class="tarefa-titulo">Detectando e Corrigindo Permissões Inseguras</span>
+      <span class="tarefa-pts">15 pts</span>
+    </div>
+    <div class="tarefa-body">
+      <div class="tarefa-context">Você recebeu um servidor com suspeita de configurações incorretas de permissão. Precisa identificar arquivos com permissão total (777) e corrigi-los.</div>
+      <ol class="passos">
+        <li data-n="1">Crie dois arquivos com permissão insegura para simular a situação:<br>
+        <code>touch /tmp/arquivo_inseguro.sh &amp;&amp; chmod 777 /tmp/arquivo_inseguro.sh</code><br>
+        <code>touch /tmp/config_exposta.txt &amp;&amp; chmod 777 /tmp/config_exposta.txt</code></li>
+        <li data-n="2">Execute a auditoria para encontrar arquivos com permissão 777 em /tmp:<br>
+        <code>find /tmp -perm 0777 -type f 2&gt;/dev/null</code></li>
+        <li data-n="3">Corrija as permissões: <code>chmod 644</code> em config_exposta.txt e <code>chmod 755</code> em arquivo_inseguro.sh.</li>
+        <li data-n="4">Rode o find novamente. Cole a saída e confirme que nenhum arquivo com 777 aparece.</li>
+        <li data-n="5">Explique por escrito: <strong>qual é o risco de um script .sh com permissão 777 em servidor com múltiplos usuários?</strong></li>
+      </ol>
+      <span class="check-label">☑ Checklist de entrega</span>
+      <ul class="checklist">
+        <li>Arquivos inseguros criados e identificados pelo find</li>
+        <li>Saída do find antes da correção colada no documento</li>
+        <li>Permissões corrigidas para 644 e 755</li>
+        <li>Saída do find após correção confirmando a resolução</li>
+        <li>Justificativa escrita sobre o risco do script com 777</li>
+      </ul>
+      <div class="aviso destaque" style="margin-top:8px">⚠ Um script com chmod 777 permite que qualquer usuário o modifique — vetor clássico de escalada de privilégios!</div>
+      <button class="reveal-btn" onclick="reveal('gab-t04', this)" style="margin-top:10px"><span class="arrow">▶</span> VER RESOLUÇÃO</button>
+    </div>
+    <div class="gabarito" id="gab-t04">
+      <div class="gab-label">Resolução — Tarefa 04</div>
+
+      <div class="gab-exp"><strong>Passo 1 — Simular permissões inseguras:</strong></div>
+      <div class="gab-cmd"><span class="prompt">$</span> touch /tmp/arquivo_inseguro.sh &amp;&amp; chmod 777 /tmp/arquivo_inseguro.sh<br>
+<span class="prompt">$</span> touch /tmp/config_exposta.txt &amp;&amp; chmod 777 /tmp/config_exposta.txt<br>
+<span class="prompt">$</span> ls -la /tmp/arquivo_inseguro.sh /tmp/config_exposta.txt<br>
+<span class="out"><span class="hi">-rwxrwxrwx</span> 1 aluno aluno 0 Mai 08 /tmp/arquivo_inseguro.sh</span><br>
+<span class="out"><span class="hi">-rwxrwxrwx</span> 1 aluno aluno 0 Mai 08 /tmp/config_exposta.txt</span></div>
+
+      <div class="gab-exp" style="margin-top:8px"><strong>Passo 2 — Auditoria (antes da correção):</strong></div>
+      <div class="gab-cmd"><span class="prompt">$</span> find /tmp -perm 0777 -type f 2&gt;/dev/null<br>
+<span class="out"><span class="hi">/tmp/arquivo_inseguro.sh</span></span><br>
+<span class="out"><span class="hi">/tmp/config_exposta.txt</span></span></div>
+
+      <div class="gab-exp" style="margin-top:8px"><strong>Passo 3 — Corrigir permissões:</strong></div>
+      <div class="gab-cmd"><span class="prompt">$</span> chmod <span class="hi">644</span> /tmp/config_exposta.txt<br>
+<span class="comment"># 644 = rw-r--r-- : dono lê/escreve, grupo e outros só leem</span><br>
+<span class="prompt">$</span> chmod <span class="hi">755</span> /tmp/arquivo_inseguro.sh<br>
+<span class="comment"># 755 = rwxr-xr-x : dono tem tudo, outros só executam/leem</span></div>
+
+      <div class="gab-exp" style="margin-top:8px"><strong>Passo 4 — Auditoria (após a correção — deve retornar vazia):</strong></div>
+      <div class="gab-cmd"><span class="prompt">$</span> find /tmp -perm 0777 -type f 2&gt;/dev/null<br>
+<span class="comment"># Saída vazia = nenhum arquivo inseguro encontrado ✓</span></div>
+
+      <div class="gab-exp" style="margin-top:8px"><strong>Passo 5 — Justificativa sobre o risco de 777 em scripts:</strong><br>
+      Um script <code>.sh</code> com permissão <code>777</code> (<code>-rwxrwxrwx</code>) permite que <strong>qualquer usuário do sistema</strong> modifique seu conteúdo. Em um servidor com múltiplos usuários:<br>
+      1. Um atacante com conta comum pode injetar código malicioso no script<br>
+      2. Se o script for executado periodicamente por root (via <code>cron</code>) ou por outro usuário privilegiado, o código injetado roda com esses privilégios<br>
+      3. O atacante obtém <strong>escalada de privilégios</strong> — acesso root sem precisar da senha<br>
+      Esse é um dos vetores mais comuns de comprometimento em servidores Linux mal configurados.
+      <div class="gab-nota">⚠ Regra de ouro: scripts executáveis devem ter no máximo 755 (dono escreve, outros só executam).</div></div>
+    </div>
+  </div>
+
+  <table class="tabela-pts" style="margin-top:24px">
+    <thead>
+      <tr><th>Seção</th><th>Tarefa</th><th>Pontos</th><th class="left" style="padding-left:10px">Critério principal</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>A — Criação de Usuários</td><td>01</td><td>30</td><td class="left" style="padding-left:10px;font-size:.8em">Usuários criados corretamente + outputs evidenciando a execução</td></tr>
+      <tr><td>B — Grupos e Permissões</td><td>02</td><td>30</td><td class="left" style="padding-left:10px;font-size:.8em">Grupos criados + usuários associados + chmod 600 explicado</td></tr>
+      <tr><td>C — Estrutura de Diretórios</td><td>03</td><td>25</td><td class="left" style="padding-left:10px;font-size:.8em">Estrutura correta + permissões aplicadas + justificativa escrita</td></tr>
+      <tr><td>D — Auditoria de Segurança</td><td>04</td><td>15</td><td class="left" style="padding-left:10px;font-size:.8em">find executado + permissões corrigidas + risco explicado</td></tr>
+      <tr class="total"><td>TOTAL</td><td>4 tarefas</td><td>100</td><td class="left" style="padding-left:10px;font-size:.8em">Nota = Total ÷ 10 · Aprovação: ≥ 60 pts</td></tr>
+    </tbody>
+  </table>
+
+</div><!-- /page prática -->
+
+<script>
+function reveal(id, btn) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.toggle('visible');
+  btn.classList.toggle('open');
+  btn.querySelector('.arrow').textContent = el.classList.contains('visible') ? '▼' : '▶';
+  btn.childNodes[1].textContent = el.classList.contains('visible') ? ' OCULTAR RESOLUÇÃO' : ' VER RESOLUÇÃO';
+}
+
+let allVisible = false;
+function toggleAll() {
+  allVisible = !allVisible;
+  document.querySelectorAll('.gabarito').forEach(el => {
+    el.classList.toggle('visible', allVisible);
+  });
+  document.querySelectorAll('.reveal-btn').forEach(btn => {
+    btn.classList.toggle('open', allVisible);
+    const arr = btn.querySelector('.arrow');
+    if (arr) arr.textContent = allVisible ? '▼' : '▶';
+    const txt = btn.childNodes[1];
+    if (txt) txt.textContent = allVisible ? ' OCULTAR RESOLUÇÃO' : ' VER RESOLUÇÃO';
+  });
+}
+</script>
+
+</body>
+</html>
