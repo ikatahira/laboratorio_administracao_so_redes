@@ -523,7 +523,7 @@ body::before {
       <rect x="260" y="96" width="200" height="64" rx="10" fill="rgba(255,140,66,0.07)" stroke="rgba(255,140,66,0.5)" stroke-width="2"/>
       <text x="360" y="117" text-anchor="middle" font-size="11" fill="#ff8c42" font-family="Space Mono" font-weight="bold">🔥 FIREWALL VM</text>
       <text x="360" y="132" text-anchor="middle" font-size="9" fill="#8a9bb8" font-family="Space Mono">enp0s3 (NAT) · 10.0.2.15</text>
-      <text x="360" y="146" text-anchor="middle" font-size="9" fill="#8a9bb8" font-family="Space Mono">enp0s8 (HostOnly) · 192.168.56.1</text>
+      <text x="360" y="146" text-anchor="middle" font-size="9" fill="#8a9bb8" font-family="Space Mono">enp0s8 (HostOnly) · 192.168.10.1</text>
 
       <!-- Arrow firewall → left (server) -->
       <line x1="260" y1="128" x2="180" y2="168" stroke="#ff8c42" stroke-width="1.5" stroke-dasharray="4,3"/>
@@ -536,16 +536,16 @@ body::before {
       <!-- Server VM -->
       <rect x="60" y="174" width="180" height="74" rx="10" fill="rgba(77,166,255,0.07)" stroke="rgba(77,166,255,0.4)" stroke-width="1.5"/>
       <text x="150" y="196" text-anchor="middle" font-size="11" fill="#4da6ff" font-family="Space Mono" font-weight="bold">🖥 ubuntu-server</text>
-      <text x="150" y="212" text-anchor="middle" font-size="9" fill="#8a9bb8" font-family="Space Mono">192.168.56.10</text>
+      <text x="150" y="212" text-anchor="middle" font-size="9" fill="#8a9bb8" font-family="Space Mono">192.168.10.10</text>
       <text x="150" y="226" text-anchor="middle" font-size="9" fill="#00e5a0" font-family="Space Mono">user: ubuntu-server</text>
-      <text x="150" y="239" text-anchor="middle" font-size="9" fill="#4a5878" font-family="Space Mono">GW → 192.168.56.1</text>
+      <text x="150" y="239" text-anchor="middle" font-size="9" fill="#4a5878" font-family="Space Mono">GW → 192.168.10.1</text>
 
       <!-- Desktop VM -->
       <rect x="480" y="174" width="180" height="74" rx="10" fill="rgba(0,229,160,0.07)" stroke="rgba(0,229,160,0.4)" stroke-width="1.5"/>
       <text x="570" y="196" text-anchor="middle" font-size="11" fill="#00e5a0" font-family="Space Mono" font-weight="bold">🖥 ubuntu-desktop</text>
-      <text x="570" y="212" text-anchor="middle" font-size="9" fill="#8a9bb8" font-family="Space Mono">192.168.56.20</text>
+      <text x="570" y="212" text-anchor="middle" font-size="9" fill="#8a9bb8" font-family="Space Mono">192.168.10.20</text>
       <text x="570" y="226" text-anchor="middle" font-size="9" fill="#00e5a0" font-family="Space Mono">user: ubuntu-desktop</text>
-      <text x="570" y="239" text-anchor="middle" font-size="9" fill="#4a5878" font-family="Space Mono">GW → 192.168.56.1</text>
+      <text x="570" y="239" text-anchor="middle" font-size="9" fill="#4a5878" font-family="Space Mono">GW → 192.168.10.1</text>
     </svg>
     <p style="margin-top:10px;font-size:0.76em;color:var(--muted);">
       Toda saída para internet passa pelo firewall (enp0s8 → enp0s3 → NAT VirtualBox)
@@ -575,7 +575,7 @@ body::before {
         </li>
         <li onclick="toggleCheck(this)">
           <div class="check-box">✓</div>
-          <span class="check-label">A VM de firewall tem a interface <code>enp0s8</code> em modo <strong>Host-Only</strong> com IP <code>192.168.56.1</code></span>
+          <span class="check-label">A VM de firewall tem a interface <code>enp0s8</code> em modo <strong>Host-Only</strong> com IP <code>192.168.10.1</code></span>
         </li>
         <li onclick="toggleCheck(this)">
           <div class="check-box">✓</div>
@@ -613,24 +613,24 @@ body::before {
         <tbody>
           <tr>
             <td style="padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.03);color:var(--orange);">🔥 Firewall</td>
-            <td style="padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.03);font-family:var(--mono);color:var(--cyan);">192.168.56.1</td>
+            <td style="padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.03);font-family:var(--mono);color:var(--cyan);">192.168.10.1</td>
             <td style="padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.03);font-family:var(--mono);">ubuntu-fw</td>
             <td style="padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.03);font-family:var(--mono);">Fatec2026</td>
             <td style="padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.03);color:var(--muted);">— (é o GW)</td>
           </tr>
           <tr>
             <td style="padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.03);color:var(--blue);">🖥 Ubuntu Server</td>
-            <td style="padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.03);font-family:var(--mono);color:var(--cyan);">192.168.56.10</td>
+            <td style="padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.03);font-family:var(--mono);color:var(--cyan);">192.168.10.10</td>
             <td style="padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.03);font-family:var(--mono);">ubuntu-server</td>
             <td style="padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.03);font-family:var(--mono);">Fatec2026</td>
-            <td style="padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.03);font-family:var(--mono);color:var(--orange);">192.168.56.1</td>
+            <td style="padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.03);font-family:var(--mono);color:var(--orange);">192.168.10.1</td>
           </tr>
           <tr>
             <td style="padding:10px 14px;color:var(--green);">🖥 Ubuntu Desktop</td>
-            <td style="padding:10px 14px;font-family:var(--mono);color:var(--cyan);">192.168.56.20</td>
+            <td style="padding:10px 14px;font-family:var(--mono);color:var(--cyan);">192.168.10.20</td>
             <td style="padding:10px 14px;font-family:var(--mono);">ubuntu-desktop</td>
             <td style="padding:10px 14px;font-family:var(--mono);">Fatec2026</td>
-            <td style="padding:10px 14px;font-family:var(--mono);color:var(--orange);">192.168.56.1</td>
+            <td style="padding:10px 14px;font-family:var(--mono);color:var(--orange);">192.168.10.1</td>
           </tr>
         </tbody>
       </table>
@@ -668,7 +668,7 @@ body::before {
       <div class="result-block">
         <div class="result-label">Saída esperada (exemplo)</div>
 <span class="r-ok">2: enp0s3:</span> <span class="r-dim">&lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel state UP</span>
-    <span class="r-dim">inet</span> <span class="r-num">192.168.56.10</span><span class="r-dim">/24 brd 192.168.56.255 scope global enp0s3</span>
+    <span class="r-dim">inet</span> <span class="r-num">192.168.10.10</span><span class="r-dim">/24 brd 192.168.10.255 scope global enp0s3</span>
       </div>
       <div class="box box-tip">
         <strong>💡 Dica:</strong> Se aparecer <code>enp0s3</code>, <code>enp0s8</code> ou <code>eth0</code>, use esse nome nos próximos passos. Aqui usaremos <code>enp0s3</code> como exemplo.
@@ -699,10 +699,10 @@ body::before {
   <span class="key">ethernets:</span>
     <span class="key">enp0s3:</span>               <span class="comment"># ← troque pelo nome da SUA interface</span>
       <span class="key">addresses:</span>
-        - <span class="val">192.168.56.10/24</span>    <span class="comment"># IP estático do servidor</span>
+        - <span class="val">192.168.10.10/24</span>    <span class="comment"># IP estático do servidor</span>
       <span class="key">routes:</span>
         - <span class="key">to:</span> <span class="val">default</span>
-          <span class="key">via:</span> <span class="val">192.168.56.1</span>   <span class="comment"># ← IP do firewall (gateway)</span>
+          <span class="key">via:</span> <span class="val">192.168.10.1</span>   <span class="comment"># ← IP do firewall (gateway)</span>
       <span class="key">nameservers:</span>
         <span class="key">addresses:</span>
           - <span class="val">8.8.8.8</span>              <span class="comment"># DNS Google</span>
@@ -716,10 +716,10 @@ body::before {
           <span style="color:var(--purple);">··</span><span style="color:var(--orange);">ethernets:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 1 — <strong>2 espaços</strong> antes</span><br>
           <span style="color:var(--purple);">····</span><span style="color:var(--orange);">enp0s3:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 2 — <strong>4 espaços</strong> antes</span><br>
           <span style="color:var(--purple);">······</span><span style="color:var(--orange);">addresses:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 3 — <strong>6 espaços</strong> antes</span><br>
-          <span style="color:var(--purple);">········</span><span style="color:var(--blue);">- 192.168.56.10/24</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 4 — <strong>8 espaços</strong> + traço</span><br>
+          <span style="color:var(--purple);">········</span><span style="color:var(--blue);">- 192.168.10.10/24</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 4 — <strong>8 espaços</strong> + traço</span><br>
           <span style="color:var(--purple);">······</span><span style="color:var(--orange);">routes:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 3 — <strong>6 espaços</strong> antes</span><br>
           <span style="color:var(--purple);">········</span><span style="color:var(--blue);">- to: default</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 4 — <strong>8 espaços</strong> + traço</span><br>
-          <span style="color:var(--purple);">··········</span><span style="color:var(--blue);">via: 192.168.56.1</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 5 — <strong>10 espaços</strong> antes</span><br>
+          <span style="color:var(--purple);">··········</span><span style="color:var(--blue);">via: 192.168.10.1</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 5 — <strong>10 espaços</strong> antes</span><br>
           <span style="color:var(--purple);">······</span><span style="color:var(--orange);">nameservers:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 3 — <strong>6 espaços</strong> antes</span><br>
           <span style="color:var(--purple);">········</span><span style="color:var(--orange);">addresses:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 4 — <strong>8 espaços</strong> antes</span><br>
           <span style="color:var(--purple);">··········</span><span style="color:var(--blue);">- 8.8.8.8</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 5 — <strong>10 espaços</strong> + traço</span>
@@ -748,11 +748,11 @@ body::before {
       </div>
       <div class="result-block">
         <div class="result-label">Saída esperada</div>
-<span class="r-ok">default via 192.168.56.1 dev enp0s3 proto static</span>
-<span class="r-val">192.168.56.0/24 dev enp0s3 proto kernel scope link src 192.168.56.10</span>
+<span class="r-ok">default via 192.168.10.1 dev enp0s3 proto static</span>
+<span class="r-val">192.168.10.0/24 dev enp0s3 proto kernel scope link src 192.168.10.10</span>
       </div>
       <div class="box box-ok">
-        <strong>✅ Sucesso:</strong> A linha <code>default via 192.168.56.1</code> confirma que o firewall é o gateway padrão. Todo tráfego destinado à internet vai passar por ele.
+        <strong>✅ Sucesso:</strong> A linha <code>default via 192.168.10.1</code> confirma que o firewall é o gateway padrão. Todo tráfego destinado à internet vai passar por ele.
       </div>
     </div>
   </div>
@@ -832,7 +832,7 @@ body::before {
         <div class="step-num">2</div>
         <div>
           <div class="step-title">Editar o Netplan do Desktop</div>
-          <div class="step-subtitle">IP estático 192.168.56.20 com gateway apontando para o firewall</div>
+          <div class="step-subtitle">IP estático 192.168.10.20 com gateway apontando para o firewall</div>
         </div>
       </div>
       <div class="step-block-body">
@@ -852,10 +852,10 @@ body::before {
   <span class="key">ethernets:</span>
     <span class="key">enp0s3:</span>               <span class="comment"># ← troque pelo nome da SUA interface</span>
       <span class="key">addresses:</span>
-        - <span class="val">192.168.56.20/24</span>    <span class="comment"># IP estático do desktop</span>
+        - <span class="val">192.168.10.20/24</span>    <span class="comment"># IP estático do desktop</span>
       <span class="key">routes:</span>
         - <span class="key">to:</span> <span class="val">default</span>
-          <span class="key">via:</span> <span class="val">192.168.56.1</span>   <span class="comment"># ← IP do firewall (gateway)</span>
+          <span class="key">via:</span> <span class="val">192.168.10.1</span>   <span class="comment"># ← IP do firewall (gateway)</span>
       <span class="key">nameservers:</span>
         <span class="key">addresses:</span>
           - <span class="val">8.8.8.8</span>
@@ -870,10 +870,10 @@ body::before {
             <span style="color:var(--purple);">··</span><span style="color:var(--orange);">ethernets:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 1 — <strong>2 espaços</strong> antes</span><br>
             <span style="color:var(--purple);">····</span><span style="color:var(--orange);">enp0s3:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 2 — <strong>4 espaços</strong> antes</span><br>
             <span style="color:var(--purple);">······</span><span style="color:var(--orange);">addresses:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 3 — <strong>6 espaços</strong> antes</span><br>
-            <span style="color:var(--purple);">········</span><span style="color:var(--blue);">- 192.168.56.20/24</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 4 — <strong>8 espaços</strong> + traço</span><br>
+            <span style="color:var(--purple);">········</span><span style="color:var(--blue);">- 192.168.10.20/24</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 4 — <strong>8 espaços</strong> + traço</span><br>
             <span style="color:var(--purple);">······</span><span style="color:var(--orange);">routes:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 3 — <strong>6 espaços</strong> antes</span><br>
             <span style="color:var(--purple);">········</span><span style="color:var(--blue);">- to: default</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 4 — <strong>8 espaços</strong> + traço</span><br>
-            <span style="color:var(--purple);">··········</span><span style="color:var(--blue);">via: 192.168.56.1</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 5 — <strong>10 espaços</strong> antes</span><br>
+            <span style="color:var(--purple);">··········</span><span style="color:var(--blue);">via: 192.168.10.1</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 5 — <strong>10 espaços</strong> antes</span><br>
             <span style="color:var(--purple);">······</span><span style="color:var(--orange);">nameservers:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 3 — <strong>6 espaços</strong> antes</span><br>
             <span style="color:var(--purple);">········</span><span style="color:var(--orange);">addresses:</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 4 — <strong>8 espaços</strong> antes</span><br>
             <span style="color:var(--purple);">··········</span><span style="color:var(--blue);">- 8.8.8.8</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← nível 5 — <strong>10 espaços</strong> + traço</span>
@@ -899,8 +899,8 @@ body::before {
         </div>
         <div class="result-block">
           <div class="result-label">Saída esperada — rota</div>
-<span class="r-ok">default via 192.168.56.1 dev enp0s3 proto static</span>
-<span class="r-val">192.168.56.0/24 dev enp0s3 proto kernel scope link src 192.168.56.20</span>
+<span class="r-ok">default via 192.168.10.1 dev enp0s3 proto static</span>
+<span class="r-val">192.168.10.0/24 dev enp0s3 proto kernel scope link src 192.168.10.20</span>
         </div>
       </div>
     </div>
@@ -938,16 +938,16 @@ body::before {
             <p>Preencha os campos:</p>
             <div class="code-block" id="cb_gui">
               <button class="copy-btn" onclick="copyCode('cb_gui',this)">📋 Copiar</button>
-<span class="key">Endereço:</span>  <span class="val">192.168.56.20</span>
+<span class="key">Endereço:</span>  <span class="val">192.168.10.20</span>
 <span class="key">Máscara:</span>   <span class="val">255.255.255.0</span>   <span class="comment">(ou /24)</span>
-<span class="key">Gateway:</span>   <span class="val">192.168.56.1</span>    <span class="comment">(← IP do firewall)</span>
+<span class="key">Gateway:</span>   <span class="val">192.168.10.1</span>    <span class="comment">(← IP do firewall)</span>
 <span class="key">DNS:</span>       <span class="val">8.8.8.8, 1.1.1.1</span>
             </div>
             <p>Clique em <strong>Aplicar</strong> e reconecte a interface.</p>
           </div>
         </div>
         <div class="box box-warn">
-          <strong>⚠️ Atenção:</strong> Após aplicar via GUI, verifique no terminal com <code>ip route show</code> se o gateway <code>192.168.56.1</code> aparece como rota padrão.
+          <strong>⚠️ Atenção:</strong> Após aplicar via GUI, verifique no terminal com <code>ip route show</code> se o gateway <code>192.168.10.1</code> aparece como rota padrão.
         </div>
       </div>
     </div>
@@ -978,7 +978,7 @@ body::before {
           <div class="code-block" id="cb_test">
             <button class="copy-btn" onclick="copyCode('cb_test',this)">📋 Copiar</button>
 <span class="comment"># Teste 1 — Conectividade com o firewall (gateway)</span>
-<span class="prompt">$</span> <span class="cmd">ping -c 2 192.168.56.1</span>
+<span class="prompt">$</span> <span class="cmd">ping -c 2 192.168.10.1</span>
 
 <span class="comment"># Teste 2 — Saída para internet (IP)</span>
 <span class="prompt">$</span> <span class="cmd">ping -c 4 8.8.8.8</span>
@@ -991,7 +991,7 @@ body::before {
 
 <span class="comment"># Teste 5 — Traceroute (mostra o caminho)</span>
 <span class="prompt">$</span> <span class="cmd">traceroute -m 5 8.8.8.8</span>
-<span class="comment">#           ↑ primeiro hop deve ser 192.168.56.1 (o firewall!)</span>
+<span class="comment">#           ↑ primeiro hop deve ser 192.168.10.1 (o firewall!)</span>
           </div>
         </div>
       </div>
@@ -999,13 +999,13 @@ body::before {
       <div class="result-block" style="margin-top:14px;">
         <div class="result-label">Resultado esperado — traceroute</div>
 <span class="r-val">traceroute to 8.8.8.8 (8.8.8.8), 5 hops max</span>
-<span class="r-ok"> 1  192.168.56.1   1.2 ms</span>   <span class="r-dim">← firewall (gateway interno)</span>
+<span class="r-ok"> 1  192.168.10.1   1.2 ms</span>   <span class="r-dim">← firewall (gateway interno)</span>
 <span class="r-num"> 2  10.0.2.2       2.1 ms</span>    <span class="r-dim">← gateway VirtualBox (NAT)</span>
 <span class="r-num"> 3  ...            x.x ms</span>    <span class="r-dim">← roteadores da internet</span>
       </div>
 
       <div class="box box-ok" style="margin-top:8px;">
-        <strong>✅ Prova de conceito:</strong> Se o <strong>primeiro hop do traceroute é 192.168.56.1</strong>, confirma que o tráfego está passando pelo firewall antes de sair para a internet. Missão cumprida!
+        <strong>✅ Prova de conceito:</strong> Se o <strong>primeiro hop do traceroute é 192.168.10.1</strong>, confirma que o tráfego está passando pelo firewall antes de sair para a internet. Missão cumprida!
       </div>
     </div>
   </div>
@@ -1029,7 +1029,7 @@ body::before {
 
 <span class="comment"># No FIREWALL — verificar regras NAT</span>
 <span class="prompt">fw$</span> <span class="cmd">sudo iptables -t nat -L -n --line-numbers</span>
-<span class="comment"># deve ter uma linha MASQUERADE para a rede 192.168.56.0/24</span>
+<span class="comment"># deve ter uma linha MASQUERADE para a rede 192.168.10.0/24</span>
 
 <span class="comment"># No FIREWALL — verificar status UFW</span>
 <span class="prompt">fw$</span> <span class="cmd">sudo ufw status verbose</span>
@@ -1072,7 +1072,7 @@ body::before {
 <span class="comment"># se der erro, ele reverte automaticamente em 120s</span>
 
 <span class="comment"># Adicionar rota manualmente (temporário — para testar)</span>
-<span class="prompt">$</span> <span class="cmd">sudo ip route add default via 192.168.56.1</span>
+<span class="prompt">$</span> <span class="cmd">sudo ip route add default via 192.168.10.1</span>
           </div>
         </div>
       </div>
@@ -1100,10 +1100,10 @@ body::before {
   ethernets:
     enp0s3:
       addresses:
-        - 192.168.56.10/24
+        - 192.168.10.10/24
       routes:
         - to: default
-          via: 192.168.56.1
+          via: 192.168.10.1
       nameservers:
         addresses:
           - 8.8.8.8"></textarea>
@@ -1130,7 +1130,7 @@ body::before {
 
       <!-- Q0 -->
       <div class="quiz-card active" id="qc0">
-        <h4>❓ Para que o ubuntu-server acesse a internet pelo firewall, qual campo do Netplan deve apontar para o IP do firewall (<code>192.168.56.1</code>)?</h4>
+        <h4>❓ Para que o ubuntu-server acesse a internet pelo firewall, qual campo do Netplan deve apontar para o IP do firewall (<code>192.168.10.1</code>)?</h4>
         <div class="q-opts">
           <button class="q-opt" onclick="ansQ(0,0,2)">O campo <code>addresses</code></button>
           <button class="q-opt" onclick="ansQ(0,1,2)">O campo <code>nameservers</code></button>
@@ -1143,12 +1143,12 @@ body::before {
 
       <!-- Q1 -->
       <div class="quiz-card" id="qc1">
-        <h4>❓ O comando <code>ip route show | grep default</code> retornou <code>default via 192.168.56.1 dev enp0s3</code>. O que isso significa?</h4>
+        <h4>❓ O comando <code>ip route show | grep default</code> retornou <code>default via 192.168.10.1 dev enp0s3</code>. O que isso significa?</h4>
         <div class="q-opts">
-          <button class="q-opt" onclick="ansQ(1,0,1)">O IP do servidor é 192.168.56.1</button>
-          <button class="q-opt" onclick="ansQ(1,1,1)">Todo tráfego destinado à internet será encaminhado para 192.168.56.1 (o firewall)</button>
-          <button class="q-opt" onclick="ansQ(1,2,1)">A máscara de rede é 192.168.56.1</button>
-          <button class="q-opt" onclick="ansQ(1,3,1)">O DNS primário é 192.168.56.1</button>
+          <button class="q-opt" onclick="ansQ(1,0,1)">O IP do servidor é 192.168.10.1</button>
+          <button class="q-opt" onclick="ansQ(1,1,1)">Todo tráfego destinado à internet será encaminhado para 192.168.10.1 (o firewall)</button>
+          <button class="q-opt" onclick="ansQ(1,2,1)">A máscara de rede é 192.168.10.1</button>
+          <button class="q-opt" onclick="ansQ(1,3,1)">O DNS primário é 192.168.10.1</button>
         </div>
         <div class="q-feedback" id="qf1"></div>
         <div class="q-next" id="qn1"><button class="q-next-btn" onclick="nextQ(2)">Próxima →</button></div>
@@ -1158,9 +1158,9 @@ body::before {
       <div class="quiz-card" id="qc2">
         <h4>❓ Ao executar <code>traceroute 8.8.8.8</code> no servidor, qual deve ser o primeiro hop (salto) se o roteamento pelo firewall estiver correto?</h4>
         <div class="q-opts">
-          <button class="q-opt" onclick="ansQ(2,0,0)">192.168.56.1 (o IP do firewall)</button>
+          <button class="q-opt" onclick="ansQ(2,0,0)">192.168.10.1 (o IP do firewall)</button>
           <button class="q-opt" onclick="ansQ(2,1,0)">8.8.8.8 (o destino final)</button>
-          <button class="q-opt" onclick="ansQ(2,2,0)">192.168.56.10 (o próprio servidor)</button>
+          <button class="q-opt" onclick="ansQ(2,2,0)">192.168.10.10 (o próprio servidor)</button>
           <button class="q-opt" onclick="ansQ(2,3,0)">10.0.2.2 (gateway do VirtualBox)</button>
         </div>
         <div class="q-feedback" id="qf2"></div>
@@ -1297,9 +1297,9 @@ function validateNetplan() {
   const checks = [
     { label: 'version: 2',           pass: /version:\s*2/.test(text),                tip: 'Adicione "version: 2" no bloco "network:"' },
     { label: 'ethernets (interface)', pass: /ethernets:/.test(text),                  tip: 'Adicione o bloco "ethernets:" com o nome da interface' },
-    { label: 'addresses (IP/máscara)',pass: /addresses:/.test(text) && /\/\d+/.test(text), tip: 'Adicione endereço com máscara: "- 192.168.56.x/24"' },
-    { label: 'routes / gateway',      pass: /routes:/.test(text) && /via:/.test(text), tip: 'Adicione o bloco routes com "via: 192.168.56.1"' },
-    { label: 'gateway aponta para firewall (192.168.56.1)', pass: /via:\s*192\.168\.56\.1/.test(text), tip: 'O campo "via:" deve ser "192.168.56.1" (IP do firewall)' },
+    { label: 'addresses (IP/máscara)',pass: /addresses:/.test(text) && /\/\d+/.test(text), tip: 'Adicione endereço com máscara: "- 192.168.10.x/24"' },
+    { label: 'routes / gateway',      pass: /routes:/.test(text) && /via:/.test(text), tip: 'Adicione o bloco routes com "via: 192.168.10.1"' },
+    { label: 'gateway aponta para firewall (192.168.10.1)', pass: /via:\s*192\.168\.56\.1/.test(text), tip: 'O campo "via:" deve ser "192.168.10.1" (IP do firewall)' },
     { label: 'nameservers / DNS',     pass: /nameservers:/.test(text) && /8\.8\.8\.8|1\.1\.1\.1/.test(text), tip: 'Adicione "nameservers: addresses: [8.8.8.8, 1.1.1.1]"' },
   ];
 
@@ -1334,15 +1334,15 @@ function validateNetplan() {
 // ── QUIZ ──
 const QFB = [
   '✅ Correto! O campo "via" dentro de "routes" define o gateway padrão. Quando o sistema precisar enviar um pacote para qualquer IP fora da rede local, ele encaminhará para o endereço especificado no "via" — que é o firewall.',
-  '✅ Exato! "default via 192.168.56.1" significa que a rota padrão (para qualquer destino desconhecido, incluindo a internet) passa pelo firewall. O tráfego sai do servidor, chega ao firewall, que faz o NAT e encaminha à internet.',
-  '✅ Perfeito! O primeiro hop do traceroute sempre é o gateway padrão. Se está configurado corretamente, deve aparecer 192.168.56.1 — confirmando que o tráfego passa pelo firewall antes de sair para a internet.',
+  '✅ Exato! "default via 192.168.10.1" significa que a rota padrão (para qualquer destino desconhecido, incluindo a internet) passa pelo firewall. O tráfego sai do servidor, chega ao firewall, que faz o NAT e encaminha à internet.',
+  '✅ Perfeito! O primeiro hop do traceroute sempre é o gateway padrão. Se está configurado corretamente, deve aparecer 192.168.10.1 — confirmando que o tráfego passa pelo firewall antes de sair para a internet.',
   '✅ Correto! Quando o ping para IP funciona mas o nome falha, é um problema de DNS. O campo "nameservers" no Netplan configura os servidores DNS. Sem DNS correto, o sistema não consegue resolver nomes de domínio.',
   '✅ Exato! O Ubuntu Desktop usa o NetworkManager como backend de rede (necessário para a interface gráfica funcionar). O Netplan com "renderer: NetworkManager" delega o gerenciamento da interface ao NM. Já o Server usa diretamente o systemd-networkd.',
 ];
 const QERR = [
   '❌ Errado. O campo "addresses" define o IP do próprio servidor — não o gateway. O campo "via" dentro de "routes" é quem define para onde o tráfego deve ser encaminhado quando o destino não está na rede local.',
-  '❌ Errado. "default via 192.168.56.1" indica que a rota padrão (gateway) é 192.168.56.1 — ou seja, todo tráfego para a internet passa pelo firewall. Não é o IP do servidor nem a máscara.',
-  '❌ Errado. O traceroute mostra o caminho hop a hop. O primeiro hop é sempre o gateway padrão da máquina — que deve ser 192.168.56.1 (o firewall). O destino final (8.8.8.8) aparece nos últimos hops.',
+  '❌ Errado. "default via 192.168.10.1" indica que a rota padrão (gateway) é 192.168.10.1 — ou seja, todo tráfego para a internet passa pelo firewall. Não é o IP do servidor nem a máscara.',
+  '❌ Errado. O traceroute mostra o caminho hop a hop. O primeiro hop é sempre o gateway padrão da máquina — que deve ser 192.168.10.1 (o firewall). O destino final (8.8.8.8) aparece nos últimos hops.',
   '❌ Errado. Se o ping para 8.8.8.8 (IP) funciona, o roteamento e o firewall estão OK. O problema é que o sistema não consegue converter "google.com" em IP — isso é função do DNS, configurado em "nameservers" no Netplan.',
   '❌ Errado. A diferença não tem relação com memória ou kernel, mas com o backend de rede. O Desktop usa NetworkManager (que integra com a interface gráfica), enquanto o Server usa systemd-networkd diretamente. O Netplan define qual backend usar.',
 ];

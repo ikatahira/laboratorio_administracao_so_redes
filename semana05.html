@@ -868,7 +868,7 @@ body::before {
     <div class="hero">
       <div class="hero-tag">ISO-103 · 3º Semestre · Semana 05</div>
       <h1>🐧 <span>Linux</span> Install Lab</h1>
-      <p class="hero-sub">Instalação e configuração de Ubuntu Desktop, Ubuntu Server e Firewall UFW no VirtualBox</p>
+      <p class="hero-sub">Instalação e configuração de Firewall UFW, Ubuntu Server e Ubuntu Desktop no VirtualBox</p>
       <div class="hero-chips">
         <div class="chip">📦 VirtualBox</div>
         <div class="chip">🖥️ Ubuntu 22.04 Desktop</div>
@@ -891,8 +891,8 @@ body::before {
         </p>
         <div style="background:rgba(0,0,0,0.2); border-radius:9px; padding:14px 18px; margin-bottom:14px; font-size:0.84em; line-height:2; color:var(--muted);">
           📶 <strong style="color:var(--green)">Adaptador 1 — NAT:</strong> conecta a VM à internet através do computador host. O VirtualBox faz o papel de roteador. Todas as VMs têm esse adaptador.<br>
-          🔗 <strong style="color:var(--cyan)">Adaptador 2 — Rede Interna (nome: <code>Intranet</code>):</strong> conecta as VMs entre si numa rede privada virtual <code>192.168.56.0/24</code>. Esse é o "cabo de rede" entre elas dentro do VirtualBox.<br>
-          🔥 <strong style="color:var(--orange)">Firewall UFW (192.168.56.1):</strong> atua como <strong>gateway</strong> — todo tráfego da rede interna que quiser sair para a internet passa por ele primeiro. Ele decide o que deixa passar usando as regras UFW.
+          🔗 <strong style="color:var(--cyan)">Adaptador 2 — Rede Interna (nome: <code>Intranet</code>):</strong> conecta as VMs entre si numa rede privada virtual <code>192.168.10.0/24</code>. Esse é o "cabo de rede" entre elas dentro do VirtualBox.<br>
+          🔥 <strong style="color:var(--orange)">Firewall UFW (192.168.10.1):</strong> atua como <strong>gateway</strong> — todo tráfego da rede interna que quiser sair para a internet passa por ele primeiro. Ele decide o que deixa passar usando as regras UFW.
         </div>
         <p style="font-size:0.85em;color:var(--muted);margin-bottom:16px;line-height:1.6;">
           <strong style="color:var(--yellow)">🗺️ Como ler o diagrama abaixo:</strong> as setas verdes tracejadas mostram a conexão NAT (internet). As setas azuis mostram a rede interna entre as VMs através do switch virtual. A seta roxa tracejada mostra a conexão SSH do Desktop para o Server.
@@ -924,7 +924,7 @@ body::before {
             <!-- VIRTUAL SWITCH -->
             <rect x="236" y="310" width="208" height="44" rx="10" fill="rgba(0,212,255,0.1)" stroke="rgba(0,212,255,0.4)" stroke-width="1"/>
             <text font-family="'Orbitron',monospace" font-size="11" font-weight="700" fill="#00d4ff" x="340" y="329" text-anchor="middle">SWITCH VIRTUAL</text>
-            <text font-family="'JetBrains Mono',monospace" font-size="9" fill="#5a7a99" x="340" y="345" text-anchor="middle">Rede interna — 192.168.56.0/24</text>
+            <text font-family="'JetBrains Mono',monospace" font-size="9" fill="#5a7a99" x="340" y="345" text-anchor="middle">Rede interna — 192.168.10.0/24</text>
 
             <!-- Switch lines to VMs -->
             <line x1="285" y1="310" x2="139" y2="292" stroke="rgba(0,212,255,0.4)" stroke-width="1.2" fill="none" marker-end="url(#topo-arrow)"/>
@@ -937,7 +937,7 @@ body::before {
             <rect x="42" y="205" width="194" height="9" rx="0" fill="rgba(0,255,136,0.15)"/>
             <text font-family="'Orbitron',monospace" font-size="11" font-weight="700" fill="#00ff88" x="139" y="208" text-anchor="middle">🖥️ Ubuntu Desktop</text>
             <text font-family="'Exo 2',sans-serif" font-size="10" fill="#e0f0ff" x="139" y="226" text-anchor="middle">22.04 LTS</text>
-            <text font-family="'JetBrains Mono',monospace" font-size="10" fill="#00d4ff" x="139" y="243" text-anchor="middle">192.168.56.10</text>
+            <text font-family="'JetBrains Mono',monospace" font-size="10" fill="#00d4ff" x="139" y="243" text-anchor="middle">192.168.10.10</text>
             <text font-family="'JetBrains Mono',monospace" font-size="9" fill="#5a7a99" x="139" y="259" text-anchor="middle">RAM: 4 GB · Disco: 25 GB</text>
             <text font-family="'JetBrains Mono',monospace" font-size="9" fill="#5a7a99" x="139" y="274" text-anchor="middle">Interface: GNOME</text>
             <!-- disk indicator -->
@@ -951,7 +951,7 @@ body::before {
             <rect x="243" y="205" width="194" height="9" rx="0" fill="rgba(0,212,255,0.15)"/>
             <text font-family="'Orbitron',monospace" font-size="11" font-weight="700" fill="#00d4ff" x="340" y="208" text-anchor="middle">🖧 Ubuntu Server</text>
             <text font-family="'Exo 2',sans-serif" font-size="10" fill="#e0f0ff" x="340" y="226" text-anchor="middle">22.04 LTS · CLI</text>
-            <text font-family="'JetBrains Mono',monospace" font-size="10" fill="#00d4ff" x="340" y="243" text-anchor="middle">192.168.56.20</text>
+            <text font-family="'JetBrains Mono',monospace" font-size="10" fill="#00d4ff" x="340" y="243" text-anchor="middle">192.168.10.20</text>
             <text font-family="'JetBrains Mono',monospace" font-size="9" fill="#5a7a99" x="340" y="259" text-anchor="middle">RAM: 1 GB · Disco: 20 GB</text>
             <text font-family="'JetBrains Mono',monospace" font-size="9" fill="#5a7a99" x="340" y="274" text-anchor="middle">LVM + OpenSSH ativo</text>
             <rect x="259" y="280" width="162" height="6" rx="3" fill="rgba(255,255,255,0.05)"/>
@@ -964,7 +964,7 @@ body::before {
             <rect x="444" y="205" width="194" height="9" rx="0" fill="rgba(255,140,0,0.15)"/>
             <text font-family="'Orbitron',monospace" font-size="11" font-weight="700" fill="#ff8c00" x="541" y="208" text-anchor="middle">🔥 Firewall UFW</text>
             <text font-family="'Exo 2',sans-serif" font-size="10" fill="#e0f0ff" x="541" y="226" text-anchor="middle">Ubuntu Server 22.04</text>
-            <text font-family="'JetBrains Mono',monospace" font-size="10" fill="#ff8c00" x="541" y="243" text-anchor="middle">192.168.56.1 (Gateway)</text>
+            <text font-family="'JetBrains Mono',monospace" font-size="10" fill="#ff8c00" x="541" y="243" text-anchor="middle">192.168.10.1 (Gateway)</text>
             <text font-family="'JetBrains Mono',monospace" font-size="9" fill="#5a7a99" x="541" y="259" text-anchor="middle">enp0s3: NAT · enp0s8: 56.1</text>
             <text font-family="'JetBrains Mono',monospace" font-size="9" fill="#5a7a99" x="541" y="274" text-anchor="middle">IP forward=1 · masquerade</text>
             <rect x="460" y="280" width="162" height="6" rx="3" fill="rgba(255,255,255,0.05)"/>
@@ -1002,7 +1002,7 @@ body::before {
           <strong>Adaptador 1</strong> = <code>NAT</code> (acesso à internet — padrão do VirtualBox).
           <strong>Adaptador 2</strong> = <code>Rede Interna</code>, nome: <code>Intranet</code> (comunicação entre as 3 VMs).
           O nome <code>Intranet</code> deve ser <strong>igual em todas as VMs</strong> — é o "switch virtual" que as conecta.
-          O Firewall deve ter o Adaptador 2 com IP fixo <code>192.168.56.1</code> para servir como gateway.
+          O Firewall deve ter o Adaptador 2 com IP fixo <code>192.168.10.1</code> para servir como gateway.
         </div>
       </div>
     </div>
@@ -1175,27 +1175,37 @@ body::before {
       </div>
       <div class="card-body">
 
-        <!-- MISSÃO 1 — Ubuntu Desktop -->
-        <div class="mission" id="m1" onclick="toggleMission('m1')">
+        <!-- MISSÃO 1 — FIREWALL UFW -->
+        <div class="mission" id="m4" onclick="toggleMission('m4')">
           <div class="mission-head">
-            <div class="mission-num">01</div>
+            <div class="mission-num orange-num">05</div>
             <div class="mission-info">
-              <div class="mission-title">🖥️ Instalar Ubuntu Desktop 22.04 no VirtualBox</div>
-              <div class="mission-meta">⏱️ 45 min · Dificuldade: ⭐⭐ · VirtualBox + ISO Ubuntu Desktop</div>
+              <div class="mission-title">🔥 MISSÃO 1 — Configurar VM Firewall — Ubuntu Server + UFW como Gateway</div>
+              <div class="mission-meta">⏱️ 45 min · Dificuldade: ⭐⭐⭐⭐ · 2 NICs · IP Forwarding · NAT · Regras UFW</div>
             </div>
-            <div class="mission-xp">+50 XP</div>
+            <div class="mission-xp">+60 XP</div>
             <div class="mission-toggle">▼</div>
           </div>
           <div class="mission-body">
-            <div class="mission-desc">🎯 Criar uma VM no VirtualBox e instalar o Ubuntu Desktop 22.04 LTS com idioma pt-BR e usuário padrão configurado.</div>
+            <div class="mission-desc">🎯 Instalar o Ubuntu Server 22.04 em uma VM dedicada, configurar duas interfaces de rede, habilitar IP forwarding e masquerading, e aplicar regras UFW para atuar como firewall/gateway da rede interna.</div>
 
-            <div class="os-tabs">
-              <button class="os-tab active-tab" onclick="switchOSM1('vbox',this)">📦 VirtualBox</button>
-              <button class="os-tab tab-cyan" onclick="switchOSM1('install',this)">💿 Instalação</button>
-              <button class="os-tab tab-orange" onclick="switchOSM1('pos',this)">⚙️ Pós-Install</button>
+            <!-- NOTA PEDAGÓGICA -->
+            <div style="background:rgba(255,140,0,0.06); border:1px solid rgba(255,140,0,0.25); border-left:4px solid var(--orange); border-radius:9px; padding:14px 16px; margin-bottom:16px; font-size:0.85em; line-height:1.6; color:var(--muted);">
+              <strong style="color:var(--orange)">🔥 Firewall como VM separada — por quê?</strong><br>
+              Em arquiteturas reais, o firewall é um dispositivo <strong style="color:var(--text)">dedicado</strong> que fica entre a rede interna e a internet. Neste laboratório, simulamos isso com uma VM que possui <strong style="color:var(--cyan)">duas placas de rede</strong>: uma voltada para a internet (NAT) e outra para a rede interna das VMs. Todo o tráfego passa por ela — e ela decide o que deixa passar.
             </div>
 
-            <div id="m1-panel-vbox" class="os-panel active-panel">
+            <div class="os-tabs">
+              <button class="os-tab active-tab tab-orange" onclick="switchOSM4('vbox',this)">📦 VirtualBox</button>
+              <button class="os-tab tab-cyan" onclick="switchOSM4('rede',this)">🌐 Rede / IP</button>
+              <button class="os-tab" onclick="switchOSM4('forward',this)">⚡ Forwarding</button>
+              <button class="os-tab" onclick="switchOSM4('ufw',this)">🔥 UFW</button>
+            </div>
+
+            <!-- ABA 1 — VirtualBox -->
+            <div id="m4-panel-vbox" class="os-panel active-panel">
+              <div class="info-box">💡 Use a mesma ISO do Ubuntu Server 22.04 disponível na <strong>unidade Z: (Prof. Isaque)</strong> — realize a instalação conforme o vídeo: <a href="https://youtu.be/BZ4yuTQmxdo" target="_blank" style="color:var(--cyan)">https://youtu.be/BZ4yuTQmxdo</a></div>
+
               <div class="fatec-box">
                 🏫 <strong>No laboratório da Fatec a VM já está criada</strong> — vá direto para a aba <strong>💿 Instalação</strong> e siga os passos a partir do boot da ISO.<br><br>
                 💻 <span class="home-label">Notebook / PC pessoal</span><br>
@@ -1206,52 +1216,270 @@ body::before {
                 <p>Importe diretamente no VirtualBox: <strong>Arquivo → Importar Appliance</strong> → selecione o arquivo <code>Isaque.ova</code>. Todas as VMs já estarão configuradas.</p>
                 <a class="ova-download-btn" href="Isaque.ova" download="Isaque.ova">⬇️ Baixar Isaque.ova</a>
               </div>
-              <div class="info-box">💡 A ISO do Ubuntu Desktop está disponível na <strong>unidade Z: (Prof. Isaque)</strong> — aponte-a ao criar a VM no VirtualBox. Não é necessário baixar.</div>
-              <div class="step"><div class="step-num">1</div><p>Abra o VirtualBox → clique em <strong>Novo</strong> → Nome: <code>Ubuntu-Desktop-22</code> → Tipo: Linux → Versão: Ubuntu (64-bit)</p></div>
-              <div class="step"><div class="step-num">2</div><p>Memória RAM: mínimo <code>2048 MB</code> (recomendado <code>4096 MB</code>)</p></div>
-              <div class="step"><div class="step-num">3</div><p>Disco Virtual: <strong>Criar novo disco VDI</strong> → alocação dinâmica → <code>25 GB</code></p></div>
-              <div class="step"><div class="step-num">4</div><p>Em Configurações → Armazenamento → Controlador IDE → selecione a ISO do Ubuntu Desktop</p></div>
-              <div class="step"><div class="step-num">5</div><p>Em Configurações → Rede → Adaptador 1 → <code>NAT</code> (para aulas) ou <code>Bridge</code> (para rede local)</p></div>
+
+              <!-- CONFIGURAÇÃO DE REDE NO VIRTUALBOX -->
+              <div style="background:rgba(63,81,181,0.08); border:1px solid rgba(63,81,181,0.35); border-left:4px solid #3f51b5; border-radius:9px; padding:16px; margin:12px 0; font-size:0.85em; line-height:1.6; color:var(--muted);">
+                <strong style="color:#7986cb; font-size:1em;">⚙️ Pré-requisito: Configuração dos Adaptadores de Rede no VirtualBox</strong>
+                <p style="margin-top:10px; color:#9fa8da;">A VM do Firewall é especial — ela precisa de <strong style="color:var(--text)">dois adaptadores ativos</strong>: um para a internet (NAT) e outro para a rede interna das VMs:</p>
+                <ol style="margin:10px 0 0 20px; line-height:2.4;">
+                  <li>Acesse as <strong>Configurações</strong> da VM <strong>Ubuntu-Firewall-22</strong> no VirtualBox</li>
+                  <li>Vá em <strong>Rede → Adaptador 1</strong> → marque "Habilitar Placa de Rede" → Conectado a: <strong>NAT</strong></li>
+                  <li>Vá em <strong>Rede → Adaptador 2</strong> → marque "Habilitar Placa de Rede" → Conectado a: <strong>Rede Interna</strong> → Nome: <code>Intranet</code></li>
+                  <li>Clique em <strong>OK</strong> para salvar</li>
+                </ol>
+                <p style="margin-top:10px; color:#ffa000;">⚠️ O nome <code>Intranet</code> deve ser <strong>exatamente igual</strong> ao configurado nas outras VMs — é o que conecta todas elas ao mesmo switch virtual.</p>
+              </div>
+
+              <div class="step"><div class="step-num">1</div><p>VirtualBox → Novo → Nome: <code>Ubuntu-Firewall-22</code> → Tipo: Linux → Versão: Ubuntu (64-bit)</p></div>
+              <div class="step"><div class="step-num">2</div><p>RAM: <code>1024 MB</code> · Disco: <code>15 GB</code> VDI dinâmico — firewall não precisa de muito espaço</p></div>
+              <div class="step"><div class="step-num">3</div><p>Configurações → Rede → <strong>Adaptador 1</strong>: Conectado a <code>NAT</code> (para acesso à internet)</p></div>
+              <div class="step"><div class="step-num">4</div><p>Configurações → Rede → <strong>Adaptador 2</strong>: habilite → Conectado a <code>Rede Interna</code> → Nome: <code>Intranet</code></p></div>
+              <div class="step"><div class="step-num">5</div><p>Instale o Ubuntu Server conforme o vídeo de referência. Na tela <strong>Profile Configuration</strong>, preencha os campos conforme abaixo e pressione <strong>Done</strong>:</p>
+                <div class="cmd-block" style="margin-top:8px;">
+                  <span class="comment"># Campo 1 — O seu nome (Your name)</span><br>
+                  <span class="value">fatec-fw</span><br><br>
+                  <span class="comment"># Campo 2 — Your server's name (hostname da máquina na rede)</span><br>
+                  <span class="value">fatec-fw</span><br><br>
+                  <span class="comment"># Campo 3 — Escolha um nome de utilizador (username para login)</span><br>
+                  <span class="value">fatec-fw</span><br><br>
+                  <span class="comment"># Campo 4 — Escolha uma palavra-passe (senha)</span><br>
+                  <span class="value">Fatec2026@</span><br><br>
+                  <span class="comment"># Campo 5 — Confirme a sua palavra-passe</span><br>
+                  <span class="value">Fatec2026@</span>
+                </div>
+              </div>
+
+              <div class="step"><div class="step-num">6</div><p>Tela <strong>SSH Setup</strong> — configure exatamente como abaixo:</p>
+                <div class="cmd-block" style="margin-top:8px; line-height:2;">
+                  <span class="output">[X]  Install OpenSSH server</span> <span class="comment">  ← marque com Espaço (obrigatório para acesso remoto)</span><br>
+                  <span class="output">[X]  Allow password authentication over SSH</span> <span class="comment">  ← marque com Espaço (permite login com senha)</span><br>
+                  <span class="comment">     [ Import SSH key ▶ ]  ← deixe sem importar</span><br>
+                  <span class="comment">     AUTHORIZED KEYS: No authorized key  ← normal</span>
+                </div>
+                <div class="info-box" style="margin-top:8px;">
+                  💡 <strong>Por que instalar OpenSSH no firewall?</strong> Mesmo sendo um firewall, precisamos acessá-lo remotamente para gerenciar regras via terminal. O SSH garante que essa conexão seja <strong>criptografada e segura</strong>. <strong>Allow password authentication</strong> permite login simples com usuário e senha, adequado para o ambiente de laboratório.
+                </div>
+                <p style="font-size:0.86em; margin-top:8px;">→ Pressione <strong>Concluído</strong>.</p>
+              </div>
+
+              <div class="step"><div class="step-num">7</div><p>Tela <strong>Featured Server Snaps</strong> — lista de aplicativos opcionais:</p>
+                <div class="cmd-block" style="margin-top:8px; line-height:1.9;">
+                  <span class="comment"># NÃO selecione nenhum snap — exemplos do que aparece:</span><br>
+                  <span class="warn">[ ]  microk8s</span>      <span class="comment"> — Kubernetes para workstations</span><br>
+                  <span class="warn">[ ]  nextcloud</span>     <span class="comment"> — Servidor de arquivos em nuvem privada</span><br>
+                  <span class="warn">[ ]  prometheus</span>    <span class="comment"> — Sistema de monitoramento</span><br>
+                  <span class="warn">[ ]  powershell</span>    <span class="comment"> — PowerShell para Linux</span>
+                </div>
+                <div class="warn-box" style="margin-top:8px;">
+                  ⚠️ <strong>Não selecione nenhum snap!</strong> O firewall deve ser o sistema mais <strong>enxuto possível</strong> — cada serviço extra é uma porta aberta a mais. Instale somente o estritamente necessário. → Pressione <strong>Concluído</strong> sem marcar nada.
+                </div>
+              </div>
+
+              <div class="step"><div class="step-num">8</div><p>Tela <strong>Updating system</strong> — a instalação roda automaticamente. Acompanhe o log em tempo real:</p>
+                <div class="cmd-block" style="margin-top:8px; line-height:1.8; font-size:0.76em;">
+                  <span class="output">running 'curtin curthooks'</span><br>
+                  <span class="output">  configuring apt</span>          <span class="comment"> ← configura o gerenciador de pacotes</span><br>
+                  <span class="output">  installing kernel</span>        <span class="comment"> ← instala o núcleo do Linux</span><br>
+                  <span class="output">  setting up swap</span>          <span class="comment"> ← configura memória virtual</span><br>
+                  <span class="output">  apply networking config</span>  <span class="comment"> ← aplica configurações de rede</span><br>
+                  <span class="output">  writing etc/fstab</span>        <span class="comment"> ← registra partições para montagem automática</span><br>
+                  <span class="output">  installing grub to target devices</span> <span class="comment"> ← instala bootloader no disco</span><br>
+                  <span class="output">final system configuration</span><br>
+                  <span class="output">  installing openssh-server</span> <span class="comment"> ← instala o SSH (marcado na etapa anterior)</span><br>
+                  <span class="output">  configuring cloud-init</span><br>
+                  <span class="output">  downloading and installing security updates</span> <span class="comment"> ← pode demorar mais aqui</span><br>
+                  <span class="warn">  curtin command in-target -</span>  <span class="comment"> ← última etapa antes do reboot</span>
+                </div>
+                <div class="info-box" style="margin-top:10px;">
+                  ⏱️ <strong>Tempo estimado de instalação:</strong>
+                  <ul style="margin:8px 0 0 16px; line-height:2;">
+                    <li>💻 <strong>Laboratório da Fatec</strong> (máquinas com SSD): <strong>~5 a 10 minutos</strong></li>
+                    <li>🏠 <strong>Notebook/PC pessoal com HDD</strong>: <strong>~15 a 25 minutos</strong></li>
+                    <li>🐢 <strong>Se a internet estiver lenta</strong>: o passo <em>"downloading security updates"</em> pode levar mais tempo — é normal</li>
+                  </ul>
+                  <p style="margin-top:8px;">💡 <strong>Não mexa no teclado nem feche a janela</strong> durante a instalação. Aguarde até aparecer o botão <strong>Reboot Now</strong> e então selecione-o. Quando pedir para remover o disco, pressione <strong>Enter</strong>. Após o reboot, faça login com <code>fatec-fw</code> e senha <code>Fatec2026@</code>.</p>
+                </div>
+              </div>
+
+              <div class="warn-box" style="border-left-color:#e91e63; background:rgba(233,30,99,0.05); margin-top:12px;">
+                🔄 <strong>Precisa reinstalar?</strong> VirtualBox → selecione a máquina → menu <strong>Dispositivos → Discos Ópticos → Escolher um arquivo em disco</strong> → navegue até a <strong>unidade Z:</strong> (Prof. Isaque) e selecione a ISO → menu <strong>Máquina → Reinicializar</strong> (ou pressione <code>Host+R</code>) → prossiga conforme o vídeo.
+              </div>
+
+              <!-- TROUBLESHOOTING DE REDE -->
+              <div style="background:rgba(249,168,37,0.06); border:1px solid rgba(249,168,37,0.3); border-left:4px solid #f9a825; border-radius:9px; padding:16px; margin-top:16px; font-size:0.85em; line-height:1.6; color:var(--muted);">
+                <strong style="color:#ffa000; font-size:1em;">🔧 A placa de rede não funcionou após a instalação? Siga estes passos:</strong>
+                <div style="margin-top:14px;">
+                  <p style="font-weight:bold; color:#00ff88; margin-bottom:6px;">✅ 1. Ativar a interface manualmente</p>
+                  <div class="cmd-block">sudo ip link set enp0s3 up</div>
+                </div>
+                <div style="margin-top:12px;">
+                  <p style="font-weight:bold; color:#00ff88; margin-bottom:6px;">✅ 2. Solicitar IP via DHCP</p>
+                  <div class="cmd-block">sudo dhclient enp0s3</div>
+                </div>
+                <div style="margin-top:12px;">
+                  <p style="font-weight:bold; color:#00d4ff; margin-bottom:6px;">🧪 3. Testar a conectividade</p>
+                  <div class="cmd-block">ping -c 4 8.8.8.8</div>
+                  <p style="margin:8px 0;">Se responder, teste também a resolução de nomes:</p>
+                  <div class="cmd-block">ping -c 4 google.com</div>
+                </div>
+                <div style="background:rgba(0,0,0,0.2); border-radius:6px; padding:10px; margin-top:12px;">
+                  <strong style="color:#ffa000;">⚠️ Atenção:</strong> Substitua <code>enp0s3</code> pelo nome real da sua interface, caso seja diferente. Use <code>ip link show</code> para verificar o nome correto.
+                </div>
+              </div>
             </div>
 
-            <div id="m1-panel-install" class="os-panel">
-              <div class="info-box">📹 <strong>Referência em vídeo:</strong> <a href="https://youtu.be/UXq193Ol33g" target="_blank" style="color:var(--cyan)">https://youtu.be/UXq193Ol33g</a> — siga o passo a passo demonstrado.</div>
-              <div class="step"><div class="step-num">1</div><p>No VirtualBox, selecione a VM <code>Ubuntu-Desktop-22</code> e clique em <strong>Iniciar</strong>. A VM vai bootar pela ISO e exibir uma tela roxa com o logo Ubuntu.</p></div>
-              <div class="step"><div class="step-num">2</div><p>Na tela GRUB, selecione <strong>Try or Install Ubuntu</strong> e pressione Enter. Aguarde o sistema carregar (~1 min).</p></div>
-              <div class="step"><div class="step-num">3</div><p>Na janela do instalador, escolha o idioma <strong>Português do Brasil</strong> → clique em <strong>Instalar o Ubuntu</strong>.</p></div>
-              <div class="step"><div class="step-num">4</div><p>Layout do teclado: <strong>Português (Brasil)</strong> → clique em <strong>Continuar</strong>.</p></div>
-              <div class="step"><div class="step-num">5</div><p>Tipo de instalação: selecione <strong>Instalação Normal</strong> (instala o sistema completo com GNOME e aplicativos básicos). Marque também <strong>"Baixar atualizações ao instalar"</strong> se tiver internet disponível.</p></div>
-              <div class="step"><div class="step-num">6</div><p>Particionamento: selecione <strong>Apagar disco e instalar Ubuntu</strong> → clique em <strong>Instalar agora</strong> → confirme com <strong>Continuar</strong>.</p></div>
-              <div class="step"><div class="step-num">7</div><p>Fuso horário: clique no mapa em <strong>São Paulo</strong> (Brasil) → clique em <strong>Continuar</strong>.</p></div>
-              <div class="step"><div class="step-num">8</div><p>Criar usuário: preencha seu nome, nome da máquina: <code>fatec-desktop</code>, usuário: seu nome, senha: <code>Fatec2025@</code> → marque <strong>"Exigir senha para entrar"</strong> → clique em <strong>Continuar</strong>.</p></div>
-              <div class="step"><div class="step-num">9</div><p>Aguarde a instalação (~15 min). Ao finalizar, clique em <strong>Reiniciar agora</strong>. Quando aparecer a mensagem para remover o disco, pressione <strong>Enter</strong>.</p></div>
-              <div class="step"><div class="step-num">10</div><p>Após o reboot, faça login com o usuário e senha criados. A área de trabalho GNOME vai aparecer — isso confirma que a instalação foi bem-sucedida! ✅</p></div>
-            </div>
-
-            <div id="m1-panel-pos" class="os-panel">
+            <!-- ABA 2 — Rede / IP Estático -->
+            <div id="m4-panel-rede" class="os-panel">
+              <div class="warn-box">⚠️ O firewall precisa de <strong>IP estático</strong> na interface interna para ser o gateway fixo das outras VMs. Use o <code>netplan</code> para configurar.</div>
+              <div class="step"><div class="step-num">1</div><p>Identifique os nomes das interfaces de rede:</p></div>
               <div class="cmd-block">
-<span class="comment"># Atualizar lista de pacotes</span>
-<span class="prompt">$</span> <span class="cmd">sudo apt update</span>
-
-<span class="comment"># Instalar Guest Additions (melhora resolução e integração)</span>
-<span class="prompt">$</span> <span class="cmd">sudo apt install virtualbox-guest-additions-iso</span>
-
-<span class="comment"># Verificar versão instalada</span>
-<span class="prompt">$</span> <span class="cmd">lsb_release -a</span>
-<span class="output">Description: Ubuntu 22.04.3 LTS</span>
-
-<span class="comment"># Instalar utilitários básicos</span>
-<span class="prompt">$</span> <span class="cmd">sudo apt install net-tools curl wget htop -y</span>
+<span class="comment"># Ver todas as interfaces e seus nomes</span>
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">ip link show</span>
+<span class="output">1: lo: &lt;LOOPBACK&gt; ...
+2: enp0s3: &lt;BROADCAST&gt; ...   ← Adaptador 1 (NAT / internet)
+3: enp0s8: &lt;BROADCAST&gt; ...   ← Adaptador 2 (Rede Interna / LAN)</span>
               </div>
-              <div class="success-box">✅ Após o update, tire um <strong>Snapshot</strong> no VirtualBox (Máquina → Tirar Snapshot) para salvar o estado limpo!</div>
+              <div class="step"><div class="step-num">2</div><p>Edite o arquivo de configuração do netplan:</p></div>
+              <div class="cmd-block">
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo nano /etc/netplan/00-installer-config.yaml</span>
+              </div>
+              <div class="step"><div class="step-num">3</div><p>Substitua o conteúdo pelo seguinte (atenção à <strong>indentação com espaços</strong> — YAML não aceita tabs):</p></div>
+              <div class="cmd-block">
+<span class="comment"># /etc/netplan/00-installer-config.yaml</span>
+<span class="value">network:
+  version: 2
+  ethernets:
+    enp0s3:
+      dhcp4: true          </span><span class="comment"># NAT — recebe IP do VirtualBox automaticamente</span>
+<span class="value">    enp0s8:
+      dhcp4: false         </span><span class="comment"># LAN interna — IP fixo</span>
+<span class="value">      addresses:
+        - 192.168.10.1/24  </span><span class="comment"># Gateway da rede interna</span>
+<span class="value">      nameservers:
+        addresses: [8.8.8.8, 1.1.1.1]</span>
+              </div>
+              <div class="step"><div class="step-num">4</div><p>Aplique as configurações e verifique:</p></div>
+              <div class="cmd-block">
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo netplan apply</span>
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">ip addr show enp0s8</span>
+<span class="output">3: enp0s8: &lt;BROADCAST,MULTICAST,UP&gt;
+    inet <span style="color:var(--green)">192.168.10.1/24</span> brd 192.168.10.255 scope global enp0s8</span>
+              </div>
+              <div class="step"><div class="step-num">5</div><p>Nas VMs <strong>Desktop</strong> e <strong>Server</strong>, configure o gateway padrão como <code>192.168.10.1</code> no netplan delas (campo <code>gateway4</code> ou <code>routes</code>).</p></div>
+            </div>
 
-              <div class="info-box">📹 <strong>Referência em vídeo:</strong> <a href="https://youtu.be/UXq193Ol33g" target="_blank" style="color:var(--cyan)">https://youtu.be/UXq193Ol33g</a></div>
+            <!-- ABA 3 — IP Forwarding -->
+            <div id="m4-panel-forward" class="os-panel">
+              <div class="info-box">💡 <strong>IP Forwarding</strong> permite que o kernel Linux encaminhe pacotes entre interfaces. Sem ele, o tráfego da LAN não chega à internet — o firewall simplesmente descartaria os pacotes.</div>
+              <div class="step"><div class="step-num">1</div><p>Habilitar IP forwarding permanentemente no kernel:</p></div>
+              <div class="cmd-block">
+<span class="comment"># Editar o arquivo de configuração do kernel</span>
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo nano /etc/sysctl.conf</span>
 
-              <div class="warn-box" style="border-left-color:#e91e63; background:rgba(233,30,99,0.05);">
-                🔄 <strong>Precisa reinstalar?</strong> Abra o VirtualBox → selecione a máquina → menu <strong>Dispositivos → Discos Ópticos → Escolher um arquivo em disco</strong> → navegue até a <strong>unidade Z:</strong> (Prof. Isaque) e selecione a ISO → menu <strong>Máquina → Reinicializar</strong> (ou pressione <code>Host+R</code>) → prossiga com a instalação conforme o vídeo.
+<span class="comment"># Encontrar e descomentar (remover o #) a linha:</span>
+<span class="value">net.ipv4.ip_forward=1</span>
+
+<span class="comment"># Aplicar sem reiniciar</span>
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo sysctl -p</span>
+<span class="output">net.ipv4.ip_forward = 1</span>
+
+<span class="comment"># Confirmar que está ativo (deve retornar 1)</span>
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">cat /proc/sys/net/ipv4/ip_forward</span>
+<span class="output">1</span>
+              </div>
+              <div class="step"><div class="step-num">2</div><p>Configurar o <strong>masquerading</strong> (NAT) no UFW para que as VMs da LAN acessem a internet usando o IP do firewall:</p></div>
+              <div class="cmd-block">
+<span class="comment"># Editar as regras brutas do UFW (antes do *filter)</span>
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo nano /etc/ufw/before.rules</span>
+
+<span class="comment"># Adicionar no INÍCIO do arquivo, antes de *filter:</span>
+<span class="value"># NAT — masquerading para saída pela interface enp0s3 (internet)
+*nat
+:POSTROUTING ACCEPT [0:0]
+-A POSTROUTING -s 192.168.10.0/24 -o enp0s3 -j MASQUERADE
+COMMIT</span>
+              </div>
+              <div class="step"><div class="step-num">3</div><p>Permitir o encaminhamento (forwarding) no arquivo de configuração do UFW:</p></div>
+              <div class="cmd-block">
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo nano /etc/default/ufw</span>
+
+<span class="comment"># Alterar a linha DEFAULT_FORWARD_POLICY:</span>
+<span class="value">DEFAULT_FORWARD_POLICY="ACCEPT"</span>
+              </div>
+            </div>
+
+            <!-- ABA 4 — UFW Regras -->
+            <div id="m4-panel-ufw" class="os-panel">
+              <div class="warn-box">⚠️ <strong>Regra de ouro:</strong> sempre libere o SSH <strong>antes</strong> de ativar o UFW. Se esquecer, perde o acesso remoto à VM sem possibilidade de recuperação pelo terminal.</div>
+
+              <div class="cmd-block">
+<span class="comment">## PASSO 1 — Liberar SSH e ativar UFW</span>
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw allow 22/tcp</span>
+<span class="output">Rules updated</span>
+
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw enable</span>
+<span class="warn">Command may disrupt existing ssh connections. Proceed with operation (y|n)? y</span>
+<span class="output">Firewall is active and enabled on system startup</span>
               </div>
 
-              <button class="complete-btn" id="btn-m1" onclick="completeM('m1','btn-m1','a-desktop','bm-desktop','Ubuntu Desktop instalado! 🖥️','desktop')">✅ MISSÃO CONCLUÍDA — Ubuntu Desktop Instalado!</button>
+              <div class="cmd-block">
+<span class="comment">## PASSO 2 — Políticas padrão (negar tudo, permitir saída)</span>
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw default deny incoming</span>
+<span class="output">Default incoming policy changed to 'deny'</span>
+
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw default allow outgoing</span>
+<span class="output">Default outgoing policy changed to 'allow'</span>
+
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw default allow routed</span>
+<span class="output">Default routed policy changed to 'allow'</span>
+<span class="comment">                                  # ↑ essencial para o masquerading funcionar</span>
+              </div>
+
+              <div class="cmd-block">
+<span class="comment">## PASSO 3 — Regras para serviços permitidos</span>
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw allow 22/tcp</span>    <span class="comment">  # SSH (já liberado, reforçando)</span>
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw allow 80/tcp</span>    <span class="comment">  # HTTP</span>
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw allow 443/tcp</span>   <span class="comment">  # HTTPS</span>
+
+<span class="comment">## PASSO 4 — Bloquear serviços inseguros explicitamente</span>
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw deny 23/tcp</span>     <span class="comment">  # Telnet — protocolo sem criptografia</span>
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw deny 21/tcp</span>     <span class="comment">  # FTP — senhas em texto claro</span>
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw deny 3389/tcp</span>   <span class="comment">  # RDP — alvo frequente de ataques</span>
+              </div>
+
+              <div class="cmd-block">
+<span class="comment">## PASSO 5 — Recarregar e verificar status completo</span>
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw reload</span>
+<span class="output">Firewall reloaded</span>
+
+<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw status verbose</span>
+<span class="output">Status: active
+Logging: on (low)
+Default: deny (incoming), allow (outgoing), allow (routed)
+
+To             Action      From
+--             ------      ----
+22/tcp         ALLOW IN    Anywhere
+80/tcp         ALLOW IN    Anywhere
+443/tcp        ALLOW IN    Anywhere
+23/tcp         DENY IN     Anywhere
+21/tcp         DENY IN     Anywhere
+3389/tcp       DENY IN     Anywhere</span>
+              </div>
+
+              <div class="cmd-block">
+<span class="comment">## PASSO 6 — Testar conectividade (nas VMs Desktop/Server)</span>
+<span class="comment"># Nas outras VMs, confirmar que o gateway está correto</span>
+<span class="prompt">fatec-desktop@fatec-desktop:~$</span> <span class="cmd">ip route show</span>
+<span class="output">default via <span style="color:var(--green)">192.168.10.1</span> dev enp0s8    ← tráfego passa pelo firewall</span>
+
+<span class="comment"># Testar que a internet funciona através do firewall</span>
+<span class="prompt">fatec-desktop@fatec-desktop:~$</span> <span class="cmd">ping -c 3 8.8.8.8</span>
+<span class="output">3 packets transmitted, 3 received, 0% packet loss</span>
+              </div>
+
+              <div class="success-box">✅ Se o ping funciona nas outras VMs, o masquerading e o IP forwarding estão funcionando. O tráfego está passando pelo firewall conforme esperado.</div>
+              <button class="complete-btn" id="btn-m4" onclick="completeM('m4','btn-m4','a-fw','bm-fw','Firewall UFW configurado como gateway! 🔥','fw')">✅ MISSÃO CONCLUÍDA — Firewall UFW Ativo como Gateway!</button>
             </div>
           </div>
         </div>
@@ -1439,7 +1667,7 @@ body::before {
 
 <span class="comment"># Descobrir o IP do servidor na rede interna</span>
 <span class="prompt">fatec-server@fatec-server:~$</span> <span class="cmd">ip addr show enp0s8 | grep inet</span>
-<span class="output">    inet <span style="color:var(--green)">192.168.56.20</span>/24 brd 192.168.56.255 scope global enp0s8</span>
+<span class="output">    inet <span style="color:var(--green)">192.168.10.20</span>/24 brd 192.168.10.255 scope global enp0s8</span>
 
 <span class="comment"># Liberar SSH no firewall local do Server (porta 22)</span>
 <span class="prompt">fatec-server@fatec-server:~$</span> <span class="cmd">sudo ufw allow OpenSSH</span>
@@ -1461,8 +1689,8 @@ body::before {
             <div class="info-box">💡 Agora acesse o <strong>Ubuntu Desktop</strong> e abra um terminal (<strong>Ctrl+Alt+T</strong>). Você vai se conectar ao Server como se fosse um administrador remoto.</div>
             <div class="cmd-block">
 <span class="comment"># No Ubuntu Desktop — conectar ao Server via SSH</span>
-<span class="prompt">fatec-desktop@fatec-desktop:~$</span> <span class="cmd">ssh fatec-server@192.168.56.20</span>
-<span class="output">The authenticity of host '192.168.56.20' can't be established.
+<span class="prompt">fatec-desktop@fatec-desktop:~$</span> <span class="cmd">ssh fatec-server@192.168.10.20</span>
+<span class="output">The authenticity of host '192.168.10.20' can't be established.
 Are you sure you want to continue connecting (yes/no)? </span><span class="value">yes</span>
 <span class="output">═══════════════════════════════════════════
   ISO-103 | 3º Semestre — Fatec
@@ -1553,7 +1781,7 @@ fatec-server@fatec-server:~$</span>
 <span class="prompt">$</span> <span class="cmd">ip route show</span>
 <span class="output">default via 10.0.2.2 dev enp0s3 proto dhcp    ← Gateway padrão (internet)
 10.0.2.0/24 dev enp0s3 proto kernel           ← Rede local do NAT
-192.168.56.0/24 dev enp0s8 proto kernel       ← Rede interna das VMs</span>
+192.168.10.0/24 dev enp0s8 proto kernel       ← Rede interna das VMs</span>
               </div>
 
               <div class="success-box">✅ <strong>Resumo dos comandos essenciais:</strong> <code>ip link show</code> = ver interfaces · <code>ip addr show</code> = ver IPs · <code>ip route show</code> = ver rotas · <code>ip link set &lt;iface&gt; up</code> = ativar placa</div>
@@ -1566,10 +1794,10 @@ fatec-server@fatec-server:~$</span>
               <div style="font-family:'Orbitron',monospace; font-size:0.72em; color:var(--cyan); font-weight:700; margin:14px 0 8px; letter-spacing:2px;">⚡ IP TEMPORÁRIO (sem reboot — só para testes)</div>
               <div class="cmd-block">
 <span class="comment"># Atribuir IP temporário a uma interface (some após reboot)</span>
-<span class="prompt">$</span> <span class="cmd">sudo ip addr add 192.168.56.10/24 dev enp0s8</span>
+<span class="prompt">$</span> <span class="cmd">sudo ip addr add 192.168.10.10/24 dev enp0s8</span>
 
 <span class="comment"># Remover IP de uma interface</span>
-<span class="prompt">$</span> <span class="cmd">sudo ip addr del 192.168.56.10/24 dev enp0s8</span>
+<span class="prompt">$</span> <span class="cmd">sudo ip addr del 192.168.10.10/24 dev enp0s8</span>
 
 <span class="comment"># Solicitar IP via DHCP manualmente</span>
 <span class="prompt">$</span> <span class="cmd">sudo dhclient enp0s3</span>
@@ -1599,10 +1827,10 @@ fatec-server@fatec-server:~$</span>
 <span class="value">    enp0s8:
       dhcp4: false            </span><span class="comment"># Adaptador 2 — Rede Interna (IP fixo)</span>
 <span class="value">      addresses:
-        - 192.168.56.20/24   </span><span class="comment"># IP do Ubuntu Server na rede interna</span>
+        - 192.168.10.20/24   </span><span class="comment"># IP do Ubuntu Server na rede interna</span>
 <span class="value">      routes:
         - to: default
-          via: 192.168.56.1  </span><span class="comment"># Gateway = IP do Firewall</span>
+          via: 192.168.10.1  </span><span class="comment"># Gateway = IP do Firewall</span>
 <span class="value">      nameservers:
         addresses: [8.8.8.8, 1.1.1.1]</span>
               </div>
@@ -1615,16 +1843,16 @@ fatec-server@fatec-server:~$</span>
 <span class="comment"># Verificar se o IP foi atribuído corretamente</span>
 <span class="prompt">$</span> <span class="cmd">ip addr show enp0s8</span>
 <span class="output">3: enp0s8: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt;
-    inet <span style="color:var(--green)">192.168.56.20/24</span> brd 192.168.56.255 scope global enp0s8</span>
+    inet <span style="color:var(--green)">192.168.10.20/24</span> brd 192.168.10.255 scope global enp0s8</span>
               </div>
 
               <div class="warn-box">⚠️ Se aparecer erro ao aplicar o netplan, verifique a indentação — o YAML é sensível a espaços. Use <code>sudo netplan try</code> para testar antes de aplicar definitivamente.</div>
 
               <div style="background:rgba(0,255,136,0.04); border:1px solid rgba(0,255,136,0.2); border-radius:9px; padding:14px; margin-top:12px; font-size:0.83em; line-height:1.8; color:var(--muted);">
                 <strong style="color:var(--green);">📌 IPs padrão do laboratório:</strong><br>
-                🔥 <code style="color:var(--orange)">192.168.56.1</code> — Firewall UFW (gateway da rede interna)<br>
-                🖧 <code style="color:var(--cyan)">192.168.56.20</code> — Ubuntu Server<br>
-                🖥️ <code style="color:var(--green)">192.168.56.10</code> — Ubuntu Desktop (cliente)
+                🔥 <code style="color:var(--orange)">192.168.10.1</code> — Firewall UFW (gateway da rede interna)<br>
+                🖧 <code style="color:var(--cyan)">192.168.10.20</code> — Ubuntu Server<br>
+                🖥️ <code style="color:var(--green)">192.168.10.10</code> — Ubuntu Desktop (cliente)
               </div>
             </div>
 
@@ -1635,15 +1863,15 @@ fatec-server@fatec-server:~$</span>
               <div style="font-family:'Orbitron',monospace; font-size:0.72em; color:var(--orange); font-weight:700; margin:14px 0 8px; letter-spacing:2px;">🧪 TESTES DE CONECTIVIDADE</div>
               <div class="cmd-block">
 <span class="comment"># Testar conexão com o gateway (Firewall)</span>
-<span class="prompt">$</span> <span class="cmd">ping -c 4 192.168.56.1</span>
-<span class="output">PING 192.168.56.1: 56 data bytes
-64 bytes from 192.168.56.1: icmp_seq=1 ttl=64 time=0.4 ms
-64 bytes from 192.168.56.1: icmp_seq=2 ttl=64 time=0.3 ms
---- 192.168.56.1 ping statistics ---
+<span class="prompt">$</span> <span class="cmd">ping -c 4 192.168.10.1</span>
+<span class="output">PING 192.168.10.1: 56 data bytes
+64 bytes from 192.168.10.1: icmp_seq=1 ttl=64 time=0.4 ms
+64 bytes from 192.168.10.1: icmp_seq=2 ttl=64 time=0.3 ms
+--- 192.168.10.1 ping statistics ---
 <span style="color:var(--green)">4 packets transmitted, 4 received, 0% packet loss</span></span>
 
 <span class="comment"># Testar conexão com o Ubuntu Server</span>
-<span class="prompt">$</span> <span class="cmd">ping -c 4 192.168.56.20</span>
+<span class="prompt">$</span> <span class="cmd">ping -c 4 192.168.10.20</span>
 
 <span class="comment"># Testar acesso à internet (via gateway Firewall)</span>
 <span class="prompt">$</span> <span class="cmd">ping -c 4 8.8.8.8</span>
@@ -1671,7 +1899,7 @@ fatec-server@fatec-server:~$</span>
 <span class="comment"># 5. Testar com traceroute para ver onde o pacote para</span>
 <span class="prompt">$</span> <span class="cmd">traceroute 8.8.8.8</span>
 <span class="output">traceroute to 8.8.8.8, 30 hops max
- 1  192.168.56.1  0.5 ms   ← Firewall (gateway OK)
+ 1  192.168.10.1  0.5 ms   ← Firewall (gateway OK)
  2  10.0.2.2     1.2 ms   ← VirtualBox NAT
  3  *            *        ← ...</span>
               </div>
@@ -1683,37 +1911,27 @@ fatec-server@fatec-server:~$</span>
           </div>
         </div>
 
-        <!-- MISSÃO 5 — FIREWALL UFW -->
-        <div class="mission" id="m4" onclick="toggleMission('m4')">
+        <!-- MISSÃO 5 — Ubuntu Desktop -->
+        <div class="mission" id="m1" onclick="toggleMission('m1')">
           <div class="mission-head">
-            <div class="mission-num orange-num">05</div>
+            <div class="mission-num">01</div>
             <div class="mission-info">
-              <div class="mission-title">🔥 Configurar VM Firewall — Ubuntu Server + UFW como Gateway</div>
-              <div class="mission-meta">⏱️ 45 min · Dificuldade: ⭐⭐⭐⭐ · 2 NICs · IP Forwarding · NAT · Regras UFW</div>
+              <div class="mission-title">🖥️ MISSÃO 5 — Instalar Ubuntu Desktop 22.04 no VirtualBox</div>
+              <div class="mission-meta">⏱️ 45 min · Dificuldade: ⭐⭐ · VirtualBox + ISO Ubuntu Desktop</div>
             </div>
-            <div class="mission-xp">+60 XP</div>
+            <div class="mission-xp">+50 XP</div>
             <div class="mission-toggle">▼</div>
           </div>
           <div class="mission-body">
-            <div class="mission-desc">🎯 Instalar o Ubuntu Server 22.04 em uma VM dedicada, configurar duas interfaces de rede, habilitar IP forwarding e masquerading, e aplicar regras UFW para atuar como firewall/gateway da rede interna.</div>
-
-            <!-- NOTA PEDAGÓGICA -->
-            <div style="background:rgba(255,140,0,0.06); border:1px solid rgba(255,140,0,0.25); border-left:4px solid var(--orange); border-radius:9px; padding:14px 16px; margin-bottom:16px; font-size:0.85em; line-height:1.6; color:var(--muted);">
-              <strong style="color:var(--orange)">🔥 Firewall como VM separada — por quê?</strong><br>
-              Em arquiteturas reais, o firewall é um dispositivo <strong style="color:var(--text)">dedicado</strong> que fica entre a rede interna e a internet. Neste laboratório, simulamos isso com uma VM que possui <strong style="color:var(--cyan)">duas placas de rede</strong>: uma voltada para a internet (NAT) e outra para a rede interna das VMs. Todo o tráfego passa por ela — e ela decide o que deixa passar.
-            </div>
+            <div class="mission-desc">🎯 Criar uma VM no VirtualBox e instalar o Ubuntu Desktop 22.04 LTS com idioma pt-BR e usuário padrão configurado.</div>
 
             <div class="os-tabs">
-              <button class="os-tab active-tab tab-orange" onclick="switchOSM4('vbox',this)">📦 VirtualBox</button>
-              <button class="os-tab tab-cyan" onclick="switchOSM4('rede',this)">🌐 Rede / IP</button>
-              <button class="os-tab" onclick="switchOSM4('forward',this)">⚡ Forwarding</button>
-              <button class="os-tab" onclick="switchOSM4('ufw',this)">🔥 UFW</button>
+              <button class="os-tab active-tab" onclick="switchOSM1('vbox',this)">📦 VirtualBox</button>
+              <button class="os-tab tab-cyan" onclick="switchOSM1('install',this)">💿 Instalação</button>
+              <button class="os-tab tab-orange" onclick="switchOSM1('pos',this)">⚙️ Pós-Install</button>
             </div>
 
-            <!-- ABA 1 — VirtualBox -->
-            <div id="m4-panel-vbox" class="os-panel active-panel">
-              <div class="info-box">💡 Use a mesma ISO do Ubuntu Server 22.04 disponível na <strong>unidade Z: (Prof. Isaque)</strong> — realize a instalação conforme o vídeo: <a href="https://youtu.be/BZ4yuTQmxdo" target="_blank" style="color:var(--cyan)">https://youtu.be/BZ4yuTQmxdo</a></div>
-
+            <div id="m1-panel-vbox" class="os-panel active-panel">
               <div class="fatec-box">
                 🏫 <strong>No laboratório da Fatec a VM já está criada</strong> — vá direto para a aba <strong>💿 Instalação</strong> e siga os passos a partir do boot da ISO.<br><br>
                 💻 <span class="home-label">Notebook / PC pessoal</span><br>
@@ -1724,275 +1942,57 @@ fatec-server@fatec-server:~$</span>
                 <p>Importe diretamente no VirtualBox: <strong>Arquivo → Importar Appliance</strong> → selecione o arquivo <code>Isaque.ova</code>. Todas as VMs já estarão configuradas.</p>
                 <a class="ova-download-btn" href="Isaque.ova" download="Isaque.ova">⬇️ Baixar Isaque.ova</a>
               </div>
-
-              <!-- CONFIGURAÇÃO DE REDE NO VIRTUALBOX -->
-              <div style="background:rgba(63,81,181,0.08); border:1px solid rgba(63,81,181,0.35); border-left:4px solid #3f51b5; border-radius:9px; padding:16px; margin:12px 0; font-size:0.85em; line-height:1.6; color:var(--muted);">
-                <strong style="color:#7986cb; font-size:1em;">⚙️ Pré-requisito: Configuração dos Adaptadores de Rede no VirtualBox</strong>
-                <p style="margin-top:10px; color:#9fa8da;">A VM do Firewall é especial — ela precisa de <strong style="color:var(--text)">dois adaptadores ativos</strong>: um para a internet (NAT) e outro para a rede interna das VMs:</p>
-                <ol style="margin:10px 0 0 20px; line-height:2.4;">
-                  <li>Acesse as <strong>Configurações</strong> da VM <strong>Ubuntu-Firewall-22</strong> no VirtualBox</li>
-                  <li>Vá em <strong>Rede → Adaptador 1</strong> → marque "Habilitar Placa de Rede" → Conectado a: <strong>NAT</strong></li>
-                  <li>Vá em <strong>Rede → Adaptador 2</strong> → marque "Habilitar Placa de Rede" → Conectado a: <strong>Rede Interna</strong> → Nome: <code>Intranet</code></li>
-                  <li>Clique em <strong>OK</strong> para salvar</li>
-                </ol>
-                <p style="margin-top:10px; color:#ffa000;">⚠️ O nome <code>Intranet</code> deve ser <strong>exatamente igual</strong> ao configurado nas outras VMs — é o que conecta todas elas ao mesmo switch virtual.</p>
-              </div>
-
-              <div class="step"><div class="step-num">1</div><p>VirtualBox → Novo → Nome: <code>Ubuntu-Firewall-22</code> → Tipo: Linux → Versão: Ubuntu (64-bit)</p></div>
-              <div class="step"><div class="step-num">2</div><p>RAM: <code>1024 MB</code> · Disco: <code>15 GB</code> VDI dinâmico — firewall não precisa de muito espaço</p></div>
-              <div class="step"><div class="step-num">3</div><p>Configurações → Rede → <strong>Adaptador 1</strong>: Conectado a <code>NAT</code> (para acesso à internet)</p></div>
-              <div class="step"><div class="step-num">4</div><p>Configurações → Rede → <strong>Adaptador 2</strong>: habilite → Conectado a <code>Rede Interna</code> → Nome: <code>Intranet</code></p></div>
-              <div class="step"><div class="step-num">5</div><p>Instale o Ubuntu Server conforme o vídeo de referência. Na tela <strong>Profile Configuration</strong>, preencha os campos conforme abaixo e pressione <strong>Done</strong>:</p>
-                <div class="cmd-block" style="margin-top:8px;">
-                  <span class="comment"># Campo 1 — O seu nome (Your name)</span><br>
-                  <span class="value">fatec-fw</span><br><br>
-                  <span class="comment"># Campo 2 — Your server's name (hostname da máquina na rede)</span><br>
-                  <span class="value">fatec-fw</span><br><br>
-                  <span class="comment"># Campo 3 — Escolha um nome de utilizador (username para login)</span><br>
-                  <span class="value">fatec-fw</span><br><br>
-                  <span class="comment"># Campo 4 — Escolha uma palavra-passe (senha)</span><br>
-                  <span class="value">Fatec2026@</span><br><br>
-                  <span class="comment"># Campo 5 — Confirme a sua palavra-passe</span><br>
-                  <span class="value">Fatec2026@</span>
-                </div>
-              </div>
-
-              <div class="step"><div class="step-num">6</div><p>Tela <strong>SSH Setup</strong> — configure exatamente como abaixo:</p>
-                <div class="cmd-block" style="margin-top:8px; line-height:2;">
-                  <span class="output">[X]  Install OpenSSH server</span> <span class="comment">  ← marque com Espaço (obrigatório para acesso remoto)</span><br>
-                  <span class="output">[X]  Allow password authentication over SSH</span> <span class="comment">  ← marque com Espaço (permite login com senha)</span><br>
-                  <span class="comment">     [ Import SSH key ▶ ]  ← deixe sem importar</span><br>
-                  <span class="comment">     AUTHORIZED KEYS: No authorized key  ← normal</span>
-                </div>
-                <div class="info-box" style="margin-top:8px;">
-                  💡 <strong>Por que instalar OpenSSH no firewall?</strong> Mesmo sendo um firewall, precisamos acessá-lo remotamente para gerenciar regras via terminal. O SSH garante que essa conexão seja <strong>criptografada e segura</strong>. <strong>Allow password authentication</strong> permite login simples com usuário e senha, adequado para o ambiente de laboratório.
-                </div>
-                <p style="font-size:0.86em; margin-top:8px;">→ Pressione <strong>Concluído</strong>.</p>
-              </div>
-
-              <div class="step"><div class="step-num">7</div><p>Tela <strong>Featured Server Snaps</strong> — lista de aplicativos opcionais:</p>
-                <div class="cmd-block" style="margin-top:8px; line-height:1.9;">
-                  <span class="comment"># NÃO selecione nenhum snap — exemplos do que aparece:</span><br>
-                  <span class="warn">[ ]  microk8s</span>      <span class="comment"> — Kubernetes para workstations</span><br>
-                  <span class="warn">[ ]  nextcloud</span>     <span class="comment"> — Servidor de arquivos em nuvem privada</span><br>
-                  <span class="warn">[ ]  prometheus</span>    <span class="comment"> — Sistema de monitoramento</span><br>
-                  <span class="warn">[ ]  powershell</span>    <span class="comment"> — PowerShell para Linux</span>
-                </div>
-                <div class="warn-box" style="margin-top:8px;">
-                  ⚠️ <strong>Não selecione nenhum snap!</strong> O firewall deve ser o sistema mais <strong>enxuto possível</strong> — cada serviço extra é uma porta aberta a mais. Instale somente o estritamente necessário. → Pressione <strong>Concluído</strong> sem marcar nada.
-                </div>
-              </div>
-
-              <div class="step"><div class="step-num">8</div><p>Tela <strong>Updating system</strong> — a instalação roda automaticamente. Acompanhe o log em tempo real:</p>
-                <div class="cmd-block" style="margin-top:8px; line-height:1.8; font-size:0.76em;">
-                  <span class="output">running 'curtin curthooks'</span><br>
-                  <span class="output">  configuring apt</span>          <span class="comment"> ← configura o gerenciador de pacotes</span><br>
-                  <span class="output">  installing kernel</span>        <span class="comment"> ← instala o núcleo do Linux</span><br>
-                  <span class="output">  setting up swap</span>          <span class="comment"> ← configura memória virtual</span><br>
-                  <span class="output">  apply networking config</span>  <span class="comment"> ← aplica configurações de rede</span><br>
-                  <span class="output">  writing etc/fstab</span>        <span class="comment"> ← registra partições para montagem automática</span><br>
-                  <span class="output">  installing grub to target devices</span> <span class="comment"> ← instala bootloader no disco</span><br>
-                  <span class="output">final system configuration</span><br>
-                  <span class="output">  installing openssh-server</span> <span class="comment"> ← instala o SSH (marcado na etapa anterior)</span><br>
-                  <span class="output">  configuring cloud-init</span><br>
-                  <span class="output">  downloading and installing security updates</span> <span class="comment"> ← pode demorar mais aqui</span><br>
-                  <span class="warn">  curtin command in-target -</span>  <span class="comment"> ← última etapa antes do reboot</span>
-                </div>
-                <div class="info-box" style="margin-top:10px;">
-                  ⏱️ <strong>Tempo estimado de instalação:</strong>
-                  <ul style="margin:8px 0 0 16px; line-height:2;">
-                    <li>💻 <strong>Laboratório da Fatec</strong> (máquinas com SSD): <strong>~5 a 10 minutos</strong></li>
-                    <li>🏠 <strong>Notebook/PC pessoal com HDD</strong>: <strong>~15 a 25 minutos</strong></li>
-                    <li>🐢 <strong>Se a internet estiver lenta</strong>: o passo <em>"downloading security updates"</em> pode levar mais tempo — é normal</li>
-                  </ul>
-                  <p style="margin-top:8px;">💡 <strong>Não mexa no teclado nem feche a janela</strong> durante a instalação. Aguarde até aparecer o botão <strong>Reboot Now</strong> e então selecione-o. Quando pedir para remover o disco, pressione <strong>Enter</strong>. Após o reboot, faça login com <code>fatec-fw</code> e senha <code>Fatec2026@</code>.</p>
-                </div>
-              </div>
-
-              <div class="warn-box" style="border-left-color:#e91e63; background:rgba(233,30,99,0.05); margin-top:12px;">
-                🔄 <strong>Precisa reinstalar?</strong> VirtualBox → selecione a máquina → menu <strong>Dispositivos → Discos Ópticos → Escolher um arquivo em disco</strong> → navegue até a <strong>unidade Z:</strong> (Prof. Isaque) e selecione a ISO → menu <strong>Máquina → Reinicializar</strong> (ou pressione <code>Host+R</code>) → prossiga conforme o vídeo.
-              </div>
-
-              <!-- TROUBLESHOOTING DE REDE -->
-              <div style="background:rgba(249,168,37,0.06); border:1px solid rgba(249,168,37,0.3); border-left:4px solid #f9a825; border-radius:9px; padding:16px; margin-top:16px; font-size:0.85em; line-height:1.6; color:var(--muted);">
-                <strong style="color:#ffa000; font-size:1em;">🔧 A placa de rede não funcionou após a instalação? Siga estes passos:</strong>
-                <div style="margin-top:14px;">
-                  <p style="font-weight:bold; color:#00ff88; margin-bottom:6px;">✅ 1. Ativar a interface manualmente</p>
-                  <div class="cmd-block">sudo ip link set enp0s3 up</div>
-                </div>
-                <div style="margin-top:12px;">
-                  <p style="font-weight:bold; color:#00ff88; margin-bottom:6px;">✅ 2. Solicitar IP via DHCP</p>
-                  <div class="cmd-block">sudo dhclient enp0s3</div>
-                </div>
-                <div style="margin-top:12px;">
-                  <p style="font-weight:bold; color:#00d4ff; margin-bottom:6px;">🧪 3. Testar a conectividade</p>
-                  <div class="cmd-block">ping -c 4 8.8.8.8</div>
-                  <p style="margin:8px 0;">Se responder, teste também a resolução de nomes:</p>
-                  <div class="cmd-block">ping -c 4 google.com</div>
-                </div>
-                <div style="background:rgba(0,0,0,0.2); border-radius:6px; padding:10px; margin-top:12px;">
-                  <strong style="color:#ffa000;">⚠️ Atenção:</strong> Substitua <code>enp0s3</code> pelo nome real da sua interface, caso seja diferente. Use <code>ip link show</code> para verificar o nome correto.
-                </div>
-              </div>
+              <div class="info-box">💡 A ISO do Ubuntu Desktop está disponível na <strong>unidade Z: (Prof. Isaque)</strong> — aponte-a ao criar a VM no VirtualBox. Não é necessário baixar.</div>
+              <div class="step"><div class="step-num">1</div><p>Abra o VirtualBox → clique em <strong>Novo</strong> → Nome: <code>Ubuntu-Desktop-22</code> → Tipo: Linux → Versão: Ubuntu (64-bit)</p></div>
+              <div class="step"><div class="step-num">2</div><p>Memória RAM: mínimo <code>2048 MB</code> (recomendado <code>4096 MB</code>)</p></div>
+              <div class="step"><div class="step-num">3</div><p>Disco Virtual: <strong>Criar novo disco VDI</strong> → alocação dinâmica → <code>25 GB</code></p></div>
+              <div class="step"><div class="step-num">4</div><p>Em Configurações → Armazenamento → Controlador IDE → selecione a ISO do Ubuntu Desktop</p></div>
+              <div class="step"><div class="step-num">5</div><p>Em Configurações → Rede → Adaptador 1 → <code>NAT</code> (para aulas) ou <code>Bridge</code> (para rede local)</p></div>
             </div>
 
-            <!-- ABA 2 — Rede / IP Estático -->
-            <div id="m4-panel-rede" class="os-panel">
-              <div class="warn-box">⚠️ O firewall precisa de <strong>IP estático</strong> na interface interna para ser o gateway fixo das outras VMs. Use o <code>netplan</code> para configurar.</div>
-              <div class="step"><div class="step-num">1</div><p>Identifique os nomes das interfaces de rede:</p></div>
-              <div class="cmd-block">
-<span class="comment"># Ver todas as interfaces e seus nomes</span>
-<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">ip link show</span>
-<span class="output">1: lo: &lt;LOOPBACK&gt; ...
-2: enp0s3: &lt;BROADCAST&gt; ...   ← Adaptador 1 (NAT / internet)
-3: enp0s8: &lt;BROADCAST&gt; ...   ← Adaptador 2 (Rede Interna / LAN)</span>
-              </div>
-              <div class="step"><div class="step-num">2</div><p>Edite o arquivo de configuração do netplan:</p></div>
-              <div class="cmd-block">
-<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo nano /etc/netplan/00-installer-config.yaml</span>
-              </div>
-              <div class="step"><div class="step-num">3</div><p>Substitua o conteúdo pelo seguinte (atenção à <strong>indentação com espaços</strong> — YAML não aceita tabs):</p></div>
-              <div class="cmd-block">
-<span class="comment"># /etc/netplan/00-installer-config.yaml</span>
-<span class="value">network:
-  version: 2
-  ethernets:
-    enp0s3:
-      dhcp4: true          </span><span class="comment"># NAT — recebe IP do VirtualBox automaticamente</span>
-<span class="value">    enp0s8:
-      dhcp4: false         </span><span class="comment"># LAN interna — IP fixo</span>
-<span class="value">      addresses:
-        - 192.168.56.1/24  </span><span class="comment"># Gateway da rede interna</span>
-<span class="value">      nameservers:
-        addresses: [8.8.8.8, 1.1.1.1]</span>
-              </div>
-              <div class="step"><div class="step-num">4</div><p>Aplique as configurações e verifique:</p></div>
-              <div class="cmd-block">
-<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo netplan apply</span>
-<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">ip addr show enp0s8</span>
-<span class="output">3: enp0s8: &lt;BROADCAST,MULTICAST,UP&gt;
-    inet <span style="color:var(--green)">192.168.56.1/24</span> brd 192.168.56.255 scope global enp0s8</span>
-              </div>
-              <div class="step"><div class="step-num">5</div><p>Nas VMs <strong>Desktop</strong> e <strong>Server</strong>, configure o gateway padrão como <code>192.168.56.1</code> no netplan delas (campo <code>gateway4</code> ou <code>routes</code>).</p></div>
+            <div id="m1-panel-install" class="os-panel">
+              <div class="info-box">📹 <strong>Referência em vídeo:</strong> <a href="https://youtu.be/UXq193Ol33g" target="_blank" style="color:var(--cyan)">https://youtu.be/UXq193Ol33g</a> — siga o passo a passo demonstrado.</div>
+              <div class="step"><div class="step-num">1</div><p>No VirtualBox, selecione a VM <code>Ubuntu-Desktop-22</code> e clique em <strong>Iniciar</strong>. A VM vai bootar pela ISO e exibir uma tela roxa com o logo Ubuntu.</p></div>
+              <div class="step"><div class="step-num">2</div><p>Na tela GRUB, selecione <strong>Try or Install Ubuntu</strong> e pressione Enter. Aguarde o sistema carregar (~1 min).</p></div>
+              <div class="step"><div class="step-num">3</div><p>Na janela do instalador, escolha o idioma <strong>Português do Brasil</strong> → clique em <strong>Instalar o Ubuntu</strong>.</p></div>
+              <div class="step"><div class="step-num">4</div><p>Layout do teclado: <strong>Português (Brasil)</strong> → clique em <strong>Continuar</strong>.</p></div>
+              <div class="step"><div class="step-num">5</div><p>Tipo de instalação: selecione <strong>Instalação Normal</strong> (instala o sistema completo com GNOME e aplicativos básicos). Marque também <strong>"Baixar atualizações ao instalar"</strong> se tiver internet disponível.</p></div>
+              <div class="step"><div class="step-num">6</div><p>Particionamento: selecione <strong>Apagar disco e instalar Ubuntu</strong> → clique em <strong>Instalar agora</strong> → confirme com <strong>Continuar</strong>.</p></div>
+              <div class="step"><div class="step-num">7</div><p>Fuso horário: clique no mapa em <strong>São Paulo</strong> (Brasil) → clique em <strong>Continuar</strong>.</p></div>
+              <div class="step"><div class="step-num">8</div><p>Criar usuário: preencha seu nome, nome da máquina: <code>fatec-desktop</code>, usuário: seu nome, senha: <code>Fatec2025@</code> → marque <strong>"Exigir senha para entrar"</strong> → clique em <strong>Continuar</strong>.</p></div>
+              <div class="step"><div class="step-num">9</div><p>Aguarde a instalação (~15 min). Ao finalizar, clique em <strong>Reiniciar agora</strong>. Quando aparecer a mensagem para remover o disco, pressione <strong>Enter</strong>.</p></div>
+              <div class="step"><div class="step-num">10</div><p>Após o reboot, faça login com o usuário e senha criados. A área de trabalho GNOME vai aparecer — isso confirma que a instalação foi bem-sucedida! ✅</p></div>
             </div>
 
-            <!-- ABA 3 — IP Forwarding -->
-            <div id="m4-panel-forward" class="os-panel">
-              <div class="info-box">💡 <strong>IP Forwarding</strong> permite que o kernel Linux encaminhe pacotes entre interfaces. Sem ele, o tráfego da LAN não chega à internet — o firewall simplesmente descartaria os pacotes.</div>
-              <div class="step"><div class="step-num">1</div><p>Habilitar IP forwarding permanentemente no kernel:</p></div>
+            <div id="m1-panel-pos" class="os-panel">
               <div class="cmd-block">
-<span class="comment"># Editar o arquivo de configuração do kernel</span>
-<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo nano /etc/sysctl.conf</span>
+<span class="comment"># Atualizar lista de pacotes</span>
+<span class="prompt">$</span> <span class="cmd">sudo apt update</span>
 
-<span class="comment"># Encontrar e descomentar (remover o #) a linha:</span>
-<span class="value">net.ipv4.ip_forward=1</span>
+<span class="comment"># Instalar Guest Additions (melhora resolução e integração)</span>
+<span class="prompt">$</span> <span class="cmd">sudo apt install virtualbox-guest-additions-iso</span>
 
-<span class="comment"># Aplicar sem reiniciar</span>
-<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo sysctl -p</span>
-<span class="output">net.ipv4.ip_forward = 1</span>
+<span class="comment"># Verificar versão instalada</span>
+<span class="prompt">$</span> <span class="cmd">lsb_release -a</span>
+<span class="output">Description: Ubuntu 22.04.3 LTS</span>
 
-<span class="comment"># Confirmar que está ativo (deve retornar 1)</span>
-<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">cat /proc/sys/net/ipv4/ip_forward</span>
-<span class="output">1</span>
+<span class="comment"># Instalar utilitários básicos</span>
+<span class="prompt">$</span> <span class="cmd">sudo apt install net-tools curl wget htop -y</span>
               </div>
-              <div class="step"><div class="step-num">2</div><p>Configurar o <strong>masquerading</strong> (NAT) no UFW para que as VMs da LAN acessem a internet usando o IP do firewall:</p></div>
-              <div class="cmd-block">
-<span class="comment"># Editar as regras brutas do UFW (antes do *filter)</span>
-<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo nano /etc/ufw/before.rules</span>
+              <div class="success-box">✅ Após o update, tire um <strong>Snapshot</strong> no VirtualBox (Máquina → Tirar Snapshot) para salvar o estado limpo!</div>
 
-<span class="comment"># Adicionar no INÍCIO do arquivo, antes de *filter:</span>
-<span class="value"># NAT — masquerading para saída pela interface enp0s3 (internet)
-*nat
-:POSTROUTING ACCEPT [0:0]
--A POSTROUTING -s 192.168.56.0/24 -o enp0s3 -j MASQUERADE
-COMMIT</span>
-              </div>
-              <div class="step"><div class="step-num">3</div><p>Permitir o encaminhamento (forwarding) no arquivo de configuração do UFW:</p></div>
-              <div class="cmd-block">
-<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo nano /etc/default/ufw</span>
+              <div class="info-box">📹 <strong>Referência em vídeo:</strong> <a href="https://youtu.be/UXq193Ol33g" target="_blank" style="color:var(--cyan)">https://youtu.be/UXq193Ol33g</a></div>
 
-<span class="comment"># Alterar a linha DEFAULT_FORWARD_POLICY:</span>
-<span class="value">DEFAULT_FORWARD_POLICY="ACCEPT"</span>
-              </div>
-            </div>
-
-            <!-- ABA 4 — UFW Regras -->
-            <div id="m4-panel-ufw" class="os-panel">
-              <div class="warn-box">⚠️ <strong>Regra de ouro:</strong> sempre libere o SSH <strong>antes</strong> de ativar o UFW. Se esquecer, perde o acesso remoto à VM sem possibilidade de recuperação pelo terminal.</div>
-
-              <div class="cmd-block">
-<span class="comment">## PASSO 1 — Liberar SSH e ativar UFW</span>
-<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw allow 22/tcp</span>
-<span class="output">Rules updated</span>
-
-<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw enable</span>
-<span class="warn">Command may disrupt existing ssh connections. Proceed with operation (y|n)? y</span>
-<span class="output">Firewall is active and enabled on system startup</span>
+              <div class="warn-box" style="border-left-color:#e91e63; background:rgba(233,30,99,0.05);">
+                🔄 <strong>Precisa reinstalar?</strong> Abra o VirtualBox → selecione a máquina → menu <strong>Dispositivos → Discos Ópticos → Escolher um arquivo em disco</strong> → navegue até a <strong>unidade Z:</strong> (Prof. Isaque) e selecione a ISO → menu <strong>Máquina → Reinicializar</strong> (ou pressione <code>Host+R</code>) → prossiga com a instalação conforme o vídeo.
               </div>
 
-              <div class="cmd-block">
-<span class="comment">## PASSO 2 — Políticas padrão (negar tudo, permitir saída)</span>
-<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw default deny incoming</span>
-<span class="output">Default incoming policy changed to 'deny'</span>
-
-<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw default allow outgoing</span>
-<span class="output">Default outgoing policy changed to 'allow'</span>
-
-<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw default allow routed</span>
-<span class="output">Default routed policy changed to 'allow'</span>
-<span class="comment">                                  # ↑ essencial para o masquerading funcionar</span>
-              </div>
-
-              <div class="cmd-block">
-<span class="comment">## PASSO 3 — Regras para serviços permitidos</span>
-<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw allow 22/tcp</span>    <span class="comment">  # SSH (já liberado, reforçando)</span>
-<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw allow 80/tcp</span>    <span class="comment">  # HTTP</span>
-<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw allow 443/tcp</span>   <span class="comment">  # HTTPS</span>
-
-<span class="comment">## PASSO 4 — Bloquear serviços inseguros explicitamente</span>
-<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw deny 23/tcp</span>     <span class="comment">  # Telnet — protocolo sem criptografia</span>
-<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw deny 21/tcp</span>     <span class="comment">  # FTP — senhas em texto claro</span>
-<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw deny 3389/tcp</span>   <span class="comment">  # RDP — alvo frequente de ataques</span>
-              </div>
-
-              <div class="cmd-block">
-<span class="comment">## PASSO 5 — Recarregar e verificar status completo</span>
-<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw reload</span>
-<span class="output">Firewall reloaded</span>
-
-<span class="prompt">fatec-fw@fatec-fw:~$</span> <span class="cmd">sudo ufw status verbose</span>
-<span class="output">Status: active
-Logging: on (low)
-Default: deny (incoming), allow (outgoing), allow (routed)
-
-To             Action      From
---             ------      ----
-22/tcp         ALLOW IN    Anywhere
-80/tcp         ALLOW IN    Anywhere
-443/tcp        ALLOW IN    Anywhere
-23/tcp         DENY IN     Anywhere
-21/tcp         DENY IN     Anywhere
-3389/tcp       DENY IN     Anywhere</span>
-              </div>
-
-              <div class="cmd-block">
-<span class="comment">## PASSO 6 — Testar conectividade (nas VMs Desktop/Server)</span>
-<span class="comment"># Nas outras VMs, confirmar que o gateway está correto</span>
-<span class="prompt">fatec-desktop@fatec-desktop:~$</span> <span class="cmd">ip route show</span>
-<span class="output">default via <span style="color:var(--green)">192.168.56.1</span> dev enp0s8    ← tráfego passa pelo firewall</span>
-
-<span class="comment"># Testar que a internet funciona através do firewall</span>
-<span class="prompt">fatec-desktop@fatec-desktop:~$</span> <span class="cmd">ping -c 3 8.8.8.8</span>
-<span class="output">3 packets transmitted, 3 received, 0% packet loss</span>
-              </div>
-
-              <div class="success-box">✅ Se o ping funciona nas outras VMs, o masquerading e o IP forwarding estão funcionando. O tráfego está passando pelo firewall conforme esperado.</div>
-              <button class="complete-btn" id="btn-m4" onclick="completeM('m4','btn-m4','a-fw','bm-fw','Firewall UFW configurado como gateway! 🔥','fw')">✅ MISSÃO CONCLUÍDA — Firewall UFW Ativo como Gateway!</button>
+              <button class="complete-btn" id="btn-m1" onclick="completeM('m1','btn-m1','a-desktop','bm-desktop','Ubuntu Desktop instalado! 🖥️','desktop')">✅ MISSÃO CONCLUÍDA — Ubuntu Desktop Instalado!</button>
             </div>
           </div>
         </div>
 
-        <!-- MISSÃO 5 — Gerenciamento de Pacotes -->
+        <!-- MISSÃO 6 — Gerenciamento de Pacotes -->
         <div class="mission" id="m5" onclick="toggleMission('m5')">
           <div class="mission-head">
             <div class="mission-num" style="background:linear-gradient(135deg,var(--purple2),var(--purple));">06</div>

@@ -394,7 +394,7 @@
                     <div class="week-number">05</div>
                     <div class="week-title">Instalação de Linux Server</div>
                     <div class="week-subtitle">
-                        Planejamento, instalação Ubuntu Server, particionamento, configuração inicial
+                        Planejamento e instalação: Ubuntu Firewall → Ubuntu Server → Ubuntu Desktop (ordem obrigatória)
                     </div>
                     <div class="week-links">
                         <a href="semana05.html" class="week-link link-content">📄 Conteúdo</a>
@@ -402,48 +402,62 @@
                     </div>
                 </div>
 
-                <!-- SEMANA 05.1 — ROTEAMENTO INTERNET VIA FIREWALL -->
-                <div class="week-card" style="border-color: #1a7fd4; background: linear-gradient(135deg, #f0f8ff 0%, #e0f0ff 100%);">
-                    <div class="week-number" style="background: linear-gradient(135deg, #1a7fd4 0%, #00b4d8 100%);">🌐</div>
-                    <div class="week-title" style="color: #1a5fa8;">Semana 5.1 — Internet via Gateway Firewall</div>
-                    <div class="week-subtitle">
-                        Configurar ubuntu-server e ubuntu-desktop para acessar a internet roteando pelo firewall NAT da Semana 5.2
+                                <!-- Pipeline visual semana05 -->
+                <div style="grid-column: 1 / -1; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border: 2px dashed #e67e22; border-radius: 12px; padding: 18px 24px; margin: 4px 0;">
+                    <p style="color:#e67e22; font-weight:800; font-size:1em; margin-bottom:10px;">🔄 Ordem obrigatória de configuração — Semana 5</p>
+                    <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                        <span style="background:#e67e22;color:white;padding:6px 14px;border-radius:20px;font-weight:700;font-size:0.85em;">1️⃣ ubuntu-firewall</span>
+                        <span style="color:#aaa; font-size:1.2em;">→</span>
+                        <span style="background:#1a7fd4;color:white;padding:6px 14px;border-radius:20px;font-weight:700;font-size:0.85em;">2️⃣ ubuntu-server</span>
+                        <span style="color:#aaa; font-size:1.2em;">→</span>
+                        <span style="background:#6f42c1;color:white;padding:6px 14px;border-radius:20px;font-weight:700;font-size:0.85em;">3️⃣ ubuntu-desktop</span>
+                        <span style="color:#aaa; font-size:1.2em;">→</span>
+                        <span style="background:#0d9488;color:white;padding:6px 14px;border-radius:20px;font-weight:700;font-size:0.85em;">4️⃣ Teste de Conectividade</span>
                     </div>
-                    <div class="week-links">
-                        <a href="semana05_01.html" class="week-link" style="background: linear-gradient(135deg, #1a7fd4, #00b4d8); color: white;">🌐 Roteamento Internet</a>
-                    </div>
+                    <p style="color:#888; font-size:0.8em; margin-top:8px;">⚠️ Configure primeiro o Firewall, pois ele é o gateway. O Server e Desktop precisam dele para acessar a internet.</p>
                 </div>
-
-                <!-- SEMANA 05.2 — FIREWALL UFW -->
+                <!-- SEMANA 05 — PASSO 1: FIREWALL UFW -->
                 <div class="week-card" style="border-color: #e67e22; background: linear-gradient(135deg, #fff8f0 0%, #ffeedd 100%);">
                     <div class="week-number" style="background: linear-gradient(135deg, #e67e22 0%, #ff4500 100%);">🔥</div>
-                    <div class="week-title" style="color: #c0392b;">Semana 5.2 — Firewall UFW Gateway</div>
+                    <div class="week-title" style="color: #c0392b;">Passo 1 — Ubuntu Firewall: UFW Gateway</div>
                     <div class="week-subtitle">
-                        VM dedicada com 2 NICs, IP Forwarding, NAT (masquerading) e regras UFW como gateway da rede interna
+                        1º a configurar: VM dedicada com 2 NICs, IP Forwarding, NAT (masquerading) e regras UFW como gateway da rede interna
                     </div>
                     <div class="week-links">
                         <a href="semana05_02.html" class="week-link" style="background: linear-gradient(135deg, #e67e22, #c0392b); color: white;">🔥 Firewall UFW</a>
                     </div>
                 </div>
 
-                <!-- SEMANA 05.3 — GUFW -->
+                <!-- SEMANA 05 — PASSO 2: SERVER -->
+                <div class="week-card" style="border-color: #1a7fd4; background: linear-gradient(135deg, #f0f8ff 0%, #e0f0ff 100%);">
+                    <div class="week-number" style="background: linear-gradient(135deg, #1a7fd4 0%, #00b4d8 100%);">🌐</div>
+                    <div class="week-title" style="color: #1a5fa8;">Passo 2 — Ubuntu Server: Rota via Firewall</div>
+                    <div class="week-subtitle">
+                        2º a configurar: Configurar ubuntu-server para acessar a internet roteando pelo ubuntu-firewall (gateway NAT)
+                    </div>
+                    <div class="week-links">
+                        <a href="semana05_01.html" class="week-link" style="background: linear-gradient(135deg, #1a7fd4, #00b4d8); color: white;">🌐 Roteamento Internet</a>
+                    </div>
+                </div>
+
+                <!-- SEMANA 05 — PASSO 3: DESKTOP GUFW -->
                 <div class="week-card" style="border-color: #6f42c1; background: linear-gradient(135deg, #f8f0ff 0%, #ede0ff 100%);">
                     <div class="week-number" style="background: linear-gradient(135deg, #6f42c1 0%, #b44aff 100%);">🛡️</div>
-                    <div class="week-title" style="color: #6f42c1;">Semana 5.3 — GUFW no Ubuntu Desktop</div>
+                    <div class="week-title" style="color: #6f42c1;">Passo 3 — Ubuntu Desktop: GUFW</div>
                     <div class="week-subtitle">
-                        Interface gráfica do UFW — configure regras de firewall no Desktop sem digitar comandos
+                        3º a configurar: Interface gráfica do UFW — configure regras de firewall no Ubuntu Desktop sem digitar comandos
                     </div>
                     <div class="week-links">
                         <a href="semana05_03.html" class="week-link" style="background: linear-gradient(135deg, #6f42c1, #b44aff); color: white;">🛡️ GUFW Desktop</a>
                     </div>
                 </div>
 
-                <!-- SEMANA 05.4 — ACESSO À INTERNET VIA FIREWALL -->
+                <!-- SEMANA 05 — PASSO 4: TESTE FINAL -->
                 <div class="week-card" style="border-color: #0d9488; background: linear-gradient(135deg, #f0fffe 0%, #ccfbf1 100%);">
                     <div class="week-number" style="background: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%);">🌍</div>
-                    <div class="week-title" style="color: #0f766e;">Semana 5.4 — Acesso à Internet via Firewall</div>
+                    <div class="week-title" style="color: #0f766e;">Passo 4 — Testar: Acesso à Internet via Firewall</div>
                     <div class="week-subtitle">
-                        Configuração completa de acesso à internet roteando pelo firewall — integração entre as VMs, NAT, testes de conectividade e troubleshooting
+                        4º — Validação final: integração entre as VMs, NAT, testes de conectividade e troubleshooting completo
                     </div>
                     <div class="week-links">
                         <a href="semana5_04.html" class="week-link" style="background: linear-gradient(135deg, #0d9488, #0f766e); color: white;">🌍 Acesso à Internet</a>
