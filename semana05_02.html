@@ -1232,11 +1232,137 @@ PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
 </div>
 
 <!-- ════════════════════════════════════════════
-     SEÇÃO 3 — UFW FIREWALL
+     SEÇÃO 3 — NAT MASQUERADE (iptables)
 ════════════════════════════════════════════ -->
 <div class="section">
   <div class="section-title">
     <div class="section-num">3</div>
+    🔀 Configurando o NAT Masquerade (iptables)
+  </div>
+
+  <div class="box box-info">
+    💡 <strong>O que é NAT Masquerade?</strong><br>
+    Após ativar o IP Forwarding, os pacotes das VMs internas conseguem ser repassados — mas ainda precisam de um "disfarce" de IP para sair para a internet. O <strong>MASQUERADE</strong> faz isso: substitui o IP privado da VM pelo IP público da interface de saída (<code>eth0</code> / <code>enp0s3</code>), permitindo que várias máquinas da rede interna compartilhem uma única saída para a internet.
+  </div>
+
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 700 180" width="100%" xmlns="http://www.w3.org/2000/svg" style="max-width:680px;">
+      <rect x="10" y="55" width="130" height="70" rx="10" fill="rgba(0,229,160,0.06)" stroke="#00e5a0" stroke-width="1.5"/>
+      <text x="75" y="82" text-anchor="middle" font-family="Sora,sans-serif" font-size="11" font-weight="700" fill="#00e5a0">🖥 VM Interna</text>
+      <text x="75" y="99" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#4a5878">192.168.10.10</text>
+      <text x="75" y="114" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#4a5878">gateway: .10.1</text>
+      <line x1="140" y1="90" x2="210" y2="90" stroke="#00e5a0" stroke-width="1.5" marker-end="url(#arr2b)"/>
+      <text x="175" y="83" text-anchor="middle" font-family="Space Mono,monospace" font-size="8" fill="#4a5878">enp0s8</text>
+      <rect x="210" y="45" width="280" height="90" rx="10" fill="rgba(255,140,66,0.07)" stroke="#ff8c42" stroke-width="2"/>
+      <text x="350" y="72" text-anchor="middle" font-family="Sora,sans-serif" font-size="12" font-weight="700" fill="#ff8c42">🔥 Ubuntu Server</text>
+      <text x="350" y="90" text-anchor="middle" font-family="Space Mono,monospace" font-size="10" fill="#ffd060">iptables MASQUERADE</text>
+      <text x="350" y="107" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#4a5878">IP privado → IP público</text>
+      <text x="350" y="123" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#86efac">192.168.10.10 → 10.0.2.15</text>
+      <line x1="490" y1="90" x2="560" y2="90" stroke="#4da6ff" stroke-width="1.5" marker-end="url(#arr1b)"/>
+      <text x="525" y="83" text-anchor="middle" font-family="Space Mono,monospace" font-size="8" fill="#4a5878">eth0/enp0s3</text>
+      <ellipse cx="620" cy="90" rx="70" ry="38" fill="rgba(77,166,255,0.07)" stroke="#4da6ff" stroke-width="1.5"/>
+      <text x="620" y="87" text-anchor="middle" font-family="Sora,sans-serif" font-size="12" fill="#4da6ff">🌐 Internet</text>
+      <text x="620" y="104" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#4a5878">NAT/VirtualBox</text>
+      <defs>
+        <marker id="arr1b" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#4da6ff"/></marker>
+        <marker id="arr2b" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#00e5a0"/></marker>
+      </defs>
+    </svg>
+    <p>Figura: MASQUERADE "disfarça" o IP privado das VMs internas ao sair pela interface externa</p>
+  </div>
+
+  <div class="card">
+    <div class="card-head">⚙️ Aplicando a regra de NAT Masquerade</div>
+    <div class="card-body">
+
+      <div class="box box-warn">⚠️ <strong>Pré-requisito:</strong> O IP Forwarding (<code>net.ipv4.ip_forward=1</code>) deve estar ativo antes de aplicar esta regra. Verifique com <code>cat /proc/sys/net/ipv4/ip_forward</code> — deve retornar <code>1</code>.</div>
+
+      <div class="step-block">
+        <div class="step-block-header">
+          <div class="step-num">1</div>
+          <div>
+            <div class="step-title">Aplicar a regra de MASQUERADE na tabela NAT</div>
+            <div class="step-subtitle">Interface de saída: eth0 (ou enp0s3 — veja qual é a sua)</div>
+          </div>
+        </div>
+        <div class="step-block-body">
+          <p>Este comando adiciona uma regra na cadeia <code>POSTROUTING</code> da tabela <code>nat</code> do iptables. Ele instrui o kernel a "disfarçar" (mascarar) o IP de origem dos pacotes que saem pela interface <code>eth0</code>:</p>
+          <div class="code-block" id="code-masq">
+<button class="copy-btn" onclick="copyCode('code-masq',this)">📋 Copiar</button>
+<span class="comment"># Ativar NAT Masquerade para tráfego saindo pela eth0</span>
+<span class="prompt">$</span> <span class="cmd">sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE</span>
+          </div>
+          <div class="result-label">📺 Resultado esperado:</div>
+          <div class="result-block">
+<span class="r-dim">(sem saída = regra aplicada com sucesso)</span>
+          </div>
+          <div class="box box-info">
+            💡 <strong>Anatomia do comando:</strong><br>
+            <span style="font-family:var(--mono);font-size:0.85em;line-height:2.3;display:block;margin-top:8px;">
+              <span style="color:var(--orange);">-t nat</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ tabela "nat" — usada para tradução de endereços</span><br>
+              <span style="color:var(--orange);">-A POSTROUTING</span><span style="color:var(--muted);">&nbsp;→ adiciona à cadeia que age APÓS decidir a rota do pacote</span><br>
+              <span style="color:var(--orange);">-o eth0</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ aplica somente aos pacotes que saem pela interface eth0</span><br>
+              <span style="color:var(--orange);">-j MASQUERADE</span><span style="color:var(--muted);">&nbsp;&nbsp;→ ação: substituir o IP de origem pelo IP da interface de saída</span>
+            </span>
+          </div>
+          <div class="box box-warn">⚠️ <strong>eth0 ou enp0s3?</strong> Em VMs com Ubuntu Server moderno, a interface NAT geralmente se chama <code>enp0s3</code> em vez de <code>eth0</code>. Verifique o nome correto com <code>ip link show</code> e substitua <code>eth0</code> pelo nome real da sua interface de saída.</div>
+        </div>
+      </div>
+
+      <div class="step-block">
+        <div class="step-block-header">
+          <div class="step-num">2</div>
+          <div>
+            <div class="step-title">Verificar se a regra foi criada</div>
+          </div>
+        </div>
+        <div class="step-block-body">
+          <div class="code-block" id="code-masq-check">
+<button class="copy-btn" onclick="copyCode('code-masq-check',this)">📋 Copiar</button>
+<span class="comment"># Listar regras da tabela nat</span>
+<span class="prompt">$</span> <span class="cmd">sudo iptables -t nat -L -v --line-numbers</span>
+          </div>
+          <div class="result-label">📺 Resultado esperado:</div>
+          <div class="result-block">
+Chain POSTROUTING (policy ACCEPT)
+num  pkts  bytes  target      prot  opt  in   out   source     destination
+<span class="r-ok">1       0     0   MASQUERADE  all   --   any  eth0  anywhere   anywhere</span>   <span class="r-dim">← ✅ regra ativa!</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-block">
+        <div class="step-block-header">
+          <div class="step-num">3</div>
+          <div>
+            <div class="step-title">Tornar a regra persistente (sobreviver ao reboot)</div>
+            <div class="step-subtitle">Por padrão, regras iptables são perdidas ao reiniciar</div>
+          </div>
+        </div>
+        <div class="step-block-body">
+          <p>O iptables não salva regras automaticamente. Para persistir, instale o pacote <code>iptables-persistent</code>:</p>
+          <div class="code-block" id="code-masq-persist">
+<button class="copy-btn" onclick="copyCode('code-masq-persist',this)">📋 Copiar</button>
+<span class="comment"># Instalar o pacote de persistência</span>
+<span class="prompt">$</span> <span class="cmd">sudo apt install iptables-persistent -y</span>
+<span class="comment"># Salvar as regras atuais</span>
+<span class="prompt">$</span> <span class="cmd">sudo netfilter-persistent save</span>
+          </div>
+          <div class="box box-ok">✅ As regras serão salvas em <code>/etc/iptables/rules.v4</code> e carregadas automaticamente a cada inicialização.</div>
+          <div class="box box-purple">🛡️ <strong>Contexto de Segurança:</strong> O MASQUERADE é um tipo de NAT (<em>Network Address Translation</em>). Ele esconde os IPs da rede interna do mundo externo, adicionando uma camada extra de segurança: as VMs internas ficam "invisíveis" para a internet.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     SEÇÃO 4 — UFW FIREWALL
+════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">
+    <div class="section-num">4</div>
     🔥 Configurando o Firewall UFW
   </div>
 
@@ -1486,11 +1612,11 @@ Status: <span class="r-ok">active</span>
 </div>
 
 <!-- ════════════════════════════════════════════
-     SEÇÃO 4 — SIMULADOR UFW
+     SEÇÃO 5 — SIMULADOR UFW
 ════════════════════════════════════════════ -->
 <div class="section">
   <div class="section-title">
-    <div class="section-num">4</div>
+    <div class="section-num">5</div>
     🛡️ Simulador de Regras UFW
   </div>
 
@@ -1519,11 +1645,11 @@ Status: <span class="r-ok">active</span>
 </div>
 
 <!-- ════════════════════════════════════════════
-     SEÇÃO 5 — QUIZ
+     SEÇÃO 6 — QUIZ
 ════════════════════════════════════════════ -->
 <div class="section">
   <div class="section-title">
-    <div class="section-num">5</div>
+    <div class="section-num">6</div>
     🧠 Quiz — Teste seus Conhecimentos
   </div>
 
