@@ -1242,7 +1242,7 @@ PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
 
   <div class="box box-info">
     💡 <strong>O que é NAT Masquerade?</strong><br>
-    Após ativar o IP Forwarding, os pacotes das VMs internas conseguem ser repassados — mas ainda precisam de um "disfarce" de IP para sair para a internet. O <strong>MASQUERADE</strong> faz isso: substitui o IP privado da VM pelo IP público da interface de saída (<code>eth0</code> / <code>enp0s3</code>), permitindo que várias máquinas da rede interna compartilhem uma única saída para a internet.
+    Após ativar o IP Forwarding, os pacotes das VMs internas conseguem ser repassados — mas ainda precisam de um "disfarce" de IP para sair para a internet. O <strong>MASQUERADE</strong> faz isso: substitui o IP privado da VM pelo IP público da interface de saída (<code>enp0s3</code>), permitindo que várias máquinas da rede interna compartilhem uma única saída para a internet.
   </div>
 
   <div class="diagram-wrap">
@@ -1259,7 +1259,7 @@ PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
       <text x="350" y="107" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#4a5878">IP privado → IP público</text>
       <text x="350" y="123" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#86efac">192.168.10.10 → 10.0.2.15</text>
       <line x1="490" y1="90" x2="560" y2="90" stroke="#4da6ff" stroke-width="1.5" marker-end="url(#arr1b)"/>
-      <text x="525" y="83" text-anchor="middle" font-family="Space Mono,monospace" font-size="8" fill="#4a5878">eth0/enp0s3</text>
+      <text x="525" y="83" text-anchor="middle" font-family="Space Mono,monospace" font-size="8" fill="#4a5878">enp0s3</text>
       <ellipse cx="620" cy="90" rx="70" ry="38" fill="rgba(77,166,255,0.07)" stroke="#4da6ff" stroke-width="1.5"/>
       <text x="620" y="87" text-anchor="middle" font-family="Sora,sans-serif" font-size="12" fill="#4da6ff">🌐 Internet</text>
       <text x="620" y="104" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="#4a5878">NAT/VirtualBox</text>
@@ -1282,15 +1282,15 @@ PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
           <div class="step-num">1</div>
           <div>
             <div class="step-title">Aplicar a regra de MASQUERADE na tabela NAT</div>
-            <div class="step-subtitle">Interface de saída: eth0 (ou enp0s3 — veja qual é a sua)</div>
+            <div class="step-subtitle">Interface de saída: enp0s3</div>
           </div>
         </div>
         <div class="step-block-body">
-          <p>Este comando adiciona uma regra na cadeia <code>POSTROUTING</code> da tabela <code>nat</code> do iptables. Ele instrui o kernel a "disfarçar" (mascarar) o IP de origem dos pacotes que saem pela interface <code>eth0</code>:</p>
+          <p>Este comando adiciona uma regra na cadeia <code>POSTROUTING</code> da tabela <code>nat</code> do iptables. Ele instrui o kernel a "disfarçar" (mascarar) o IP de origem dos pacotes que saem pela interface <code>enp0s3</code>:</p>
           <div class="code-block" id="code-masq">
 <button class="copy-btn" onclick="copyCode('code-masq',this)">📋 Copiar</button>
-<span class="comment"># Ativar NAT Masquerade para tráfego saindo pela eth0</span>
-<span class="prompt">$</span> <span class="cmd">sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE</span>
+<span class="comment"># Ativar NAT Masquerade para tráfego saindo pela enp0s3</span>
+<span class="prompt">$</span> <span class="cmd">sudo iptables -t nat -A POSTROUTING -o enp0s3 -j MASQUERADE</span>
           </div>
           <div class="result-label">📺 Resultado esperado:</div>
           <div class="result-block">
@@ -1301,11 +1301,11 @@ PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
             <span style="font-family:var(--mono);font-size:0.85em;line-height:2.3;display:block;margin-top:8px;">
               <span style="color:var(--orange);">-t nat</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ tabela "nat" — usada para tradução de endereços</span><br>
               <span style="color:var(--orange);">-A POSTROUTING</span><span style="color:var(--muted);">&nbsp;→ adiciona à cadeia que age APÓS decidir a rota do pacote</span><br>
-              <span style="color:var(--orange);">-o eth0</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ aplica somente aos pacotes que saem pela interface eth0</span><br>
+              <span style="color:var(--orange);">-o enp0s3</span><span style="color:var(--muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ aplica somente aos pacotes que saem pela interface enp0s3</span><br>
               <span style="color:var(--orange);">-j MASQUERADE</span><span style="color:var(--muted);">&nbsp;&nbsp;→ ação: substituir o IP de origem pelo IP da interface de saída</span>
             </span>
           </div>
-          <div class="box box-warn">⚠️ <strong>eth0 ou enp0s3?</strong> Em VMs com Ubuntu Server moderno, a interface NAT geralmente se chama <code>enp0s3</code> em vez de <code>eth0</code>. Verifique o nome correto com <code>ip link show</code> e substitua <code>eth0</code> pelo nome real da sua interface de saída.</div>
+          <div class="box box-warn">⚠️ <strong>Atenção ao nome da interface!</strong> Em VMs com Ubuntu Server moderno, a interface NAT se chama <code>enp0s3</code>. Se o seu ambiente usar outro nome, verifique com <code>ip link show</code> e ajuste o comando.</div>
         </div>
       </div>
 
@@ -1326,7 +1326,7 @@ PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
           <div class="result-block">
 Chain POSTROUTING (policy ACCEPT)
 num  pkts  bytes  target      prot  opt  in   out   source     destination
-<span class="r-ok">1       0     0   MASQUERADE  all   --   any  eth0  anywhere   anywhere</span>   <span class="r-dim">← ✅ regra ativa!</span>
+<span class="r-ok">1       0     0   MASQUERADE  all   --   any  enp0s3  anywhere   anywhere</span>   <span class="r-dim">← ✅ regra ativa!</span>
           </div>
         </div>
       </div>
