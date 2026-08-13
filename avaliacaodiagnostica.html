@@ -156,6 +156,75 @@
         .category-header.cat-arquitetura { background: linear-gradient(135deg, #6f42c1 0%, #9b59b6 100%); }
         .category-header.cat-seguranca   { background: linear-gradient(135deg, #dc3545 0%, #c0392b 100%); }
         .category-header.cat-redes       { background: linear-gradient(135deg, #00875a 0%, #00cc6a 100%); }
+        .category-header.cat-enade       { background: linear-gradient(135deg, #003366 0%, #6f42c1 100%); }
+
+        .enade-source {
+            display: inline-block;
+            background: #ffd166;
+            color: #7a5200;
+            font-size: 0.7em;
+            font-weight: bold;
+            padding: 3px 10px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+
+        .enade-extra {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 10px 0 14px;
+            font-size: 0.88em;
+            color: #333;
+            overflow-x: auto;
+        }
+
+        .enade-extra table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 6px;
+        }
+
+        .enade-extra th, .enade-extra td {
+            border: 1px solid #ccc;
+            padding: 6px 10px;
+            text-align: left;
+            font-size: 0.92em;
+        }
+
+        .enade-extra th {
+            background: #003366;
+            color: white;
+        }
+
+        .enade-station {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .enade-station:last-child { border-bottom: none; }
+
+        .enade-station .station-icon-mini {
+            font-size: 1.8em;
+            flex-shrink: 0;
+        }
+
+        .enade-station .station-name-mini {
+            font-weight: bold;
+            color: #003366;
+            width: 130px;
+            flex-shrink: 0;
+        }
+
+        .enade-station .station-config {
+            font-size: 0.85em;
+            color: #333;
+            line-height: 1.5;
+        }
 
         .question-card {
             background: #f8f9fa;
@@ -442,7 +511,7 @@
                 <h1>Avaliação Diagnóstica — Fundamentos de Hardware</h1>
                 <p>ISO-103 | Laboratório de Administração de Sistemas Operacionais de Redes | Pré-teste da Semana 0</p>
             </div>
-            <div class="header-progress" id="header-progress">0 / 20 respondidas</div>
+            <div class="header-progress" id="header-progress">0 / 22 respondidas</div>
         </div>
     </header>
 
@@ -460,15 +529,15 @@
                     <strong>🎯 Objetivo:</strong> identificar o nível de conhecimento prévio da turma sobre hardware,
                     segurança e conceitos de rede, vindos de <strong>Arquitetura e Organização de Computadores (IAC-001)</strong>
                     e <strong>Diagnóstico e Solução de Problemas de TI (ITI-011)</strong>.<br><br>
-                    <strong>📋 Formato:</strong> 20 questões de múltipla escolha, divididas em 4 blocos. Não vale nota —
+                    <strong>📋 Formato:</strong> 22 questões de múltipla escolha, divididas em 5 blocos (incluindo 2 questões reais do ENADE 2021). Não vale nota —
                     o resultado ajuda o professor a calibrar o ritmo da aula prática.<br><br>
-                    <strong>⏱️ Tempo estimado:</strong> 15 a 20 minutos.
+                    <strong>⏱️ Tempo estimado:</strong> 18 a 25 minutos.
                 </div>
 
                 <div class="overall-progress-wrap">
                     <div class="overall-progress-label">
                         <span>Progresso da avaliação</span>
-                        <span id="progress-text">0 de 20 questões respondidas</span>
+                        <span id="progress-text">0 de 22 questões respondidas</span>
                     </div>
                     <div class="overall-progress-outer">
                         <div class="overall-progress-inner" id="overall-progress-bar"></div>
@@ -499,11 +568,17 @@
                     <div id="block-redes"></div>
                 </div>
 
+                <!-- BLOCO E: ENADE -->
+                <div class="category-block" data-category="enade">
+                    <div class="category-header cat-enade">🎓 Bloco E — Desafio ENADE 2021 (nível avançado)</div>
+                    <div id="block-enade"></div>
+                </div>
+
                 <div class="submit-area">
                     <button class="submit-btn" id="submit-btn" onclick="finishAssessment()" disabled>
                         ✅ Finalizar Avaliação
                     </button>
-                    <p class="submit-hint">Responda todas as 20 questões para liberar o botão.</p>
+                    <p class="submit-hint">Responda todas as 22 questões para liberar o botão.</p>
                 </div>
             </div>
 
@@ -511,7 +586,7 @@
             <div id="results-screen">
                 <div class="result-hero" id="result-hero">
                     <div class="score-label">Sua pontuação</div>
-                    <div class="score-big" id="score-big">0 / 20</div>
+                    <div class="score-big" id="score-big">0 / 22</div>
                     <div class="score-label" id="score-percent">0%</div>
                     <div class="result-level-tag" id="result-level-tag">Nível: —</div>
                 </div>
@@ -654,13 +729,62 @@
                   "Apenas a cor do gabinete importa",
                   "Só o modelo do teclado influencia a instalação"
               ], correct: 1 },
+
+            // ---- BLOCO E: ENADE 2021 (questões reais, nível avançado) ----
+            {
+                cat: "enade",
+                source: "ENADE 2021 — Questão 30",
+                q: "Suponha que sua faculdade, tendo em sua rede de computadores máquinas que compartilham arquivos e serviços, tenha contratado você para uma consultoria de TI. Atualmente, na sala dos professores, existem 3 máquinas ligadas à rede, com as configurações apresentadas na tabela abaixo. Porém, a estação de trabalho \"PROFESSORES01\" não consegue enviar documentos para impressão em uma impressora, corretamente instalada e compartilhada na estação de trabalho \"PROFESSORES03\". Nesse caso, que alteração deve ser realizada para que o problema seja resolvido?",
+                extraHtml: `
+                    <div class="enade-station">
+                        <span class="station-icon-mini">🖥️</span>
+                        <span class="station-name-mini">PROFESSORES 01</span>
+                        <span class="station-config">Endereço IP: 175.16.10.200 &nbsp;|&nbsp; Máscara: 255.255.255.0 &nbsp;|&nbsp; Gateway: 175.16.1.1</span>
+                    </div>
+                    <div class="enade-station">
+                        <span class="station-icon-mini">🖥️</span>
+                        <span class="station-name-mini">PROFESSORES 02</span>
+                        <span class="station-config">Endereço IP: 175.16.20.200 &nbsp;|&nbsp; Máscara: 255.255.0.0 &nbsp;|&nbsp; Gateway: 175.16.1.1</span>
+                    </div>
+                    <div class="enade-station">
+                        <span class="station-icon-mini">🖥️</span>
+                        <span class="station-name-mini">PROFESSORES 03</span>
+                        <span class="station-config">Endereço IP: 175.16.30.200 &nbsp;|&nbsp; Máscara: 255.255.0.0 &nbsp;|&nbsp; Gateway: 175.16.1.1</span>
+                    </div>
+                `,
+                options: [
+                    "Alterar o gateway da estação PROFESSORES03 para 175.16.10.200",
+                    "Alterar o endereço de IP da estação PROFESSORES01 para 175.16.30.200",
+                    "Alterar a máscara de sub-rede da estação PROFESSORES01 para 255.255.0.0",
+                    "Alterar a máscara de sub-rede da estação PROFESSORES03 para 255.255.255.0",
+                    "Alterar o gateway da estação PROFESSORES01 para o endereço de IP 175.16.30.200"
+                ],
+                correct: 2
+            },
+            {
+                cat: "enade",
+                source: "ENADE 2021 — Questão 27",
+                q: "O sistema de numeração, inserido na arquitetura e no funcionamento dos computadores, pode ser escrito em diferentes bases numéricas: binária, octal, decimal ou hexadecimal. A tabela abaixo mostra os dígitos, a notação e exemplos nessas bases. Fazendo a conversão da soma de: (1001)₂ + (15)₈ + (FF)₁₆, qual é o número equivalente na base decimal?",
+                extraHtml: `
+                    <table>
+                        <tr><th>Sistema na Base</th><th>Dígitos utilizados</th><th>Notação e exemplos</th></tr>
+                        <tr><td>Binário - base 2</td><td>0, 1</td><td>(1001)₂ ; (11011)₂</td></tr>
+                        <tr><td>Octal - base 8</td><td>0, 1, 2, 3, 4, 5, 6, 7</td><td>(27)₈ ; (35)₈ ; (16)₈</td></tr>
+                        <tr><td>Decimal - base 10</td><td>0, 1, 2, 3, 4, 5, 6, 7, 8, 9</td><td>(45)₁₀ ; (120)₁₀</td></tr>
+                        <tr><td>Hexadecimal - base 16</td><td>0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, F</td><td>(1A)₁₆ ; (48)₁₆ ; (1E2)₁₆</td></tr>
+                    </table>
+                `,
+                options: ["(188)₁₀", "(215)₁₀", "(277)₁₀", "(316)₁₀", "(345)₁₀"],
+                correct: 2
+            },
         ];
 
         const CATEGORY_LABELS = {
             componentes: "🖥️ Componentes de Hardware",
             arquitetura: "🧩 Arquitetura de Computadores",
             seguranca: "🦺 Segurança e Boas Práticas",
-            redes: "🌐 Redes e Sistemas Operacionais"
+            redes: "🌐 Redes e Sistemas Operacionais",
+            enade: "🎓 Desafio ENADE 2021"
         };
 
         const userAnswers = new Array(QUESTIONS.length).fill(null);
@@ -668,7 +792,7 @@
         // ============================================================
         // RENDERIZAÇÃO DAS QUESTÕES
         // ============================================================
-        const blocks = { componentes: [], arquitetura: [], seguranca: [], redes: [] };
+        const blocks = { componentes: [], arquitetura: [], seguranca: [], redes: [], enade: [] };
         QUESTIONS.forEach((item, idx) => blocks[item.cat].push({ ...item, idx }));
 
         function renderBlock(catKey, containerId) {
@@ -678,10 +802,24 @@
                 card.className = 'question-card';
                 card.id = 'qcard-' + item.idx;
 
+                if (item.source) {
+                    const sourceTag = document.createElement('div');
+                    sourceTag.className = 'enade-source';
+                    sourceTag.textContent = '📌 ' + item.source;
+                    card.appendChild(sourceTag);
+                }
+
                 const qNum = document.createElement('div');
                 qNum.className = 'question-text';
                 qNum.innerHTML = '<span class="question-number">' + (item.idx + 1) + '</span>' + item.q;
                 card.appendChild(qNum);
+
+                if (item.extraHtml) {
+                    const extraDiv = document.createElement('div');
+                    extraDiv.className = 'enade-extra';
+                    extraDiv.innerHTML = item.extraHtml;
+                    card.appendChild(extraDiv);
+                }
 
                 const optionsWrap = document.createElement('div');
                 optionsWrap.className = 'options';
@@ -714,6 +852,7 @@
         renderBlock('arquitetura', 'block-arquitetura');
         renderBlock('seguranca', 'block-seguranca');
         renderBlock('redes', 'block-redes');
+        renderBlock('enade', 'block-enade');
 
         function selectAnswer(qIdx, optIdx) {
             userAnswers[qIdx] = optIdx;
@@ -747,7 +886,8 @@
                 componentes: { correct: 0, total: 0 },
                 arquitetura: { correct: 0, total: 0 },
                 seguranca: { correct: 0, total: 0 },
-                redes: { correct: 0, total: 0 }
+                redes: { correct: 0, total: 0 },
+                enade: { correct: 0, total: 0 }
             };
 
             let totalCorrect = 0;
