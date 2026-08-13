@@ -208,6 +208,54 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
+        .module-separator.extra {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        .module-separator.extra h3 {
+            color: #ffd166;
+        }
+
+        .week-card.extra-card {
+            border-color: #e67e22;
+            background: linear-gradient(135deg, #fff8f0 0%, #ffeedd 100%);
+        }
+
+        .week-card.extra-card::before {
+            background: linear-gradient(to bottom, #e67e22, #c0392b);
+        }
+
+        .week-card.extra-card .week-number {
+            background: linear-gradient(135deg, #e67e22 0%, #c0392b 100%);
+        }
+
+        .week-card.extra-card .week-title {
+            color: #c0392b;
+        }
+
+        .extra-tag {
+            display: inline-block;
+            background: #e67e22;
+            color: white;
+            font-size: 0.7em;
+            font-weight: bold;
+            padding: 3px 10px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+
+        .gamified-tag {
+            display: inline-block;
+            background: #6f42c1;
+            color: white;
+            font-size: 0.7em;
+            font-weight: bold;
+            padding: 3px 10px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            margin-left: 5px;
+        }
+
         .module-separator h3 {
             color: #0066cc;
             font-size: 1.5em;
@@ -317,6 +365,30 @@
                 <div class="legend-item">
                     <span class="legend-badge badge-guide">Guia</span>
                     <span>Rubricas de avaliação e soluções detalhadas</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- MÓDULO 0: REVISÃO DE HARDWARE (EXTRA) -->
+        <div class="section">
+            <div class="module-separator extra">
+                <h3>🎮 MÓDULO 0: Revisão de Fundamentos de Hardware (Aula Extra — Nivelamento)</h3>
+            </div>
+
+            <div class="weeks-grid">
+                <!-- Semana 0 -->
+                <div class="week-card extra-card">
+                    <div class="week-number">00</div>
+                    <span class="extra-tag">EXTRA</span>
+                    <span class="gamified-tag">GAMIFICADA</span>
+                    <div class="week-title">Missão Hardware — Desmontagem e Montagem de Gabinete</div>
+                    <div class="week-subtitle">
+                        Aula de nivelamento prático com 10 estações de trabalho. Segurança e ESD, desmontagem e remontagem guiadas,
+                        identificação de componentes, quiz e desafio cronometrado. Sistema de XP, níveis e crachás.
+                    </div>
+                    <div class="week-links">
+                        <a href="semana0.html" class="week-link" style="background: linear-gradient(135deg, #e67e22, #c0392b); color: white;">🎮 Iniciar Missão</a>
+                    </div>
                 </div>
             </div>
         </div>

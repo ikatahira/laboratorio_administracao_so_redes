@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semana 0 - Revisão de Fundamentos de Hardware | Laboratório ISO-103</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: #f0f2f5;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #003366 0%, #0066cc 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .header-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid white;
+            background: linear-gradient(135deg, #e67e22 0%, #ff4500 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8em;
+            flex-shrink: 0;
+        }
+
+        .header-text h1 {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+
+        .header-text p {
+            font-size: 0.9em;
+            opacity: 0.95;
+        }
+
+        .header-game-status {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255,255,255,0.12);
+            padding: 10px 18px;
+            border-radius: 30px;
+        }
+
+        .xp-display {
+            text-align: center;
+        }
+
+        .xp-display .xp-value {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #ffd166;
+        }
+
+        .xp-display .xp-label {
+            font-size: 0.7em;
+            opacity: 0.85;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .level-badge {
+            background: linear-gradient(135deg, #ffd166 0%, #f4a300 100%);
+            color: #003366;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+            white-space: nowrap;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 0 20px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            height: fit-content;
+            position: sticky;
+            top: 120px;
+        }
+
+        .sidebar h2 {
+            color: #003366;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #0066cc;
+        }
+
+        .week-menu {
+            list-style: none;
+        }
+
+        .week-menu li {
+            margin-bottom: 8px;
+        }
+
+        .week-menu a {
+            display: block;
+            padding: 12px 15px;
+            background: #f8f9fa;
+            color: #003366;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+
+        .week-menu a:hover {
+            background: #e3f2fd;
+            border-left-color: #0066cc;
+            transform: translateX(5px);
+        }
+
+        .week-menu a.active {
+            background: #003366;
+            color: white;
+            border-left-color: #ffd166;
+        }
+
+        .week-badge {
+            background: #0066cc;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            margin-right: 8px;
+        }
+
+        .week-menu a.active .week-badge {
+            background: #ffd166;
+            color: #003366;
+        }
+
+        .sidebar-progress {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .sidebar-progress h3 {
+            color: #003366;
+            font-size: 1em;
+            margin-bottom: 10px;
+        }
+
+        .badges-mini {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .badge-mini {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em;
+            background: #e9ecef;
+            filter: grayscale(1);
+            opacity: 0.4;
+            transition: all 0.4s;
+            border: 2px solid #ccc;
+        }
+
+        .badge-mini.unlocked {
+            filter: grayscale(0);
+            opacity: 1;
+            background: linear-gradient(135deg, #ffd166 0%, #f4a300 100%);
+            border-color: #f4a300;
+            transform: scale(1.08);
+            box-shadow: 0 3px 8px rgba(244,163,0,0.5);
+        }
+
+        .content {
+            flex: 1;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            min-height: 600px;
+        }
+
+        .week-title {
+            color: #003366;
+            font-size: 2em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .week-number {
+            background: linear-gradient(135deg, #e67e22 0%, #c0392b 100%);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .week-subtitle {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        /* ===== GAME HUD ===== */
+        .game-hud {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 12px;
+            padding: 20px 25px;
+            color: white;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .game-hud-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .game-hud-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hud-level {
+            background: linear-gradient(135deg, #ffd166 0%, #f4a300 100%);
+            color: #1a1a2e;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.95em;
+        }
+
+        .progress-bar-outer {
+            width: 100%;
+            height: 22px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar-inner {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #00cc6a 0%, #00ff88 100%);
+            border-radius: 12px;
+            transition: width 0.6s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            font-size: 0.75em;
+            font-weight: bold;
+            color: #003366;
+        }
+
+        .hud-caption {
+            font-size: 0.8em;
+            color: #aaa;
+            margin-top: 8px;
+        }
+
+        .badges-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .badge-item {
+            background: rgba(255,255,255,0.08);
+            border: 2px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85em;
+            opacity: 0.45;
+            filter: grayscale(1);
+            transition: all 0.4s;
+        }
+
+        .badge-item.unlocked {
+            opacity: 1;
+            filter: grayscale(0);
+            background: linear-gradient(135deg, rgba(255,209,102,0.25) 0%, rgba(244,163,0,0.25) 100%);
+            border-color: #ffd166;
+        }
+
+        .badge-item .badge-icon {
+            font-size: 1.4em;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            color: #0066cc;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section h3 {
+            color: #003366;
+            font-size: 1.2em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .icon { font-size: 1.2em; }
+
+        .objectives-list, .topics-list {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #0066cc;
+        }
+
+        .objectives-list li, .topics-list li {
+            margin-bottom: 10px;
+            padding-left: 10px;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #0066cc;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .success-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .danger-box {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        /* ===== ESTAÇÕES (10 GABINETES) ===== */
+        .stations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .station-card {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .station-card:hover {
+            border-color: #0066cc;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,102,204,0.2);
+        }
+
+        .station-card.selected {
+            border-color: #00cc6a;
+            background: linear-gradient(135deg, #f0fff8 0%, #e0ffef 100%);
+            box-shadow: 0 5px 15px rgba(0,204,106,0.35);
+        }
+
+        .station-icon {
+            font-size: 2.5em;
+        }
+
+        .station-name {
+            color: #003366;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+
+        .station-status {
+            font-size: 0.75em;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .station-card.selected .station-status {
+            color: #00875a;
+            font-weight: bold;
+        }
+
+        .station-checkmark {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            font-size: 1.2em;
+            display: none;
+        }
+
+        .station-card.selected .station-checkmark {
+            display: block;
+        }
+
+        #active-station-banner {
+            margin-top: 15px;
+            padding: 12px 18px;
+            background: linear-gradient(135deg, #00cc6a 0%, #00875a 100%);
+            color: white;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            display: none;
+        }
+
+        /* ===== CHECKLIST GAMIFICADA ===== */
+        .step-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 16px 0;
+            border: 2px solid #0066cc;
+            transition: all 0.3s;
+        }
+
+        .step-card.done {
+            border-color: #00cc6a;
+            background: linear-gradient(135deg, #f0fff8 0%, #e0ffef 100%);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .step-number {
+            background: #0066cc;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .step-card.done .step-number {
+            background: #00875a;
+        }
+
+        .step-title {
+            color: #003366;
+            font-size: 1.15em;
+            font-weight: bold;
+            flex: 1;
+        }
+
+        .step-xp {
+            background: #ffd166;
+            color: #7a5200;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .step-body { padding-left: 51px; }
+
+        .step-checklist {
+            list-style: none;
+            margin-top: 10px;
+        }
+
+        .step-checklist li {
+            margin-bottom: 8px;
+        }
+
+        .check-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 8px 10px;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+
+        .check-label:hover {
+            background: rgba(0,102,204,0.08);
+        }
+
+        .check-label input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #00cc6a;
+            flex-shrink: 0;
+        }
+
+        .check-label span.item-text {
+            flex: 1;
+        }
+
+        .check-label .item-xp {
+            font-size: 0.75em;
+            color: #f4a300;
+            font-weight: bold;
+        }
+
+        .safety-alert {
+            background: #dc3545;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75em;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+
+        /* ===== QUIZ ===== */
+        .quiz-box {
+            background: white;
+            border: 2px solid #6f42c1;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .quiz-question {
+            font-weight: bold;
+            color: #003366;
+            margin-bottom: 12px;
+            font-size: 1.05em;
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .quiz-option {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 12px 15px;
+            cursor: pointer;
+            transition: all 0.25s;
+            text-align: left;
+        }
+
+        .quiz-option:hover {
+            border-color: #6f42c1;
+            background: #f3f0ff;
+        }
+
+        .quiz-option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+            font-weight: bold;
+        }
+
+        .quiz-option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+
+        .quiz-feedback {
+            margin-top: 10px;
+            font-weight: bold;
+            display: none;
+        }
+
+        .quiz-score-box {
+            background: linear-gradient(135deg, #6f42c1 0%, #9b59b6 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 15px 20px;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        /* ===== DESAFIO CRONOMETRADO ===== */
+        .timer-box {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            color: white;
+            margin: 15px 0;
+        }
+
+        .timer-display {
+            font-size: 3em;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            color: #00ff88;
+            margin: 10px 0;
+        }
+
+        .timer-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .timer-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .timer-btn.start { background: #00cc6a; color: white; }
+        .timer-btn.stop { background: #dc3545; color: white; }
+        .timer-btn.reset { background: #6c757d; color: white; }
+
+        .timer-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .timer-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        .timer-record {
+            margin-top: 12px;
+            font-size: 0.95em;
+            color: #ffd166;
+        }
+
+        /* ===== FERRAMENTAS / MATERIAIS ===== */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .tool-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .tool-card:hover {
+            border-color: #0066cc;
+            transform: scale(1.05);
+        }
+
+        .tool-icon { font-size: 3em; margin-bottom: 10px; }
+        .tool-name { color: #003366; font-weight: bold; margin-bottom: 5px; }
+        .tool-description { color: #666; font-size: 0.85em; }
+
+        .bibliography {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .bibliography-item {
+            padding: 15px;
+            background: white;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border-left: 3px solid #0066cc;
+        }
+
+        .bibliography-item strong { color: #003366; }
+
+        .rubric-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .rubric-table th, .rubric-table td {
+            border: 1px solid #e0e0e0;
+            padding: 10px 14px;
+            text-align: left;
+        }
+
+        .rubric-table th {
+            background: #003366;
+            color: white;
+        }
+
+        .rubric-table tr:nth-child(even) { background: #f8f9fa; }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .nav-button {
+            padding: 12px 25px;
+            background: #0066cc;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-button:hover {
+            background: #003366;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        @media (max-width: 968px) {
+            .container { flex-direction: column; }
+            .sidebar { width: 100%; position: static; }
+            .header-text h1 { font-size: 1.2em; }
+            .header-game-status { margin-left: 0; width: 100%; justify-content: center; }
+            .step-body { padding-left: 0; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="header-avatar">🛠️</div>
+            <div class="header-text">
+                <h1>Laboratório de Administração de Sistemas Operacionais de Redes</h1>
+                <p>ISO-103 | 3º Semestre | Curso Superior de Tecnologia em Segurança da Informação</p>
+            </div>
+            <div class="header-game-status">
+                <div class="xp-display">
+                    <div class="xp-value" id="hud-xp-mini">0 XP</div>
+                    <div class="xp-label">Pontos</div>
+                </div>
+                <div class="level-badge" id="hud-level-mini">🔰 Novato</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <aside class="sidebar">
+            <h2>📅 Cronograma</h2>
+            <ul class="week-menu">
+                <li><a href="semana0.html" class="active"><span class="week-badge">S0</span>Semana 0 (Extra)</a></li>
+                <li><a href="semana01.html"><span class="week-badge">S1</span>Semana 1</a></li>
+                <li><a href="semana02.html"><span class="week-badge">S2</span>Semana 2</a></li>
+                <li><a href="semana03.html"><span class="week-badge">S3</span>Semana 3</a></li>
+                <li><a href="semana04.html"><span class="week-badge">S4</span>Semana 4</a></li>
+                <li><a href="semana05.html"><span class="week-badge">S5</span>Semana 5</a></li>
+                <li><a href="index.html"><span class="week-badge">⌂</span>Voltar ao Início</a></li>
+            </ul>
+
+            <div class="sidebar-progress">
+                <h3>🏅 Conquistas</h3>
+                <div class="badges-mini" id="badges-mini-container">
+                    <div class="badge-mini" data-badge="seguranca" title="Guardião da Segurança">🦺</div>
+                    <div class="badge-mini" data-badge="desmontagem" title="Mestre da Desmontagem">🔧</div>
+                    <div class="badge-mini" data-badge="identificacao" title="Olho Clínico">🔍</div>
+                    <div class="badge-mini" data-badge="remontagem" title="Reconstrutor">⚙️</div>
+                    <div class="badge-mini" data-badge="quiz" title="Sabe Tudo">🧠</div>
+                    <div class="badge-mini" data-badge="cronometro" title="Velocista do Hardware">⏱️</div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="content" id="main-content">
+            <div class="week-title">
+                <div class="week-number">00</div>
+                <div>
+                    <h1>Semana 0 — Missão Hardware</h1>
+                    <p style="color: #666; font-size: 0.5em; margin: 0;">Revisão Completa de Fundamentos de Hardware: Desmontagem e Montagem de Gabinete</p>
+                </div>
+            </div>
+
+            <p class="week-subtitle">
+                Aula extra de nivelamento prático. Antes de mexer em cabeamento e equipamentos de rede (Semana 1),
+                todo aluno passa pela experiência completa de abrir, identificar, desmontar e remontar um gabinete de computador —
+                com segurança, método e, claro, pontuação. 🎮
+            </p>
+
+            <div class="info-box">
+                <strong>🎯 Carga Horária:</strong> 4 horas/aula (dobrada, prática integral)<br>
+                <strong>📍 Local:</strong> Laboratório de Redes — 10 estações de trabalho (gabinetes completos)<br>
+                <strong>⚠️ Pré-requisito:</strong> Nenhum — reforça conteúdo teórico de IAC-001 e ITI-011<br>
+                <strong>👥 Formato:</strong> Individual ou duplas, uma estação (gabinete) por grupo
+            </div>
+
+            <!-- ===== GAME HUD ===== -->
+            <div class="game-hud">
+                <div class="game-hud-top">
+                    <div class="game-hud-title">🎮 Painel da Missão</div>
+                    <div class="hud-level" id="hud-level">🔰 Nível 1 — Novato do Hardware</div>
+                </div>
+                <div class="progress-bar-outer">
+                    <div class="progress-bar-inner" id="progress-bar" style="width:0%;">0 XP</div>
+                </div>
+                <div class="hud-caption">Complete os passos abaixo para ganhar XP, desbloquear crachás e subir de nível. Meta da aula: <strong>100 XP</strong>.</div>
+
+                <div class="badges-row" id="badges-row">
+                    <div class="badge-item" data-badge="seguranca"><span class="badge-icon">🦺</span> Guardião da Segurança</div>
+                    <div class="badge-item" data-badge="desmontagem"><span class="badge-icon">🔧</span> Mestre da Desmontagem</div>
+                    <div class="badge-item" data-badge="identificacao"><span class="badge-icon">🔍</span> Olho Clínico</div>
+                    <div class="badge-item" data-badge="remontagem"><span class="badge-icon">⚙️</span> Reconstrutor</div>
+                    <div class="badge-item" data-badge="quiz"><span class="badge-icon">🧠</span> Sabe Tudo</div>
+                    <div class="badge-item" data-badge="cronometro"><span class="badge-icon">⏱️</span> Velocista do Hardware</div>
+                </div>
+            </div>
+
+            <section class="section">
+                <h2><span class="icon">🎯</span>Objetivos de Aprendizagem</h2>
+                <ul class="objectives-list">
+                    <li>Aplicar na prática os fundamentos de arquitetura de computadores vistos em IAC-001</li>
+                    <li>Manusear com segurança um gabinete real (energia, ESD, ferramentas)</li>
+                    <li>Identificar visualmente e por contato todos os componentes internos de um computador</li>
+                    <li>Desmontar completamente um gabinete seguindo ordem correta e segura</li>
+                    <li>Remontar o gabinete garantindo boot funcional ao final</li>
+                    <li>Relacionar hardware físico com segurança da informação (segurança física, forense, controle de acesso)</li>
+                </ul>
+            </section>
+
+            <!-- ===== SEGURANÇA ===== -->
+            <section class="section">
+                <h2><span class="icon">🦺</span>Missão 1 — Segurança Antes de Tudo</h2>
+                <p style="margin-bottom:10px; color:#666;">Nenhum gabinete é aberto sem cumprir o checklist de segurança. Marque cada item após realizá-lo na prática.</p>
+
+                <div class="step-card" id="step-seguranca">
+                    <div class="step-header">
+                        <div class="step-number">1</div>
+                        <div class="step-title">Checklist de Segurança e ESD</div>
+                        <div class="step-xp">+20 XP</div>
+                    </div>
+                    <div class="step-body">
+                        <ul class="step-checklist">
+                            <li>
+                                <label class="check-label">
+                                    <input type="checkbox" onchange="toggleItem(this, 4, 'seguranca')">
+                                    <span class="item-text">Desconectar o gabinete da tomada e do estabilizador/nobreak <span class="safety-alert">OBRIGATÓRIO</span></span>
+                                    <span class="item-xp">+4 XP</span>
+                                </label>
+                            </li>
+                            <li>
+                                <label class="check-label">
+                                    <input type="checkbox" onchange="toggleItem(this, 4, 'seguranca')">
+                                    <span class="item-text">Calçar pulseira antiestática e conectá-la a um ponto aterrado (chassi do gabinete)</span>
+                                    <span class="item-xp">+4 XP</span>
+                                </label>
+                            </li>
+                            <li>
+                                <label class="check-label">
+                                    <input type="checkbox" onchange="toggleItem(this, 4, 'seguranca')">
+                                    <span class="item-text">Pressionar o botão de ligar por 3-5 segundos para descarregar capacitores residuais</span>
+                                    <span class="item-xp">+4 XP</span>
+                                </label>
+                            </li>
+                            <li>
+                                <label class="check-label">
+                                    <input type="checkbox" onchange="toggleItem(this, 4, 'seguranca')">
+                                    <span class="item-text">Organizar bancada: superfície limpa, seca, sem tapetes ou tecidos sintéticos por perto</span>
+                                    <span class="item-xp">+4 XP</span>
+                                </label>
+                            </li>
+                            <li>
+                                <label class="check-label">
+                                    <input type="checkbox" onchange="toggleItem(this, 4, 'seguranca')">
+                                    <span class="item-text">Separar recipiente para parafusos identificado com o número da estação</span>
+                                    <span class="item-xp">+4 XP</span>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="danger-box">
+                    <strong>⚠️ Regra de Ouro:</strong> Nunca toque diretamente nos contatos dourados de memórias RAM, placas de expansão
+                    ou processador. Segure os componentes sempre pelas bordas. Fonte de alimentação nunca deve ser aberta pelo aluno —
+                    mesmo desligada, pode reter carga elétrica perigosa.
+                </div>
+            </section>
+
+            <!-- ===== ESTAÇÕES ===== -->
+            <section class="section">
+                <h2><span class="icon">🖥️</span>Escolha sua Estação de Trabalho</h2>
+                <p style="margin-bottom:10px; color:#666;">Temos <strong>10 gabinetes completos</strong> disponíveis no laboratório. Clique na estação que sua dupla vai utilizar.</p>
+
+                <div class="stations-grid" id="stations-grid">
+                    <!-- geradas via JS: Estação 01 a 10 -->
+                </div>
+
+                <div id="active-station-banner">Estação selecionada!</div>
+            </section>
+
+            <!-- ===== KIT DE FERRAMENTAS ===== -->
+            <section class="section">
+                <h2><span class="icon">🛠️</span>Kit de Ferramentas por Estação</h2>
+                <div class="tools-grid">
+                    <div class="tool-card">
+                        <div class="tool-icon">🪛</div>
+                        <div class="tool-name">Chave Phillips</div>
+                        <div class="tool-description">P1 e P2, magnetizada</div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">📿</div>
+                        <div class="tool-name">Pulseira Antiestática</div>
+                        <div class="tool-description">Aterramento individual</div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">🧤</div>
+                        <div class="tool-name">Luvas Antiestáticas</div>
+                        <div class="tool-description">Opcional, uso recomendado</div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">🥡</div>
+                        <div class="tool-name">Pote de Parafusos</div>
+                        <div class="tool-description">Identificado por estação</div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">🔦</div>
+                        <div class="tool-name">Lanterna</div>
+                        <div class="tool-description">Inspeção interna</div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">🧹</div>
+                        <div class="tool-name">Pincel Antiestático</div>
+                        <div class="tool-description">Limpeza de poeira</div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">📋</div>
+                        <div class="tool-name">Ficha de Estação</div>
+                        <div class="tool-description">Checklist impresso + croqui</div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon">🏷️</div>
+                        <div class="tool-name">Etiquetas</div>
+                        <div class="tool-description">Identificar cabos ao remover</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== DESMONTAGEM ===== -->
+            <section class="section">
+                <h2><span class="icon">🔧</span>Missão 2 — Desmontagem Guiada (Passo a Passo)</h2>
+                <p style="margin-bottom:10px; color:#666;">Siga rigorosamente a ordem abaixo. Cada componente removido corretamente vale XP. Fotografe (celular) cada etapa antes de desconectar.</p>
+
+                <div class="step-card" id="step-desmontagem">
+                    <div class="step-header">
+                        <div class="step-number">2</div>
+                        <div class="step-title">Sequência de Desmontagem Completa</div>
+                        <div class="step-xp">+30 XP</div>
+                    </div>
+                    <div class="step-body">
+                        <ul class="step-checklist">
+                            <li><label class="check-label"><input type="checkbox" onchange="toggleItem(this, 3, 'desmontagem')"><span class="item-text">Remover a tampa lateral do gabinete (verificar tipo de fixação: parafuso ou encaixe)</span><span class="item-xp">+3 XP</span></label></li>
+                            <li><label class="check-label"><input type="checkbox" onchange="toggleItem(this, 3, 'desmontagem')"><span class="item-text">Fotografar/anotar o roteamento de todos os cabos antes de desconectar</span><span class="item-xp">+3 XP</span></label></li>
+                            <li><label class="check-label"><input type="checkbox" onchange="toggleItem(this, 3, 'desmontagem')"><span class="item-text">Desconectar cabo de dados e cabo de energia do HD/SSD, depois remover o dispositivo</span><span class="item-xp">+3 XP</span></label></li>
+                            <li><label class="check-label"><input type="checkbox" onchange="toggleItem(this, 3, 'desmontagem')"><span class="item-text">Desconectar cabo da unidade óptica (se houver) e removê-la</span><span class="item-xp">+3 XP</span></label></li>
+                            <li><label class="check-label"><input type="checkbox" onchange="toggleItem(this, 3, 'desmontagem')"><span class="item-text">Remover placa de vídeo/expansão: soltar trava PCIe e parafuso do chassi</span><span class="item-xp">+3 XP</span></label></li>
+                            <li><label class="check-label"><input type="checkbox" onchange="toggleItem(this, 3, 'desmontagem')"><span class="item-text">Abrir as travas laterais dos módulos de memória RAM e retirá-los</span><span class="item-xp">+3 XP</span></label></li>
+                            <li><label class="check-label"><input type="checkbox" onchange="toggleItem(this, 3, 'desmontagem')"><span class="item-text">Desconectar cabos da fonte (24 pinos, CPU 4/8 pinos, SATA, periféricos) sem abrir a fonte</span><span class="item-xp">+3 XP</span></label></li>
+                            <li><label class="check-label"><input type="checkbox" onchange="toggleItem(this, 3, 'desmontagem')"><span class="item-text">Remover o cooler/dissipador do processador e, com cuidado, o processador do soquete</span><span class="item-xp">+3 XP</span></label></li>
+                            <li><label class="check-label"><input type="checkbox" onchange="toggleItem(this, 3, 'desmontagem')"><span class="item-text">Desconectar cabos do painel frontal (power switch, LEDs, USB, áudio) da placa-mãe</span><span class="item-xp">+3 XP</span></label></li>
+                            <li><label class="check-label"><input type="checkbox" onchange="toggleItem(this, 3, 'desmontagem')"><span class="item-text">Remover os parafusos da placa-mãe e retirá-la do gabinete</span><span class="item-xp">+3 XP</span></label></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== IDENTIFICAÇÃO ===== -->
+            <section class="section">
+                <h2><span class="icon">🔍</span>Missão 3 — Bancada de Identificação</h2>
+                <p style="margin-bottom:10px; color:#666;">Com o gabinete totalmente desmontado, organize os componentes na bancada e identifique cada um em voz alta para o professor/monitor.</p>
+
+                <div class="step-card" id="step-identificacao">
+                    <div class="step-header">
+                        <div class="step-number">3</div>
+                        <div class="step-title">Checklist de Identificação de Componentes</div>
+                        <div class="step-xp">+20 XP</div>
+                    </div>
+                    <div class="step-body">
+                        <ul class="step-checklist">
+                            <li><label class="check-label"><input type="checkbox" onchange="toggleItem(this, 2, 'identificacao')"><span class="item-text">Placa-mãe: identificar chipset, soquete, slots PCIe e SATA</span><span class="item-xp">+2 XP</span></label></li>
+                            <li><label class="check-label"><input type="checkbox" onchange="toggleItem(this, 2, 'identificacao')"><span class="item-text">Processador (CPU): identificar fabricante, soquete e geração aparente</span><span class="item-xp">+2 XP</span></label></li>
+                            <li><label class="check-label"><input type="checkbox" onchange="toggleItem(this, 2, 'identificacao')"><span class="item-text">Memória RAM: identificar tipo (DDR3/DDR4), capacidade e frequência na etiqueta</span><span class="item-xp">+2 XP</span></label></li>
+                            <li><label class="check-label"><input type="checkbox" onchange="toggleItem(this, 2, 'identificacao')"><span class="item-text">Fonte de alimentação: identificar potência (W) e certificação 80 Plus</span><span class="item-xp">+2 XP</span></label></li>
+                            <li><label class="check-label"><input type="checkbox" onchange="toggleItem(this, 2, 'identificacao')"><span class="item-text">HD/SSD: diferenciar mecânico de sólido, identificar interface (SATA/NVMe)</span><span class="item-xp">+2 XP</span></label></li>
+                            <li><label class="check-label"><input type="checkbox" onchange="toggleItem(this, 2, 'identificacao')"><span class="item-text">Placa de vídeo: identificar conectores de saída e alimentação auxiliar</span><span class="item-xp">+2 XP</span></label></li>
+                            <li><label class="check-label"><input type="checkbox" onchange="toggleItem(this, 2, 'identificacao')"><span class="item-text">Cooler/dissipador: identificar tipo de refrigeração (ar/água) e pasta térmica</span><span class="item-xp">+2 XP</span></label></li>
+                            <li><label class="check-label"><input type="checkbox" onchange="toggleItem(this, 2, 'identificacao')"><span class="item-text">Cabos internos: diferenciar SATA de dados, SATA de energia, 24-pin, 4/8-pin CPU</span><span class="item-xp">+2 XP</span></label></li>
+                            <li><label class="check-label"><input type="checkbox" onchange="toggleItem(this, 2, 'identificacao')"><span class="item-text">Painel frontal: localizar conectores de power switch, reset, LEDs e USB</span><span class="item-xp">+2 XP</span></label></li>
+                            <li><label class="check-label"><input type="checkbox" onchange="toggleItem(this, 2, 'identificacao')"><span class="item-text">Gabinete: identificar pontos de fixação, baias e sistema de ventilação</span><span class="item-xp">+2 XP</span></label></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== QUIZ ===== -->
+            <section class="section">
+                <h2><span class="icon">🧠</span>Desafio Relâmpago — Quiz de Identificação</h2>
+                <p style="margin-bottom:10px; color:#666;">Responda rápido! Cada acerto vale pontos extras para o crachá "Sabe Tudo".</p>
+
+                <div class="quiz-box">
+                    <div class="quiz-question">1. Qual componente NUNCA deve ser aberto pelo aluno, mesmo desconectado da tomada?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="answerQuiz(this, false)">Gabinete</div>
+                        <div class="quiz-option" onclick="answerQuiz(this, true)">Fonte de Alimentação</div>
+                        <div class="quiz-option" onclick="answerQuiz(this, false)">Cooler do processador</div>
+                        <div class="quiz-option" onclick="answerQuiz(this, false)">Leitor de cartão de memória</div>
+                    </div>
+                    <div class="quiz-feedback"></div>
+                </div>
+
+                <div class="quiz-box">
+                    <div class="quiz-question">2. Como devem ser sempre manuseados os módulos de memória RAM?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="answerQuiz(this, false)">Segurando pelos contatos dourados</div>
+                        <div class="quiz-option" onclick="answerQuiz(this, true)">Segurando pelas bordas laterais</div>
+                        <div class="quiz-option" onclick="answerQuiz(this, false)">Com as mãos molhadas para reduzir eletricidade estática</div>
+                        <div class="quiz-option" onclick="answerQuiz(this, false)">Não há cuidado especial necessário</div>
+                    </div>
+                    <div class="quiz-feedback"></div>
+                </div>
+
+                <div class="quiz-box">
+                    <div class="quiz-question">3. Qual a função da pulseira antiestática?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="answerQuiz(this, false)">Prender cabos soltos</div>
+                        <div class="quiz-option" onclick="answerQuiz(this, false)">Medir a temperatura dos componentes</div>
+                        <div class="quiz-option" onclick="answerQuiz(this, true)">Escoar cargas eletrostáticas do corpo para evitar dano aos componentes</div>
+                        <div class="quiz-option" onclick="answerQuiz(this, false)">Proteger contra choques de 220V</div>
+                    </div>
+                    <div class="quiz-feedback"></div>
+                </div>
+
+                <div class="quiz-box">
+                    <div class="quiz-question">4. Antes de desconectar qualquer cabo interno, o que se deve fazer?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="answerQuiz(this, false)">Cortar o cabo mais próximo</div>
+                        <div class="quiz-option" onclick="answerQuiz(this, true)">Fotografar/anotar o roteamento e a posição original</div>
+                        <div class="quiz-option" onclick="answerQuiz(this, false)">Puxar com força pelo próprio fio</div>
+                        <div class="quiz-option" onclick="answerQuiz(this, false)">Nada, todos os cabos são intercambiáveis</div>
+                    </div>
+                    <div class="quiz-feedback"></div>
+                </div>
+
+                <div class="quiz-box">
+                    <div class="quiz-question">5. Qual conector fornece energia principal à placa-mãe?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="answerQuiz(this, false)">SATA de dados</div>
+                        <div class="quiz-option" onclick="answerQuiz(this, false)">USB interno</div>
+                        <div class="quiz-option" onclick="answerQuiz(this, true)">Conector de 24 pinos (ATX)</div>
+                        <div class="quiz-option" onclick="answerQuiz(this, false)">Conector de áudio HD</div>
+                    </div>
+                    <div class="quiz-feedback"></div>
+                </div>
+
+                <div class="quiz-score-box" id="quiz-score-box">
+                    🏆 Pontuação do Quiz: <span id="quiz-score">0</span> / 5 acertos
+                </div>
+            </section>
+
+            <!-- ===== REMONTAGEM ===== -->
+            <section class="section">
+                <h2><span class="icon">⚙️</span>Missão 4 — Remontagem (Ordem Inversa)</h2>
+                <p style="margin-bottom:10px; color:#666;">Remonte o gabinete seguindo a ordem inversa da desmontagem. O objetivo final é o computador ligar e dar boot normalmente.</p>
+
+                <div class="step-card" id="step-remontagem">
+                    <div class="step-header">
+                        <div class="step-number">4</div>
+                        <div class="step-title">Sequência de Remontagem Completa</div>
+                        <div class="step-xp">+30 XP</div>
+                    </div>
+                    <div class="step-body">
+                        <ul class="step-checklist">
+                            <li><label class="check-label"><input type="checkbox" onchange="toggleItem(this, 3, 'remontagem')"><span class="item-text">Fixar a placa-mãe no gabinete com os parafusos e espaçadores corretos</span><span class="item-xp">+3 XP</span></label></li>
+                            <li><label class="check-label"><input type="checkbox" onchange="toggleItem(this, 3, 'remontagem')"><span class="item-text">Instalar o processador no soquete respeitando a marcação de alinhamento</span><span class="item-xp">+3 XP</span></label></li>
+                            <li><label class="check-label"><input type="checkbox" onchange="toggleItem(this, 3, 'remontagem')"><span class="item-text">Aplicar pasta térmica (quantidade correta) e instalar o cooler/dissipador</span><span class="item-xp">+3 XP</span></label></li>
+                            <li><label class="check-label"><input type="checkbox" onchange="toggleItem(this, 3, 'remontagem')"><span class="item-text">Encaixar os módulos de RAM até o clique das travas laterais</span><span class="item-xp">+3 XP</span></label></li>
+                            <li><label class="check-label"><input type="checkbox" onchange="toggleItem(this, 3, 'remontagem')"><span class="item-text">Reconectar todos os cabos da fonte (24 pinos, CPU, SATA/periféricos)</span><span class="item-xp">+3 XP</span></label></li>
+                            <li><label class="check-label"><input type="checkbox" onchange="toggleItem(this, 3, 'remontagem')"><span class="item-text">Reinstalar HD/SSD e unidade óptica, reconectando cabos de dados e energia</span><span class="item-xp">+3 XP</span></label></li>
+                            <li><label class="check-label"><input type="checkbox" onchange="toggleItem(this, 3, 'remontagem')"><span class="item-text">Reinstalar placa de vídeo/expansão e travar no slot PCIe</span><span class="item-xp">+3 XP</span></label></li>
+                            <li><label class="check-label"><input type="checkbox" onchange="toggleItem(this, 3, 'remontagem')"><span class="item-text">Reconectar cabos do painel frontal conferindo a polaridade dos LEDs</span><span class="item-xp">+3 XP</span></label></li>
+                            <li><label class="check-label"><input type="checkbox" onchange="toggleItem(this, 3, 'remontagem')"><span class="item-text">Organizar e prender cabos internos (cable management) antes de fechar</span><span class="item-xp">+3 XP</span></label></li>
+                            <li><label class="check-label"><input type="checkbox" onchange="toggleItem(this, 3, 'remontagem')"><span class="item-text">Fechar tampa lateral, reconectar energia e testar o boot (POST/BIOS)</span><span class="item-xp">+3 XP</span></label></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="success-box">
+                    <strong>✅ Critério de Sucesso da Missão:</strong> O gabinete liga, passa pelo POST sem beeps de erro e exibe
+                    a tela de boot ou entra na BIOS/UEFI normalmente. Chame o professor para validar antes de desmontar a estação seguinte.
+                </div>
+            </section>
+
+            <!-- ===== DESAFIO CRONOMETRADO ===== -->
+            <section class="section">
+                <h2><span class="icon">⏱️</span>Missão Bônus — Contra o Relógio</h2>
+                <p style="margin-bottom:10px; color:#666;">Já dominou a sequência? Depois de validado pelo professor, cronometre uma segunda desmontagem + remontagem completa
+                da sua estação. Use o cronômetro abaixo (funciona só nesta aba, sem salvar histórico entre sessões).</p>
+
+                <div class="timer-box">
+                    <div>⏱️ Cronômetro da Estação</div>
+                    <div class="timer-display" id="timer-display">00:00.0</div>
+                    <div class="timer-buttons">
+                        <button class="timer-btn start" onclick="startTimer()" id="btn-start">▶️ Iniciar</button>
+                        <button class="timer-btn stop" onclick="stopTimer()" id="btn-stop" disabled>⏹️ Parar</button>
+                        <button class="timer-btn reset" onclick="resetTimer()" id="btn-reset">🔄 Zerar</button>
+                    </div>
+                    <div class="timer-record" id="timer-record">Nenhum tempo registrado ainda nesta sessão.</div>
+                </div>
+
+                <div class="warning-box">
+                    <strong>⚠️ Segurança acima da velocidade:</strong> O cronômetro é só para engajamento — nenhum checklist de
+                    segurança pode ser pulado para ganhar tempo. Estações que pularem etapas de segurança são desclassificadas do desafio bônus.
+                </div>
+            </section>
+
+            <!-- ===== RUBRICA ===== -->
+            <section class="section">
+                <h2><span class="icon">📊</span>Rubrica de Avaliação da Aula</h2>
+                <table class="rubric-table">
+                    <tr>
+                        <th>Critério</th>
+                        <th>Pontuação</th>
+                    </tr>
+                    <tr>
+                        <td>Checklist de segurança e ESD cumprido integralmente</td>
+                        <td>2,0 pontos</td>
+                    </tr>
+                    <tr>
+                        <td>Desmontagem completa e organizada (parafusos e cabos identificados)</td>
+                        <td>2,5 pontos</td>
+                    </tr>
+                    <tr>
+                        <td>Identificação correta dos componentes para o professor/monitor</td>
+                        <td>2,5 pontos</td>
+                    </tr>
+                    <tr>
+                        <td>Remontagem com boot funcional validado</td>
+                        <td>2,5 pontos</td>
+                    </tr>
+                    <tr>
+                        <td>Quiz de identificação (participação)</td>
+                        <td>0,5 ponto</td>
+                    </tr>
+                </table>
+            </section>
+
+            <section class="section">
+                <h2><span class="icon">📚</span>Bibliografia de Apoio (Revisão)</h2>
+                <div class="bibliography">
+                    <div class="bibliography-item">
+                        <strong>HENNESSY, John; PATTERSON, David.</strong> Arquitetura de Computadores. Rio de Janeiro: Campus, 2009.<br>
+                        <em>Revisão dos componentes internos e organização de sistemas</em>
+                    </div>
+                    <div class="bibliography-item">
+                        <strong>STALLINGS, William.</strong> Arquitetura e Organização de Computadores. 8.ed. São Paulo: Prentice-Hall, 2010.<br>
+                        <em>Base teórica utilizada em IAC-001, aplicada agora na prática</em>
+                    </div>
+                    <div class="bibliography-item">
+                        <strong>MEYERS, Michael.</strong> CompTIA A+ Certification All-in-One Exam Guide. 7.ed. Columbus: McGraw-Hill Osborne Media, 2010.<br>
+                        <em>Referência de ITI-011 sobre manutenção e hardware prático</em>
+                    </div>
+                    <div class="bibliography-item">
+                        <strong>VASCONCELOS, Laércio.</strong> Hardware na Prática. 3.ed. Rio de Janeiro: Laércio Vasconcelos Computação, 2009.<br>
+                        <em>Guia de montagem/desmontagem passo a passo</em>
+                    </div>
+                </div>
+            </section>
+
+            <div class="warning-box">
+                <strong>⚠️ Para a próxima aula (Semana 1):</strong><br>
+                • Sapatos fechados (obrigatório)<br>
+                • Roupas adequadas, evitar mangas largas ou pulseiras metálicas<br>
+                • Caderno para anotações<br>
+                • Trazer a "Ficha de Estação" preenchida e assinada pelo professor
+            </div>
+
+            <div class="navigation">
+                <a href="index.html" class="nav-button">⬅️ Voltar ao Início</a>
+                <a href="semana01.html" class="nav-button">Próxima Semana ➡️</a>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // ===== ESTADO DO JOGO (em memória, sem localStorage) =====
+        let totalXP = 0;
+        const unlockedBadges = new Set();
+        const sectionProgress = { seguranca: 0, desmontagem: 0, identificacao: 0, remontagem: 0 };
+        const sectionMax = { seguranca: 5, desmontagem: 10, identificacao: 10, remontagem: 10 };
+        let quizScore = 0;
+        let quizAnswered = 0;
+        const totalQuizQuestions = 5;
+
+        const levels = [
+            { min: 0,   name: "🔰 Nível 1 — Novato do Hardware" },
+            { min: 20,  name: "🥉 Nível 2 — Aprendiz de Bancada" },
+            { min: 45,  name: "🥈 Nível 3 — Técnico Júnior" },
+            { min: 75,  name: "🥇 Nível 4 — Técnico Sênior" },
+            { min: 100, name: "🏆 Nível 5 — Especialista em Hardware" },
+            { min: 130, name: "👑 Nível 6 — Mestre do Gabinete" }
+        ];
+
+        function currentLevel(xp) {
+            let lvl = levels[0];
+            for (const l of levels) { if (xp >= l.min) lvl = l; }
+            return lvl;
+        }
+
+        function updateHUD() {
+            const meta = 100;
+            const pct = Math.min(100, Math.round((totalXP / meta) * 100));
+            const bar = document.getElementById('progress-bar');
+            bar.style.width = pct + '%';
+            bar.textContent = totalXP + ' XP';
+
+            const lvl = currentLevel(totalXP);
+            document.getElementById('hud-level').textContent = lvl.name;
+            document.getElementById('hud-level-mini').textContent = lvl.name.split('—')[0].trim();
+            document.getElementById('hud-xp-mini').textContent = totalXP + ' XP';
+        }
+
+        function unlockBadge(badgeId) {
+            if (unlockedBadges.has(badgeId)) return;
+            unlockedBadges.add(badgeId);
+            document.querySelectorAll('[data-badge="' + badgeId + '"]').forEach(el => el.classList.add('unlocked'));
+        }
+
+        function toggleItem(checkbox, xpValue, sectionId) {
+            if (checkbox.checked) {
+                totalXP += xpValue;
+                sectionProgress[sectionId] = (sectionProgress[sectionId] || 0) + 1;
+            } else {
+                totalXP -= xpValue;
+                sectionProgress[sectionId] = Math.max(0, (sectionProgress[sectionId] || 0) - 1);
+            }
+            totalXP = Math.max(0, totalXP);
+
+            // Atualiza visual do card pai (step-card) quando todos os itens estão marcados
+            const stepCard = document.getElementById('step-' + sectionId);
+            if (stepCard) {
+                const allChecks = stepCard.querySelectorAll('input[type="checkbox"]');
+                const allChecked = Array.from(allChecks).every(c => c.checked);
+                stepCard.classList.toggle('done', allChecked);
+            }
+
+            if (sectionProgress[sectionId] >= sectionMax[sectionId]) {
+                unlockBadge(sectionId);
+            }
+
+            updateHUD();
+        }
+
+        // ===== ESTAÇÕES DE TRABALHO (10 GABINETES) =====
+        const stationsGrid = document.getElementById('stations-grid');
+        let selectedStation = null;
+        for (let i = 1; i <= 10; i++) {
+            const num = String(i).padStart(2, '0');
+            const card = document.createElement('div');
+            card.className = 'station-card';
+            card.setAttribute('data-station', num);
+            card.innerHTML = '<div class="station-checkmark">✅</div>' +
+                '<div class="station-icon">🖥️</div>' +
+                '<div class="station-name">Estação ' + num + '</div>' +
+                '<div class="station-status">Disponível</div>';
+            card.addEventListener('click', () => selectStation(num, card));
+            stationsGrid.appendChild(card);
+        }
+
+        function selectStation(num, card) {
+            document.querySelectorAll('.station-card').forEach(c => {
+                c.classList.remove('selected');
+                c.querySelector('.station-status').textContent = 'Disponível';
+            });
+            card.classList.add('selected');
+            card.querySelector('.station-status').textContent = 'Sua estação';
+            selectedStation = num;
+
+            const banner = document.getElementById('active-station-banner');
+            banner.style.display = 'block';
+            banner.textContent = '✅ Estação ' + num + ' selecionada — bom trabalho, equipe!';
+        }
+
+        // ===== QUIZ =====
+        function answerQuiz(optionEl, isCorrect) {
+            const optionsContainer = optionEl.parentElement;
+            const quizBox = optionEl.closest('.quiz-box');
+            const feedback = quizBox.querySelector('.quiz-feedback');
+
+            // Evita responder a mesma pergunta duas vezes
+            if (optionsContainer.dataset.answered === 'true') return;
+            optionsContainer.dataset.answered = 'true';
+
+            Array.from(optionsContainer.children).forEach(opt => {
+                opt.style.pointerEvents = 'none';
+            });
+
+            if (isCorrect) {
+                optionEl.classList.add('correct');
+                feedback.textContent = '✅ Correto! +5 XP';
+                feedback.style.color = '#28a745';
+                totalXP += 5;
+                quizScore++;
+            } else {
+                optionEl.classList.add('incorrect');
+                // destaca a correta
+                Array.from(optionsContainer.children).forEach((opt, idx) => {
+                    if (opt.getAttribute('onclick').includes('true')) {
+                        opt.classList.add('correct');
+                    }
+                });
+                feedback.textContent = '❌ Ops! Veja a resposta correta destacada em verde.';
+                feedback.style.color = '#dc3545';
+            }
+            feedback.style.display = 'block';
+
+            quizAnswered++;
+            document.getElementById('quiz-score').textContent = quizScore;
+
+            if (quizAnswered >= totalQuizQuestions) {
+                if (quizScore >= 4) {
+                    unlockBadge('quiz');
+                }
+            }
+
+            updateHUD();
+        }
+
+        // ===== CRONÔMETRO =====
+        let timerInterval = null;
+        let timerStart = 0;
+        let timerElapsed = 0;
+        let bestTime = null;
+
+        function formatTime(ms) {
+            const totalSeconds = ms / 1000;
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = Math.floor(totalSeconds % 60);
+            const tenths = Math.floor((ms % 1000) / 100);
+            return String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0') + '.' + tenths;
+        }
+
+        function startTimer() {
+            timerStart = Date.now() - timerElapsed;
+            timerInterval = setInterval(() => {
+                timerElapsed = Date.now() - timerStart;
+                document.getElementById('timer-display').textContent = formatTime(timerElapsed);
+            }, 100);
+            document.getElementById('btn-start').disabled = true;
+            document.getElementById('btn-stop').disabled = false;
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+            document.getElementById('btn-start').disabled = false;
+            document.getElementById('btn-stop').disabled = true;
+
+            if (bestTime === null || timerElapsed < bestTime) {
+                bestTime = timerElapsed;
+                document.getElementById('timer-record').textContent = '🏆 Novo melhor tempo da sessão: ' + formatTime(bestTime);
+                unlockBadge('cronometro');
+                totalXP += 15;
+                updateHUD();
+            } else {
+                document.getElementById('timer-record').textContent = 'Tempo registrado: ' + formatTime(timerElapsed) + ' | Melhor da sessão: ' + formatTime(bestTime);
+            }
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timerElapsed = 0;
+            document.getElementById('timer-display').textContent = '00:00.0';
+            document.getElementById('btn-start').disabled = false;
+            document.getElementById('btn-stop').disabled = true;
+        }
+
+        updateHUD();
+    </script>
+</body>
+</html>
