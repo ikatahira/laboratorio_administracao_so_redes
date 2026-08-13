@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projeto Semestral - Dossiê Fotográfico | Laboratório ISO-103</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: #f0f2f5;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #003366 0%, #0066cc 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .header-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid white;
+            background: linear-gradient(135deg, #f4a300 0%, #e67e22 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8em;
+            flex-shrink: 0;
+        }
+
+        .header-text h1 { font-size: 1.4em; margin-bottom: 5px; }
+        .header-text p { font-size: 0.9em; opacity: 0.95; }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 14px;
+            padding: 40px;
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .hero h1 {
+            font-size: 2.1em;
+            margin-bottom: 12px;
+        }
+
+        .hero p {
+            max-width: 750px;
+            margin: 0 auto 20px;
+            color: #ccc;
+            font-size: 1.05em;
+        }
+
+        .hero-tags {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .hero-tag {
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.25);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85em;
+        }
+
+        .content {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            color: #003366;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid #0066cc;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #0066cc;
+            padding: 16px 20px;
+            border-radius: 6px;
+            margin: 18px 0;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 16px 20px;
+            border-radius: 6px;
+            margin: 18px 0;
+        }
+
+        .success-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 16px 20px;
+            border-radius: 6px;
+            margin: 18px 0;
+        }
+
+        /* ===== LINHA DO TEMPO DO PROJETO ===== */
+        .timeline {
+            position: relative;
+            margin: 25px 0;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: "";
+            position: absolute;
+            left: 9px;
+            top: 6px;
+            bottom: 6px;
+            width: 3px;
+            background: linear-gradient(to bottom, #0066cc, #00cc6a);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 26px;
+        }
+
+        .timeline-item:last-child { padding-bottom: 0; }
+
+        .timeline-dot {
+            position: absolute;
+            left: -30px;
+            top: 2px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #0066cc;
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px #0066cc;
+        }
+
+        .timeline-item h4 {
+            color: #003366;
+            font-size: 1.05em;
+            margin-bottom: 4px;
+        }
+
+        .timeline-item p {
+            color: #666;
+            font-size: 0.92em;
+        }
+
+        .timeline-item .tl-link {
+            display: inline-block;
+            margin-top: 6px;
+            font-size: 0.82em;
+            color: #0066cc;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .timeline-item .tl-link:hover { text-decoration: underline; }
+
+        /* ===== EXEMPLO — GALERIA ===== */
+        .example-banner {
+            background: linear-gradient(135deg, #6f42c1 0%, #9b59b6 100%);
+            color: white;
+            padding: 16px 22px;
+            border-radius: 10px;
+            margin-bottom: 22px;
+            font-size: 0.95em;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 16px;
+            margin-top: 18px;
+        }
+
+        .gallery-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s;
+        }
+
+        .gallery-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .gallery-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+            background: #ddd;
+        }
+
+        .gallery-caption {
+            padding: 12px 14px;
+        }
+
+        .gallery-caption h5 {
+            color: #003366;
+            font-size: 0.92em;
+            margin-bottom: 4px;
+        }
+
+        .gallery-caption p {
+            color: #666;
+            font-size: 0.8em;
+        }
+
+        .gallery-price {
+            display: inline-block;
+            margin-top: 6px;
+            font-size: 0.75em;
+            background: #e3f2fd;
+            color: #0066cc;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .subsection-title {
+            color: #0066cc;
+            font-size: 1.15em;
+            margin: 26px 0 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .subsection-desc {
+            color: #666;
+            font-size: 0.92em;
+            margin-bottom: 6px;
+        }
+
+        /* ===== ESTRUTURA DO DOSSIÊ (ACCORDION-LIKE CARDS) ===== */
+        .part-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 18px;
+        }
+
+        .part-card .part-number {
+            display: inline-block;
+            background: #003366;
+            color: white;
+            padding: 4px 14px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .part-card h3 {
+            color: #003366;
+            margin-bottom: 8px;
+        }
+
+        .part-card ul {
+            margin: 10px 0 0 20px;
+            color: #444;
+            font-size: 0.92em;
+        }
+
+        .part-card ul li { margin-bottom: 5px; }
+
+        /* ===== RUBRICA ===== */
+        .rubric-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .rubric-table th, .rubric-table td {
+            border: 1px solid #e0e0e0;
+            padding: 10px 14px;
+            text-align: left;
+            font-size: 0.92em;
+        }
+
+        .rubric-table th { background: #003366; color: white; }
+        .rubric-table tr:nth-child(even) { background: #f8f9fa; }
+
+        .download-box {
+            background: linear-gradient(135deg, #00875a 0%, #00cc6a 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 22px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .download-btn {
+            display: inline-block;
+            margin-top: 12px;
+            background: white;
+            color: #00875a;
+            padding: 12px 28px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .nav-button {
+            padding: 12px 25px;
+            background: #0066cc;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .nav-button:hover { background: #003366; }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 1.5em; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="header-avatar">📸</div>
+            <div class="header-text">
+                <h1>Projeto Semestral — Dossiê Fotográfico</h1>
+                <p>ISO-103 | Laboratório de Administração de Sistemas Operacionais de Redes | FATEC Ourinhos</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <div class="hero">
+            <h1>📸 O Projeto que Vocês Vão Construir ao Longo do Semestre</h1>
+            <p>
+                Da Semana 0 até a Semana 20, cada atividade prática vira registro: fotos, descrições técnicas e
+                aprendizados documentados em um <strong>Dossiê Fotográfico</strong> — o portfólio final da disciplina.
+                Abaixo, um exemplo real produzido por uma turma anterior.
+            </p>
+            <div class="hero-tags">
+                <span class="hero-tag">📷 Registro fotográfico contínuo</span>
+                <span class="hero-tag">📝 Ficha técnica de cada peça/procedimento</span>
+                <span class="hero-tag">🗂️ Entrega progressiva por módulo</span>
+                <span class="hero-tag">🎓 Portfólio final do semestre</span>
+            </div>
+        </div>
+
+        <!-- ===== O QUE É O PROJETO ===== -->
+        <div class="content">
+            <h2 class="section-title">🎯 O que é o Dossiê Fotográfico</h2>
+            <p style="color:#444;">
+                O Dossiê Fotográfico é o <strong>projeto contínuo da disciplina</strong>: em vez de um trabalho final único
+                e isolado, cada grupo vai documentando, semana a semana, o que foi feito em laboratório — com fotos, fichas
+                técnicas dos componentes e equipamentos, e reflexões sobre o que foi aprendido. No fim do semestre, esse
+                material vira um documento único que representa toda a jornada prática do grupo.
+            </p>
+
+            <div class="info-box">
+                <strong>📌 Como funciona na prática:</strong><br>
+                • Cada grupo fotografa peças, procedimentos e telas relevantes durante as aulas práticas<br>
+                • Para cada componente ou equipamento, é feita uma pequena ficha técnica (nome, função, especificações, e quando possível, valor de mercado)<br>
+                • Ao final de cada módulo do cronograma, o grupo organiza o material em uma seção do dossiê<br>
+                • Na Semana 20 (Projeto Final), o dossiê completo é entregue e apresentado
+            </div>
+
+            <h3 class="subsection-title">🗓️ Como o projeto acompanha o cronograma</h3>
+            <p class="subsection-desc">O dossiê cresce junto com o curso — cada módulo do laboratório vira um capítulo do documento final.</p>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <h4>Semana 0 — Missão Hardware</h4>
+                    <p>Fotos da desmontagem/remontagem do gabinete, fichas técnicas de CPU, RAM, placa-mãe, fonte, HD/SSD.</p>
+                    <a href="semana0.html" class="tl-link">Ir para a Semana 0 →</a>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <h4>Módulo 1 — Infraestrutura Física (Semanas 1-4)</h4>
+                    <p>Registro da crimpagem de cabos, montagem de patch panels e racks, configuração de switches.</p>
+                    <a href="index.html" class="tl-link">Ver módulo no cronograma →</a>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <h4>Módulo 2 e 3 — Linux e Windows Server (Semanas 5-19)</h4>
+                    <p>Prints de tela e fotos dos processos de instalação, configuração de serviços (DNS, Samba, AD, GPO) e scripts desenvolvidos.</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <h4>Visitas técnicas (ao longo do semestre)</h4>
+                    <p>Registro fotográfico de visitas a data centers e laboratórios, como a visita ao Data Center da própria FATEC.</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <h4>Módulo 4 — Projeto Final (Semana 20)</h4>
+                    <p>Consolidação de todo o material em um dossiê final, com considerações finais e apresentação para a turma.</p>
+                    <a href="index.html" class="tl-link">Ver Módulo 4 →</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== EXEMPLO REAL ===== -->
+        <div class="content">
+            <h2 class="section-title">🖼️ Exemplo Real — Dossiê de uma Turma Anterior</h2>
+
+            <div class="example-banner">
+                <strong>Sobre este exemplo:</strong> produzido por uma turma anterior da disciplina, este dossiê documentou
+                a desmontagem de servidores reais (Dell PowerEdge), a montagem de cabos de rede e uma visita técnica ao
+                Data Center da FATEC Ourinhos. Está disponível para download completo ao final desta página.
+            </div>
+
+            <h3 class="subsection-title">🔧 Parte 1 — Anatomia de um Servidor</h3>
+            <p class="subsection-desc">
+                O grupo abriu servidores reais em desuso, identificou cada peça e registrou nome, função,
+                especificações e valor de mercado — o mesmo espírito da Missão Hardware da Semana 0, só que em um servidor
+                de produção (Dell PowerEdge 2850) em vez de um desktop comum.
+            </p>
+            <div class="gallery-grid">
+                <div class="gallery-card">
+                    <img src="projeto_imgs/hd.jpg" alt="HD do servidor">
+                    <div class="gallery-caption">
+                        <h5>HD (Ultra320 SCSI)</h5>
+                        <p>6 unidades, 147GB cada. Armazenamento local dos dados do sistema.</p>
+                        <span class="gallery-price">~R$ 442 cada</span>
+                    </div>
+                </div>
+                <div class="gallery-card">
+                    <img src="projeto_imgs/ram.jpg" alt="Memória RAM do servidor">
+                    <div class="gallery-caption">
+                        <h5>Memória RAM (DDR2)</h5>
+                        <p>7 módulos de 1GB, 400MHz. Permite acesso imediato do processador aos dados.</p>
+                        <span class="gallery-price">~R$ 130 cada</span>
+                    </div>
+                </div>
+                <div class="gallery-card">
+                    <img src="projeto_imgs/cpu.jpg" alt="Processador Intel Xeon">
+                    <div class="gallery-caption">
+                        <h5>CPU — Intel Xeon</h5>
+                        <p>2 processadores, 3.00GHz. Executa todas as operações do servidor.</p>
+                        <span class="gallery-price">~R$ 420 cada</span>
+                    </div>
+                </div>
+                <div class="gallery-card">
+                    <img src="projeto_imgs/placamae.jpg" alt="Placa-mãe do servidor">
+                    <div class="gallery-caption">
+                        <h5>Placa-mãe (Dell / Foxconn LS-36)</h5>
+                        <p>Interliga todos os componentes e permite o tráfego de informação entre eles.</p>
+                        <span class="gallery-price">~R$ 1.960</span>
+                    </div>
+                </div>
+                <div class="gallery-card">
+                    <img src="projeto_imgs/fonte.jpg" alt="Fonte de alimentação do servidor">
+                    <div class="gallery-caption">
+                        <h5>Fonte — Dell PowerEdge 2850</h5>
+                        <p>2 unidades, 700W. Regula a voltagem para proteger os componentes.</p>
+                        <span class="gallery-price">~R$ 132 cada</span>
+                    </div>
+                </div>
+                <div class="gallery-card">
+                    <img src="projeto_imgs/coolers.jpg" alt="Coolers e ventoinhas">
+                    <div class="gallery-caption">
+                        <h5>Coolers e Ventoinhas</h5>
+                        <p>8 unidades. Retiram o ar quente de dentro do servidor, evitando superaquecimento.</p>
+                        <span class="gallery-price">~R$ 174 cada</span>
+                    </div>
+                </div>
+                <div class="gallery-card">
+                    <img src="projeto_imgs/soquete.jpg" alt="Soquete do processador">
+                    <div class="gallery-caption">
+                        <h5>Soquete 604</h5>
+                        <p>Permite a instalação do processador e sua comunicação com a placa-mãe.</p>
+                    </div>
+                </div>
+                <div class="gallery-card">
+                    <img src="projeto_imgs/raid.jpg" alt="Controlador RAID">
+                    <div class="gallery-caption">
+                        <h5>Controlador RAID</h5>
+                        <p>Cria uma unidade lógica entre os HDs, unificando-os ou espelhando dados.</p>
+                        <span class="gallery-price">~R$ 920</span>
+                    </div>
+                </div>
+                <div class="gallery-card">
+                    <img src="projeto_imgs/slots.jpg" alt="Slots de expansão">
+                    <div class="gallery-caption">
+                        <h5>Slots de Expansão</h5>
+                        <p>12 slots ao todo, para adicionar placas de rede e módulos de memória.</p>
+                    </div>
+                </div>
+                <div class="gallery-card">
+                    <img src="projeto_imgs/placarede.jpg" alt="Placa de rede do servidor">
+                    <div class="gallery-caption">
+                        <h5>Placa de Rede 10/100/1000</h5>
+                        <p>Dell Dual Gigabit PCIe Broadcom. Permite a conexão e comunicação em rede.</p>
+                        <span class="gallery-price">~R$ 284</span>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">🔌 Parte 2 — Cabos de Rede</h3>
+            <p class="subsection-desc">
+                Na segunda etapa, o grupo aprendeu a decapar, organizar por cor (padrão T-568A) e crimpar seus próprios
+                cabos de rede — exatamente o conteúdo que vocês vão viver no Módulo 1 (Semanas 1-4).
+            </p>
+            <div class="gallery-grid">
+                <div class="gallery-card">
+                    <img src="projeto_imgs/alicate_crimpagem.jpg" alt="Alicate de crimpagem">
+                    <div class="gallery-caption">
+                        <h5>Alicate de Crimpagem</h5>
+                        <p>Usado para crimpar, decapar e cortar os fios de rede.</p>
+                        <span class="gallery-price">~R$ 45</span>
+                    </div>
+                </div>
+                <div class="gallery-card">
+                    <img src="projeto_imgs/cabo.jpg" alt="Cabo de rede">
+                    <div class="gallery-caption">
+                        <h5>Cabo de Rede</h5>
+                        <p>Meio físico para transmissão de sinais e dados entre dois pontos.</p>
+                        <span class="gallery-price">~R$ 20 (10m)</span>
+                    </div>
+                </div>
+                <div class="gallery-card">
+                    <img src="projeto_imgs/conectores.jpg" alt="Conectores RJ-45">
+                    <div class="gallery-caption">
+                        <h5>Conectores RJ-45</h5>
+                        <p>Fazem a comunicação entre o cabo e a porta de entrada dos dispositivos.</p>
+                        <span class="gallery-price">~R$ 26 (100 un.)</span>
+                    </div>
+                </div>
+                <div class="gallery-card">
+                    <img src="projeto_imgs/testador.jpg" alt="Testador de cabo de rede">
+                    <div class="gallery-caption">
+                        <h5>Aparelho de Teste</h5>
+                        <p>Verifica se a montagem do cabo foi feita corretamente antes da instalação.</p>
+                        <span class="gallery-price">~R$ 35</span>
+                    </div>
+                </div>
+                <div class="gallery-card">
+                    <img src="projeto_imgs/sfp.jpg" alt="Módulo SFP+">
+                    <div class="gallery-caption">
+                        <h5>SFP / SFP+</h5>
+                        <p>Conectores para equipamentos de infraestrutura — SFP (1Gb) e SFP+ (10Gb).</p>
+                        <span class="gallery-price">~R$ 280</span>
+                    </div>
+                </div>
+                <div class="gallery-card">
+                    <img src="projeto_imgs/fibra.jpg" alt="Conectores de fibra óptica UPC e APC">
+                    <div class="gallery-caption">
+                        <h5>Fibra UPC / APC</h5>
+                        <p>UPC (polimento quadrado, azul) e APC (polimento arredondado, verde).</p>
+                    </div>
+                </div>
+                <div class="gallery-card">
+                    <img src="projeto_imgs/montagem_cabo1.jpg" alt="Montagem do conector RJ-45">
+                    <div class="gallery-caption">
+                        <h5>Montagem do Conector</h5>
+                        <p>Fios organizados por cor antes da crimpagem no conector RJ-45.</p>
+                    </div>
+                </div>
+                <div class="gallery-card">
+                    <img src="projeto_imgs/keystone.jpg" alt="Keystone RJ-45">
+                    <div class="gallery-caption">
+                        <h5>Keystone RJ-45</h5>
+                        <p>Conector de encaixe usado em tomadas e patch panels de cabeamento estruturado.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">🏢 Visita Técnica — Data Center da FATEC</h3>
+            <p class="subsection-desc">
+                O grupo também visitou o Data Center da própria FATEC Ourinhos, registrando servidores, roteador
+                Mikrotik e switches em operação real — um ótimo exemplo de como fechar o dossiê com uma vivência de campo.
+            </p>
+            <div class="gallery-grid">
+                <div class="gallery-card">
+                    <img src="projeto_imgs/dc_rack1.jpg" alt="Rack do Data Center da FATEC">
+                    <div class="gallery-caption">
+                        <h5>Rack de Rede</h5>
+                        <p>Switches e roteador em operação, com cabeamento organizado do Data Center.</p>
+                    </div>
+                </div>
+                <div class="gallery-card">
+                    <img src="projeto_imgs/dc_rack2.jpg" alt="Rack de servidores do Data Center">
+                    <div class="gallery-caption">
+                        <h5>Rack de Servidores</h5>
+                        <p>Servidores em produção atendendo à rede da faculdade.</p>
+                    </div>
+                </div>
+                <div class="gallery-card">
+                    <img src="projeto_imgs/dc_equip.jpg" alt="Equipamento do Data Center">
+                    <div class="gallery-caption">
+                        <h5>Equipamentos de Rede</h5>
+                        <p>Switches 3com e Huawei, parte da infraestrutura de rede do campus.</p>
+                    </div>
+                </div>
+                <div class="gallery-card">
+                    <img src="projeto_imgs/dc_equip2.jpg" alt="Equipamento do Data Center 2">
+                    <div class="gallery-caption">
+                        <h5>Infraestrutura do DC</h5>
+                        <p>Conexões por par trançado e fibra óptica para laboratórios mais distantes.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== ESTRUTURA ESPERADA DO DOSSIÊ ===== -->
+        <div class="content">
+            <h2 class="section-title">📂 Estrutura do Dossiê que Vocês Vão Entregar</h2>
+            <p style="color:#444; margin-bottom:15px;">
+                Usando o exemplo acima como referência, cada grupo deve estruturar seu dossiê seguindo o modelo abaixo,
+                adaptado ao cronograma completo do semestre.
+            </p>
+
+            <div class="part-card">
+                <span class="part-number">CAPA</span>
+                <h3>Identificação</h3>
+                <ul>
+                    <li>Nome da instituição, curso e disciplina</li>
+                    <li>Nome completo de todos os integrantes do grupo</li>
+                    <li>Nome do professor responsável</li>
+                </ul>
+            </div>
+
+            <div class="part-card">
+                <span class="part-number">PARTE 1</span>
+                <h3>Fundamentos de Hardware (Semana 0)</h3>
+                <ul>
+                    <li>Fotos da desmontagem e remontagem do gabinete</li>
+                    <li>Ficha técnica de cada componente (nome, função, especificações)</li>
+                    <li>Relação com os requisitos de instalação de SO de rede</li>
+                </ul>
+            </div>
+
+            <div class="part-card">
+                <span class="part-number">PARTE 2</span>
+                <h3>Infraestrutura Física de Redes (Semanas 1-4)</h3>
+                <ul>
+                    <li>Fotos do processo de crimpagem de cabos (padrões T-568A/B)</li>
+                    <li>Montagem de patch panels e organização de racks</li>
+                    <li>Configuração de switches, roteadores e access points</li>
+                </ul>
+            </div>
+
+            <div class="part-card">
+                <span class="part-number">PARTE 3</span>
+                <h3>Administração de Linux e Windows Server (Semanas 5-19)</h3>
+                <ul>
+                    <li>Prints e fotos das instalações (Ubuntu Firewall/Server/Desktop, Windows Server)</li>
+                    <li>Configuração de serviços: DNS, Samba, Active Directory, GPO, DHCP</li>
+                    <li>Scripts desenvolvidos (Shell Script e PowerShell)</li>
+                </ul>
+            </div>
+
+            <div class="part-card">
+                <span class="part-number">PARTE 4</span>
+                <h3>Visitas Técnicas (quando aplicável)</h3>
+                <ul>
+                    <li>Registro fotográfico de visitas a data centers ou empresas parceiras</li>
+                    <li>Equipamentos observados e aprendizados obtidos</li>
+                </ul>
+            </div>
+
+            <div class="part-card">
+                <span class="part-number">FINAL</span>
+                <h3>Considerações Finais</h3>
+                <ul>
+                    <li>Reflexão do grupo sobre os principais aprendizados do semestre</li>
+                    <li>Dificuldades encontradas e como foram superadas</li>
+                    <li>Sugestões de melhoria para a disciplina</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ===== RUBRICA ===== -->
+        <div class="content">
+            <h2 class="section-title">📊 Como o Dossiê é Avaliado</h2>
+            <table class="rubric-table">
+                <tr>
+                    <th>Critério</th>
+                    <th>Peso</th>
+                </tr>
+                <tr>
+                    <td>Completude — todas as partes do cronograma documentadas</td>
+                    <td>3,0 pontos</td>
+                </tr>
+                <tr>
+                    <td>Qualidade técnica das fichas (nome, função, especificações corretas)</td>
+                    <td>2,5 pontos</td>
+                </tr>
+                <tr>
+                    <td>Qualidade e clareza do registro fotográfico</td>
+                    <td>2,0 pontos</td>
+                </tr>
+                <tr>
+                    <td>Organização e formatação do documento</td>
+                    <td>1,5 ponto</td>
+                </tr>
+                <tr>
+                    <td>Considerações finais e reflexão crítica do grupo</td>
+                    <td>1,0 ponto</td>
+                </tr>
+            </table>
+
+            <div class="warning-box" style="margin-top:18px;">
+                <strong>⚠️ Atenção com dados pessoais:</strong> ao fotografar colegas, priorize fotos de mãos, peças e
+                equipamentos (como no exemplo acima). Se o rosto de alguém aparecer, peça autorização antes de incluir a
+                imagem no dossiê final, especialmente se ele for divulgado além da sala de aula.
+            </div>
+
+            <div class="success-box">
+                <strong>✅ Dica de produtividade:</strong> não deixe para organizar tudo na Semana 20. Tire as fotos e
+                preencha as fichas técnicas <em>na própria semana em que a atividade acontece</em> — é exatamente assim
+                que o dossiê de exemplo foi construído.
+            </div>
+        </div>
+
+        <!-- ===== DOWNLOAD DO EXEMPLO ===== -->
+        <div class="download-box">
+            <h3>📥 Quer ver o dossiê de exemplo completo?</h3>
+            <p>Baixe o documento original (Word), com todas as fotos e fichas técnicas na íntegra.</p>
+            <a href="Dossie_Fotografico_Exemplo.docx" class="download-btn" download>Baixar Dossiê de Exemplo (.docx)</a>
+        </div>
+
+        <div class="content" style="margin-top:25px;">
+            <div class="navigation">
+                <a href="index.html" class="nav-button">⬅️ Voltar ao Início</a>
+                <a href="semana0.html" class="nav-button">Começar pela Semana 0 ➡️</a>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

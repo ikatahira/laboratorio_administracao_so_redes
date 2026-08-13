@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avaliação Diagnóstica - Fundamentos de Hardware | Laboratório ISO-103</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: #f0f2f5;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #003366 0%, #0066cc 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .header-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid white;
+            background: linear-gradient(135deg, #6f42c1 0%, #9b59b6 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8em;
+            flex-shrink: 0;
+        }
+
+        .header-text h1 { font-size: 1.4em; margin-bottom: 5px; }
+        .header-text p { font-size: 0.9em; opacity: 0.95; }
+
+        .header-progress {
+            margin-left: auto;
+            background: rgba(255,255,255,0.12);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+            white-space: nowrap;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .content {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            min-height: 400px;
+        }
+
+        .page-title {
+            color: #003366;
+            font-size: 1.9em;
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            color: #666;
+            font-size: 1.05em;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #0066cc;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        /* ===== BARRA DE PROGRESSO GERAL ===== */
+        .overall-progress-wrap {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin: 20px 0 30px;
+        }
+
+        .overall-progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 6px;
+        }
+
+        .overall-progress-outer {
+            width: 100%;
+            height: 14px;
+            background: #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .overall-progress-inner {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #0066cc 0%, #00cc6a 100%);
+            border-radius: 8px;
+            transition: width 0.3s;
+        }
+
+        /* ===== CATEGORIAS ===== */
+        .category-block {
+            margin-bottom: 35px;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 18px;
+            border-radius: 8px;
+            color: white;
+            margin-bottom: 15px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .category-header.cat-componentes { background: linear-gradient(135deg, #0066cc 0%, #003366 100%); }
+        .category-header.cat-arquitetura { background: linear-gradient(135deg, #6f42c1 0%, #9b59b6 100%); }
+        .category-header.cat-seguranca   { background: linear-gradient(135deg, #dc3545 0%, #c0392b 100%); }
+        .category-header.cat-redes       { background: linear-gradient(135deg, #00875a 0%, #00cc6a 100%); }
+
+        .question-card {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 18px 20px;
+            margin-bottom: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .question-card.answered {
+            border-color: #0066cc;
+        }
+
+        .question-text {
+            color: #003366;
+            font-weight: bold;
+            margin-bottom: 12px;
+            font-size: 1em;
+        }
+
+        .question-number {
+            display: inline-block;
+            background: #003366;
+            color: white;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 26px;
+            font-size: 0.8em;
+            margin-right: 8px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-label:hover {
+            border-color: #0066cc;
+            background: #f0f7ff;
+        }
+
+        .option-label input[type="radio"] {
+            width: 17px;
+            height: 17px;
+            accent-color: #0066cc;
+            flex-shrink: 0;
+        }
+
+        .option-label.picked {
+            border-color: #0066cc;
+            background: #e3f2fd;
+            font-weight: bold;
+        }
+
+        /* ===== BOTÃO FINALIZAR ===== */
+        .submit-area {
+            text-align: center;
+            margin: 35px 0;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #00875a 0%, #00cc6a 100%);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,204,106,0.4);
+            transition: all 0.3s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,204,106,0.5);
+        }
+
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .submit-hint {
+            margin-top: 10px;
+            color: #999;
+            font-size: 0.85em;
+        }
+
+        /* ===== TELA DE RESULTADOS ===== */
+        #results-screen { display: none; }
+
+        .result-hero {
+            text-align: center;
+            padding: 30px 20px;
+            border-radius: 14px;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .result-hero .score-big {
+            font-size: 3.2em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .result-hero .score-label {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .result-level-tag {
+            display: inline-block;
+            margin-top: 12px;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .category-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .category-result-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 18px;
+            border-left: 5px solid #0066cc;
+        }
+
+        .category-result-card h4 {
+            color: #003366;
+            margin-bottom: 10px;
+            font-size: 0.95em;
+        }
+
+        .mini-bar-outer {
+            width: 100%;
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 6px;
+        }
+
+        .mini-bar-inner {
+            height: 100%;
+            background: linear-gradient(90deg, #0066cc, #00cc6a);
+            border-radius: 6px;
+        }
+
+        .category-result-card .cat-score {
+            font-size: 0.85em;
+            color: #666;
+        }
+
+        .recommendation-box {
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid;
+        }
+
+        .rec-excelente { background: #d4edda; border-color: #28a745; color: #155724; }
+        .rec-bom { background: #d1ecf1; border-color: #0c9bd6; color: #0c5674; }
+        .rec-parcial { background: #fff3cd; border-color: #ffc107; color: #7a5200; }
+        .rec-inicial { background: #f8d7da; border-color: #dc3545; color: #721c24; }
+
+        .review-list {
+            margin-top: 10px;
+        }
+
+        .review-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin-bottom: 10px;
+            border-left: 4px solid #dc3545;
+        }
+
+        .review-item.correct-item {
+            border-left-color: #28a745;
+        }
+
+        .review-item .rq-text {
+            font-weight: bold;
+            color: #003366;
+            margin-bottom: 6px;
+            font-size: 0.92em;
+        }
+
+        .review-item .rq-answer {
+            font-size: 0.85em;
+            color: #555;
+        }
+
+        .review-item .rq-correct {
+            font-size: 0.85em;
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .review-item .rq-wrong {
+            font-size: 0.85em;
+            color: #dc3545;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .action-btn {
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95em;
+        }
+
+        .action-btn.primary {
+            background: #0066cc;
+            color: white;
+        }
+
+        .action-btn.primary:hover {
+            background: #003366;
+        }
+
+        .action-btn.secondary {
+            background: #f8f9fa;
+            color: #003366;
+            border: 2px solid #e0e0e0;
+        }
+
+        .action-btn.secondary:hover {
+            border-color: #0066cc;
+        }
+
+        @media print {
+            .header, .submit-area, .action-buttons, .overall-progress-wrap { display: none !important; }
+            #questions-screen { display: block !important; }
+            .option-label { border: 1px solid #999; }
+        }
+
+        @media (max-width: 768px) {
+            .header-progress { margin-left: 0; width: 100%; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="header-avatar">🧪</div>
+            <div class="header-text">
+                <h1>Avaliação Diagnóstica — Fundamentos de Hardware</h1>
+                <p>ISO-103 | Laboratório de Administração de Sistemas Operacionais de Redes | Pré-teste da Semana 0</p>
+            </div>
+            <div class="header-progress" id="header-progress">0 / 20 respondidas</div>
+        </div>
+    </header>
+
+    <div class="container">
+        <main class="content">
+
+            <!-- ===================== TELA DE QUESTÕES ===================== -->
+            <div id="questions-screen">
+                <h1 class="page-title">🧪 Avaliação Diagnóstica</h1>
+                <p class="page-subtitle">
+                    Fundamentos de Hardware, Segurança e Redes — aplicada antes da Semana 0 (Missão Hardware)
+                </p>
+
+                <div class="info-box">
+                    <strong>🎯 Objetivo:</strong> identificar o nível de conhecimento prévio da turma sobre hardware,
+                    segurança e conceitos de rede, vindos de <strong>Arquitetura e Organização de Computadores (IAC-001)</strong>
+                    e <strong>Diagnóstico e Solução de Problemas de TI (ITI-011)</strong>.<br><br>
+                    <strong>📋 Formato:</strong> 20 questões de múltipla escolha, divididas em 4 blocos. Não vale nota —
+                    o resultado ajuda o professor a calibrar o ritmo da aula prática.<br><br>
+                    <strong>⏱️ Tempo estimado:</strong> 15 a 20 minutos.
+                </div>
+
+                <div class="overall-progress-wrap">
+                    <div class="overall-progress-label">
+                        <span>Progresso da avaliação</span>
+                        <span id="progress-text">0 de 20 questões respondidas</span>
+                    </div>
+                    <div class="overall-progress-outer">
+                        <div class="overall-progress-inner" id="overall-progress-bar"></div>
+                    </div>
+                </div>
+
+                <!-- BLOCO A: COMPONENTES -->
+                <div class="category-block" data-category="componentes">
+                    <div class="category-header cat-componentes">🖥️ Bloco A — Identificação de Componentes</div>
+                    <div id="block-componentes"></div>
+                </div>
+
+                <!-- BLOCO B: ARQUITETURA -->
+                <div class="category-block" data-category="arquitetura">
+                    <div class="category-header cat-arquitetura">🧩 Bloco B — Conceitos de Arquitetura de Computadores</div>
+                    <div id="block-arquitetura"></div>
+                </div>
+
+                <!-- BLOCO C: SEGURANÇA -->
+                <div class="category-block" data-category="seguranca">
+                    <div class="category-header cat-seguranca">🦺 Bloco C — Segurança e Boas Práticas</div>
+                    <div id="block-seguranca"></div>
+                </div>
+
+                <!-- BLOCO D: REDES E SO -->
+                <div class="category-block" data-category="redes">
+                    <div class="category-header cat-redes">🌐 Bloco D — Fundamentos de Redes e Sistemas Operacionais</div>
+                    <div id="block-redes"></div>
+                </div>
+
+                <div class="submit-area">
+                    <button class="submit-btn" id="submit-btn" onclick="finishAssessment()" disabled>
+                        ✅ Finalizar Avaliação
+                    </button>
+                    <p class="submit-hint">Responda todas as 20 questões para liberar o botão.</p>
+                </div>
+            </div>
+
+            <!-- ===================== TELA DE RESULTADOS ===================== -->
+            <div id="results-screen">
+                <div class="result-hero" id="result-hero">
+                    <div class="score-label">Sua pontuação</div>
+                    <div class="score-big" id="score-big">0 / 20</div>
+                    <div class="score-label" id="score-percent">0%</div>
+                    <div class="result-level-tag" id="result-level-tag">Nível: —</div>
+                </div>
+
+                <h3 style="color:#003366; margin-bottom:12px;">📊 Desempenho por bloco</h3>
+                <div class="category-results" id="category-results"></div>
+
+                <div class="recommendation-box" id="recommendation-box">
+                    <strong id="rec-title">Recomendação</strong>
+                    <p id="rec-text" style="margin-top:8px;"></p>
+                </div>
+
+                <h3 style="color:#003366; margin-bottom:12px;">🔍 Revisão das questões</h3>
+                <div class="review-list" id="review-list"></div>
+
+                <div class="action-buttons">
+                    <button class="action-btn secondary" onclick="window.print()">🖨️ Imprimir Resultado</button>
+                    <button class="action-btn secondary" onclick="restartAssessment()">🔄 Refazer Avaliação</button>
+                    <a href="semana0.html" class="action-btn primary">🎮 Ir para a Semana 0 →</a>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // ============================================================
+        // BANCO DE QUESTÕES
+        // ============================================================
+        const QUESTIONS = [
+            // ---- BLOCO A: COMPONENTES ----
+            { cat: "componentes", q: "Qual componente é considerado o 'cérebro' do computador, responsável por executar instruções?",
+              options: ["Fonte de alimentação", "Processador (CPU)", "Placa de rede", "Cooler"], correct: 1 },
+            { cat: "componentes", q: "O que armazena dados de forma temporária enquanto o computador está ligado?",
+              options: ["HD (disco rígido)", "Memória RAM", "SSD", "Placa-mãe"], correct: 1 },
+            { cat: "componentes", q: "Qual componente conecta e permite a comunicação entre todos os outros (CPU, RAM, discos, placas)?",
+              options: ["Fonte de alimentação", "Gabinete", "Placa-mãe", "Cooler"], correct: 2 },
+            { cat: "componentes", q: "Qual a principal diferença entre um HD (disco rígido) e um SSD?",
+              options: [
+                  "HD é mais rápido que SSD",
+                  "SSD não armazena dados permanentemente",
+                  "SSD usa memória flash (sem partes móveis), HD usa discos magnéticos giratórios",
+                  "Não existe diferença, são o mesmo componente"
+              ], correct: 2 },
+            { cat: "componentes", q: "Qual conector fornece a alimentação elétrica principal para a placa-mãe?",
+              options: ["Conector SATA de dados", "Conector de 24 pinos (ATX)", "Conector USB", "Conector de áudio HD"], correct: 1 },
+
+            // ---- BLOCO B: ARQUITETURA ----
+            { cat: "arquitetura", q: "Qual é a menor unidade de dados em um computador?",
+              options: ["Byte", "Bit", "Kilobyte", "Palavra (word)"], correct: 1 },
+            { cat: "arquitetura", q: "Quantos bits formam um byte?",
+              options: ["4", "8", "16", "32"], correct: 1 },
+            { cat: "arquitetura", q: "O que significa 'arquitetura 64-bit' em um processador?",
+              options: [
+                  "O processador tem 64 núcleos",
+                  "O processador processa instruções e endereços de memória em blocos de 64 bits",
+                  "O processador funciona apenas com 64 GB de RAM",
+                  "É o número de portas USB disponíveis"
+              ], correct: 1 },
+            { cat: "arquitetura", q: "O que é o BIOS/UEFI de um computador?",
+              options: [
+                  "Um tipo de memória RAM",
+                  "Um software/firmware que inicializa o hardware antes do sistema operacional carregar",
+                  "Um antivírus embutido na placa-mãe",
+                  "Um tipo de cabo de dados"
+              ], correct: 1 },
+            { cat: "arquitetura", q: "O que é a virtualização de hardware (VT-x / AMD-V)?",
+              options: [
+                  "Um recurso que permite exibir imagens em 3D",
+                  "Um recurso do processador que permite rodar máquinas virtuais com melhor desempenho",
+                  "Um tipo de memória RAM virtual em disco",
+                  "Um driver de placa de vídeo"
+              ], correct: 1 },
+
+            // ---- BLOCO C: SEGURANÇA ----
+            { cat: "seguranca", q: "Para que serve a pulseira antiestática ao manusear componentes internos?",
+              options: [
+                  "Proteger contra choques de 220V",
+                  "Escoar cargas eletrostáticas do corpo e evitar dano aos componentes",
+                  "Medir a temperatura da CPU",
+                  "Prender cabos soltos dentro do gabinete"
+              ], correct: 1 },
+            { cat: "seguranca", q: "Qual componente NUNCA deve ser aberto por um técnico iniciante, mesmo desligado da tomada?",
+              options: ["Gabinete", "Fonte de alimentação", "Cooler do processador", "Leitor de cartão de memória"], correct: 1 },
+            { cat: "seguranca", q: "Como os módulos de memória RAM devem ser manuseados?",
+              options: [
+                  "Segurando pelos contatos dourados",
+                  "Segurando pelas bordas laterais",
+                  "Com as mãos molhadas",
+                  "Não há cuidado especial necessário"
+              ], correct: 1 },
+            { cat: "seguranca", q: "Antes de desconectar qualquer cabo interno de um gabinete, o que se deve fazer primeiro?",
+              options: [
+                  "Cortar o cabo mais próximo",
+                  "Fotografar/anotar o roteamento e a posição original",
+                  "Puxar com força pelo próprio fio",
+                  "Nada, todos os cabos são intercambiáveis"
+              ], correct: 1 },
+            { cat: "seguranca", q: "Antes de abrir um gabinete para manutenção, qual é o primeiro passo de segurança?",
+              options: [
+                  "Ligar o computador para verificar se funciona",
+                  "Desconectar da tomada/estabilizador e descarregar capacitores residuais",
+                  "Remover todos os parafusos de uma vez",
+                  "Instalar um novo sistema operacional"
+              ], correct: 1 },
+
+            // ---- BLOCO D: REDES E SO ----
+            { cat: "redes", q: "O que é um Sistema Operacional de Rede (como Linux Server ou Windows Server)?",
+              options: [
+                  "Um aplicativo de escritório",
+                  "Um sistema operacional voltado a gerenciar e disponibilizar serviços de rede para outros computadores",
+                  "Um tipo de placa de vídeo",
+                  "Um antivírus para redes Wi-Fi"
+              ], correct: 1 },
+            { cat: "redes", q: "O que é uma NIC (placa de rede)?",
+              options: [
+                  "Um tipo de memória RAM",
+                  "O componente de hardware que conecta o computador a uma rede",
+                  "Um software de segurança",
+                  "Um tipo de processador"
+              ], correct: 1 },
+            { cat: "redes", q: "Por que a instalação de um servidor Firewall/Gateway normalmente exige 2 placas de rede?",
+              options: [
+                  "Para aumentar a velocidade do processador",
+                  "Para conectar simultaneamente à rede externa (internet) e à rede interna, controlando o tráfego entre elas",
+                  "Porque uma placa de rede sozinha não liga o computador",
+                  "Não há motivo técnico, é apenas tradição"
+              ], correct: 1 },
+            { cat: "redes", q: "O que significa 'dar boot' em um computador?",
+              options: [
+                  "Desligar o computador",
+                  "O processo de inicialização do computador até carregar o sistema operacional",
+                  "Instalar um programa novo",
+                  "Trocar a senha do usuário"
+              ], correct: 1 },
+            { cat: "redes", q: "Qual a relação entre os requisitos mínimos de hardware e a escolha do sistema operacional de rede a instalar?",
+              options: [
+                  "Não existe relação, qualquer SO roda em qualquer hardware",
+                  "É preciso verificar RAM, disco, CPU e rede disponíveis para garantir que o SO escolhido vai instalar e funcionar corretamente",
+                  "Apenas a cor do gabinete importa",
+                  "Só o modelo do teclado influencia a instalação"
+              ], correct: 1 },
+        ];
+
+        const CATEGORY_LABELS = {
+            componentes: "🖥️ Componentes de Hardware",
+            arquitetura: "🧩 Arquitetura de Computadores",
+            seguranca: "🦺 Segurança e Boas Práticas",
+            redes: "🌐 Redes e Sistemas Operacionais"
+        };
+
+        const userAnswers = new Array(QUESTIONS.length).fill(null);
+
+        // ============================================================
+        // RENDERIZAÇÃO DAS QUESTÕES
+        // ============================================================
+        const blocks = { componentes: [], arquitetura: [], seguranca: [], redes: [] };
+        QUESTIONS.forEach((item, idx) => blocks[item.cat].push({ ...item, idx }));
+
+        function renderBlock(catKey, containerId) {
+            const container = document.getElementById(containerId);
+            blocks[catKey].forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = 'qcard-' + item.idx;
+
+                const qNum = document.createElement('div');
+                qNum.className = 'question-text';
+                qNum.innerHTML = '<span class="question-number">' + (item.idx + 1) + '</span>' + item.q;
+                card.appendChild(qNum);
+
+                const optionsWrap = document.createElement('div');
+                optionsWrap.className = 'options';
+
+                item.options.forEach((optText, optIdx) => {
+                    const label = document.createElement('label');
+                    label.className = 'option-label';
+                    label.id = 'opt-' + item.idx + '-' + optIdx;
+
+                    const radio = document.createElement('input');
+                    radio.type = 'radio';
+                    radio.name = 'q' + item.idx;
+                    radio.value = optIdx;
+                    radio.addEventListener('change', () => selectAnswer(item.idx, optIdx));
+
+                    const span = document.createElement('span');
+                    span.textContent = optText;
+
+                    label.appendChild(radio);
+                    label.appendChild(span);
+                    optionsWrap.appendChild(label);
+                });
+
+                card.appendChild(optionsWrap);
+                container.appendChild(card);
+            });
+        }
+
+        renderBlock('componentes', 'block-componentes');
+        renderBlock('arquitetura', 'block-arquitetura');
+        renderBlock('seguranca', 'block-seguranca');
+        renderBlock('redes', 'block-redes');
+
+        function selectAnswer(qIdx, optIdx) {
+            userAnswers[qIdx] = optIdx;
+
+            // Atualiza visual das opções da pergunta
+            for (let i = 0; i < QUESTIONS[qIdx].options.length; i++) {
+                document.getElementById('opt-' + qIdx + '-' + i).classList.toggle('picked', i === optIdx);
+            }
+            document.getElementById('qcard-' + qIdx).classList.add('answered');
+
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const answeredCount = userAnswers.filter(a => a !== null).length;
+            const total = QUESTIONS.length;
+            const pct = Math.round((answeredCount / total) * 100);
+
+            document.getElementById('progress-text').textContent = answeredCount + ' de ' + total + ' questões respondidas';
+            document.getElementById('overall-progress-bar').style.width = pct + '%';
+            document.getElementById('header-progress').textContent = answeredCount + ' / ' + total + ' respondidas';
+
+            document.getElementById('submit-btn').disabled = answeredCount < total;
+        }
+
+        // ============================================================
+        // FINALIZAÇÃO E RESULTADOS
+        // ============================================================
+        function finishAssessment() {
+            const catStats = {
+                componentes: { correct: 0, total: 0 },
+                arquitetura: { correct: 0, total: 0 },
+                seguranca: { correct: 0, total: 0 },
+                redes: { correct: 0, total: 0 }
+            };
+
+            let totalCorrect = 0;
+
+            QUESTIONS.forEach((item, idx) => {
+                catStats[item.cat].total++;
+                if (userAnswers[idx] === item.correct) {
+                    totalCorrect++;
+                    catStats[item.cat].correct++;
+                }
+            });
+
+            const totalQuestions = QUESTIONS.length;
+            const percent = Math.round((totalCorrect / totalQuestions) * 100);
+
+            // ---- Hero de resultado ----
+            document.getElementById('score-big').textContent = totalCorrect + ' / ' + totalQuestions;
+            document.getElementById('score-percent').textContent = percent + '% de acertos';
+
+            const hero = document.getElementById('result-hero');
+            const levelTag = document.getElementById('result-level-tag');
+            const recBox = document.getElementById('recommendation-box');
+            const recTitle = document.getElementById('rec-title');
+            const recText = document.getElementById('rec-text');
+
+            let heroGradient, levelName, recClass, recTitleText, recTextContent;
+
+            if (percent >= 90) {
+                heroGradient = 'linear-gradient(135deg, #00875a 0%, #00cc6a 100%)';
+                levelName = '🏆 Nível: Avançado';
+                recClass = 'rec-excelente';
+                recTitleText = '✅ Excelente! Você já domina os fundamentos.';
+                recTextContent = 'Pode seguir direto para a prática da Semana 0 com tranquilidade. Aproveite para ajudar os colegas com mais dificuldade durante as missões em dupla.';
+            } else if (percent >= 70) {
+                heroGradient = 'linear-gradient(135deg, #0066cc 0%, #00a8e8 100%)';
+                levelName = '🥈 Nível: Bom Domínio';
+                recClass = 'rec-bom';
+                recTitleText = '👍 Bom domínio dos fundamentos.';
+                recTextContent = 'Revise rapidamente os pontos errados listados abaixo antes da aula prática. No geral, você está pronto para a Semana 0.';
+            } else if (percent >= 50) {
+                heroGradient = 'linear-gradient(135deg, #f4a300 0%, #ffd166 100%)';
+                levelName = '🥉 Nível: Domínio Parcial';
+                recClass = 'rec-parcial';
+                recTitleText = '⚠️ Fundamentos parciais — vale reforçar antes da prática.';
+                recTextContent = 'Revise os capítulos de Arquitetura e Organização de Computadores (IAC-001) e Diagnóstico de Problemas de TI (ITI-011) relacionados aos itens errados abaixo. Isso vai tornar a Semana 0 bem mais tranquila.';
+            } else {
+                heroGradient = 'linear-gradient(135deg, #dc3545 0%, #c0392b 100%)';
+                levelName = '🔰 Nível: Iniciante';
+                recClass = 'rec-inicial';
+                recTitleText = '📚 Vamos reforçar os fundamentos antes da prática!';
+                recTextContent = 'Recomendamos assistir novamente aos vídeos e materiais de IAC-001 e ITI-011 sobre hardware antes da Semana 0. Procure o professor/monitor se tiver dúvidas — chegar preparado torna a aula prática muito mais proveitosa.';
+            }
+
+            hero.style.background = heroGradient;
+            levelTag.textContent = levelName;
+            recBox.className = 'recommendation-box ' + recClass;
+            recTitle.textContent = recTitleText;
+            recText.textContent = recTextContent;
+
+            // ---- Resultados por categoria ----
+            const catContainer = document.getElementById('category-results');
+            catContainer.innerHTML = '';
+            Object.keys(catStats).forEach(catKey => {
+                const stat = catStats[catKey];
+                const catPct = Math.round((stat.correct / stat.total) * 100);
+
+                const card = document.createElement('div');
+                card.className = 'category-result-card';
+                card.innerHTML =
+                    '<h4>' + CATEGORY_LABELS[catKey] + '</h4>' +
+                    '<div class="mini-bar-outer"><div class="mini-bar-inner" style="width:' + catPct + '%;"></div></div>' +
+                    '<div class="cat-score">' + stat.correct + ' de ' + stat.total + ' acertos (' + catPct + '%)</div>';
+                catContainer.appendChild(card);
+            });
+
+            // ---- Revisão das questões ----
+            const reviewList = document.getElementById('review-list');
+            reviewList.innerHTML = '';
+            QUESTIONS.forEach((item, idx) => {
+                const userAns = userAnswers[idx];
+                const isCorrect = userAns === item.correct;
+
+                const div = document.createElement('div');
+                div.className = 'review-item' + (isCorrect ? ' correct-item' : '');
+
+                let html = '<div class="rq-text">' + (idx + 1) + '. ' + item.q + '</div>';
+                if (isCorrect) {
+                    html += '<div class="rq-correct">✅ Sua resposta: ' + item.options[userAns] + '</div>';
+                } else {
+                    html += '<div class="rq-wrong">❌ Sua resposta: ' + item.options[userAns] + '</div>';
+                    html += '<div class="rq-correct">✅ Resposta correta: ' + item.options[item.correct] + '</div>';
+                }
+                div.innerHTML = html;
+                reviewList.appendChild(div);
+            });
+
+            document.getElementById('questions-screen').style.display = 'none';
+            document.getElementById('results-screen').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function restartAssessment() {
+            userAnswers.fill(null);
+            document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+            document.querySelectorAll('.option-label').forEach(l => l.classList.remove('picked'));
+            document.querySelectorAll('.question-card').forEach(c => c.classList.remove('answered'));
+            updateProgress();
+            document.getElementById('results-screen').style.display = 'none';
+            document.getElementById('questions-screen').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        updateProgress();
+    </script>
+</body>
+</html>
