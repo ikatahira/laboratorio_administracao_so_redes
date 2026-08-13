@@ -850,6 +850,7 @@
                     <div class="badge-mini" data-badge="desmontagem" title="Mestre da Desmontagem">🔧</div>
                     <div class="badge-mini" data-badge="identificacao" title="Olho Clínico">🔍</div>
                     <div class="badge-mini" data-badge="remontagem" title="Reconstrutor">⚙️</div>
+                    <div class="badge-mini" data-badge="planejamento" title="Planejador de Servidor">💻</div>
                     <div class="badge-mini" data-badge="quiz" title="Sabe Tudo">🧠</div>
                     <div class="badge-mini" data-badge="cronometro" title="Velocista do Hardware">⏱️</div>
                 </div>
@@ -894,6 +895,7 @@
                     <div class="badge-item" data-badge="desmontagem"><span class="badge-icon">🔧</span> Mestre da Desmontagem</div>
                     <div class="badge-item" data-badge="identificacao"><span class="badge-icon">🔍</span> Olho Clínico</div>
                     <div class="badge-item" data-badge="remontagem"><span class="badge-icon">⚙️</span> Reconstrutor</div>
+                    <div class="badge-item" data-badge="planejamento"><span class="badge-icon">💻</span> Planejador de Servidor</div>
                     <div class="badge-item" data-badge="quiz"><span class="badge-icon">🧠</span> Sabe Tudo</div>
                     <div class="badge-item" data-badge="cronometro"><span class="badge-icon">⏱️</span> Velocista do Hardware</div>
                 </div>
@@ -1147,19 +1149,104 @@
                     <div class="quiz-feedback"></div>
                 </div>
 
-                <div class="quiz-score-box" id="quiz-score-box">
-                    🏆 Pontuação do Quiz: <span id="quiz-score">0</span> / 5 acertos
+                <div class="quiz-box">
+                    <div class="quiz-question">6. Antes de instalar um Ubuntu Server ou Windows Server, o que deve ser verificado na BIOS/UEFI para garantir suporte a máquinas virtuais?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="answerQuiz(this, false)">O tamanho da tela do monitor</div>
+                        <div class="quiz-option" onclick="answerQuiz(this, true)">Se a virtualização (VT-x/AMD-V) está habilitada</div>
+                        <div class="quiz-option" onclick="answerQuiz(this, false)">A cor do gabinete</div>
+                        <div class="quiz-option" onclick="answerQuiz(this, false)">O modelo do teclado</div>
+                    </div>
+                    <div class="quiz-feedback"></div>
                 </div>
+
+                <div class="quiz-score-box" id="quiz-score-box">
+                    🏆 Pontuação do Quiz: <span id="quiz-score">0</span> / 6 acertos
+                </div>
+            </section>
+
+            <!-- ===== HARDWARE x INSTALAÇÃO DE SO DE REDE ===== -->
+            <section class="section">
+                <h2><span class="icon">💻</span>Por que isso importa: do Hardware ao Sistema Operacional de Rede</h2>
+                <p style="margin-bottom:10px; color:#666;">
+                    Todo o trabalho de hoje tem um motivo prático além da prova: <strong>nenhum Sistema Operacional de Rede é instalado
+                    "no escuro"</strong>. Antes de instalar o Ubuntu Server/Firewall (Semana 5) ou o Windows Server (Semana 12),
+                    o administrador precisa levantar os recursos de hardware disponíveis e confirmar se atendem aos requisitos mínimos
+                    da instalação — exatamente a habilidade que a disciplina teórica de Administração de Sistemas Operacionais de Redes exige:
+                    <em>"identificar recursos de hardware necessários para a instalação de sistemas operacionais de rede"</em>.
+                </p>
+
+                <div class="info-box">
+                    <strong>🔗 Conexão direta com o cronograma:</strong><br>
+                    • <strong>Semana 5</strong> — instalação de Ubuntu Firewall (2 NICs), Ubuntu Server e Ubuntu Desktop<br>
+                    • <strong>Semana 12</strong> — instalação do Windows Server e planejamento do Server Manager<br>
+                    Sem saber ler a placa-mãe, a RAM instalada e as placas de rede do gabinete, não é possível planejar nenhuma dessas instalações.
+                </div>
+
+                <div class="step-card" id="step-planejamento">
+                    <div class="step-header">
+                        <div class="step-number">4</div>
+                        <div class="step-title">Missão 4 — Levantamento de Requisitos para Instalação de SO de Rede</div>
+                        <div class="step-xp">+20 XP</div>
+                    </div>
+                    <div class="step-body">
+                        <ul class="step-checklist">
+                            <li><label class="check-label"><input type="checkbox" onchange="toggleItem(this, 4, 'planejamento')"><span class="item-text">Verificar na BIOS/UEFI se a virtualização (Intel VT-x / AMD-V) está habilitada — essencial para as VMs da Semana 5 e o Hyper-V da Semana 12</span><span class="item-xp">+4 XP</span></label></li>
+                            <li><label class="check-label"><input type="checkbox" onchange="toggleItem(this, 4, 'planejamento')"><span class="item-text">Conferir a quantidade de memória RAM instalada e comparar com o mínimo exigido pelo SO a instalar</span><span class="item-xp">+4 XP</span></label></li>
+                            <li><label class="check-label"><input type="checkbox" onchange="toggleItem(this, 4, 'planejamento')"><span class="item-text">Verificar espaço livre em disco e o tipo de armazenamento (HDD/SSD) disponível para o servidor</span><span class="item-xp">+4 XP</span></label></li>
+                            <li><label class="check-label"><input type="checkbox" onchange="toggleItem(this, 4, 'planejamento')"><span class="item-text">Identificar quantidade e modelo das placas de rede (NICs) — a Semana 5 exige 2 NICs para o Ubuntu Firewall atuar como gateway</span><span class="item-xp">+4 XP</span></label></li>
+                            <li><label class="check-label"><input type="checkbox" onchange="toggleItem(this, 4, 'planejamento')"><span class="item-text">Checar o modo de boot da BIOS/UEFI (Legacy x UEFI) e o estado do Secure Boot antes de qualquer instalação</span><span class="item-xp">+4 XP</span></label></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Requisitos mínimos de referência</h3>
+                <table class="rubric-table">
+                    <tr>
+                        <th>Recurso</th>
+                        <th>Ubuntu Server / Firewall (Semana 5)</th>
+                        <th>Windows Server (Semana 12)</th>
+                    </tr>
+                    <tr>
+                        <td>Processador</td>
+                        <td>64-bit, 1 GHz+ — VT-x/AMD-V recomendado</td>
+                        <td>64-bit, 1,4 GHz+ — VT-x/AMD-V p/ Hyper-V</td>
+                    </tr>
+                    <tr>
+                        <td>Memória RAM</td>
+                        <td>Mínimo 1 GB (recomendado 2 GB+)</td>
+                        <td>Mínimo 2 GB (recomendado 4 GB+)</td>
+                    </tr>
+                    <tr>
+                        <td>Armazenamento</td>
+                        <td>Mínimo 2,5 GB (recomendado 20 GB+)</td>
+                        <td>Mínimo 32 GB</td>
+                    </tr>
+                    <tr>
+                        <td>Placas de rede (NIC)</td>
+                        <td>1 NIC — 2 NICs no cenário do Firewall/Gateway</td>
+                        <td>1 NIC (2+ recomendado em produção)</td>
+                    </tr>
+                    <tr>
+                        <td>Modo de boot</td>
+                        <td>Legacy (BIOS) ou UEFI</td>
+                        <td>UEFI recomendado</td>
+                    </tr>
+                </table>
+                <p style="color:#999; font-size:0.85em; margin-top:8px;">
+                    Valores de referência para fins didáticos. Use-os como base para o levantamento na sua estação — anote os
+                    dados reais do seu gabinete no campo de observações da Ficha de Estação.
+                </p>
             </section>
 
             <!-- ===== REMONTAGEM ===== -->
             <section class="section">
-                <h2><span class="icon">⚙️</span>Missão 4 — Remontagem (Ordem Inversa)</h2>
+                <h2><span class="icon">⚙️</span>Missão 5 — Remontagem (Ordem Inversa)</h2>
                 <p style="margin-bottom:10px; color:#666;">Remonte o gabinete seguindo a ordem inversa da desmontagem. O objetivo final é o computador ligar e dar boot normalmente.</p>
 
                 <div class="step-card" id="step-remontagem">
                     <div class="step-header">
-                        <div class="step-number">4</div>
+                        <div class="step-number">5</div>
                         <div class="step-title">Sequência de Remontagem Completa</div>
                         <div class="step-xp">+30 XP</div>
                     </div>
@@ -1218,15 +1305,19 @@
                     </tr>
                     <tr>
                         <td>Checklist de segurança e ESD cumprido integralmente</td>
-                        <td>2,0 pontos</td>
+                        <td>1,5 ponto</td>
                     </tr>
                     <tr>
                         <td>Desmontagem completa e organizada (parafusos e cabos identificados)</td>
-                        <td>2,5 pontos</td>
+                        <td>2,0 pontos</td>
                     </tr>
                     <tr>
                         <td>Identificação correta dos componentes para o professor/monitor</td>
-                        <td>2,5 pontos</td>
+                        <td>2,0 pontos</td>
+                    </tr>
+                    <tr>
+                        <td>Levantamento de requisitos de hardware para instalação de SO de rede</td>
+                        <td>1,5 ponto</td>
                     </tr>
                     <tr>
                         <td>Remontagem com boot funcional validado</td>
@@ -1280,11 +1371,11 @@
         // ===== ESTADO DO JOGO (em memória, sem localStorage) =====
         let totalXP = 0;
         const unlockedBadges = new Set();
-        const sectionProgress = { seguranca: 0, desmontagem: 0, identificacao: 0, remontagem: 0 };
-        const sectionMax = { seguranca: 5, desmontagem: 10, identificacao: 10, remontagem: 10 };
+        const sectionProgress = { seguranca: 0, desmontagem: 0, identificacao: 0, remontagem: 0, planejamento: 0 };
+        const sectionMax = { seguranca: 5, desmontagem: 10, identificacao: 10, remontagem: 10, planejamento: 5 };
         let quizScore = 0;
         let quizAnswered = 0;
-        const totalQuizQuestions = 5;
+        const totalQuizQuestions = 6;
 
         const levels = [
             { min: 0,   name: "🔰 Nível 1 — Novato do Hardware" },
@@ -1302,7 +1393,7 @@
         }
 
         function updateHUD() {
-            const meta = 100;
+            const meta = 120;
             const pct = Math.min(100, Math.round((totalXP / meta) * 100));
             const bar = document.getElementById('progress-bar');
             bar.style.width = pct + '%';
@@ -1412,7 +1503,7 @@
             document.getElementById('quiz-score').textContent = quizScore;
 
             if (quizAnswered >= totalQuizQuestions) {
-                if (quizScore >= 4) {
+                if (quizScore >= 5) {
                     unlockBadge('quiz');
                 }
             }
