@@ -1251,7 +1251,7 @@
                 <div class="progress-bar-container">
                     <div class="progress-bar-fill" id="progressBarFill"></div>
                 </div>
-                <p class="progress-caption" id="progressCaption">0 / 234 pontos possíveis</p>
+                <p class="progress-caption" id="progressCaption">0 / 274 pontos possíveis</p>
                 <div class="badges-list" id="badgesList"></div>
             </div>
         </aside>
@@ -1295,6 +1295,7 @@
                     <li>Aplicar técnicas de identificação e documentação com anilhas</li>
                     <li>Seguir normas de organização e estética em infraestrutura de rede</li>
                     <li>Facilitar manutenção futura através de organização adequada</li>
+                    <li>Reconhecer o keystone jack (tomada fêmea RJ45) e sua relação com o patch panel na composição do cabeamento horizontal</li>
                 </ul>
                 <div class="security-box">
                     <div class="sb-title">🔐 Conexão com Segurança da Informação</div>
@@ -1401,6 +1402,25 @@
                         </div>
                     </div>
 
+                    <div class="flashcard" data-card="6" onclick="flipCard(this)">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                <div class="fc-icon">🔌</div>
+                                <strong>6. Keystone Jack</strong>
+                                <small>toque para revisar</small>
+                            </div>
+                            <div class="flashcard-back">
+                                <ul>
+                                    <li><strong>O que é:</strong> conector fêmea RJ45 (tomada) instalado em faceplates de parede/mesa</li>
+                                    <li><strong>Função:</strong> ponta oposta ao patch panel no mesmo cabo horizontal</li>
+                                    <li><strong>Instalação:</strong> punch down igual ao patch panel, em formato compacto</li>
+                                    <li><strong>Tipos:</strong> com ferramenta ou "toolless" (encaixe manual)</li>
+                                    <li><strong>Regra de ouro:</strong> mesmo padrão de cor (T568B) nas duas pontas do cabo</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </section>
 
@@ -1486,9 +1506,66 @@
             </section>
 
             <section class="section">
+                <h2><span class="icon">🔌</span>Keystone Jack: a Tomada Fêmea RJ45<span class="section-tag">marque cada etapa concluída (+3 pts)</span></h2>
+                <p style="color:#444; margin-bottom: 14px;">
+                    O <strong>keystone jack</strong> é o conector fêmea RJ45 que fica na ponta oposta do patch panel: enquanto o patch panel organiza o cabeamento na sala de telecomunicações, o keystone é instalado em <strong>faceplates</strong> (espelhos de tomada) na parede ou na mesa do usuário, formando o ponto físico onde o cabo de rede (patch cord) do computador é conectado. Ambos são, na verdade, o mesmo tipo de conexão IDC — só muda o formato e o local de instalação.
+                </p>
+
+                <h3>Patch Panel × Keystone Jack: qual a diferença?</h3>
+                <ul class="topics-list">
+                    <li><strong>Onde fica:</strong> patch panel → rack/sala de telecomunicações · keystone → parede, mesa ou piso, perto do usuário</li>
+                    <li><strong>Formato:</strong> patch panel → várias portas em uma placa · keystone → um único módulo por conector</li>
+                    <li><strong>Instalação elétrica:</strong> ambos usam o mesmo princípio de conexão por inserção (IDC), com o mesmo código de cores T568B</li>
+                    <li><strong>Tipos de keystone:</strong> com ferramenta punch down ou <em>toolless</em> (encaixe manual, sem ferramenta)</li>
+                    <li><strong>Regra crítica:</strong> o padrão de cor usado no keystone deve ser <strong>idêntico</strong> ao usado no patch panel do outro lado do mesmo cabo — inverter o padrão quebra o mapeamento da rede</li>
+                </ul>
+
+                <h3>Processo de instalação do Keystone</h3>
+                <div class="step-by-step" id="keystoneStepList">
+                    <div class="step" data-kstep="1">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Preparar o cabo e o keystone</h4>
+                            <p>Remova cerca de 5cm da capa externa do cabo UTP. Encaixe o corpo do keystone em um suporte de fixação (jack rapid) para facilitar o manuseio durante a conectorização.</p>
+                        </div>
+                        <div class="step-check"><input type="checkbox" onchange="toggleKeystoneStep(1, this.checked)"></div>
+                    </div>
+                    <div class="step" data-kstep="2">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Seguir o código de cores</h4>
+                            <p>Posicione cada par na guia de cores impressa no próprio keystone (T568B, o mesmo padrão usado no patch panel). Erros aqui geram inversão de par em toda a conexão.</p>
+                        </div>
+                        <div class="step-check"><input type="checkbox" onchange="toggleKeystoneStep(2, this.checked)"></div>
+                    </div>
+                    <div class="step" data-kstep="3">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Conectorizar (punch down ou toolless)</h4>
+                            <p>Em modelos com ferramenta, use o alicate punch down do mesmo jeito que no patch panel. Em modelos toolless, pressione a tampa até ouvir o "click" de cada fio encaixado.</p>
+                        </div>
+                        <div class="step-check"><input type="checkbox" onchange="toggleKeystoneStep(3, this.checked)"></div>
+                    </div>
+                    <div class="step" data-kstep="4">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Encaixar no faceplate e testar</h4>
+                            <p>Encaixe o keystone no espelho (faceplate), fixe na caixa de parede e teste a continuidade com o testador de cabos — assim como é feito no patch panel.</p>
+                        </div>
+                        <div class="step-check"><input type="checkbox" onchange="toggleKeystoneStep(4, this.checked)"></div>
+                    </div>
+                </div>
+
+                <div class="security-box">
+                    <div class="sb-title">🔐 Conexão com Segurança da Informação</div>
+                    <p>Cada keystone ativo é um ponto de acesso físico à rede. Uma tomada de rede esquecida ligada e sem uso em uma sala vazia é, na prática, uma porta aberta: qualquer pessoa com acesso físico ao ambiente pode conectar um notebook ali e alcançar a rede interna sem passar por nenhum controle de perímetro. Por isso, boas práticas de segurança recomendam desativar portas de switch não utilizadas e aplicar controles como <strong>802.1X (autenticação de porta)</strong> em ambientes críticos — um assunto que você vai aprofundar nas próximas semanas, quando tratarmos de switches gerenciáveis.</p>
+                </div>
+            </section>
+
+            <section class="section">
                 <h2><span class="icon">🎮</span>Desafio Prático: Ordem dos Fios T568B<span class="section-tag">+15 pts ao completar</span></h2>
                 <div class="wire-game">
-                    <p>Clique nos fios na ordem correta do padrão <strong>T568B</strong>, do pino 1 ao pino 8.</p>
+                    <p>Clique nos fios na ordem correta do padrão <strong>T568B</strong>, do pino 1 ao pino 8 — a mesma ordem usada tanto no patch panel quanto no keystone jack.</p>
                     <div class="wire-slots" id="wireSlots"></div>
                     <div class="wire-options" id="wireOptions"></div>
                     <p class="wire-feedback" id="wireFeedback"></p>
@@ -1639,6 +1716,38 @@
             </div>
         </div>
 
+        <div class="demo-card">
+            <div class="demo-stage">
+                <svg viewBox="0 0 300 190" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <defs>
+                        <filter id="glow5" x="-60%" y="-60%" width="220%" height="220%">
+                            <feGaussianBlur stdDeviation="2.5" result="blur"/>
+                            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                        </filter>
+                    </defs>
+                    <rect x="30" y="60" width="90" height="70" rx="4" fill="#0d47a1" stroke="#66aaff" stroke-width="1.5"/>
+                    <text x="75" y="53" fill="#9fc4ea" font-size="8" text-anchor="middle">FACEPLATE</text>
+                    <rect id="d5-hole" x="55" y="80" width="40" height="30" rx="3" fill="#062442" stroke="#3a7bd5"/>
+                    <line x1="10" y1="95" x2="55" y2="95" stroke="#e0a300" stroke-width="4"/>
+                    <text x="30" y="145" fill="#9fc4ea" font-size="8" text-anchor="middle">cabo</text>
+                    <g id="d5-keystone" transform="translate(160,0)">
+                        <rect x="50" y="78" width="34" height="24" rx="3" fill="#c62828" filter="url(#glow5)"/>
+                        <text x="67" y="94" fill="white" font-size="7" text-anchor="middle">keystone</text>
+                    </g>
+                    <text x="200" y="150" fill="#cfe4fb" font-size="9" text-anchor="middle">Encaixe no faceplate → teste de continuidade</text>
+                    <text id="d5-status" x="200" y="165" fill="#8bd17c" font-size="8" text-anchor="middle"></text>
+                    <animateTransform id="d5-anim" xlink:href="#d5-keystone" attributeName="transform" type="translate"
+                        begin="indefinite" dur="1.6s" values="160,0; 90,0; 90,0" keyTimes="0;0.7;1" fill="freeze" calcMode="spline" keySplines="0.42 0 0.58 1;0 0 1 1"/>
+                </svg>
+            </div>
+            <div class="demo-info">
+                <h4>Instalação do Keystone no Faceplate</h4>
+                <p>O keystone (tomada fêmea RJ45) conectorizado desliza até encaixar no espelho de parede, formando o ponto de rede do usuário.</p>
+                <button class="demo-play-btn" onclick="playDemo(5)">▶️ Reproduzir animação</button>
+                <p class="demo-caption" id="d5-caption"></p>
+            </div>
+        </div>
+
     </div>
 
     <div class="security-box">
@@ -1753,7 +1862,7 @@
             </div>
 
             <section class="section">
-                <h2><span class="icon">📝</span>Complete as Frases<span class="section-tag">6 frases · +5 pts por acerto</span></h2>
+                <h2><span class="icon">📝</span>Complete as Frases<span class="section-tag">7 frases · +5 pts por acerto</span></h2>
                 <p style="color:#555; margin-bottom: 6px;">Selecione a opção correta em cada frase. Todas contextualizadas para o Laboratório de Administração de Sistemas Operacionais de Redes.</p>
                 <div class="complete-box" id="completeBox">
                     <div class="complete-item" data-c="1">
@@ -1823,6 +1932,18 @@
                         </select>, essencial para rastrear a origem de um incidente até a porta física correta.
                     </div>
 
+                    <div class="complete-item" data-c="7">
+                        <span class="c-num">7</span>O
+                        <select data-correct="0" onchange="markCompleteChanged(7)">
+                            <option value="" selected disabled>selecione</option>
+                            <option value="0">keystone jack</option>
+                            <option value="1">patch cord</option>
+                            <option value="2">gerenciador vertical</option>
+                            <option value="3">testador de cabo</option>
+                        </select>
+                        é o conector fêmea RJ45 instalado em faceplates de parede ou mesa, formando a ponta oposta do patch panel — e por isso deve seguir exatamente o mesmo padrão de cores da outra extremidade do cabo.
+                    </div>
+
                     <div class="quiz-actions">
                         <button type="button" class="btn-primary" id="completeSubmitBtn" onclick="submitComplete()">✅ Verificar respostas</button>
                         <button type="button" class="btn-reset" id="completeRedoBtn" onclick="resetComplete()" style="display:none;">🔄 Refazer</button>
@@ -1832,7 +1953,7 @@
             </section>
 
             <section class="section">
-                <h2><span class="icon">🧩</span>Arraste e Solte: Combine os Termos<span class="section-tag">6 pares · +5 pts por acerto</span></h2>
+                <h2><span class="icon">🧩</span>Arraste e Solte: Combine os Termos<span class="section-tag">7 pares · +5 pts por acerto</span></h2>
                 <p class="dragdrop-hint">Arraste cada termo (ou toque nele e depois toque na definição, no celular) até a definição correta.</p>
                 <div class="dragdrop-box">
                     <div class="dragdrop-columns">
@@ -1843,6 +1964,7 @@
                             <div class="term-chip" draggable="true" data-term="anilha" ondragstart="dragStart(event)" onclick="selectTerm(this)">Anilha numerada</div>
                             <div class="term-chip" draggable="true" data-term="raio" ondragstart="dragStart(event)" onclick="selectTerm(this)">Raio de curvatura</div>
                             <div class="term-chip" draggable="true" data-term="606b" ondragstart="dragStart(event)" onclick="selectTerm(this)">TIA-606-B</div>
+                            <div class="term-chip" draggable="true" data-term="keystone" ondragstart="dragStart(event)" onclick="selectTerm(this)">Keystone Jack</div>
                         </div>
                         <div class="definition-zone" id="definitionZone">
                             <div class="def-slot" data-expects="bloco110" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropTerm(event)" onclick="tryPlaceOnSlot(this)">Sistema de conexão por inserção usado nos patch panels — evita fios soltos que poderiam ser adulterados sem deixar marca visível.</div>
@@ -1851,6 +1973,7 @@
                             <div class="def-slot" data-expects="anilha" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropTerm(event)" onclick="tryPlaceOnSlot(this)">Identificador sequencial usado para documentar cada cabo — a base da rastreabilidade em uma investigação.</div>
                             <div class="def-slot" data-expects="raio" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropTerm(event)" onclick="tryPlaceOnSlot(this)">Curvatura mínima do cabo (geralmente 4x seu diâmetro) para não comprometer a integridade do sinal.</div>
                             <div class="def-slot" data-expects="606b" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropTerm(event)" onclick="tryPlaceOnSlot(this)">Norma que define os padrões de identificação e documentação exigidos em auditorias de segurança física.</div>
+                            <div class="def-slot" data-expects="keystone" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropTerm(event)" onclick="tryPlaceOnSlot(this)">Conector fêmea RJ45 instalado em faceplates de parede/mesa — a ponta oposta do patch panel, e um possível ponto de acesso físico não autorizado se deixado ativo sem uso.</div>
                         </div>
                     </div>
                     <p class="quiz-result-box" id="dragdropResultBox" style="display:none;"></p>
@@ -1858,7 +1981,7 @@
             </section>
 
             <section class="section">
-                <h2><span class="icon">🎯</span>Quiz da Semana 3<span class="section-tag">10 questões · +5 pts por acerto</span></h2>
+                <h2><span class="icon">🎯</span>Quiz da Semana 3<span class="section-tag">11 questões · +5 pts por acerto</span></h2>
                 <div class="quiz-box">
                     <p style="margin-bottom: 15px; color: #555;">Responda todas as questões e clique em <strong>Corrigir Quiz</strong> para ver seu resultado.</p>
                     <form id="quizForm"></form>
@@ -1946,11 +2069,12 @@
        ESTADO GERAL / GAMIFICAÇÃO
        (estado mantido apenas na sessão da página, sem localStorage)
     ========================================================= */
-    const MAX_POINTS = 234;
+    const MAX_POINTS = 274;
     const state = {
         points: 0,
         flippedCards: new Set(),
         stepsDone: new Set(),
+        keystoneStepsDone: new Set(),
         activitiesDone: new Set(),
         wireGameDone: false,
         quizSubmitted: false,
@@ -1960,9 +2084,9 @@
     };
 
     const BADGES = [
-        { threshold: 60,  icon: '🥉', name: 'Aprendiz de Redes',   desc: '60+ pontos' },
-        { threshold: 140, icon: '🥈', name: 'Técnico Júnior',      desc: '140+ pontos' },
-        { threshold: 210, icon: '🥇', name: 'Mestre do Cabeamento', desc: '210+ pontos' }
+        { threshold: 70,  icon: '🥉', name: 'Aprendiz de Redes',   desc: '70+ pontos' },
+        { threshold: 160, icon: '🥈', name: 'Técnico Júnior',      desc: '160+ pontos' },
+        { threshold: 240, icon: '🥇', name: 'Mestre do Cabeamento', desc: '240+ pontos' }
     ];
     const unlockedBadges = new Set();
 
@@ -2036,6 +2160,21 @@
             addPoints(3, 'etapa ' + n + ' concluída');
             if (state.stepsDone.size === 8) {
                 setTimeout(() => addPoints(10, 'checklist de instalação 100% completo'), 200);
+            }
+        }
+    }
+
+    /* =========================================================
+       CHECKLIST DE ETAPAS (Instalação do Keystone)
+    ========================================================= */
+    function toggleKeystoneStep(n, checked) {
+        const stepEl = document.querySelector('.step[data-kstep="' + n + '"]');
+        stepEl.classList.toggle('done', checked);
+        if (checked && !state.keystoneStepsDone.has(n)) {
+            state.keystoneStepsDone.add(n);
+            addPoints(3, 'etapa keystone ' + n + ' concluída');
+            if (state.keystoneStepsDone.size === 4) {
+                setTimeout(() => addPoints(8, 'checklist de instalação do keystone 100% completo'), 200);
             }
         }
     }
@@ -2194,6 +2333,16 @@
             caption.textContent = 'Encaixando anilhas 1, 2, 3 e 4 em sequência…';
             setTimeout(() => { caption.textContent = 'Cabos identificados na ordem correta de instalação.'; }, 2200);
         }
+
+        if (n === 5) {
+            const status = document.getElementById('d5-status');
+            document.getElementById('d5-anim').beginElement();
+            status.textContent = '';
+            caption.textContent = 'Deslizando o keystone conectorizado até o faceplate…';
+            setTimeout(() => { status.textContent = '✅ encaixado!'; }, 1200);
+            setTimeout(() => { caption.textContent = 'Ponto de rede pronto para o testador de continuidade.'; }, 1700);
+            setTimeout(() => { caption.textContent = ''; status.textContent = ''; }, 2800);
+        }
     }
 
     /* =========================================================
@@ -2217,6 +2366,7 @@
         }
 
         let correctCount = 0;
+        const total = selects.length;
         selects.forEach(s => {
             const correct = s.dataset.correct;
             if (s.value === correct) {
@@ -2230,13 +2380,13 @@
 
         state.completeSubmitted = true;
         const earned = correctCount * 5;
-        addPoints(earned, 'complete as frases (' + correctCount + '/6 acertos)');
+        addPoints(earned, 'complete as frases (' + correctCount + '/' + total + ' acertos)');
 
         const resultBox = document.getElementById('completeResultBox');
         resultBox.style.display = 'block';
-        resultBox.style.background = correctCount === 6 ? '#d4edda' : '#fff3cd';
-        resultBox.style.color = correctCount === 6 ? '#155724' : '#856404';
-        resultBox.textContent = (correctCount === 6 ? '🏆 Perfeito! ' : '📘 ') + 'Você acertou ' + correctCount + '/6 frases (+' + earned + ' pontos).';
+        resultBox.style.background = correctCount === total ? '#d4edda' : '#fff3cd';
+        resultBox.style.color = correctCount === total ? '#155724' : '#856404';
+        resultBox.textContent = (correctCount === total ? '🏆 Perfeito! ' : '📘 ') + 'Você acertou ' + correctCount + '/' + total + ' frases (+' + earned + ' pontos).';
 
         document.getElementById('completeSubmitBtn').disabled = true;
         document.getElementById('completeRedoBtn').style.display = 'inline-block';
@@ -2257,7 +2407,7 @@
     /* =========================================================
        ARRASTE E SOLTE
     ========================================================= */
-    const DRAGDROP_TOTAL = 6;
+    const DRAGDROP_TOTAL = 7;
 
     function dragStart(event) {
         event.dataTransfer.setData('text/plain', event.target.dataset.term);
@@ -2411,6 +2561,16 @@
                 'Não há motivo técnico, é só tradição'
             ],
             correct: 2
+        },
+        {
+            q: 'O que é um keystone jack e onde ele normalmente é instalado?',
+            options: [
+                'Um tipo de switch instalado no rack principal',
+                'O conector fêmea RJ45 instalado em faceplates de parede ou mesa, ponto de rede do usuário',
+                'Um cabo de fibra óptica usado entre andares',
+                'Uma ferramenta usada apenas para cortar cabos'
+            ],
+            correct: 1
         }
     ];
 
@@ -2467,18 +2627,20 @@
         });
 
         state.quizSubmitted = true;
+        const total = QUIZ.length;
         const earned = correctCount * 5;
-        addPoints(earned, 'quiz corrigido (' + correctCount + '/10 acertos)');
+        addPoints(earned, 'quiz corrigido (' + correctCount + '/' + total + ' acertos)');
 
         const resultBox = document.getElementById('quizResultBox');
         resultBox.style.display = 'block';
         let msg, bg, color;
-        if (correctCount >= 9) { msg = '🏆 Excelente! Você domina o conteúdo da Semana 3.'; bg = '#d4edda'; color = '#155724'; }
-        else if (correctCount >= 7) { msg = '👍 Muito bom! Revise os pontos que errou.'; bg = '#fff3cd'; color = '#856404'; }
+        const pct = correctCount / total;
+        if (pct >= 0.9) { msg = '🏆 Excelente! Você domina o conteúdo da Semana 3.'; bg = '#d4edda'; color = '#155724'; }
+        else if (pct >= 0.7) { msg = '👍 Muito bom! Revise os pontos que errou.'; bg = '#fff3cd'; color = '#856404'; }
         else { msg = '📘 Vale revisar o Guia de Estudo antes da próxima aula.'; bg = '#fdecec'; color = '#842029'; }
         resultBox.style.background = bg;
         resultBox.style.color = color;
-        resultBox.textContent = msg + ' Você acertou ' + correctCount + '/10 questões (+' + earned + ' pontos).';
+        resultBox.textContent = msg + ' Você acertou ' + correctCount + '/' + total + ' questões (+' + earned + ' pontos).';
 
         document.getElementById('quizSubmitBtn').disabled = true;
         document.getElementById('quizRedoBtn').style.display = 'inline-block';
