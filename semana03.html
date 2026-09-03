@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Semana 3 - Laboratório de Administração de Sistemas Operacionais de Redes</title>
+    <title>Semana 3 - Patch Panels e Organização de Racks (Gamificado)</title>
     <style>
         * {
             margin: 0;
@@ -20,7 +20,7 @@
         .header {
             background: linear-gradient(135deg, #003366 0%, #0066cc 100%);
             color: white;
-            padding: 20px 0;
+            padding: 16px 0;
             box-shadow: 0 2px 10px rgba(0,0,0,0.2);
             position: sticky;
             top: 0;
@@ -34,24 +34,58 @@
             display: flex;
             align-items: center;
             gap: 20px;
+            flex-wrap: wrap;
         }
 
-        .header-content img {
-            width: 60px;
-            height: 60px;
+        .header-avatar {
+            width: 55px;
+            height: 55px;
             border-radius: 50%;
             border: 3px solid white;
-            object-fit: cover;
+            background: rgba(255,255,255,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6em;
+            flex-shrink: 0;
+        }
+
+        .header-text {
+            flex: 1;
+            min-width: 200px;
         }
 
         .header-text h1 {
-            font-size: 1.5em;
-            margin-bottom: 5px;
+            font-size: 1.4em;
+            margin-bottom: 4px;
         }
 
         .header-text p {
-            font-size: 0.9em;
+            font-size: 0.85em;
             opacity: 0.95;
+        }
+
+        .header-score {
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.35);
+            border-radius: 30px;
+            padding: 8px 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 0.9em;
+        }
+
+        .header-score .score-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .header-score .score-value {
+            font-weight: bold;
+            font-size: 1.15em;
         }
 
         .container {
@@ -64,18 +98,24 @@
 
         .sidebar {
             width: 280px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            height: fit-content;
+            position: sticky;
+            top: 110px;
+        }
+
+        .sidebar-box {
             background: white;
             border-radius: 10px;
             padding: 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            height: fit-content;
-            position: sticky;
-            top: 120px;
         }
 
-        .sidebar h2 {
+        .sidebar-box h2 {
             color: #003366;
-            font-size: 1.2em;
+            font-size: 1.15em;
             margin-bottom: 15px;
             padding-bottom: 10px;
             border-bottom: 2px solid #0066cc;
@@ -121,6 +161,73 @@
             margin-right: 8px;
         }
 
+        /* ---- Progresso / gamificação ---- */
+        .progress-bar-container {
+            background: #e9ecef;
+            border-radius: 20px;
+            height: 16px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #0066cc, #00c853);
+            border-radius: 20px;
+            transition: width 0.4s ease;
+        }
+
+        .progress-caption {
+            font-size: 0.8em;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .badges-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .badge-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            border-radius: 8px;
+            background: #f8f9fa;
+            font-size: 0.85em;
+            border-left: 3px solid #dcdcdc;
+            transition: all 0.3s;
+        }
+
+        .badge-row.unlocked {
+            background: #fff8e1;
+            border-left-color: #ffb300;
+        }
+
+        .badge-row .badge-icon {
+            font-size: 1.3em;
+            filter: grayscale(1);
+            opacity: 0.5;
+        }
+
+        .badge-row.unlocked .badge-icon {
+            filter: none;
+            opacity: 1;
+        }
+
+        .badge-row .badge-info strong {
+            display: block;
+            color: #003366;
+        }
+
+        .badge-row .badge-info span {
+            color: #888;
+            font-size: 0.9em;
+        }
+
         .content {
             flex: 1;
             background: white;
@@ -149,6 +256,7 @@
             justify-content: center;
             font-size: 1.5em;
             font-weight: bold;
+            flex-shrink: 0;
         }
 
         .week-subtitle {
@@ -177,6 +285,18 @@
             font-size: 1.2em;
             margin-top: 20px;
             margin-bottom: 10px;
+        }
+
+        .section-tag {
+            display: inline-block;
+            font-size: 0.5em;
+            background: #e3f2fd;
+            color: #0066cc;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-weight: normal;
+            vertical-align: middle;
+            margin-left: 4px;
         }
 
         .objectives-list, .topics-list {
@@ -242,6 +362,79 @@
             font-size: 0.9em;
         }
 
+        /* ---- Demonstrações animadas (substituem os vídeos externos) ---- */
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .demo-card {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: border-color 0.3s;
+        }
+
+        .demo-card:hover {
+            border-color: #0066cc;
+        }
+
+        .demo-stage {
+            width: 100%;
+            aspect-ratio: 16/10;
+            background: linear-gradient(135deg, #0d2b4d 0%, #003366 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .demo-stage svg {
+            width: 92%;
+            height: 92%;
+        }
+
+        .demo-info {
+            padding: 15px 18px 18px;
+        }
+
+        .demo-info h4 {
+            color: #003366;
+            margin-bottom: 6px;
+        }
+
+        .demo-info p {
+            color: #555;
+            font-size: 0.9em;
+            margin-bottom: 12px;
+        }
+
+        .demo-play-btn {
+            background: #0066cc;
+            color: white;
+            border: none;
+            padding: 9px 16px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .demo-play-btn:hover {
+            background: #003366;
+        }
+
+        .demo-caption {
+            font-size: 0.8em;
+            color: #9fc4ea;
+            text-align: center;
+            margin-top: 6px;
+            min-height: 16px;
+        }
+
         .info-box {
             background: #e3f2fd;
             border-left: 4px solid #0066cc;
@@ -272,6 +465,12 @@
             padding: 20px;
             margin: 20px 0;
             border: 2px solid #0066cc;
+            transition: all 0.3s;
+        }
+
+        .activity-card.done {
+            border-color: #28a745;
+            background: linear-gradient(135deg, #eafbf0 0%, #dcf5e6 100%);
         }
 
         .activity-header {
@@ -291,12 +490,37 @@
             align-items: center;
             justify-content: center;
             font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .activity-card.done .activity-number {
+            background: #28a745;
         }
 
         .activity-title {
             color: #003366;
             font-size: 1.3em;
             font-weight: bold;
+            flex: 1;
+        }
+
+        .activity-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 15px;
+            padding-top: 12px;
+            border-top: 1px dashed #ccc;
+            font-size: 0.9em;
+            color: #555;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .activity-check input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
         }
 
         .materials-grid {
@@ -380,10 +604,13 @@
             margin-bottom: 20px;
             padding-bottom: 20px;
             border-bottom: 1px solid #e0e0e0;
+            transition: opacity 0.3s;
         }
 
         .step:last-child {
             border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
         }
 
         .step-number {
@@ -397,6 +624,320 @@
             justify-content: center;
             font-weight: bold;
             flex-shrink: 0;
+        }
+
+        .step.done .step-number {
+            background: #28a745;
+        }
+
+        .step.done h4 {
+            text-decoration: line-through;
+            color: #999;
+        }
+
+        .step-check {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+            padding-left: 10px;
+        }
+
+        .step-check input {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        /* ---- Guia de estudo: flashcards ---- */
+        .flashcard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 18px;
+            margin-top: 20px;
+        }
+
+        .flashcard {
+            perspective: 1200px;
+            height: 190px;
+            cursor: pointer;
+        }
+
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            inset: 0;
+            border-radius: 10px;
+            backface-visibility: hidden;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .flashcard-front {
+            background: linear-gradient(135deg, #003366 0%, #0066cc 100%);
+            color: white;
+            text-align: center;
+            align-items: center;
+        }
+
+        .flashcard-front .fc-icon {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+
+        .flashcard-front small {
+            opacity: 0.85;
+            margin-top: 10px;
+        }
+
+        .flashcard-back {
+            background: #f8f9fa;
+            border: 2px solid #0066cc;
+            transform: rotateY(180deg);
+            overflow-y: auto;
+        }
+
+        .flashcard-back ul {
+            padding-left: 18px;
+            font-size: 0.87em;
+            color: #333;
+        }
+
+        .flashcard-back li {
+            margin-bottom: 6px;
+        }
+
+        .flashcard-earned {
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            font-size: 0.9em;
+        }
+
+        /* ---- Desafio da ordem dos fios ---- */
+        .wire-game {
+            background: #f8f9fa;
+            border: 2px solid #0066cc;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .wire-slots {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 15px 0;
+            min-height: 46px;
+        }
+
+        .wire-slot {
+            width: 40px;
+            height: 40px;
+            border: 2px dashed #b0b0b0;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75em;
+            font-weight: bold;
+            color: #999;
+            background: white;
+        }
+
+        .wire-slot.filled {
+            border-style: solid;
+            border-color: #0066cc;
+            color: white;
+        }
+
+        .wire-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .wire-btn {
+            border: none;
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-size: 0.85em;
+            font-weight: bold;
+            cursor: pointer;
+            color: #222;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            transition: transform 0.15s;
+        }
+
+        .wire-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .wire-btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .wire-feedback {
+            margin-top: 12px;
+            font-weight: bold;
+            min-height: 24px;
+        }
+
+        .wire-feedback.ok { color: #28a745; }
+        .wire-feedback.err { color: #dc3545; }
+
+        .btn-reset {
+            margin-top: 12px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85em;
+        }
+
+        .btn-reset:hover {
+            background: #545b62;
+        }
+
+        /* ---- Quiz ---- */
+        .quiz-box {
+            background: #f8f9fa;
+            border: 2px solid #0066cc;
+            border-radius: 10px;
+            padding: 24px;
+            margin-top: 20px;
+        }
+
+        .quiz-question {
+            margin-bottom: 22px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .quiz-question:last-of-type {
+            border-bottom: none;
+        }
+
+        .quiz-question p.q-text {
+            font-weight: bold;
+            color: #003366;
+            margin-bottom: 10px;
+        }
+
+        .quiz-option {
+            display: block;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 10px 14px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quiz-option:hover {
+            border-color: #0066cc;
+        }
+
+        .quiz-option input {
+            margin-right: 10px;
+        }
+
+        .quiz-option.correct {
+            border-color: #28a745;
+            background: #eafbf0;
+        }
+
+        .quiz-option.incorrect {
+            border-color: #dc3545;
+            background: #fdecec;
+        }
+
+        .quiz-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: #0066cc;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #003366;
+        }
+
+        .btn-primary:disabled {
+            background: #a9c6e8;
+            cursor: not-allowed;
+        }
+
+        .quiz-result-box {
+            display: none;
+            margin-top: 18px;
+            padding: 18px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 1.1em;
+        }
+
+        /* ---- Toast ---- */
+        #toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 3000;
+        }
+
+        .toast {
+            background: #003366;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            font-weight: bold;
+            animation: toast-in 0.3s ease, toast-out 0.4s ease 2.4s forwards;
+        }
+
+        @keyframes toast-in {
+            from { opacity: 0; transform: translateX(40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes toast-out {
+            from { opacity: 1; }
+            to { opacity: 0; transform: translateX(40px); }
         }
 
         @media (max-width: 968px) {
@@ -413,39 +954,54 @@
 <body>
     <header class="header">
         <div class="header-content">
-            <img src="foto_professor.png" alt="Professor">
+            <div class="header-avatar">🖧</div>
             <div class="header-text">
                 <h1>Laboratório de Administração de Sistemas Operacionais de Redes</h1>
                 <p>ISO-103 | 3º Semestre | Curso Superior de Tecnologia em Segurança da Informação</p>
+            </div>
+            <div class="header-score">
+                <div class="score-item">🏆 <span class="score-value" id="pointsDisplay">0</span> pts</div>
+                <div class="score-item">🎖️ Nível <span class="score-value" id="levelDisplay">1</span></div>
             </div>
         </div>
     </header>
 
     <div class="container">
         <aside class="sidebar">
-            <h2>📅 Cronograma</h2>
-            <ul class="week-menu">
-                <li><a href="semana01.html"><span class="week-badge">S1</span>Semana 1</a></li>
-                <li><a href="semana02.html"><span class="week-badge">S2</span>Semana 2</a></li>
-                <li><a href="semana03.html" class="active"><span class="week-badge">S3</span>Semana 3</a></li>
-                <li><a href="semana04.html"><span class="week-badge">S4</span>Semana 4</a></li>
-                <li><a href="semana05.html"><span class="week-badge">S5</span>Semana 5</a></li>
-                <li><a href="semana06.html"><span class="week-badge">S6</span>Semana 6</a></li>
-                <li><a href="semana07.html"><span class="week-badge">S7</span>Semana 7</a></li>
-                <li><a href="semana08.html"><span class="week-badge">S8</span>Semana 8</a></li>
-                <li><a href="semana09.html"><span class="week-badge">S9</span>Semana 9</a></li>
-                <li><a href="semana10.html"><span class="week-badge">S10</span>Semana 10</a></li>
-                <li><a href="semana11.html"><span class="week-badge">S11</span>Semana 11</a></li>
-                <li><a href="semana12.html"><span class="week-badge">S12</span>Semana 12</a></li>
-                <li><a href="semana13.html"><span class="week-badge">S13</span>Semana 13</a></li>
-                <li><a href="semana14.html"><span class="week-badge">S14</span>Semana 14</a></li>
-                <li><a href="semana15.html"><span class="week-badge">S15</span>Semana 15</a></li>
-                <li><a href="semana16.html"><span class="week-badge">S16</span>Semana 16</a></li>
-                <li><a href="semana17.html"><span class="week-badge">S17</span>Semana 17</a></li>
-                <li><a href="semana18.html"><span class="week-badge">S18</span>Semana 18</a></li>
-                <li><a href="semana19.html"><span class="week-badge">S19</span>Semana 19</a></li>
-                <li><a href="semana20.html"><span class="week-badge">S20</span>Semana 20</a></li>
-            </ul>
+            <div class="sidebar-box">
+                <h2>📅 Cronograma</h2>
+                <ul class="week-menu">
+                    <li><a href="semana01.html"><span class="week-badge">S1</span>Semana 1</a></li>
+                    <li><a href="semana02.html"><span class="week-badge">S2</span>Semana 2</a></li>
+                    <li><a href="semana03.html" class="active"><span class="week-badge">S3</span>Semana 3</a></li>
+                    <li><a href="semana04.html"><span class="week-badge">S4</span>Semana 4</a></li>
+                    <li><a href="semana05.html"><span class="week-badge">S5</span>Semana 5</a></li>
+                    <li><a href="semana06.html"><span class="week-badge">S6</span>Semana 6</a></li>
+                    <li><a href="semana07.html"><span class="week-badge">S7</span>Semana 7</a></li>
+                    <li><a href="semana08.html"><span class="week-badge">S8</span>Semana 8</a></li>
+                    <li><a href="semana09.html"><span class="week-badge">S9</span>Semana 9</a></li>
+                    <li><a href="semana10.html"><span class="week-badge">S10</span>Semana 10</a></li>
+                    <li><a href="semana11.html"><span class="week-badge">S11</span>Semana 11</a></li>
+                    <li><a href="semana12.html"><span class="week-badge">S12</span>Semana 12</a></li>
+                    <li><a href="semana13.html"><span class="week-badge">S13</span>Semana 13</a></li>
+                    <li><a href="semana14.html"><span class="week-badge">S14</span>Semana 14</a></li>
+                    <li><a href="semana15.html"><span class="week-badge">S15</span>Semana 15</a></li>
+                    <li><a href="semana16.html"><span class="week-badge">S16</span>Semana 16</a></li>
+                    <li><a href="semana17.html"><span class="week-badge">S17</span>Semana 17</a></li>
+                    <li><a href="semana18.html"><span class="week-badge">S18</span>Semana 18</a></li>
+                    <li><a href="semana19.html"><span class="week-badge">S19</span>Semana 19</a></li>
+                    <li><a href="semana20.html"><span class="week-badge">S20</span>Semana 20</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-box">
+                <h2>🚀 Seu Progresso</h2>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" id="progressBarFill"></div>
+                </div>
+                <p class="progress-caption" id="progressCaption">0 / 164 pontos possíveis</p>
+                <div class="badges-list" id="badgesList"></div>
+            </div>
         </aside>
 
         <main class="content">
@@ -458,7 +1014,7 @@
             </div>
 
             <p class="week-subtitle">
-                Montagem e conexão de patch panels, uso de alicate punch down, organização profissional de racks de rede e sistema de identificação com anilhas.
+                Montagem e conexão de patch panels, uso de alicate punch down, organização profissional de racks de rede e sistema de identificação com anilhas. Versão gamificada: leia, marque, jogue e teste seu conhecimento para ganhar pontos e desbloquear medalhas.
             </p>
 
             <div class="info-box">
@@ -480,170 +1036,326 @@
             </section>
 
             <section class="section">
-                <h2><span class="icon">📚</span>Conteúdo Programático</h2>
-                
-                <h3>1. Patch Panels</h3>
-                <ul class="topics-list">
-                    <li><strong>Função:</strong> Ponto centralizado de conexão do cabeamento horizontal</li>
-                    <li><strong>Tipos:</strong> Cat5e, Cat6, Cat6a - blindados e não blindados</li>
-                    <li><strong>Configurações:</strong> 12, 24, 48 portas</li>
-                    <li><strong>Blocos 110:</strong> Sistema de conexão por inserção (IDC)</li>
-                    <li><strong>Vantagens:</strong> Flexibilidade, organização, facilidade de manutenção</li>
-                    <li><strong>Normas:</strong> ANSI/TIA-568 para instalação</li>
-                </ul>
+                <h2><span class="icon">📘</span>Guia de Estudo Rápido<span class="section-tag">clique nos cartões para revisar (+5 pts cada)</span></h2>
+                <div class="flashcard-grid" id="flashcardGrid">
 
-                <h3>2. Alicate Punch Down (Push Down)</h3>
-                <ul class="topics-list">
-                    <li><strong>Tipos:</strong> 110 e Krone (mais comum: 110)</li>
-                    <li><strong>Mecanismo:</strong> Inserção e corte automático</li>
-                    <li><strong>Regulagem:</strong> Ajuste da profundidade de inserção</li>
-                    <li><strong>Técnica correta:</strong> Ângulo de 45-90 graus, pressão adequada</li>
-                    <li><strong>Manutenção:</strong> Verificação e troca de lâminas</li>
-                </ul>
+                    <div class="flashcard" data-card="1" onclick="flipCard(this)">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                <div class="fc-icon">🔌</div>
+                                <strong>1. Patch Panels</strong>
+                                <small>toque para revisar</small>
+                            </div>
+                            <div class="flashcard-back">
+                                <ul>
+                                    <li><strong>Função:</strong> ponto centralizado do cabeamento horizontal</li>
+                                    <li><strong>Tipos:</strong> Cat5e, Cat6, Cat6a (blindados/não blindados)</li>
+                                    <li><strong>Portas:</strong> 12, 24 ou 48</li>
+                                    <li><strong>Blocos 110:</strong> conexão por inserção (IDC)</li>
+                                    <li><strong>Norma:</strong> ANSI/TIA-568</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
 
-                <h3>3. Racks de Rede</h3>
-                <ul class="topics-list">
-                    <li><strong>Padrão 19 polegadas:</strong> Largura universal</li>
-                    <li><strong>Unidades (U):</strong> 1U = 1,75 polegadas (44,45mm)</li>
-                    <li><strong>Tipos:</strong> Abertos, fechados, de parede, de piso</li>
-                    <li><strong>Componentes:</strong> Guias de cabos, bandejas, PDUs, ventilação</li>
-                    <li><strong>Fluxo de ar:</strong> Front-to-back, side-to-side</li>
-                    <li><strong>Profundidade:</strong> 600mm, 800mm, 1000mm</li>
-                </ul>
+                    <div class="flashcard" data-card="2" onclick="flipCard(this)">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                <div class="fc-icon">🛠️</div>
+                                <strong>2. Alicate Punch Down</strong>
+                                <small>toque para revisar</small>
+                            </div>
+                            <div class="flashcard-back">
+                                <ul>
+                                    <li><strong>Tipos:</strong> 110 e Krone (110 é o mais comum)</li>
+                                    <li><strong>Mecanismo:</strong> inserção + corte automático</li>
+                                    <li><strong>Ângulo correto:</strong> 45-90°</li>
+                                    <li><strong>Regulagem:</strong> ajuste da profundidade</li>
+                                    <li><strong>Manutenção:</strong> verificar/trocar lâminas</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
 
-                <h3>4. Organização de Cabeamento</h3>
-                <ul class="topics-list">
-                    <li><strong>Gerenciadores horizontais:</strong> 1U, 2U com guias</li>
-                    <li><strong>Gerenciadores verticais:</strong> Laterais do rack</li>
-                    <li><strong>Patch cords:</strong> Comprimentos padronizados, cores</li>
-                    <li><strong>Raio de curvatura:</strong> Mínimo 4x diâmetro do cabo</li>
-                    <li><strong>Velcro vs abraçadeiras:</strong> Quando usar cada um</li>
-                    <li><strong>Folga de serviço:</strong> Margem para manutenção</li>
-                </ul>
+                    <div class="flashcard" data-card="3" onclick="flipCard(this)">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                <div class="fc-icon">🗄️</div>
+                                <strong>3. Racks de Rede</strong>
+                                <small>toque para revisar</small>
+                            </div>
+                            <div class="flashcard-back">
+                                <ul>
+                                    <li><strong>Padrão:</strong> 19 polegadas de largura</li>
+                                    <li><strong>1U:</strong> 1,75 pol (44,45mm)</li>
+                                    <li><strong>Tipos:</strong> aberto, fechado, parede, piso</li>
+                                    <li><strong>Fluxo de ar:</strong> front-to-back ou side-to-side</li>
+                                    <li><strong>Profundidade:</strong> 600/800/1000mm</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
 
-                <h3>5. Sistema de Identificação</h3>
-                <ul class="topics-list">
-                    <li><strong>Anilhas numéricas:</strong> Sistema sequencial</li>
-                    <li><strong>Anilhas coloridas:</strong> Código por departamento/função</li>
-                    <li><strong>Etiquetas:</strong> Informações complementares</li>
-                    <li><strong>Documentação:</strong> Planilhas, diagramas, As-Built</li>
-                    <li><strong>Padrões de cores:</strong> ANSI/TIA-606-B</li>
-                </ul>
+                    <div class="flashcard" data-card="4" onclick="flipCard(this)">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                <div class="fc-icon">🧵</div>
+                                <strong>4. Organização</strong>
+                                <small>toque para revisar</small>
+                            </div>
+                            <div class="flashcard-back">
+                                <ul>
+                                    <li><strong>Gerenciadores:</strong> horizontais (1U/2U) e verticais</li>
+                                    <li><strong>Patch cords:</strong> comprimentos e cores padronizados</li>
+                                    <li><strong>Raio de curvatura:</strong> mínimo 4x o diâmetro do cabo</li>
+                                    <li><strong>Fixação:</strong> velcro (preferível) vs abraçadeira</li>
+                                    <li><strong>Folga de serviço:</strong> margem p/ manutenção</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flashcard" data-card="5" onclick="flipCard(this)">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                <div class="fc-icon">🏷️</div>
+                                <strong>5. Identificação</strong>
+                                <small>toque para revisar</small>
+                            </div>
+                            <div class="flashcard-back">
+                                <ul>
+                                    <li><strong>Anilhas numéricas:</strong> sistema sequencial</li>
+                                    <li><strong>Anilhas coloridas:</strong> código por área/função</li>
+                                    <li><strong>Etiquetas:</strong> informações complementares</li>
+                                    <li><strong>Documentação:</strong> planilhas, diagramas, As-Built</li>
+                                    <li><strong>Norma:</strong> ANSI/TIA-606-B</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </section>
 
             <section class="section">
-                <h2><span class="icon">🔧</span>Processo de Instalação em Patch Panel</h2>
-                <div class="step-by-step">
-                    <div class="step">
+                <h2><span class="icon">🔧</span>Processo de Instalação em Patch Panel<span class="section-tag">marque cada etapa concluída (+3 pts)</span></h2>
+                <div class="step-by-step" id="stepList">
+                    <div class="step" data-step="1">
                         <div class="step-number">1</div>
                         <div class="step-content">
                             <h4>Preparação do Cabo</h4>
                             <p>Remova aproximadamente 7-10cm da capa externa do cabo UTP. Não destrance os pares ainda. Identifique qual porta do patch panel receberá este cabo.</p>
                         </div>
+                        <div class="step-check"><input type="checkbox" onchange="toggleStep(1, this.checked)"></div>
                     </div>
-                    
-                    <div class="step">
+
+                    <div class="step" data-step="2">
                         <div class="step-number">2</div>
                         <div class="step-content">
                             <h4>Identificação e Organização</h4>
                             <p>Coloque a anilha de identificação no cabo antes de conectá-lo. Organize os cabos de forma que fiquem alinhados e sem cruzamentos desnecessários.</p>
                         </div>
+                        <div class="step-check"><input type="checkbox" onchange="toggleStep(2, this.checked)"></div>
                     </div>
-                    
-                    <div class="step">
+
+                    <div class="step" data-step="3">
                         <div class="step-number">3</div>
                         <div class="step-content">
                             <h4>Destrançamento Mínimo</h4>
                             <p>Destrance apenas o necessário para alcançar os terminais. Manter os pares trançados o máximo possível preserva a qualidade do sinal.</p>
                         </div>
+                        <div class="step-check"><input type="checkbox" onchange="toggleStep(3, this.checked)"></div>
                     </div>
-                    
-                    <div class="step">
+
+                    <div class="step" data-step="4">
                         <div class="step-number">4</div>
                         <div class="step-content">
                             <h4>Posicionamento dos Fios</h4>
                             <p>Coloque cada fio no slot correspondente seguindo o código de cores impresso no patch panel (normalmente T568B). Verifique duas vezes antes de conectar.</p>
                         </div>
+                        <div class="step-check"><input type="checkbox" onchange="toggleStep(4, this.checked)"></div>
                     </div>
-                    
-                    <div class="step">
+
+                    <div class="step" data-step="5">
                         <div class="step-number">5</div>
                         <div class="step-content">
                             <h4>Uso do Alicate Punch Down</h4>
                             <p>Posicione o alicate sobre o fio no ângulo correto (geralmente 90 graus). Pressione firmemente até ouvir o "click". A lâmina cortará a sobra automaticamente.</p>
                         </div>
+                        <div class="step-check"><input type="checkbox" onchange="toggleStep(5, this.checked)"></div>
                     </div>
-                    
-                    <div class="step">
+
+                    <div class="step" data-step="6">
                         <div class="step-number">6</div>
                         <div class="step-content">
                             <h4>Verificação Visual</h4>
                             <p>Inspecione todas as conexões. Os fios devem estar firmemente inseridos, cortados uniformemente, sem sobras soltas.</p>
                         </div>
+                        <div class="step-check"><input type="checkbox" onchange="toggleStep(6, this.checked)"></div>
                     </div>
-                    
-                    <div class="step">
+
+                    <div class="step" data-step="7">
                         <div class="step-number">7</div>
                         <div class="step-content">
                             <h4>Fixação do Cabo</h4>
                             <p>Prenda a capa externa do cabo na estrutura do patch panel usando o suporte apropriado ou abraçadeira. Isso evita tensão nas conexões.</p>
                         </div>
+                        <div class="step-check"><input type="checkbox" onchange="toggleStep(7, this.checked)"></div>
                     </div>
-                    
-                    <div class="step">
+
+                    <div class="step" data-step="8">
                         <div class="step-number">8</div>
                         <div class="step-content">
                             <h4>Teste de Certificação</h4>
                             <p>Utilize testador de cabo para verificar continuidade, mapeamento correto e ausência de problemas. Documente os resultados.</p>
                         </div>
+                        <div class="step-check"><input type="checkbox" onchange="toggleStep(8, this.checked)"></div>
                     </div>
                 </div>
             </section>
 
             <section class="section">
-    <h2><span class="icon">🎬</span>Vídeos Recomendados</h2>
-    <div class="video-container">
-        <div class="video-card">
-            <div class="video-thumbnail">▶️</div>
-            <div class="video-info">
-                <h4>Instalação de Patch Panel Completo</h4>
-                <p>Tutorial passo a passo profissional da Delta Cable</p>
-                <a href="http://www.youtube.com/watch?v=0xzY5Mj6NFc" target="_blank" class="video-link">Assistir no YouTube</a>
+                <h2><span class="icon">🎮</span>Desafio Prático: Ordem dos Fios T568B<span class="section-tag">+15 pts ao completar</span></h2>
+                <div class="wire-game">
+                    <p>Clique nos fios na ordem correta do padrão <strong>T568B</strong>, do pino 1 ao pino 8.</p>
+                    <div class="wire-slots" id="wireSlots"></div>
+                    <div class="wire-options" id="wireOptions"></div>
+                    <p class="wire-feedback" id="wireFeedback"></p>
+                    <button class="btn-reset" onclick="resetWireGame()">🔄 Reiniciar desafio</button>
+                </div>
+            </section>
+
+            <section class="section">
+    <h2><span class="icon">🎬</span>Demonstrações Animadas<span class="section-tag">interativo, direto na página</span></h2>
+    <div class="demo-grid">
+
+        <div class="demo-card">
+            <div class="demo-stage">
+                <svg viewBox="0 0 300 190" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="15" y="20" width="270" height="40" rx="4" fill="#0d47a1" stroke="#66aaff" stroke-width="1.5"/>
+                    <text x="150" y="15" fill="#9fc4ea" font-size="9" text-anchor="middle">PATCH PANEL</text>
+                    <g id="d1-ports">
+                        <rect x="25" y="30" width="16" height="20" rx="2" fill="#1565c0"/>
+                        <rect x="47" y="30" width="16" height="20" rx="2" fill="#1565c0"/>
+                        <rect x="69" y="30" width="16" height="20" rx="2" fill="#1565c0"/>
+                        <rect x="91" y="30" width="16" height="20" rx="2" fill="#1565c0"/>
+                    </g>
+                    <text x="150" y="100" fill="#cfe4fb" font-size="9" text-anchor="middle">Estação → Patch Panel → Switch</text>
+                    <circle cx="20" cy="130" r="5" fill="#66aaff"/>
+                    <text x="20" y="150" fill="#9fc4ea" font-size="8" text-anchor="middle">PC</text>
+                    <rect x="255" y="115" width="30" height="30" rx="3" fill="#1565c0" stroke="#66aaff"/>
+                    <text x="270" y="158" fill="#9fc4ea" font-size="8" text-anchor="middle">Switch</text>
+                    <path d="M 20 130 L 33 40" stroke="#4d7ea8" stroke-width="2" fill="none"/>
+                    <path d="M 33 40 L 270 130" stroke="#4d7ea8" stroke-width="2" fill="none"/>
+                    <circle id="d1-signal" r="5" fill="#ffb300">
+                        <animateMotion id="d1-anim" begin="indefinite" dur="2.2s" path="M 20 130 L 33 40 L 270 130" fill="freeze"/>
+                    </circle>
+                </svg>
+            </div>
+            <div class="demo-info">
+                <h4>Como o sinal viaja pelo Patch Panel</h4>
+                <p>Veja o caminho do sinal da estação de trabalho até o switch, passando pela porta do patch panel.</p>
+                <button class="demo-play-btn" onclick="playDemo(1)">▶️ Reproduzir animação</button>
+                <p class="demo-caption" id="d1-caption"></p>
             </div>
         </div>
 
-        <div class="video-card">
-            <div class="video-thumbnail">▶️</div>
-            <div class="video-info">
-                <h4>Como Usar Alicate Punch Down</h4>
-                <p>Dicas sobre a ferramenta de impacto e inserção</p>
-                <a href="http://www.youtube.com/watch?v=7V9BkkH18WA" target="_blank" class="video-link">Assistir no YouTube</a>
+        <div class="demo-card">
+            <div class="demo-stage">
+                <svg viewBox="0 0 300 190" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <rect x="60" y="120" width="180" height="18" rx="3" fill="#0d47a1" stroke="#66aaff"/>
+                    <rect x="140" y="112" width="10" height="10" fill="#f5deb3"/>
+                    <line x1="20" y1="127" x2="140" y2="127" stroke="#e0a300" stroke-width="4"/>
+                    <g id="d2-tool" transform="translate(0,-70)">
+                        <rect x="130" y="20" width="30" height="60" rx="4" fill="#c62828"/>
+                        <rect x="141" y="75" width="8" height="20" fill="#333"/>
+                        <text x="145" y="15" fill="#f2c1c1" font-size="8" text-anchor="middle">Alicate</text>
+                    </g>
+                    <text x="150" y="165" fill="#cfe4fb" font-size="9" text-anchor="middle">Ângulo de 90° · pressão até o "click"</text>
+                    <text id="d2-status" x="150" y="180" fill="#9fc4ea" font-size="8" text-anchor="middle"></text>
+                    <animateTransform id="d2-anim" xlink:href="#d2-tool" attributeName="transform" type="translate"
+                        begin="indefinite" dur="1.8s" values="0,-70; 0,15; 0,-70" keyTimes="0;0.5;1" fill="freeze"/>
+                </svg>
+            </div>
+            <div class="demo-info">
+                <h4>Técnica do Alicate Punch Down</h4>
+                <p>Simulação do movimento correto: posicionar a 90°, pressionar até o "click" e recuar a ferramenta.</p>
+                <button class="demo-play-btn" onclick="playDemo(2)">▶️ Reproduzir animação</button>
+                <p class="demo-caption" id="d2-caption"></p>
             </div>
         </div>
 
-        <div class="video-card">
-            <div class="video-thumbnail">▶️</div>
-            <div class="video-info">
-                <h4>Organização de Rack Profissional</h4>
-                <p>Dicas de cabeamento estruturado organizado e identificado</p>
-                <a href="http://www.youtube.com/watch?v=dc-ivYlvmBA" target="_blank" class="video-link">Assistir no YouTube</a>
+        <div class="demo-card">
+            <div class="demo-stage">
+                <svg viewBox="0 0 300 190" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="15" y="15" width="270" height="20" rx="3" fill="#0d47a1"/>
+                    <rect x="15" y="150" width="270" height="20" rx="3" fill="#0d47a1"/>
+                    <g id="d3-messy" style="opacity:1; transition: opacity 0.9s ease;">
+                        <path d="M 30 35 C 80 90, 40 100, 120 70 S 200 130, 260 40" stroke="#ff8c1a" stroke-width="2.5" fill="none"/>
+                        <path d="M 45 35 C 100 60, 60 130, 150 90 S 210 60, 250 40" stroke="#2ecc71" stroke-width="2.5" fill="none"/>
+                        <path d="M 60 35 C 30 100, 130 110, 100 60 S 230 110, 270 40" stroke="#3399ff" stroke-width="2.5" fill="none"/>
+                        <text x="150" y="185" fill="#f2b8b8" font-size="9" text-anchor="middle">Antes: cabos cruzados</text>
+                    </g>
+                    <g id="d3-tidy" style="opacity:0; transition: opacity 0.9s ease;">
+                        <path d="M 40 35 L 40 150" stroke="#ff8c1a" stroke-width="3"/>
+                        <path d="M 70 35 L 70 150" stroke="#2ecc71" stroke-width="3"/>
+                        <path d="M 100 35 L 100 150" stroke="#3399ff" stroke-width="3"/>
+                        <path d="M 130 35 L 130 150" stroke="#ffb300" stroke-width="3"/>
+                        <path d="M 160 35 L 160 150" stroke="#ff8c1a" stroke-width="3"/>
+                        <path d="M 190 35 L 190 150" stroke="#2ecc71" stroke-width="3"/>
+                        <text x="150" y="185" fill="#b8f2c4" font-size="9" text-anchor="middle">Depois: organizado com gerenciadores</text>
+                    </g>
+                </svg>
+            </div>
+            <div class="demo-info">
+                <h4>Organização de Rack: Antes e Depois</h4>
+                <p>Compare visualmente cabeamento desorganizado com cruzamentos e um rack organizado com gerenciadores.</p>
+                <button class="demo-play-btn" onclick="playDemo(3)">▶️ Ver transformação</button>
+                <p class="demo-caption" id="d3-caption"></p>
             </div>
         </div>
 
-        <div class="video-card">
-            <div class="video-thumbnail">▶️</div>
-            <div class="video-info">
-                <h4>Sistema de Identificação de Cabos</h4>
-                <p>Uso de identificadores tipo anilha para organização</p>
-                <a href="http://www.youtube.com/watch?v=8Ggh-Pl9Gc4" target="_blank" class="video-link">Assistir no YouTube</a>
+        <div class="demo-card">
+            <div class="demo-stage">
+                <svg viewBox="0 0 300 190" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <line x1="20" y1="100" x2="280" y2="100" stroke="#e0a300" stroke-width="5"/>
+                    <text x="150" y="180" fill="#9fc4ea" font-size="9" text-anchor="middle">Anilhas numeradas na sequência de instalação</text>
+                    <g id="d4-ring1" transform="translate(0,-80)">
+                        <circle cx="70" cy="100" r="13" fill="#0066cc" stroke="white" stroke-width="2"/>
+                        <text x="70" y="104" fill="white" font-size="11" text-anchor="middle">1</text>
+                    </g>
+                    <g id="d4-ring2" transform="translate(0,-80)">
+                        <circle cx="130" cy="100" r="13" fill="#0066cc" stroke="white" stroke-width="2"/>
+                        <text x="130" y="104" fill="white" font-size="11" text-anchor="middle">2</text>
+                    </g>
+                    <g id="d4-ring3" transform="translate(0,-80)">
+                        <circle cx="190" cy="100" r="13" fill="#0066cc" stroke="white" stroke-width="2"/>
+                        <text x="190" y="104" fill="white" font-size="11" text-anchor="middle">3</text>
+                    </g>
+                    <g id="d4-ring4" transform="translate(0,-80)">
+                        <circle cx="250" cy="100" r="13" fill="#0066cc" stroke="white" stroke-width="2"/>
+                        <text x="250" y="104" fill="white" font-size="11" text-anchor="middle">4</text>
+                    </g>
+                    <animateTransform id="d4-anim1" xlink:href="#d4-ring1" attributeName="transform" type="translate" begin="indefinite" dur="0.5s" from="0,-80" to="0,0" fill="freeze"/>
+                    <animateTransform id="d4-anim2" xlink:href="#d4-ring2" attributeName="transform" type="translate" begin="indefinite" dur="0.5s" from="0,-80" to="0,0" fill="freeze"/>
+                    <animateTransform id="d4-anim3" xlink:href="#d4-ring3" attributeName="transform" type="translate" begin="indefinite" dur="0.5s" from="0,-80" to="0,0" fill="freeze"/>
+                    <animateTransform id="d4-anim4" xlink:href="#d4-ring4" attributeName="transform" type="translate" begin="indefinite" dur="0.5s" from="0,-80" to="0,0" fill="freeze"/>
+                </svg>
+            </div>
+            <div class="demo-info">
+                <h4>Sistema de Anilhas Numeradas</h4>
+                <p>Veja as anilhas encaixando no cabo em ordem sequencial, como no padrão de identificação da atividade prática.</p>
+                <button class="demo-play-btn" onclick="playDemo(4)">▶️ Reproduzir animação</button>
+                <p class="demo-caption" id="d4-caption"></p>
             </div>
         </div>
+
     </div>
 </section>
             <section class="section">
-                <h2><span class="icon">✏️</span>Atividades Práticas</h2>
-                
-                <div class="activity-card">
+                <h2><span class="icon">✏️</span>Atividades Práticas<span class="section-tag">marque ao concluir em laboratório (+10 pts cada)</span></h2>
+
+                <div class="activity-card" data-activity="1">
                     <div class="activity-header">
                         <div class="activity-number">1</div>
                         <div class="activity-title">Demonstração de Patch Panel</div>
@@ -657,9 +1369,12 @@
                         <li>Entender o fluxo do sinal</li>
                     </ul>
                     <p><strong>Duração:</strong> 20 minutos</p>
+                    <label class="activity-check">
+                        <input type="checkbox" onchange="toggleActivity(1, this.checked)"> Marquei esta atividade como concluída
+                    </label>
                 </div>
 
-                <div class="activity-card">
+                <div class="activity-card" data-activity="2">
                     <div class="activity-header">
                         <div class="activity-number">2</div>
                         <div class="activity-title">Prática com Alicate Punch Down</div>
@@ -673,9 +1388,12 @@
                         <li>Verificar qualidade das conexões</li>
                     </ul>
                     <p><strong>Duração:</strong> 40 minutos</p>
+                    <label class="activity-check">
+                        <input type="checkbox" onchange="toggleActivity(2, this.checked)"> Marquei esta atividade como concluída
+                    </label>
                 </div>
 
-                <div class="activity-card">
+                <div class="activity-card" data-activity="3">
                     <div class="activity-header">
                         <div class="activity-number">3</div>
                         <div class="activity-title">Organização de Rack</div>
@@ -699,9 +1417,12 @@
                         <li>Estética profissional</li>
                     </ul>
                     <p><strong>Duração:</strong> 45 minutos</p>
+                    <label class="activity-check">
+                        <input type="checkbox" onchange="toggleActivity(3, this.checked)"> Marquei esta atividade como concluída
+                    </label>
                 </div>
 
-                <div class="activity-card">
+                <div class="activity-card" data-activity="4">
                     <div class="activity-header">
                         <div class="activity-number">4</div>
                         <div class="activity-title">Documentação da Infraestrutura</div>
@@ -716,6 +1437,9 @@
                         <li>Lista de materiais utilizados</li>
                     </ul>
                     <p><strong>Duração:</strong> 15 minutos</p>
+                    <label class="activity-check">
+                        <input type="checkbox" onchange="toggleActivity(4, this.checked)"> Marquei esta atividade como concluída
+                    </label>
                 </div>
             </section>
 
@@ -728,7 +1452,21 @@
                 • Use EPI apropriado (óculos de proteção)<br>
                 • Organize antes de fixar definitivamente
             </div>
-<section class="section">
+
+            <section class="section">
+                <h2><span class="icon">🎯</span>Quiz da Semana 3<span class="section-tag">10 questões · +5 pts por acerto</span></h2>
+                <div class="quiz-box">
+                    <p style="margin-bottom: 15px; color: #555;">Responda todas as questões e clique em <strong>Corrigir Quiz</strong> para ver seu resultado.</p>
+                    <form id="quizForm"></form>
+                    <div class="quiz-actions">
+                        <button type="button" class="btn-primary" id="quizSubmitBtn" onclick="submitQuiz()">✅ Corrigir Quiz</button>
+                        <button type="button" class="btn-reset" id="quizRedoBtn" onclick="resetQuiz()" style="display:none;">🔄 Refazer quiz</button>
+                    </div>
+                    <div class="quiz-result-box" id="quizResultBox"></div>
+                </div>
+            </section>
+
+            <section class="section">
     <h2><span class="icon">📖</span>Material de Apoio</h2>
     <div class="materials-grid">
         <div class="material-card">
@@ -795,5 +1533,405 @@
             </div>
         </main>
     </div>
+
+    <div id="toast-container"></div>
+
+    <script>
+    /* =========================================================
+       ESTADO GERAL / GAMIFICAÇÃO
+       (estado mantido apenas na sessão da página, sem localStorage)
+    ========================================================= */
+    const MAX_POINTS = 164;
+    const state = {
+        points: 0,
+        flippedCards: new Set(),
+        stepsDone: new Set(),
+        activitiesDone: new Set(),
+        wireGameDone: false,
+        quizSubmitted: false
+    };
+
+    const BADGES = [
+        { threshold: 40,  icon: '🥉', name: 'Aprendiz de Redes',   desc: '40+ pontos' },
+        { threshold: 90,  icon: '🥈', name: 'Técnico Júnior',      desc: '90+ pontos' },
+        { threshold: 140, icon: '🥇', name: 'Mestre do Cabeamento', desc: '140+ pontos' }
+    ];
+    const unlockedBadges = new Set();
+
+    function renderBadges() {
+        const list = document.getElementById('badgesList');
+        list.innerHTML = '';
+        BADGES.forEach(b => {
+            const unlocked = unlockedBadges.has(b.name);
+            const row = document.createElement('div');
+            row.className = 'badge-row' + (unlocked ? ' unlocked' : '');
+            row.innerHTML = `<span class="badge-icon">${b.icon}</span>
+                <div class="badge-info"><strong>${b.name}</strong><span>${unlocked ? 'Desbloqueada!' : b.desc}</span></div>`;
+            list.appendChild(row);
+        });
+    }
+
+    function showToast(msg) {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = msg;
+        container.appendChild(toast);
+        setTimeout(() => toast.remove(), 2800);
+    }
+
+    function updateHeader() {
+        document.getElementById('pointsDisplay').textContent = state.points;
+        document.getElementById('levelDisplay').textContent = 1 + Math.floor(state.points / 40);
+        const pct = Math.min(100, Math.round((state.points / MAX_POINTS) * 100));
+        document.getElementById('progressBarFill').style.width = pct + '%';
+        document.getElementById('progressCaption').textContent = state.points + ' / ' + MAX_POINTS + ' pontos possíveis';
+    }
+
+    function addPoints(n, reason) {
+        state.points += n;
+        showToast('+' + n + ' pts — ' + reason);
+        checkBadges();
+        updateHeader();
+    }
+
+    function checkBadges() {
+        BADGES.forEach(b => {
+            if (state.points >= b.threshold && !unlockedBadges.has(b.name)) {
+                unlockedBadges.add(b.name);
+                setTimeout(() => showToast('🎉 Medalha desbloqueada: ' + b.name), 350);
+                renderBadges();
+            }
+        });
+    }
+
+    /* =========================================================
+       FLASHCARDS (Guia de Estudo)
+    ========================================================= */
+    function flipCard(el) {
+        el.classList.toggle('flipped');
+        const id = el.dataset.card;
+        if (el.classList.contains('flipped') && !state.flippedCards.has(id)) {
+            state.flippedCards.add(id);
+            addPoints(5, 'cartão de estudo revisado');
+        }
+    }
+
+    /* =========================================================
+       CHECKLIST DE ETAPAS (Processo de instalação)
+    ========================================================= */
+    function toggleStep(n, checked) {
+        const stepEl = document.querySelector('.step[data-step="' + n + '"]');
+        stepEl.classList.toggle('done', checked);
+        if (checked && !state.stepsDone.has(n)) {
+            state.stepsDone.add(n);
+            addPoints(3, 'etapa ' + n + ' concluída');
+            if (state.stepsDone.size === 8) {
+                setTimeout(() => addPoints(10, 'checklist de instalação 100% completo'), 200);
+            }
+        }
+    }
+
+    /* =========================================================
+       ATIVIDADES PRÁTICAS
+    ========================================================= */
+    function toggleActivity(n, checked) {
+        const card = document.querySelector('.activity-card[data-activity="' + n + '"]');
+        card.classList.toggle('done', checked);
+        if (checked && !state.activitiesDone.has(n)) {
+            state.activitiesDone.add(n);
+            addPoints(10, 'atividade prática ' + n + ' concluída');
+        }
+    }
+
+    /* =========================================================
+       DESAFIO: ORDEM DOS FIOS T568B
+    ========================================================= */
+    const WIRE_SEQUENCE = [
+        { id: 'wo', label: 'Branco/Laranja', color: '#ff8c1a' },
+        { id: 'o',  label: 'Laranja',        color: '#ff8c1a' },
+        { id: 'wg', label: 'Branco/Verde',   color: '#2ecc71' },
+        { id: 'b',  label: 'Azul',           color: '#3399ff' },
+        { id: 'wb', label: 'Branco/Azul',    color: '#3399ff' },
+        { id: 'g',  label: 'Verde',          color: '#2ecc71' },
+        { id: 'wbr',label: 'Branco/Marrom',  color: '#8b5a2b' },
+        { id: 'br', label: 'Marrom',         color: '#8b5a2b' }
+    ];
+    let wireProgress = 0;
+
+    function shuffledWires() {
+        const arr = [...WIRE_SEQUENCE];
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    function renderWireGame() {
+        const slots = document.getElementById('wireSlots');
+        const options = document.getElementById('wireOptions');
+        slots.innerHTML = '';
+        options.innerHTML = '';
+        document.getElementById('wireFeedback').textContent = '';
+        document.getElementById('wireFeedback').className = 'wire-feedback';
+
+        for (let i = 0; i < 8; i++) {
+            const slot = document.createElement('div');
+            slot.className = 'wire-slot';
+            slot.id = 'slot-' + i;
+            slot.textContent = i + 1;
+            slots.appendChild(slot);
+        }
+
+        shuffledWires().forEach(w => {
+            const btn = document.createElement('button');
+            btn.className = 'wire-btn';
+            btn.style.background = w.color;
+            btn.style.color = (w.id === 'wo' || w.id === 'wg' || w.id === 'wb' || w.id === 'wbr') ? '#333' : 'white';
+            if (w.id.startsWith('w') && w.id !== 'wo' && w.id !== 'wg' && w.id !== 'wb' && w.id !== 'wbr') {
+                // not used, safeguard
+            }
+            btn.textContent = w.label;
+            btn.onclick = () => pickWire(w, btn);
+            options.appendChild(btn);
+        });
+    }
+
+    function pickWire(wire, btnEl) {
+        const expected = WIRE_SEQUENCE[wireProgress];
+        const feedback = document.getElementById('wireFeedback');
+        if (wire.id === expected.id) {
+            const slot = document.getElementById('slot-' + wireProgress);
+            slot.textContent = wireProgress + 1;
+            slot.style.background = wire.color;
+            slot.classList.add('filled');
+            btnEl.disabled = true;
+            wireProgress++;
+            feedback.textContent = 'Correto! Pino ' + wireProgress + ' de 8.';
+            feedback.className = 'wire-feedback ok';
+            if (wireProgress === 8) {
+                feedback.textContent = '🎉 Sequência T568B completa!';
+                if (!state.wireGameDone) {
+                    state.wireGameDone = true;
+                    addPoints(15, 'desafio da ordem dos fios T568B concluído');
+                }
+            }
+        } else {
+            feedback.textContent = 'Ordem incorreta. Reiniciando o desafio...';
+            feedback.className = 'wire-feedback err';
+            setTimeout(resetWireGame, 900);
+        }
+    }
+
+    function resetWireGame() {
+        wireProgress = 0;
+        renderWireGame();
+    }
+
+    /* =========================================================
+       DEMONSTRAÇÕES ANIMADAS (substituem os vídeos externos)
+    ========================================================= */
+    let demo3Showing = 'messy'; // alterna entre 'messy' e 'tidy'
+
+    function playDemo(n) {
+        const caption = document.getElementById('d' + n + '-caption');
+
+        if (n === 1) {
+            const anim = document.getElementById('d1-anim');
+            anim.beginElement();
+            caption.textContent = 'Sinal saindo da estação, passando pela porta e chegando ao switch…';
+            setTimeout(() => { caption.textContent = 'Concluído: a porta do patch panel liga o ponto de rede ao switch.'; }, 2200);
+        }
+
+        if (n === 2) {
+            document.getElementById('d2-anim').beginElement();
+            caption.textContent = 'Posicionando a 90°… pressionando até o "click"…';
+            setTimeout(() => { caption.textContent = 'Fio inserido e excesso cortado automaticamente.'; }, 1000);
+            setTimeout(() => { caption.textContent = ''; }, 2000);
+        }
+
+        if (n === 3) {
+            const messy = document.getElementById('d3-messy');
+            const tidy = document.getElementById('d3-tidy');
+            if (demo3Showing === 'messy') {
+                messy.style.opacity = '0';
+                tidy.style.opacity = '1';
+                demo3Showing = 'tidy';
+                caption.textContent = 'Cabos organizados, sem cruzamentos.';
+            } else {
+                messy.style.opacity = '1';
+                tidy.style.opacity = '0';
+                demo3Showing = 'messy';
+                caption.textContent = 'Voltando ao estado desorganizado…';
+            }
+        }
+
+        if (n === 4) {
+            ['d4-anim1', 'd4-anim2', 'd4-anim3', 'd4-anim4'].forEach((id, i) => {
+                setTimeout(() => document.getElementById(id).beginElement(), i * 450);
+            });
+            caption.textContent = 'Encaixando anilhas 1, 2, 3 e 4 em sequência…';
+            setTimeout(() => { caption.textContent = 'Cabos identificados na ordem correta de instalação.'; }, 2200);
+        }
+    }
+
+    /* =========================================================
+       QUIZ
+    ========================================================= */
+    const QUIZ = [
+        {
+            q: 'Qual é a função principal de um patch panel em uma rede estruturada?',
+            options: [
+                'Ampliar o sinal Wi-Fi do prédio',
+                'Servir como ponto centralizado de conexão do cabeamento horizontal',
+                'Substituir o switch na distribuição de rede',
+                'Fornecer energia para os dispositivos de rede'
+            ],
+            correct: 1
+        },
+        {
+            q: 'Qual sistema de conexão é utilizado nos blocos do patch panel?',
+            options: ['Solda a quente', 'Conector RJ11', 'Bloco 110 (IDC - inserção e corte)', 'Encaixe magnético'],
+            correct: 2
+        },
+        {
+            q: 'Qual é o destrançamento máximo recomendado dos pares ao conectar em um patch panel?',
+            options: ['Sem limite, quanto mais melhor', 'Aproximadamente 1,3 cm', '10 cm', 'Não é necessário destrançar'],
+            correct: 1
+        },
+        {
+            q: 'Quanto mede 1U em um rack padrão de 19 polegadas?',
+            options: ['1 polegada (25,4mm)', '1,75 polegadas (44,45mm)', '2,5 polegadas (63,5mm)', '3 polegadas (76,2mm)'],
+            correct: 1
+        },
+        {
+            q: 'Qual é o padrão de cores mais comum utilizado em patch panels?',
+            options: ['T568A apenas', 'RJ45-C', 'T568B', 'ISO-8877'],
+            correct: 2
+        },
+        {
+            q: 'Qual é o ângulo recomendado para o uso correto do alicate punch down?',
+            options: ['0 grau (paralelo ao cabo)', 'Geralmente 90 graus', '180 graus', 'Não há ângulo específico'],
+            correct: 1
+        },
+        {
+            q: 'Qual é a principal função das anilhas de identificação nos cabos?',
+            options: [
+                'Aumentar a velocidade da rede',
+                'Proteger o cabo contra umidade',
+                'Identificar e documentar cada cabo de forma sequencial ou por código de cor',
+                'Reduzir interferência eletromagnética'
+            ],
+            correct: 2
+        },
+        {
+            q: 'Qual norma rege os padrões de identificação (etiquetagem) do cabeamento estruturado?',
+            options: ['ANSI/TIA-568', 'ANSI/TIA-606-B', 'ISO/IEC 27001', 'IEEE 802.3'],
+            correct: 1
+        },
+        {
+            q: 'Qual é o raio de curvatura mínimo recomendado para um cabo de rede?',
+            options: ['Igual ao diâmetro do cabo', 'Mínimo de 4x o diâmetro do cabo', 'Não existe recomendação', 'Metade do diâmetro do cabo'],
+            correct: 1
+        },
+        {
+            q: 'Por que é importante manter os pares do cabo trançados o máximo possível ao conectorizar?',
+            options: [
+                'Apenas por questão estética',
+                'Para facilitar a identificação por cor',
+                'Para preservar a qualidade do sinal e reduzir interferência (crosstalk)',
+                'Não há motivo técnico, é só tradição'
+            ],
+            correct: 2
+        }
+    ];
+
+    function renderQuiz() {
+        const form = document.getElementById('quizForm');
+        form.innerHTML = '';
+        QUIZ.forEach((item, qi) => {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'quiz-question';
+            wrapper.dataset.qi = qi;
+
+            const qText = document.createElement('p');
+            qText.className = 'q-text';
+            qText.textContent = (qi + 1) + '. ' + item.q;
+            wrapper.appendChild(qText);
+
+            item.options.forEach((opt, oi) => {
+                const label = document.createElement('label');
+                label.className = 'quiz-option';
+                label.innerHTML = `<input type="radio" name="q${qi}" value="${oi}"> ${opt}`;
+                wrapper.appendChild(label);
+            });
+
+            form.appendChild(wrapper);
+        });
+    }
+
+    function submitQuiz() {
+        if (state.quizSubmitted) return;
+
+        let unanswered = [];
+        QUIZ.forEach((item, qi) => {
+            const checked = document.querySelector('input[name="q' + qi + '"]:checked');
+            if (!checked) unanswered.push(qi + 1);
+        });
+        if (unanswered.length > 0) {
+            alert('Responda todas as questões antes de corrigir. Faltam: ' + unanswered.join(', '));
+            return;
+        }
+
+        let correctCount = 0;
+        QUIZ.forEach((item, qi) => {
+            const options = document.querySelectorAll('.quiz-question[data-qi="' + qi + '"] .quiz-option');
+            const checked = document.querySelector('input[name="q' + qi + '"]:checked');
+            const chosen = parseInt(checked.value, 10);
+
+            options.forEach((optEl, oi) => {
+                optEl.querySelector('input').disabled = true;
+                if (oi === item.correct) optEl.classList.add('correct');
+                else if (oi === chosen) optEl.classList.add('incorrect');
+            });
+
+            if (chosen === item.correct) correctCount++;
+        });
+
+        state.quizSubmitted = true;
+        const earned = correctCount * 5;
+        addPoints(earned, 'quiz corrigido (' + correctCount + '/10 acertos)');
+
+        const resultBox = document.getElementById('quizResultBox');
+        resultBox.style.display = 'block';
+        let msg, bg, color;
+        if (correctCount >= 9) { msg = '🏆 Excelente! Você domina o conteúdo da Semana 3.'; bg = '#d4edda'; color = '#155724'; }
+        else if (correctCount >= 7) { msg = '👍 Muito bom! Revise os pontos que errou.'; bg = '#fff3cd'; color = '#856404'; }
+        else { msg = '📘 Vale revisar o Guia de Estudo antes da próxima aula.'; bg = '#fdecec'; color = '#842029'; }
+        resultBox.style.background = bg;
+        resultBox.style.color = color;
+        resultBox.textContent = msg + ' Você acertou ' + correctCount + '/10 questões (+' + earned + ' pontos).';
+
+        document.getElementById('quizSubmitBtn').disabled = true;
+        document.getElementById('quizRedoBtn').style.display = 'inline-block';
+    }
+
+    function resetQuiz() {
+        state.quizSubmitted = false;
+        document.getElementById('quizResultBox').style.display = 'none';
+        document.getElementById('quizSubmitBtn').disabled = false;
+        document.getElementById('quizRedoBtn').style.display = 'none';
+        renderQuiz();
+    }
+
+    /* =========================================================
+       INIT
+    ========================================================= */
+    renderBadges();
+    updateHeader();
+    renderWireGame();
+    renderQuiz();
+    </script>
 </body>
 </html>
