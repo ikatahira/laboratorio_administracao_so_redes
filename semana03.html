@@ -385,7 +385,11 @@
         .demo-stage {
             width: 100%;
             aspect-ratio: 16/10;
-            background: linear-gradient(135deg, #0d2b4d 0%, #003366 100%);
+            background-color: #003366;
+            background-image:
+                linear-gradient(135deg, rgba(13,43,77,0.97) 0%, rgba(0,51,102,0.97) 100%),
+                repeating-linear-gradient(0deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 1px, transparent 1px, transparent 24px),
+                repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 1px, transparent 1px, transparent 24px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -940,6 +944,254 @@
             to { opacity: 0; transform: translateX(40px); }
         }
 
+        /* ---- Caixa de contexto: Segurança da Informação ---- */
+        .security-box {
+            background: linear-gradient(135deg, #f5edff 0%, #ede3fb 100%);
+            border-left: 4px solid #6a1b9a;
+            padding: 16px 18px;
+            border-radius: 8px;
+            margin: 18px 0;
+        }
+
+        .security-box .sb-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #4a148c;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .security-box p {
+            color: #4a2f66;
+            font-size: 0.93em;
+        }
+
+        .security-hero {
+            background: linear-gradient(135deg, #2d0a4e 0%, #4a148c 55%, #6a1b9a 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 22px 24px;
+            margin: 20px 0 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .security-hero::before {
+            content: "🛡️";
+            position: absolute;
+            right: -10px;
+            top: -20px;
+            font-size: 7em;
+            opacity: 0.12;
+        }
+
+        .security-hero h3 {
+            font-size: 1.15em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .security-hero p {
+            font-size: 0.93em;
+            opacity: 0.95;
+            margin-bottom: 8px;
+            max-width: 760px;
+        }
+
+        .security-hero ul {
+            margin: 10px 0 0 18px;
+            font-size: 0.9em;
+            opacity: 0.95;
+        }
+
+        .security-hero li {
+            margin-bottom: 6px;
+        }
+
+        /* ---- Exercício: Complete as frases ---- */
+        .complete-box {
+            background: #f8f9fa;
+            border: 2px solid #0066cc;
+            border-radius: 10px;
+            padding: 22px;
+            margin-top: 20px;
+        }
+
+        .complete-item {
+            margin-bottom: 18px;
+            padding-bottom: 16px;
+            border-bottom: 1px dashed #dcdcdc;
+            font-size: 0.97em;
+            color: #333;
+            line-height: 1.9;
+        }
+
+        .complete-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .complete-item select {
+            font-family: inherit;
+            font-size: 0.95em;
+            font-weight: bold;
+            color: #003366;
+            border: 2px solid #0066cc;
+            border-radius: 6px;
+            padding: 4px 8px;
+            background: white;
+            margin: 0 4px;
+            cursor: pointer;
+        }
+
+        .complete-item select.correct {
+            border-color: #28a745;
+            background: #eafbf0;
+            color: #1e7e34;
+        }
+
+        .complete-item select.incorrect {
+            border-color: #dc3545;
+            background: #fdecec;
+            color: #b02a37;
+        }
+
+        .complete-item .c-num {
+            display: inline-block;
+            background: #0066cc;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        /* ---- Exercício: Arraste e Solte ---- */
+        .dragdrop-box {
+            background: #f8f9fa;
+            border: 2px solid #0066cc;
+            border-radius: 10px;
+            padding: 22px;
+            margin-top: 20px;
+        }
+
+        .dragdrop-columns {
+            display: grid;
+            grid-template-columns: 1fr 1.4fr;
+            gap: 24px;
+            margin-top: 16px;
+        }
+
+        @media (max-width: 760px) {
+            .dragdrop-columns {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .term-pool {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .term-chip {
+            background: linear-gradient(135deg, #0066cc, #003366);
+            color: white;
+            padding: 12px 14px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.9em;
+            cursor: grab;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+            transition: transform 0.15s, opacity 0.3s;
+            user-select: none;
+        }
+
+        .term-chip:hover {
+            transform: translateY(-2px);
+        }
+
+        .term-chip.selected {
+            outline: 3px solid #ffb300;
+            outline-offset: 2px;
+        }
+
+        .term-chip.placed {
+            opacity: 0;
+            pointer-events: none;
+            height: 0;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .definition-zone {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .def-slot {
+            background: white;
+            border: 2px dashed #b0b0b0;
+            border-radius: 8px;
+            padding: 12px 14px;
+            font-size: 0.87em;
+            color: #444;
+            min-height: 46px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.25s;
+        }
+
+        .def-slot.drag-over {
+            border-color: #0066cc;
+            background: #e3f2fd;
+        }
+
+        .def-slot.filled {
+            border-style: solid;
+            border-color: #28a745;
+            background: #eafbf0;
+        }
+
+        .def-slot .slot-answer {
+            font-weight: bold;
+            color: #003366;
+            background: #d4edda;
+            padding: 3px 10px;
+            border-radius: 5px;
+            font-size: 0.95em;
+            flex-shrink: 0;
+        }
+
+        .def-slot.wrong-flash {
+            animation: shake-wrong 0.4s;
+            border-color: #dc3545;
+            background: #fdecec;
+        }
+
+        @keyframes shake-wrong {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+
+        .dragdrop-hint {
+            font-size: 0.83em;
+            color: #777;
+            margin-bottom: 10px;
+        }
+
         @media (max-width: 968px) {
             .container {
                 flex-direction: column;
@@ -999,7 +1251,7 @@
                 <div class="progress-bar-container">
                     <div class="progress-bar-fill" id="progressBarFill"></div>
                 </div>
-                <p class="progress-caption" id="progressCaption">0 / 164 pontos possíveis</p>
+                <p class="progress-caption" id="progressCaption">0 / 234 pontos possíveis</p>
                 <div class="badges-list" id="badgesList"></div>
             </div>
         </aside>
@@ -1023,6 +1275,17 @@
                 <strong>⚠️ Pré-requisito:</strong> Conhecimentos das Semanas 1 e 2
             </div>
 
+            <div class="security-hero">
+                <h3>🛡️ Por que isso importa para o Curso Superior de Tecnologia em Segurança da Informação?</h3>
+                <p>Na disciplina de <strong>Laboratório de Administração de Sistemas Operacionais de Redes</strong>, a infraestrutura física é a base sobre a qual toda a segurança lógica é construída. De nada adianta firewall, criptografia e controle de acesso bem configurados se qualquer pessoa puder chegar a um rack aberto e religar um cabo em outra porta sem deixar rastro. Patch panels, racks e sistemas de identificação são, na prática, controles de <strong>segurança física</strong> previstos em normas como a ISO/IEC 27001 (domínio de segurança física e do ambiente).</p>
+                <ul>
+                    <li><strong>Rastreabilidade:</strong> um cabeamento identificado permite saber exatamente qual porta, switch e VLAN correspondem a cada ponto de rede — essencial em uma investigação de incidente.</li>
+                    <li><strong>Superfície de ataque:</strong> racks desorganizados e sem documentação facilitam a conexão de dispositivos não autorizados (ataques físicos, sniffers, pontos de acesso maliciosos).</li>
+                    <li><strong>Continuidade e resposta a incidentes:</strong> documentação precisa reduz o tempo de resposta ao isolar um equipamento comprometido sem derrubar a rede inteira.</li>
+                    <li><strong>Auditoria e conformidade:</strong> normas como TIA-606-B e ISO 27001 exigem documentação física como evidência de controles implementados.</li>
+                </ul>
+            </div>
+
             <section class="section">
                 <h2><span class="icon">🎯</span>Objetivos de Aprendizagem</h2>
                 <ul class="objectives-list">
@@ -1033,6 +1296,10 @@
                     <li>Seguir normas de organização e estética em infraestrutura de rede</li>
                     <li>Facilitar manutenção futura através de organização adequada</li>
                 </ul>
+                <div class="security-box">
+                    <div class="sb-title">🔐 Conexão com Segurança da Informação</div>
+                    <p>Cada objetivo acima também é um objetivo de segurança física: organizar, documentar e identificar a infraestrutura são pré-requisitos para qualquer política de controle de acesso físico e para a capacidade de auditar quem tem acesso a quê dentro da rede.</p>
+                </div>
             </section>
 
             <section class="section">
@@ -1212,6 +1479,10 @@
                         <div class="step-check"><input type="checkbox" onchange="toggleStep(8, this.checked)"></div>
                     </div>
                 </div>
+                <div class="security-box">
+                    <div class="sb-title">🔐 Conexão com Segurança da Informação</div>
+                    <p>A etapa 8 (teste de certificação) não é burocracia: um cabo mal certificado pode mascarar problemas de integridade do sinal e dificultar a detecção de manipulação física do meio de transmissão — algo relevante em ambientes de alta segurança, onde a integridade do cabeamento também é auditada.</p>
+                </div>
             </section>
 
             <section class="section">
@@ -1227,29 +1498,35 @@
 
             <section class="section">
     <h2><span class="icon">🎬</span>Demonstrações Animadas<span class="section-tag">interativo, direto na página</span></h2>
+    <p style="color:#555; margin-bottom: 6px;">Reproduza quantas vezes quiser — nenhuma delas depende de internet ou de sair da página.</p>
     <div class="demo-grid">
 
         <div class="demo-card">
             <div class="demo-stage">
                 <svg viewBox="0 0 300 190" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <filter id="glow1" x="-60%" y="-60%" width="220%" height="220%">
+                            <feGaussianBlur stdDeviation="3" result="blur"/>
+                            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                        </filter>
+                    </defs>
                     <rect x="15" y="20" width="270" height="40" rx="4" fill="#0d47a1" stroke="#66aaff" stroke-width="1.5"/>
                     <text x="150" y="15" fill="#9fc4ea" font-size="9" text-anchor="middle">PATCH PANEL</text>
-                    <g id="d1-ports">
-                        <rect x="25" y="30" width="16" height="20" rx="2" fill="#1565c0"/>
-                        <rect x="47" y="30" width="16" height="20" rx="2" fill="#1565c0"/>
-                        <rect x="69" y="30" width="16" height="20" rx="2" fill="#1565c0"/>
-                        <rect x="91" y="30" width="16" height="20" rx="2" fill="#1565c0"/>
-                    </g>
+                    <rect id="d1-port" x="25" y="30" width="16" height="20" rx="2" fill="#1565c0"/>
+                    <rect x="47" y="30" width="16" height="20" rx="2" fill="#1565c0"/>
+                    <rect x="69" y="30" width="16" height="20" rx="2" fill="#1565c0"/>
+                    <rect x="91" y="30" width="16" height="20" rx="2" fill="#1565c0"/>
                     <text x="150" y="100" fill="#cfe4fb" font-size="9" text-anchor="middle">Estação → Patch Panel → Switch</text>
                     <circle cx="20" cy="130" r="5" fill="#66aaff"/>
                     <text x="20" y="150" fill="#9fc4ea" font-size="8" text-anchor="middle">PC</text>
-                    <rect x="255" y="115" width="30" height="30" rx="3" fill="#1565c0" stroke="#66aaff"/>
+                    <rect id="d1-switch" x="255" y="115" width="30" height="30" rx="3" fill="#1565c0" stroke="#66aaff"/>
                     <text x="270" y="158" fill="#9fc4ea" font-size="8" text-anchor="middle">Switch</text>
                     <path d="M 20 130 L 33 40" stroke="#4d7ea8" stroke-width="2" fill="none"/>
                     <path d="M 33 40 L 270 130" stroke="#4d7ea8" stroke-width="2" fill="none"/>
-                    <circle id="d1-signal" r="5" fill="#ffb300">
-                        <animateMotion id="d1-anim" begin="indefinite" dur="2.2s" path="M 20 130 L 33 40 L 270 130" fill="freeze"/>
+                    <circle id="d1-signal" r="5" fill="#ffb300" filter="url(#glow1)">
+                        <animateMotion id="d1-anim" begin="indefinite" dur="2.4s" path="M 20 130 L 33 40 L 270 130" fill="freeze" calcMode="spline" keySplines="0.42 0 0.58 1"/>
                     </circle>
+                    <text id="d1-lock" x="150" y="75" fill="#8bd17c" font-size="9" text-anchor="middle" opacity="0">🔒 Porta rastreável e auditável</text>
                 </svg>
             </div>
             <div class="demo-info">
@@ -1263,18 +1540,24 @@
         <div class="demo-card">
             <div class="demo-stage">
                 <svg viewBox="0 0 300 190" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <defs>
+                        <filter id="glow2" x="-60%" y="-60%" width="220%" height="220%">
+                            <feGaussianBlur stdDeviation="2.5" result="blur"/>
+                            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                        </filter>
+                    </defs>
                     <rect x="60" y="120" width="180" height="18" rx="3" fill="#0d47a1" stroke="#66aaff"/>
-                    <rect x="140" y="112" width="10" height="10" fill="#f5deb3"/>
-                    <line x1="20" y1="127" x2="140" y2="127" stroke="#e0a300" stroke-width="4"/>
+                    <rect id="d2-idc" x="140" y="112" width="10" height="10" fill="#f5deb3"/>
+                    <line id="d2-wire" x1="20" y1="127" x2="140" y2="127" stroke="#e0a300" stroke-width="4"/>
                     <g id="d2-tool" transform="translate(0,-70)">
-                        <rect x="130" y="20" width="30" height="60" rx="4" fill="#c62828"/>
+                        <rect x="130" y="20" width="30" height="60" rx="4" fill="#c62828" filter="url(#glow2)"/>
                         <rect x="141" y="75" width="8" height="20" fill="#333"/>
                         <text x="145" y="15" fill="#f2c1c1" font-size="8" text-anchor="middle">Alicate</text>
                     </g>
                     <text x="150" y="165" fill="#cfe4fb" font-size="9" text-anchor="middle">Ângulo de 90° · pressão até o "click"</text>
-                    <text id="d2-status" x="150" y="180" fill="#9fc4ea" font-size="8" text-anchor="middle"></text>
+                    <text id="d2-status" x="150" y="180" fill="#8bd17c" font-size="8" text-anchor="middle"></text>
                     <animateTransform id="d2-anim" xlink:href="#d2-tool" attributeName="transform" type="translate"
-                        begin="indefinite" dur="1.8s" values="0,-70; 0,15; 0,-70" keyTimes="0;0.5;1" fill="freeze"/>
+                        begin="indefinite" dur="2s" values="0,-70; 0,15; 0,15; 0,-70" keyTimes="0;0.45;0.6;1" calcMode="spline" keySplines="0.42 0 0.58 1;0 0 1 1;0.42 0 0.58 1"/>
                 </svg>
             </div>
             <div class="demo-info">
@@ -1294,7 +1577,7 @@
                         <path d="M 30 35 C 80 90, 40 100, 120 70 S 200 130, 260 40" stroke="#ff8c1a" stroke-width="2.5" fill="none"/>
                         <path d="M 45 35 C 100 60, 60 130, 150 90 S 210 60, 250 40" stroke="#2ecc71" stroke-width="2.5" fill="none"/>
                         <path d="M 60 35 C 30 100, 130 110, 100 60 S 230 110, 270 40" stroke="#3399ff" stroke-width="2.5" fill="none"/>
-                        <text x="150" y="185" fill="#f2b8b8" font-size="9" text-anchor="middle">Antes: cabos cruzados</text>
+                        <text x="150" y="185" fill="#f2b8b8" font-size="9" text-anchor="middle">Antes: cabos cruzados e sem rastreio</text>
                     </g>
                     <g id="d3-tidy" style="opacity:0; transition: opacity 0.9s ease;">
                         <path d="M 40 35 L 40 150" stroke="#ff8c1a" stroke-width="3"/>
@@ -1303,7 +1586,7 @@
                         <path d="M 130 35 L 130 150" stroke="#ffb300" stroke-width="3"/>
                         <path d="M 160 35 L 160 150" stroke="#ff8c1a" stroke-width="3"/>
                         <path d="M 190 35 L 190 150" stroke="#2ecc71" stroke-width="3"/>
-                        <text x="150" y="185" fill="#b8f2c4" font-size="9" text-anchor="middle">Depois: organizado com gerenciadores</text>
+                        <text x="150" y="185" fill="#b8f2c4" font-size="9" text-anchor="middle">Depois: auditável, cada cabo rastreável</text>
                     </g>
                 </svg>
             </div>
@@ -1318,28 +1601,34 @@
         <div class="demo-card">
             <div class="demo-stage">
                 <svg viewBox="0 0 300 190" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <defs>
+                        <filter id="glow4" x="-60%" y="-60%" width="220%" height="220%">
+                            <feGaussianBlur stdDeviation="2.5" result="blur"/>
+                            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                        </filter>
+                    </defs>
                     <line x1="20" y1="100" x2="280" y2="100" stroke="#e0a300" stroke-width="5"/>
                     <text x="150" y="180" fill="#9fc4ea" font-size="9" text-anchor="middle">Anilhas numeradas na sequência de instalação</text>
                     <g id="d4-ring1" transform="translate(0,-80)">
-                        <circle cx="70" cy="100" r="13" fill="#0066cc" stroke="white" stroke-width="2"/>
+                        <circle cx="70" cy="100" r="13" fill="#0066cc" stroke="white" stroke-width="2" filter="url(#glow4)"/>
                         <text x="70" y="104" fill="white" font-size="11" text-anchor="middle">1</text>
                     </g>
                     <g id="d4-ring2" transform="translate(0,-80)">
-                        <circle cx="130" cy="100" r="13" fill="#0066cc" stroke="white" stroke-width="2"/>
+                        <circle cx="130" cy="100" r="13" fill="#0066cc" stroke="white" stroke-width="2" filter="url(#glow4)"/>
                         <text x="130" y="104" fill="white" font-size="11" text-anchor="middle">2</text>
                     </g>
                     <g id="d4-ring3" transform="translate(0,-80)">
-                        <circle cx="190" cy="100" r="13" fill="#0066cc" stroke="white" stroke-width="2"/>
+                        <circle cx="190" cy="100" r="13" fill="#0066cc" stroke="white" stroke-width="2" filter="url(#glow4)"/>
                         <text x="190" y="104" fill="white" font-size="11" text-anchor="middle">3</text>
                     </g>
                     <g id="d4-ring4" transform="translate(0,-80)">
-                        <circle cx="250" cy="100" r="13" fill="#0066cc" stroke="white" stroke-width="2"/>
+                        <circle cx="250" cy="100" r="13" fill="#0066cc" stroke="white" stroke-width="2" filter="url(#glow4)"/>
                         <text x="250" y="104" fill="white" font-size="11" text-anchor="middle">4</text>
                     </g>
-                    <animateTransform id="d4-anim1" xlink:href="#d4-ring1" attributeName="transform" type="translate" begin="indefinite" dur="0.5s" from="0,-80" to="0,0" fill="freeze"/>
-                    <animateTransform id="d4-anim2" xlink:href="#d4-ring2" attributeName="transform" type="translate" begin="indefinite" dur="0.5s" from="0,-80" to="0,0" fill="freeze"/>
-                    <animateTransform id="d4-anim3" xlink:href="#d4-ring3" attributeName="transform" type="translate" begin="indefinite" dur="0.5s" from="0,-80" to="0,0" fill="freeze"/>
-                    <animateTransform id="d4-anim4" xlink:href="#d4-ring4" attributeName="transform" type="translate" begin="indefinite" dur="0.5s" from="0,-80" to="0,0" fill="freeze"/>
+                    <animateTransform id="d4-anim1" xlink:href="#d4-ring1" attributeName="transform" type="translate" begin="indefinite" dur="0.55s" from="0,-80" to="0,0" fill="freeze" calcMode="spline" keySplines="0.34 1.56 0.64 1"/>
+                    <animateTransform id="d4-anim2" xlink:href="#d4-ring2" attributeName="transform" type="translate" begin="indefinite" dur="0.55s" from="0,-80" to="0,0" fill="freeze" calcMode="spline" keySplines="0.34 1.56 0.64 1"/>
+                    <animateTransform id="d4-anim3" xlink:href="#d4-ring3" attributeName="transform" type="translate" begin="indefinite" dur="0.55s" from="0,-80" to="0,0" fill="freeze" calcMode="spline" keySplines="0.34 1.56 0.64 1"/>
+                    <animateTransform id="d4-anim4" xlink:href="#d4-ring4" attributeName="transform" type="translate" begin="indefinite" dur="0.55s" from="0,-80" to="0,0" fill="freeze" calcMode="spline" keySplines="0.34 1.56 0.64 1"/>
                 </svg>
             </div>
             <div class="demo-info">
@@ -1350,6 +1639,11 @@
             </div>
         </div>
 
+    </div>
+
+    <div class="security-box">
+        <div class="sb-title">🔐 Conexão com Segurança da Informação</div>
+        <p>Um patch panel sem documentação é um ponto cego de segurança: qualquer pessoa pode religar um cabo em outra porta sem que ninguém perceba, criando um caminho não autorizado até a rede. Rastrear a origem física de um incidente (quem estava conectado a qual porta, em qual data) é parte da resposta a incidentes exigida em normas como a ISO/IEC 27001 — e só é possível quando a infraestrutura física está organizada e identificada.</p>
     </div>
 </section>
             <section class="section">
@@ -1441,6 +1735,11 @@
                         <input type="checkbox" onchange="toggleActivity(4, this.checked)"> Marquei esta atividade como concluída
                     </label>
                 </div>
+
+                <div class="security-box">
+                    <div class="sb-title">🔐 Conexão com Segurança da Informação</div>
+                    <p>A atividade 4 é a mais próxima do que você fará como profissional de segurança: sem diagrama de rack, mapeamento de portas e tabela de cabos, um analista não consegue responder rapidamente "quem está conectado onde?" durante um incidente — essa documentação é evidência formal em auditorias de segurança física.</p>
+                </div>
             </section>
 
             <div class="warning-box">
@@ -1454,6 +1753,111 @@
             </div>
 
             <section class="section">
+                <h2><span class="icon">📝</span>Complete as Frases<span class="section-tag">6 frases · +5 pts por acerto</span></h2>
+                <p style="color:#555; margin-bottom: 6px;">Selecione a opção correta em cada frase. Todas contextualizadas para o Laboratório de Administração de Sistemas Operacionais de Redes.</p>
+                <div class="complete-box" id="completeBox">
+                    <div class="complete-item" data-c="1">
+                        <span class="c-num">1</span>O patch panel funciona como um ponto
+                        <select data-correct="0" onchange="markCompleteChanged(1)">
+                            <option value="" selected disabled>selecione</option>
+                            <option value="0">centralizado</option>
+                            <option value="1">aleatório</option>
+                            <option value="2">criptografado</option>
+                            <option value="3">sem fio</option>
+                        </select>
+                        de conexão do cabeamento horizontal, o que facilita a auditoria física da rede.
+                    </div>
+
+                    <div class="complete-item" data-c="2">
+                        <span class="c-num">2</span>O sistema de conexão dos blocos do patch panel é chamado de bloco
+                        <select data-correct="0" onchange="markCompleteChanged(2)">
+                            <option value="" selected disabled>selecione</option>
+                            <option value="0">110 (IDC)</option>
+                            <option value="1">USB-C</option>
+                            <option value="2">PoE</option>
+                            <option value="3">SFP+</option>
+                        </select>.
+                    </div>
+
+                    <div class="complete-item" data-c="3">
+                        <span class="c-num">3</span>Para preservar a qualidade do sinal e reduzir riscos de interferência (que poderiam mascarar anomalias de tráfego), o destrançamento dos pares deve ser de no máximo
+                        <select data-correct="0" onchange="markCompleteChanged(3)">
+                            <option value="" selected disabled>selecione</option>
+                            <option value="0">1,3 cm</option>
+                            <option value="1">10 cm</option>
+                            <option value="2">30 cm</option>
+                            <option value="3">sem limite</option>
+                        </select>.
+                    </div>
+
+                    <div class="complete-item" data-c="4">
+                        <span class="c-num">4</span>Em um rack padrão de 19 polegadas, uma unidade (1U) equivale a
+                        <select data-correct="0" onchange="markCompleteChanged(4)">
+                            <option value="" selected disabled>selecione</option>
+                            <option value="0">1,75 pol (44,45mm)</option>
+                            <option value="1">1 pol (25,4mm)</option>
+                            <option value="2">3 pol (76,2mm)</option>
+                            <option value="3">10 cm</option>
+                        </select>.
+                    </div>
+
+                    <div class="complete-item" data-c="5">
+                        <span class="c-num">5</span>O padrão de cores mais usado para conectorização é o
+                        <select data-correct="0" onchange="markCompleteChanged(5)">
+                            <option value="" selected disabled>selecione</option>
+                            <option value="0">T568B</option>
+                            <option value="1">T568X</option>
+                            <option value="2">RJ45-Z</option>
+                            <option value="3">ISO 9001</option>
+                        </select>, e um erro de mapeamento pode disfarçar um dispositivo não autorizado como se fosse legítimo.
+                    </div>
+
+                    <div class="complete-item" data-c="6">
+                        <span class="c-num">6</span>A documentação e identificação do cabeamento seguem a norma
+                        <select data-correct="0" onchange="markCompleteChanged(6)">
+                            <option value="" selected disabled>selecione</option>
+                            <option value="0">ANSI/TIA-606-B</option>
+                            <option value="1">ISO 27001 (isolada)</option>
+                            <option value="2">LGPD</option>
+                            <option value="3">GDPR</option>
+                        </select>, essencial para rastrear a origem de um incidente até a porta física correta.
+                    </div>
+
+                    <div class="quiz-actions">
+                        <button type="button" class="btn-primary" id="completeSubmitBtn" onclick="submitComplete()">✅ Verificar respostas</button>
+                        <button type="button" class="btn-reset" id="completeRedoBtn" onclick="resetComplete()" style="display:none;">🔄 Refazer</button>
+                    </div>
+                    <div class="quiz-result-box" id="completeResultBox"></div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2><span class="icon">🧩</span>Arraste e Solte: Combine os Termos<span class="section-tag">6 pares · +5 pts por acerto</span></h2>
+                <p class="dragdrop-hint">Arraste cada termo (ou toque nele e depois toque na definição, no celular) até a definição correta.</p>
+                <div class="dragdrop-box">
+                    <div class="dragdrop-columns">
+                        <div class="term-pool" id="termPool">
+                            <div class="term-chip" draggable="true" data-term="t568b" ondragstart="dragStart(event)" onclick="selectTerm(this)">T568B</div>
+                            <div class="term-chip" draggable="true" data-term="bloco110" ondragstart="dragStart(event)" onclick="selectTerm(this)">Bloco 110 (IDC)</div>
+                            <div class="term-chip" draggable="true" data-term="1u" ondragstart="dragStart(event)" onclick="selectTerm(this)">1U</div>
+                            <div class="term-chip" draggable="true" data-term="anilha" ondragstart="dragStart(event)" onclick="selectTerm(this)">Anilha numerada</div>
+                            <div class="term-chip" draggable="true" data-term="raio" ondragstart="dragStart(event)" onclick="selectTerm(this)">Raio de curvatura</div>
+                            <div class="term-chip" draggable="true" data-term="606b" ondragstart="dragStart(event)" onclick="selectTerm(this)">TIA-606-B</div>
+                        </div>
+                        <div class="definition-zone" id="definitionZone">
+                            <div class="def-slot" data-expects="bloco110" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropTerm(event)" onclick="tryPlaceOnSlot(this)">Sistema de conexão por inserção usado nos patch panels — evita fios soltos que poderiam ser adulterados sem deixar marca visível.</div>
+                            <div class="def-slot" data-expects="t568b" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropTerm(event)" onclick="tryPlaceOnSlot(this)">Padrão de cores mais comum para conectorização — manter o padrão evita ambiguidade na hora de rastrear um cabo suspeito.</div>
+                            <div class="def-slot" data-expects="1u" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropTerm(event)" onclick="tryPlaceOnSlot(this)">Unidade de medida de rack equivalente a 44,45mm, usada para planejar o espaço físico do datacenter.</div>
+                            <div class="def-slot" data-expects="anilha" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropTerm(event)" onclick="tryPlaceOnSlot(this)">Identificador sequencial usado para documentar cada cabo — a base da rastreabilidade em uma investigação.</div>
+                            <div class="def-slot" data-expects="raio" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropTerm(event)" onclick="tryPlaceOnSlot(this)">Curvatura mínima do cabo (geralmente 4x seu diâmetro) para não comprometer a integridade do sinal.</div>
+                            <div class="def-slot" data-expects="606b" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropTerm(event)" onclick="tryPlaceOnSlot(this)">Norma que define os padrões de identificação e documentação exigidos em auditorias de segurança física.</div>
+                        </div>
+                    </div>
+                    <p class="quiz-result-box" id="dragdropResultBox" style="display:none;"></p>
+                </div>
+            </section>
+
+            <section class="section">
                 <h2><span class="icon">🎯</span>Quiz da Semana 3<span class="section-tag">10 questões · +5 pts por acerto</span></h2>
                 <div class="quiz-box">
                     <p style="margin-bottom: 15px; color: #555;">Responda todas as questões e clique em <strong>Corrigir Quiz</strong> para ver seu resultado.</p>
@@ -1465,6 +1869,7 @@
                     <div class="quiz-result-box" id="quizResultBox"></div>
                 </div>
             </section>
+
 
             <section class="section">
     <h2><span class="icon">📖</span>Material de Apoio</h2>
@@ -1541,20 +1946,23 @@
        ESTADO GERAL / GAMIFICAÇÃO
        (estado mantido apenas na sessão da página, sem localStorage)
     ========================================================= */
-    const MAX_POINTS = 164;
+    const MAX_POINTS = 234;
     const state = {
         points: 0,
         flippedCards: new Set(),
         stepsDone: new Set(),
         activitiesDone: new Set(),
         wireGameDone: false,
-        quizSubmitted: false
+        quizSubmitted: false,
+        completeSubmitted: false,
+        dragMatched: new Set(),
+        selectedTermEl: null
     };
 
     const BADGES = [
-        { threshold: 40,  icon: '🥉', name: 'Aprendiz de Redes',   desc: '40+ pontos' },
-        { threshold: 90,  icon: '🥈', name: 'Técnico Júnior',      desc: '90+ pontos' },
-        { threshold: 140, icon: '🥇', name: 'Mestre do Cabeamento', desc: '140+ pontos' }
+        { threshold: 60,  icon: '🥉', name: 'Aprendiz de Redes',   desc: '60+ pontos' },
+        { threshold: 140, icon: '🥈', name: 'Técnico Júnior',      desc: '140+ pontos' },
+        { threshold: 210, icon: '🥇', name: 'Mestre do Cabeamento', desc: '210+ pontos' }
     ];
     const unlockedBadges = new Set();
 
@@ -1739,16 +2147,28 @@
 
         if (n === 1) {
             const anim = document.getElementById('d1-anim');
+            const lock = document.getElementById('d1-lock');
+            const port = document.getElementById('d1-port');
+            lock.style.transition = 'opacity 0.5s ease';
+            lock.setAttribute('opacity', '0');
             anim.beginElement();
             caption.textContent = 'Sinal saindo da estação, passando pela porta e chegando ao switch…';
-            setTimeout(() => { caption.textContent = 'Concluído: a porta do patch panel liga o ponto de rede ao switch.'; }, 2200);
+            port.setAttribute('fill', '#ffb300');
+            setTimeout(() => port.setAttribute('fill', '#1565c0'), 500);
+            setTimeout(() => {
+                caption.textContent = 'Concluído: a porta do patch panel liga o ponto de rede ao switch.';
+                lock.setAttribute('opacity', '1');
+            }, 2400);
         }
 
         if (n === 2) {
+            const status = document.getElementById('d2-status');
             document.getElementById('d2-anim').beginElement();
             caption.textContent = 'Posicionando a 90°… pressionando até o "click"…';
-            setTimeout(() => { caption.textContent = 'Fio inserido e excesso cortado automaticamente.'; }, 1000);
-            setTimeout(() => { caption.textContent = ''; }, 2000);
+            status.textContent = '';
+            setTimeout(() => { status.textContent = '✅ click!'; }, 900);
+            setTimeout(() => { caption.textContent = 'Fio inserido e excesso cortado automaticamente.'; }, 1100);
+            setTimeout(() => { caption.textContent = ''; status.textContent = ''; }, 2200);
         }
 
         if (n === 3) {
@@ -1773,6 +2193,153 @@
             });
             caption.textContent = 'Encaixando anilhas 1, 2, 3 e 4 em sequência…';
             setTimeout(() => { caption.textContent = 'Cabos identificados na ordem correta de instalação.'; }, 2200);
+        }
+    }
+
+    /* =========================================================
+       COMPLETE AS FRASES
+    ========================================================= */
+    function markCompleteChanged(n) {
+        // apenas garante que a seleção prévia (correct/incorrect) some ao trocar de resposta
+        const item = document.querySelector('.complete-item[data-c="' + n + '"] select');
+        item.classList.remove('correct', 'incorrect');
+    }
+
+    function submitComplete() {
+        if (state.completeSubmitted) return;
+
+        const selects = document.querySelectorAll('#completeBox select');
+        let unanswered = 0;
+        selects.forEach(s => { if (s.value === '') unanswered++; });
+        if (unanswered > 0) {
+            alert('Selecione uma opção em todas as frases antes de verificar.');
+            return;
+        }
+
+        let correctCount = 0;
+        selects.forEach(s => {
+            const correct = s.dataset.correct;
+            if (s.value === correct) {
+                s.classList.add('correct');
+                correctCount++;
+            } else {
+                s.classList.add('incorrect');
+            }
+            s.disabled = true;
+        });
+
+        state.completeSubmitted = true;
+        const earned = correctCount * 5;
+        addPoints(earned, 'complete as frases (' + correctCount + '/6 acertos)');
+
+        const resultBox = document.getElementById('completeResultBox');
+        resultBox.style.display = 'block';
+        resultBox.style.background = correctCount === 6 ? '#d4edda' : '#fff3cd';
+        resultBox.style.color = correctCount === 6 ? '#155724' : '#856404';
+        resultBox.textContent = (correctCount === 6 ? '🏆 Perfeito! ' : '📘 ') + 'Você acertou ' + correctCount + '/6 frases (+' + earned + ' pontos).';
+
+        document.getElementById('completeSubmitBtn').disabled = true;
+        document.getElementById('completeRedoBtn').style.display = 'inline-block';
+    }
+
+    function resetComplete() {
+        state.completeSubmitted = false;
+        document.querySelectorAll('#completeBox select').forEach(s => {
+            s.value = '';
+            s.classList.remove('correct', 'incorrect');
+            s.disabled = false;
+        });
+        document.getElementById('completeResultBox').style.display = 'none';
+        document.getElementById('completeSubmitBtn').disabled = false;
+        document.getElementById('completeRedoBtn').style.display = 'none';
+    }
+
+    /* =========================================================
+       ARRASTE E SOLTE
+    ========================================================= */
+    const DRAGDROP_TOTAL = 6;
+
+    function dragStart(event) {
+        event.dataTransfer.setData('text/plain', event.target.dataset.term);
+        event.dataTransfer.effectAllowed = 'move';
+    }
+
+    function dragOver(event) {
+        event.preventDefault();
+        if (!event.currentTarget.classList.contains('filled')) {
+            event.currentTarget.classList.add('drag-over');
+        }
+    }
+
+    function dragLeave(event) {
+        event.currentTarget.classList.remove('drag-over');
+    }
+
+    function dropTerm(event) {
+        event.preventDefault();
+        event.currentTarget.classList.remove('drag-over');
+        const termId = event.dataTransfer.getData('text/plain');
+        handleMatch(termId, event.currentTarget);
+    }
+
+    function selectTerm(el) {
+        if (el.classList.contains('placed')) return;
+        document.querySelectorAll('.term-chip').forEach(c => c.classList.remove('selected'));
+        if (state.selectedTermEl === el) {
+            state.selectedTermEl = null;
+            return;
+        }
+        el.classList.add('selected');
+        state.selectedTermEl = el;
+    }
+
+    function tryPlaceOnSlot(slotEl) {
+        if (slotEl.classList.contains('filled')) return;
+        if (!state.selectedTermEl) {
+            slotEl.classList.add('wrong-flash');
+            setTimeout(() => slotEl.classList.remove('wrong-flash'), 400);
+            return;
+        }
+        handleMatch(state.selectedTermEl.dataset.term, slotEl);
+    }
+
+    function handleMatch(termId, slotEl) {
+        if (slotEl.classList.contains('filled')) return;
+        const expected = slotEl.dataset.expects;
+        const termEl = document.querySelector('.term-chip[data-term="' + termId + '"]');
+
+        if (termId === expected) {
+            slotEl.classList.add('filled');
+            const badge = document.createElement('span');
+            badge.className = 'slot-answer';
+            badge.textContent = termEl ? termEl.textContent : termId;
+            slotEl.prepend(badge);
+            if (termEl) termEl.classList.add('placed');
+            if (state.selectedTermEl) {
+                state.selectedTermEl.classList.remove('selected');
+                state.selectedTermEl = null;
+            }
+            if (!state.dragMatched.has(expected)) {
+                state.dragMatched.add(expected);
+                addPoints(5, 'termo "' + badge.textContent + '" associado corretamente');
+                if (state.dragMatched.size === DRAGDROP_TOTAL) {
+                    setTimeout(() => {
+                        addPoints(10, 'todos os termos combinados corretamente');
+                        const box = document.getElementById('dragdropResultBox');
+                        box.style.display = 'block';
+                        box.style.background = '#d4edda';
+                        box.style.color = '#155724';
+                        box.textContent = '🏆 Todos os termos combinados corretamente!';
+                    }, 200);
+                }
+            }
+        } else {
+            slotEl.classList.add('wrong-flash');
+            setTimeout(() => slotEl.classList.remove('wrong-flash'), 400);
+            if (state.selectedTermEl) {
+                state.selectedTermEl.classList.remove('selected');
+                state.selectedTermEl = null;
+            }
         }
     }
 
