@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Operação Núcleo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: coluna única estilo prancheta técnica sobre papel quadriculado; HUD fixo no topo com as 6 chaves da porta. */
+:root{
+  --paper:#EDF1F4; --grid:rgba(14,31,46,.055); --panel:#FFFFFF; --ink:#0E1F2E; --muted:#4F6376; --line:#C3CFD9;
+  --accent:#F5B800; --accent-ink:#1B1500; --signal:#0A6CE0; --ok:#12805A; --bad:#C62838;
+  --coat:#D6DEE6; --clad:#EAF0F5; --corefill:#FFF3C2;
+  --font-display:'Big Shoulders Display','Arial Narrow',Impact,sans-serif;
+  --font-body:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0C1823; --grid:rgba(230,238,244,.045); --panel:#132431; --ink:#E7EEF4; --muted:#9BB0C2; --line:#27404F;
+    --accent:#FFC72C; --accent-ink:#1B1500; --signal:#4CC9F0; --ok:#3DD598; --bad:#FF6B7A;
+    --coat:#172B3B; --clad:#1D3447; --corefill:#3A3414;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0C1823; --grid:rgba(230,238,244,.045); --panel:#132431; --ink:#E7EEF4; --muted:#9BB0C2; --line:#27404F;
+  --accent:#FFC72C; --accent-ink:#1B1500; --signal:#4CC9F0; --ok:#3DD598; --bad:#FF6B7A;
+  --coat:#172B3B; --clad:#1D3447; --corefill:#3A3414;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:32px 32px;
+  color:var(--ink); font-family:var(--font-body); font-size:16px; line-height:1.55;
+}
+h1,h2,h3{font-family:var(--font-display); text-transform:uppercase; letter-spacing:.02em; line-height:1; margin:0; text-wrap:balance}
+p{margin:0 0 12px}
+button{font:inherit; color:inherit}
+:focus-visible{outline:3px solid var(--signal); outline-offset:2px}
+.wrap{max-width:880px; margin:0 auto; padding:0 16px 64px}
+
+/* HUD */
+.hud{position:sticky; top:0; z-index:5; background:var(--paper); border-bottom:2px solid var(--ink)}
+.hud-in{max-width:880px; margin:0 auto; padding:10px 16px 8px; display:flex; flex-wrap:wrap; gap:8px 22px; align-items:center}
+.who{flex:1 1 180px; min-width:0}
+.who small{display:block; font-family:var(--font-mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+.who b{display:block; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.stat small{display:block; font-family:var(--font-mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+.stat b{font-family:var(--font-display); font-size:26px; font-weight:800; line-height:1; font-variant-numeric:tabular-nums}
+.bulbs{display:flex; gap:5px; height:26px; align-items:center}
+.bulb{width:18px; height:10px; border:2px solid var(--ink); border-radius:2px; background:transparent}
+.bulb.on{background:var(--accent)}
+.hud.hit{animation:hit .4s}
+@keyframes hit{0%,100%{background:var(--paper)}30%{background:color-mix(in srgb,var(--bad) 28%,var(--paper))}}
+.keys{max-width:880px; margin:0 auto; padding:0 16px 10px; display:grid; grid-template-columns:repeat(7,1fr); gap:6px}
+.key{height:30px; border:2px solid var(--ink); border-radius:3px; display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:13px; color:var(--muted); background:transparent}
+.key.got{background:var(--accent); color:var(--accent-ink); font-weight:500; font-size:17px}
+.key.now{border-style:dashed; color:var(--ink)}
+
+/* Cartões */
+.card{background:var(--panel); border:2px solid var(--ink); border-radius:4px; padding:22px; margin-top:20px; box-shadow:6px 6px 0 var(--ink)}
+.eyebrow{font-family:var(--font-mono); font-size:12px; letter-spacing:.09em; text-transform:uppercase; color:var(--muted); margin-bottom:8px}
+.h-xl{font-size:clamp(46px,9vw,84px); font-weight:800}
+.h-l{font-size:clamp(34px,6vw,50px); font-weight:800}
+.h-m{font-size:26px; font-weight:700}
+.muted{color:var(--muted)}
+.row{display:flex; flex-wrap:wrap; gap:12px; align-items:center}
+.btn{background:var(--accent); color:var(--accent-ink); border:2px solid var(--ink); border-radius:3px; padding:11px 20px; font-weight:600; cursor:pointer; box-shadow:3px 3px 0 var(--ink); transition:transform .08s, box-shadow .08s}
+.btn:hover{transform:translate(-1px,-1px); box-shadow:4px 4px 0 var(--ink)}
+.btn:active{transform:translate(2px,2px); box-shadow:1px 1px 0 var(--ink)}
+.btn[disabled]{opacity:.45; cursor:not-allowed; transform:none; box-shadow:3px 3px 0 var(--ink)}
+.btn.ghost{background:transparent; color:var(--ink)}
+.input{width:100%; max-width:380px; padding:11px 12px; border:2px solid var(--ink); border-radius:3px; background:var(--paper); color:var(--ink); font:inherit}
+label{font-weight:600; display:block; margin-bottom:6px}
+
+/* Intro */
+.intro{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,340px); gap:28px; align-items:center}
+.intro svg{width:100%; height:auto; max-width:340px; justify-self:center}
+@media (max-width:700px){.intro{grid-template-columns:1fr}}
+.fiber-label{font-family:var(--font-mono); font-size:12px; fill:var(--ink)}
+.halo{transform-origin:105px 150px; animation:halo 2.8s ease-in-out infinite}
+@keyframes halo{0%,100%{opacity:.25; transform:scale(1)}50%{opacity:.8; transform:scale(1.35)}}
+.meta{display:flex; flex-wrap:wrap; gap:8px; margin:14px 0 0; padding:0; list-style:none}
+.meta li{font-family:var(--font-mono); font-size:12px; border:1px solid var(--line); padding:3px 9px; border-radius:99px; color:var(--muted)}
+
+/* Desafios */
+.prompt{font-size:19px; font-weight:500; margin-bottom:16px}
+.ticket{border-left:6px solid var(--accent); background:var(--paper); padding:10px 14px; margin-bottom:14px; font-family:var(--font-mono); font-size:13px}
+.opts{display:grid; gap:10px}
+.opt{text-align:left; padding:13px 16px; border:2px solid var(--ink); border-radius:3px; background:var(--panel); cursor:pointer; transition:background .1s}
+.opt:hover:not([disabled]){background:var(--paper)}
+.opt.ok{background:color-mix(in srgb,var(--ok) 22%,var(--panel)); border-color:var(--ok)}
+.opt.bad{background:color-mix(in srgb,var(--bad) 16%,var(--panel)); border-color:var(--bad); text-decoration:line-through; opacity:.8}
+.opt[disabled]{cursor:default}
+.slots{display:grid; gap:8px; margin-bottom:16px}
+.slot{display:flex; gap:10px; align-items:center; min-height:48px; padding:6px 10px; border:2px dashed var(--line); border-radius:3px}
+.slot.full{border:2px solid var(--ink); background:var(--panel)}
+.slot .n{font-family:var(--font-mono); font-size:13px; color:var(--muted); width:22px}
+.slot button{flex:1; text-align:left; background:none; border:0; padding:6px 0; cursor:pointer}
+.slot.right{border-color:var(--ok); background:color-mix(in srgb,var(--ok) 18%,var(--panel))}
+.pool{display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px}
+.chip{padding:10px 14px; border:2px solid var(--ink); border-radius:3px; background:var(--panel); cursor:pointer; box-shadow:2px 2px 0 var(--ink)}
+.chip.sel{background:var(--accent); color:var(--accent-ink)}
+.chip.shake{animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.buckets{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+@media (max-width:520px){.buckets{grid-template-columns:1fr}}
+.bucket{border:2px solid var(--ink); border-radius:3px; padding:12px; min-height:130px; background:var(--paper); text-align:left; cursor:pointer}
+.bucket h3{font-size:24px; margin-bottom:8px}
+.bucket ul{margin:0; padding:0; list-style:none; display:grid; gap:6px}
+.bucket li{font-size:14px; padding:5px 8px; background:color-mix(in srgb,var(--ok) 18%,var(--panel)); border:1px solid var(--ok); border-radius:3px}
+.sim-wrap{border:2px solid var(--ink); border-radius:3px; overflow:hidden; background:var(--panel)}
+#cv{display:block; width:100%; height:auto}
+.sim-ctl{display:grid; gap:10px; margin:14px 0}
+.sim-ctl input[type=range]{width:100%; accent-color:var(--accent-ink)}
+.readout{display:flex; flex-wrap:wrap; justify-content:space-between; gap:6px 16px; font-family:var(--font-mono); font-size:14px}
+.status{font-weight:600}
+.status.t{color:var(--ok)}
+.status.p{color:var(--bad)}
+.legend{font-family:var(--font-mono); font-size:12px; color:var(--muted)}
+.fb{min-height:24px; margin:14px 0 0; font-weight:500}
+.fb.ok{color:var(--ok)}
+.fb.no{color:var(--bad)}
+.why{background:var(--paper); border-left:6px solid var(--ok); padding:10px 14px; margin-top:14px}
+.hintbox{background:var(--paper); border-left:6px solid var(--signal); padding:10px 14px; margin-top:14px}
+.bar{display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-top:20px; align-items:center}
+.award{font-family:var(--font-mono); font-size:14px; color:var(--ok); font-weight:500}
+
+/* Fase concluída e final */
+.digit{font-family:var(--font-display); font-weight:800; font-size:120px; line-height:.9; background:var(--accent); color:var(--accent-ink); border:2px solid var(--ink); padding:6px 28px 0; display:inline-block; box-shadow:6px 6px 0 var(--ink)}
+.medals{display:flex; flex-wrap:wrap; gap:8px; margin:12px 0; padding:0; list-style:none}
+.medals li{border:2px solid var(--ink); border-radius:99px; padding:4px 14px; font-weight:600; font-size:14px; background:var(--accent); color:var(--accent-ink)}
+.code{font-family:var(--font-display); font-weight:800; font-size:clamp(54px,14vw,110px); letter-spacing:.08em; color:var(--ink)}
+.report{width:100%; min-height:170px; font-family:var(--font-mono); font-size:13px; padding:12px; border:2px solid var(--ink); border-radius:3px; background:var(--paper); color:var(--ink); resize:vertical}
+details{margin-top:28px; border-top:1px solid var(--line); padding-top:14px}
+summary{cursor:pointer; font-weight:600}
+.verdict{margin-top:10px; font-weight:600}
+
+.adm{border-left-color:var(--accent)!important}
+.fig{margin:0 0 16px; border:2px solid var(--ink); border-radius:3px; background:var(--panel); overflow:hidden}
+.fig img,.fig video{display:block; width:100%; max-height:340px; object-fit:contain; background:#fff}
+.fig video{background:#000}
+.fig figcaption{padding:8px 12px; font-family:var(--font-mono); font-size:12px; color:var(--muted); border-top:2px solid var(--ink); background:var(--paper)}
+.bonus{color:var(--ok); font-weight:500; margin-left:6px}
+.figs{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px}
+.figs .fig{margin:0}
+.opts.imgs{grid-template-columns:1fr 1fr}
+@media (max-width:520px){.opts.imgs{grid-template-columns:1fr 1fr}}
+.opt.withimg{display:flex; flex-direction:column; gap:8px; align-items:center; text-align:center; padding:10px}
+.opt.withimg img{width:100%; height:120px; object-fit:contain; background:#fff; border-radius:2px}
+.chip .thumb{display:block; width:84px; height:64px; object-fit:contain; background:#fff; margin:0 auto 6px; border-radius:2px}
+.chip.hasimg{display:flex; flex-direction:column; align-items:center}
+@media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important}}
+</style>
+</head>
+<body>
+<div id="hud" class="hud" hidden></div>
+<main class="wrap" id="app"></main>
+
+<script>
+(function(){
+'use strict';
+
+/* ---------- utilidades ---------- */
+var app = document.getElementById('app');
+var hudEl = document.getElementById('hud');
+function esc(s){ return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+function fmt(n){ return Number(n).toLocaleString('pt-BR'); }
+function hash6(str){ var h=2166136261; for(var i=0;i<str.length;i++){ h^=str.charCodeAt(i); h=Math.imul(h,16777619)>>>0; } return ('000000'+h.toString(36).toUpperCase()).slice(-6); }
+var SAVE_KEY='operacao-nucleo-v1';
+function loadSave(){ try{ var r=localStorage.getItem(SAVE_KEY); return r?JSON.parse(r):null; }catch(e){ return null; } }
+function writeSave(s){ try{ localStorage.setItem(SAVE_KEY, JSON.stringify(s)); }catch(e){} }
+function clearSave(){ try{ localStorage.removeItem(SAVE_KEY); }catch(e){} }
+
+/* ---------- conteúdo ---------- */
+var DIGITS=[4,7,1,9,2,3,6];
+var PHASES=[
+ { title:'Cofre da luz', place:'Painel de óptica',
+   adm:'Toda fibra perde um pouco de sinal. O administrador de rede precisa saber quanta perda o enlace aguenta antes de o cliente ficar sem serviço, e isso começa em entender como a luz viaja.',
+   brief:[{src:'media/intro.mp4',poster:'media/intro.jpg',id:'intro',cap:'Vídeo da aula: abertura'},{img:'img/monomodo.jpg',cap:'Fibra monomodo e multimodo, como no slide 6'}], review:'Revise os slides 5 e 6: reflexão, refração e a luz no núcleo.',
+   story:'O primeiro painel está selado por um feixe de luz. Para abri-lo, você precisa dominar quando a luz escapa do núcleo e quando ela fica presa.',
+   medal:'Luz presa',
+   steps:[
+    {type:'sim', goal:'escape', start:86, prompt:'Teste 1. Diminua o ângulo de incidência até que parte da luz escape do núcleo. Depois aperte Confirmar.',
+     hint:'A luz escapa quando o ângulo na fronteira é pequeno. Tente algo abaixo de 60°.',
+     why:'Com ângulo pequeno a luz sofre refração: uma parte atravessa para a casca e se perde. É a reflexão parcial.'},
+    {type:'sim', goal:'trap', start:30, prompt:'Teste 2. Aumente o ângulo até que toda a luz fique presa no núcleo. Depois aperte Confirmar.',
+     hint:'Neste modelo, o ângulo crítico fica perto de 81°.',
+     why:'Acima do ângulo crítico toda a luz volta para o núcleo. É a reflexão total, o princípio que faz a fibra funcionar.'},
+    {type:'mcq', q:'Para a luz ficar presa no núcleo, o índice de refração do núcleo precisa ser…',
+     options:['Maior que o da casca','Menor que o da casca','Igual ao da casca','Tanto faz'], answer:0,
+     hint:'Pense no teste 2: de onde a luz vem e para onde tenta ir.',
+     why:'A reflexão total só ocorre quando a luz vai de um meio de índice maior (núcleo) para um de índice menor (casca).'},
+    {type:'mcq', q:'A reflexão total ocorre quando o ângulo de incidência é…',
+     options:['Maior que o ângulo crítico','Menor que o ângulo crítico','Zero, com a luz perpendicular à fronteira','Qualquer um, se a fibra estiver limpa'], answer:0,
+     hint:'Releia o que apareceu na tela quando a luz ficou presa.',
+     why:'Passando do ângulo crítico não existe raio refratado, e toda a luz é refletida de volta ao núcleo.',
+     adm:'Se o cabo é dobrado demais, parte da luz escapa e o sinal chega fraco ao cliente. Isso aparece no monitoramento como atenuação alta.'}
+   ]},
+ { title:'Bancada de fusão', place:'Sala de emendas',
+   adm:'Cada emenda soma perda ao enlace. Emendas ruins viram lentidão e quedas para vários clientes, e é a administração de rede que recebe essas reclamações.',
+   brief:[{src:'media/fusao.mp4',poster:'media/fusao.jpg',id:'fusao',cap:'Vídeo da aula: a máquina de fusão em ação'},{loop:'media/loop-arco.mp4',cap:'As pontas da fibra no microscópio e o arco da fusão'}], review:'Revise os slides 8 a 12 (fusão, limpeza, clivagem, proteção) e o slide 21 (clivador).',
+   story:'A bancada tem uma máquina de fusão e uma bandeja bagunçada. A trava só solta se a emenda for feita na ordem certa.',
+   medal:'Clivagem perfeita',
+   steps:[
+    {type:'order', fig:{img:'img/decapar.jpg',cap:'Decapagem da fibra com o alicate, em fotos reais'}, prompt:'Monte a sequência de uma emenda por fusão. Toque nas etapas na ordem em que acontecem.',
+     items:['Decapar a fibra (remover a capa)','Limpar a fibra','Clivar a fibra (corte reto)','Fundir as fibras na máquina','Proteger a emenda'],
+     hint:'Primeiro a fibra fica exposta, depois limpa. A proteção é sempre a última etapa.',
+     why:'Decapar, limpar, clivar, fundir e proteger. Pular ou inverter etapas aumenta a perda da emenda.'},
+    {type:'mcq', fig:{loop:'media/loop-alinha.mp4',cap:'As duas pontas da fibra alinhadas, vistas pelo microscópio da máquina'}, q:'Para uma fusão sem perdas, a clivagem precisa deixar a face da fibra a quantos graus?',
+     options:['90°','45°','30°','180°'], answer:0,
+     hint:'Slide 21: o clivador é um equipamento de alta precisão.',
+     why:'A face precisa ficar a 90° em relação ao eixo da fibra. Por isso o clivador é de alta precisão.'},
+    {type:'mcq', q:'Pela regra da aula, uma emenda é considerada ótima quando a perda fica…',
+     options:['Abaixo de 0,05 dB','Acima de 0,05 dB','Em exatamente 1 dB','Acima de 0,5 dB'], answer:0,
+     hint:'Quanto menor a perda, melhor a emenda.',
+     why:'Segundo o slide do clivador, acima de 0,05 é ruim e abaixo de 0,05 é ótima.',
+     adm:'Quanto menor a perda de cada emenda, maior a folga de sinal do enlace e o alcance até o cliente.'}
+   ]},
+ { title:'Rack de infra', place:'Sala de equipamentos',
+   adm:'O administrador gerencia e monitora a OLT e as ONUs. DIO, caixas e CTOs são passivos e não aparecem no monitoramento, por isso a documentação da rede é parte do trabalho.', review:'Revise os slides 14 a 18: caixas de emendas, CTOs, OLTs e DIOs.',
+   story:'O rack da sala tem peças soltas. Instale cada uma no lugar certo e trace o caminho do sinal até a casa do cliente.',
+   medal:'Mapa da rede',
+   steps:[
+    {type:'sort', prompt:'Classifique cada equipamento. Toque no equipamento e depois na categoria.',
+     buckets:['Ativo','Passivo'],
+     items:[{t:'OLT',b:0,img:'img/olt.jpg'},{t:'DIO',b:1,img:'img/dio.jpg'},{t:'CTO',b:1,img:'img/cto.jpg'},{t:'Caixa de emendas',b:1,img:'img/caixa-emendas.jpg'},{t:'ONU do cliente',b:0,img:'img/onu.jpg'}],
+     hint:'Equipamento ativo precisa de energia elétrica. Passivo só guia ou distribui a luz.',
+     why:'OLT e ONU são ativos: têm eletrônica e energia. DIO, CTO e caixas de emendas são passivos.'},
+    {type:'order', prompt:'Siga o caminho do sinal, da central até a casa do cliente.',
+     items:['OLT','DIO','Caixa de emendas primária','CTO (caixa secundária)','Cliente (ONU)'],
+     hint:'Slide 15: a caixa primária distribui para as caixas secundárias.',
+     why:'A OLT fica na central, o DIO organiza as saídas, a caixa primária distribui para as secundárias (CTOs) e dali a fibra segue ao cliente.',
+     adm:'No dia a dia você monitora a OLT e a ONU. O trecho do meio é passivo: se não estiver documentado, ninguém sabe que caminho o sinal faz.'},
+    {type:'mcq', q:'Qual caixa recebe a fibra da central e distribui para as caixas secundárias?',
+     options:['Caixa de emendas primária','CTO','ONU','OLT'], answer:0,
+     hint:'As CTOs são as secundárias. Quem alimenta elas?',
+     why:'As caixas primárias fazem a distribuição óptica para as secundárias, e as CTOs são as secundárias.'}
+   ]},
+ { title:'Caixa de ferramentas', place:'Oficina',
+   adm:'Com o OTDR, o administrador transforma "cliente sem sinal" em uma distância exata para mandar a equipe de campo, e reduz o tempo de reparo.', review:'Revise os slides 20 a 24: clivador, decapador, máquina de fusão e OTDR.',
+   story:'A oficina tem quatro gavetas e quatro problemas. Abra a gaveta certa para cada situação.',
+   medal:'Gaveta certa',
+   tools:true,
+   steps:[
+    {type:'mcq', q:'Você precisa tirar a capa de proteção da fibra para começar a emenda. Qual ferramenta?', answer:'Alicate decapador',
+     hint:'A palavra "decapar" já diz o que ela faz.', why:'O alicate decapador remove a capa e deixa a fibra exposta sem danificá-la.'},
+    {type:'mcq', q:'A ponta da fibra precisa de um corte reto, a 90°. O que usar?', answer:'Clivador',
+     hint:'É o equipamento de alta precisão do slide 21.', why:'O clivador faz o corte reto que garante uma fusão com baixa perda.'},
+    {type:'mcq', q:'As duas pontas já estão prontas e alinhadas. O que as une com um arco elétrico?', answer:'Máquina de fusão',
+     hint:'O nome da etapa é "fusão".', why:'A máquina de fusão alinha as fibras e as une com um arco elétrico.'},
+    {type:'mcq', q:'Um cliente está sem sinal e você precisa saber a que distância a fibra está rompida.', answer:'OTDR',
+     hint:'Esta ferramenta mede a fibra ao longo de todo o comprimento.', why:'O OTDR mede a atenuação ao longo da fibra e mostra a distância de eventos como emendas e rompimentos.'},
+    {type:'mcq', fig:{src:'media/otdr.mp4',poster:'media/otdr.jpg',id:'otdr',cap:'Vídeo da aula: medindo uma fibra com o OTDR'},
+     q:'Assista ao vídeo e observe o gráfico do OTDR. O que o eixo horizontal (em km) mostra?',
+     options:['A distância ao longo da fibra','O tempo de uso do cabo','A velocidade contratada pelo cliente','O número de clientes na CTO'], answer:0,
+     hint:'Na tela aparecem marcas como 0.5, 1.0 e 1.5 km. Pense em onde cada evento acontece na fibra.',
+     why:'O gráfico do OTDR mostra a perda ao longo da distância. Cada queda ou pico indica um evento, como emenda, conector ou rompimento.'},
+    {type:'mcq', q:'O OTDR indicou um rompimento a 1,24 km da central. O que o administrador de rede faz com essa informação?',
+     options:['Passa a distância à equipe de campo e registra o chamado','Troca a OLT da central','Reinicia a ONU de todos os clientes','Espera o cliente ligar de novo'], answer:0,
+     hint:'A distância serve para o técnico ir direto ao ponto, sem varrer o cabo inteiro.',
+     why:'Com a distância, a equipe vai direto ao ponto do problema. O registro no chamado também ajuda a medir o tempo de reparo.',
+     adm:'O tempo entre a queda e o reparo é um indicador de qualidade do provedor. Localizar rápido a falha melhora esse número.'}
+   ]},
+ { title:'Almoxarifado de rede', place:'Estoque de materiais', review:'Revise os slides 26 a 29: material óptico, equipamentos e ferramentas ativas e passivas.',
+   adm:'Ter o material certo em estoque reduz o tempo de reparo. O administrador de rede precisa reconhecer cada item para planejar compras e atender chamados.',
+   story:'O estoque está cheio de caixas sem etiqueta. Identifique cada item pela foto para liberar a próxima chave.',
+   medal:'Estoque em dia',
+   steps:[
+    {type:'mcq', q:'Qual item emite luz vermelha para localizar rompimentos e dobras excessivas na fibra?',
+     options:[{t:'Localizador visual de falhas (caneta VFL)',img:'img/vfl.jpg'},{t:'Medidor de potência óptica',img:'img/medidor.jpg'},{t:'Cordão óptico',img:'img/cordao.jpg'},{t:'Splitter óptico',img:'img/splitter.jpg'}], answer:0,
+     hint:'É uma caneta. A luz vermelha vaza pela fibra no ponto do problema.',
+     why:'A caneta VFL joga luz visível na fibra. Onde há rompimento ou curva muito fechada, a luz vaza e dá para ver.',
+     adm:'É a ferramenta mais rápida para confirmar uma falha em trechos curtos, como dentro de uma CTO ou do cliente.'},
+    {type:'mcq', q:'Qual item mede a potência óptica, em dBm, para checar se o sinal chega dentro do esperado?',
+     options:[{t:'Medidor de potência óptica',img:'img/medidor.jpg'},{t:'Localizador visual de falhas (caneta VFL)',img:'img/vfl.jpg'},{t:'Conversor de mídia',img:'img/conversor.jpg'},{t:'Roteador Wi-Fi',img:'img/roteador.jpg'}], answer:0,
+     hint:'A tela do aparelho mostra um número em dBm.',
+     why:'O medidor de potência mostra quanto sinal chegou ao ponto medido. Valores baixos indicam perda excessiva no caminho.',
+     adm:'Comparar a potência medida com a esperada ajuda a decidir se o problema está na fibra ou no equipamento do cliente.'},
+    {type:'mcq', q:'Qual item divide o sinal óptico de uma fibra para atender vários clientes?',
+     options:[{t:'Splitter óptico',img:'img/splitter.jpg'},{t:'Cordão óptico',img:'img/cordao.jpg'},{t:'Conversor de mídia',img:'img/conversor.jpg'},{t:'Medidor de potência óptica',img:'img/medidor.jpg'}], answer:0,
+     hint:'Uma entrada, várias saídas com conectores verdes.',
+     why:'O splitter divide a luz de uma fibra em várias saídas. Por isso uma porta da OLT atende vários clientes.',
+     adm:'Cada divisão reduz o sinal. Quanto mais clientes por porta, menor a folga de potência para cada um.'},
+    {type:'sort', prompt:'Classifique cada item da foto como ativo ou passivo.',
+     buckets:['Ativo','Passivo'],
+     items:[{t:'Conversor de mídia',b:0,img:'img/conversor.jpg'},{t:'Roteador Wi-Fi',b:0,img:'img/roteador.jpg'},{t:'Splitter óptico',b:1,img:'img/splitter.jpg'},{t:'Cordão óptico',b:1,img:'img/cordao.jpg'}],
+     hint:'Ativo precisa de energia elétrica. Passivo só conduz ou divide a luz.',
+     why:'Conversor de mídia e roteador usam energia e eletrônica. Splitter e cordão apenas conduzem ou dividem a luz.'},
+    {type:'mcq', q:'Por que o administrador de rede precisa documentar splitters e CTOs, como qual cliente está em qual porta?',
+     options:['Equipamento passivo não aparece no monitoramento, e sem documentação fica difícil achar a origem do problema','A CTO envia alertas por e-mail ao administrador','O splitter exige licença de software','Não é necessário documentar'], answer:0,
+     hint:'Pense no que a OLT consegue enxergar e no que ela não consegue.',
+     why:'Itens passivos não têm gerenciamento. O mapa da rede em documento é o que permite achar o caminho do sinal quando algo cai.'}
+   ]},
+
+ { title:'Central de chamados', place:'Sala de suporte',
+   adm:'Priorizar chamados e achar a causa raiz é rotina de quem administra a rede. Aqui você faz o diagnóstico que a equipe de campo espera receber.', review:'Revise os slides 9 a 12 e 21: limpeza, clivagem e proteção.',
+   story:'Três chamados chegaram ao mesmo tempo. Cada um traz uma pista. Encontre a causa de cada falha.',
+   medal:'Olho clínico',
+   steps:[
+    {type:'mcq', fig:{img:'img/fusora-tela.jpg',cap:'Tela de uma máquina de fusão durante o alinhamento'}, ticket:'Chamado 101 · emenda com perda alta', q:'A emenda de um técnico novo deu 0,21 dB. Na tela da máquina, as duas faces da fibra aparecem inclinadas. Qual a causa mais provável?',
+     options:['Clivagem fora de 90°','Fibra limpa demais','OLT desligada','Caixa primária muito cheia'], answer:0,
+     hint:'Faces inclinadas indicam problema no corte.', why:'Faces inclinadas mostram clivagem fora de 90°. A solução é refazer a clivagem e a fusão.',
+     adm:'Antes de liberar o enlace, o administrador pode exigir o relatório de perda da emenda feito pela máquina.'},
+    {type:'mcq', ticket:'Chamado 102 · várias emendas ruins', q:'Várias emendas novas deram perda alta e a imagem mostra pontos escuros na fibra. O técnico pulou qual etapa?',
+     options:['Limpeza da fibra','Proteção da emenda','Uso do OTDR','Escolha da OLT'], answer:0,
+     hint:'Pontos escuros são sujeira que queima no arco elétrico.', why:'Sujeira na fibra gera perda na fusão. A limpeza vem antes da clivagem e da fusão.',
+     adm:'Várias emendas ruins no mesmo trecho geram vários chamados parecidos. Achar a causa comum evita visitas repetidas.'},
+    {type:'mcq', fig:{img:'img/luvas.jpg',cap:'Protetores de emenda usados no final da fusão'}, ticket:'Chamado 103 · emenda quebrada', q:'Uma emenda feita há uma semana quebrou dentro da caixa. Ela havia ficado sem proteção. Qual etapa faltou?',
+     options:['Proteção da fusão','Decapagem','Limpeza','Clivagem'], answer:0,
+     hint:'É a última etapa da sequência.', why:'A região da emenda fica sem capa e frágil. A proteção da fusão evita que ela quebre.',
+     adm:'Registrar a causa no chamado ajuda a corrigir o processo para o problema não se repetir.'}
+   ]},
+ { title:'Porta final', place:'Saída da sala',
+   adm:'A fibra entrega velocidade e estabilidade, mas custo e mão de obra entram no planejamento e no orçamento da rede.', review:'Revise o slide 31: conclusão, pontos positivos e negativos.',
+   story:'Última trava. O painel quer saber se você entende o lado bom e o lado difícil de uma rede de fibra óptica.',
+   medal:'Visão de negócio',
+   steps:[
+    {type:'sort', prompt:'Classifique cada item como ponto positivo ou negativo de uma rede de fibra óptica.',
+     buckets:['Ponto positivo','Ponto negativo'],
+     items:[{t:'Maiores velocidades de banda larga',b:0},{t:'Conexões mais estáveis e seguras',b:0},{t:'Alto custo de manutenção e investimento',b:1},{t:'Exige profissionais qualificados',b:1}],
+     hint:'Slide 31: o que o cliente ganha é positivo; o que a operadora enfrenta é negativo.',
+     why:'Velocidade e estabilidade são vantagens. Custo alto e necessidade de mão de obra qualificada são os desafios.',
+     adm:'Custo de manutenção e mão de obra qualificada entram no orçamento e no planejamento de crescimento da rede.'}
+   ]}
+];
+PHASES.forEach(function(ph){
+  if(ph.tools){
+    var tools=[{t:'Alicate decapador',img:'img/alicate.jpg'},{t:'Clivador',img:'img/clivador.jpg'},{t:'Máquina de fusão',img:'img/fusora.jpg'},{t:'OTDR',img:'img/otdr.jpg'}];
+    ph.steps.forEach(function(st){ if(st.options) return; st.options=tools.slice(); st.answer=tools.map(function(o){return o.t;}).indexOf(st.answer); });
+  }
+});
+var BASE={sim:100,mcq:100,order:150,sort:150};
+var NSTEPS=PHASES.reduce(function(a,p){return a+p.steps.length;},0);
+
+function rankFor(xp){
+  if(xp<1200) return 'Aprendiz de campo';
+  if(xp<2000) return 'Auxiliar de emenda';
+  if(xp<2800) return 'Técnico de fibra';
+  if(xp<3500) return 'Técnico sênior';
+  return 'Mestre da fusão';
+}
+
+/* ---------- estado ---------- */
+var S=null, view='intro';
+function newState(name){
+  return {name:name,p:0,s:0,xp:0,lives:3,streak:0,lostTotal:0,hintsTotal:0,restarts:0,phaseLost:0,phaseStartXp:0,keys:[],medals:[],elapsed:0,t0:Date.now(),cur:null,phaseMedal:false,phaseXp:0,watched:{}};
+}
+function elapsedMin(){ return Math.max(1,Math.round((S.elapsed+(Date.now()-S.t0))/60000)); }
+function persist(){
+  writeSave({name:S.name,p:S.p,xp:S.xp,lostTotal:S.lostTotal,hintsTotal:S.hintsTotal,restarts:S.restarts,keys:S.keys,medals:S.medals,elapsed:S.elapsed+(Date.now()-S.t0)});
+}
+
+/* ---------- HUD ---------- */
+function renderHud(){
+  if(view==='intro'||!S){ hudEl.hidden=true; return; }
+  hudEl.hidden=false;
+  var bulbs=''; for(var i=0;i<3;i++) bulbs+='<span class="bulb'+(i<S.lives?' on':'')+'"></span>';
+  var keys=''; for(var k=0;k<PHASES.length;k++){
+    var got=S.keys[k]!==undefined;
+    keys+='<div class="key'+(got?' got':(k===S.p?' now':''))+'" title="Fase '+(k+1)+'">'+(got?S.keys[k]:(k+1))+'</div>';
+  }
+  hudEl.innerHTML='<div class="hud-in">'+
+    '<div class="who"><small>'+esc(rankFor(S.xp))+'</small><b>'+esc(S.name)+'</b></div>'+
+    '<div class="stat"><small>XP</small><b>'+fmt(S.xp)+'</b></div>'+
+    '<div class="stat"><small>Sinal</small><div class="bulbs" aria-label="Sinal restante: '+S.lives+' de 3">'+bulbs+'</div></div>'+
+    '<div class="stat"><small>Combo</small><b>'+(S.streak>=2?'x'+S.streak:'-')+'</b></div>'+
+    '</div><div class="keys" aria-label="Chaves da porta">'+keys+'</div>';
+}
+function flashHud(){ hudEl.classList.remove('hit'); void hudEl.offsetWidth; hudEl.classList.add('hit'); }
+
+/* ---------- telas ---------- */
+function fiberSvg(){
+  return '<svg viewBox="0 0 380 300" role="img" aria-label="Seção de uma fibra monomodo em escala: núcleo de 9 micrômetros, casca de 125 e revestimento de 250">'+
+  '<circle cx="105" cy="150" r="100" fill="var(--coat)" stroke="var(--ink)" stroke-width="2"/>'+
+  '<circle cx="105" cy="150" r="50" fill="var(--clad)" stroke="var(--ink)" stroke-width="2"/>'+
+  '<circle class="halo" cx="105" cy="150" r="11" fill="var(--accent)"/>'+
+  '<circle cx="105" cy="150" r="3.6" fill="var(--accent)" stroke="var(--ink)" stroke-width="1.2"/>'+
+  '<line x1="108" y1="147" x2="236" y2="70" stroke="var(--ink)" stroke-width="1"/><text class="fiber-label" x="242" y="74">núcleo 9 µm</text>'+
+  '<line x1="152" y1="167" x2="236" y2="150" stroke="var(--ink)" stroke-width="1"/><text class="fiber-label" x="242" y="154">casca 125 µm</text>'+
+  '<line x1="158" y1="203" x2="236" y2="230" stroke="var(--ink)" stroke-width="1"/><text class="fiber-label" x="242" y="234">revestimento 250 µm</text>'+
+  '<text class="fiber-label" x="105" y="292" text-anchor="middle" style="fill:var(--muted)">em escala</text>'+
+  '</svg>';
+}
+function renderIntro(){
+  var sv=loadSave();
+  var cont=(sv&&sv.name&&sv.p<PHASES.length)?'<button class="btn ghost" data-act="resume">Continuar como '+esc(sv.name)+' (fase '+(sv.p+1)+')</button>':'';
+  app.innerHTML=
+  '<section class="card"><div class="intro"><div>'+
+   '<div class="eyebrow">Introdução a redes de fibra óptica · BGNET</div>'+
+   '<h1 class="h-xl">Operação Núcleo</h1>'+
+   '<p style="margin-top:16px;font-size:18px">Você é administrador de rede da BGNET e hoje foi a campo acompanhar a equipe de fibra. Entrou na sala de equipamentos e a porta trancou. O painel pede um código de 7 dígitos, e cada fase entrega um deles.</p>'+
+   '<p>Resolva os desafios, poupe seu sinal e saia da sala. Dá para jogar sozinho, no seu ritmo, em cerca de 35 minutos. Cada fase mostra como o assunto aparece no trabalho de quem administra redes.</p>'+
+   '<ul class="meta"><li>7 fases</li><li>25 desafios</li><li>3 vídeos reais</li><li>3 de sinal por fase</li><li>Dicas custam 30 XP</li></ul>'+
+   '</div>'+fiberSvg()+'</div>'+
+   '<div style="margin-top:26px"><label for="nm">Seu nome</label><input id="nm" class="input" type="text" maxlength="40" autocomplete="name" placeholder="Nome e sobrenome" value="'+(sv&&sv.name?esc(sv.name):'')+'"></div>'+
+   '<div class="row" style="margin-top:16px"><button class="btn" data-act="start">Entrar na sala</button>'+cont+'</div>'+
+   '<p class="muted" id="nmerr" style="margin:10px 0 0;min-height:22px"></p>'+
+   '<details><summary>Área do professor</summary>'+
+    '<p class="muted" style="margin-top:12px">Cole o relatório que o aluno enviou para conferir se o código bate com os dados.</p>'+
+    '<textarea id="vr" class="report" style="min-height:120px" placeholder="Cole aqui o relatório do aluno"></textarea>'+
+    '<div class="row" style="margin-top:10px"><button class="btn ghost" data-act="verify">Conferir relatório</button></div>'+
+    '<p class="verdict" id="vv" role="status"></p></details>'+
+  '</section>';
+}
+function fig(m){
+  if(m.img) return '<figure class="fig"><img src="'+m.img+'" alt="'+esc(m.cap||'')+'"><figcaption>'+esc(m.cap||'')+'</figcaption></figure>';
+  if(m.loop) return '<figure class="fig"><video src="'+m.loop+'" autoplay muted loop playsinline preload="auto" aria-label="'+esc(m.cap||'')+'"></video><figcaption>'+esc(m.cap||'')+'</figcaption></figure>';
+  if(m.src) return '<figure class="fig"><video src="'+m.src+'" poster="'+m.poster+'" controls playsinline preload="metadata" data-bonus="'+m.id+'"></video><figcaption>'+esc(m.cap)+' <span class="bonus" id="wb-'+m.id+'">'+(S.watched[m.id]?'+50 XP ganhos':'Assista até o fim: +50 XP')+'</span></figcaption></figure>';
+  return '';
+}
+function renderBrief(){
+  var ph=PHASES[S.p];
+  app.innerHTML='<section class="card">'+
+   '<div class="eyebrow">Fase '+(S.p+1)+' de '+PHASES.length+' · '+esc(ph.place)+'</div>'+
+   '<h2 class="h-l">'+esc(ph.title)+'</h2>'+
+   '<p style="margin-top:16px;font-size:18px">'+esc(ph.story)+'</p>'+
+   '<p class="muted">'+esc(ph.review)+'</p>'+
+   (ph.adm?'<div class="why adm"><b>Na administração de redes.</b> '+esc(ph.adm)+'</div>':'')+
+   (ph.brief?'<div class="figs" style="margin-top:16px">'+ph.brief.map(fig).join('')+'</div>':'')+
+   '<ul class="meta"><li>'+ph.steps.length+' desafios</li><li>sinal: 3</li></ul>'+
+   '<div class="row" style="margin-top:22px"><button class="btn" data-act="enter">Entrar na fase</button></div></section>';
+}
+function initCur(st){
+  var c={wrongs:0,hint:false,solved:false,msg:'',msgOk:false,award:null};
+  if(st.type==='mcq'){
+    c.opts=shuffle(st.options.map(function(o,i){return {t:(typeof o==='string'?o:o.t),img:(typeof o==='string'?null:o.img),ok:i===st.answer,bad:false};}));
+  } else if(st.type==='order'){
+    var idx=st.items.map(function(_,i){return i;}), pool;
+    do{ pool=shuffle(idx); }while(pool.every(function(v,i){return v===i;}));
+    c.pool=pool; c.seq=[]; c.right=null;
+  } else if(st.type==='sort'){
+    c.pool=shuffle(st.items.map(function(_,i){return i;})); c.sel=null; c.placed=[[],[]]; c.shake=null;
+  } else if(st.type==='sim'){
+    c.theta=st.start;
+  }
+  return c;
+}
+function renderStep(){
+  var ph=PHASES[S.p], st=ph.steps[S.s];
+  if(!S.cur) S.cur=initCur(st);
+  var c=S.cur, body='';
+  var head='<div class="eyebrow">'+esc(ph.title)+' · desafio '+(S.s+1)+' de '+ph.steps.length+'</div>';
+
+  if(st.type==='mcq'){
+    if(st.ticket) body+='<div class="ticket">'+esc(st.ticket)+'</div>';
+    if(st.fig) body+=fig(st.fig);
+    var hasImg=c.opts.some(function(o){return o.img;});
+    body+='<p class="prompt">'+esc(st.q)+'</p><div class="opts'+(hasImg?' imgs':'')+'">';
+    c.opts.forEach(function(o,i){
+      var cls='opt'+(hasImg?' withimg':'')+(c.solved&&o.ok?' ok':'')+(o.bad?' bad':'');
+      body+='<button class="'+cls+'" data-act="opt" data-i="'+i+'"'+((c.solved||o.bad)?' disabled':'')+'>'+(o.img?'<img src="'+o.img+'" alt="">':'')+'<span>'+esc(o.t)+'</span></button>';
+    });
+    body+='</div>';
+  }
+  else if(st.type==='order'){
+    if(st.fig) body+=fig(st.fig);
+    body+='<p class="prompt">'+esc(st.prompt)+'</p><div class="slots">';
+    for(var i=0;i<st.items.length;i++){
+      var has=c.seq[i]!==undefined;
+      var rc=(c.solved||(c.right&&c.right[i]))?' right':'';
+      body+='<div class="slot'+(has?' full':'')+rc+'"><span class="n">'+(i+1)+'</span>'+
+        (has?'<button data-act="unseq" data-i="'+i+'"'+(c.solved?' disabled':'')+'>'+esc(st.items[c.seq[i]])+'</button>':'<span class="muted">vazio</span>')+'</div>';
+    }
+    body+='</div><div class="pool">';
+    c.pool.forEach(function(v){
+      if(c.seq.indexOf(v)===-1) body+='<button class="chip" data-act="seq" data-v="'+v+'"'+(c.solved?' disabled':'')+'>'+esc(st.items[v])+'</button>';
+    });
+    body+='</div>';
+    if(!c.solved) body+='<button class="btn" data-act="check"'+(c.seq.length===st.items.length?'':' disabled')+'>Verificar sequência</button>';
+  }
+  else if(st.type==='sort'){
+    body+='<p class="prompt">'+esc(st.prompt)+'</p><div class="pool">';
+    c.pool.forEach(function(v){
+      var placed=c.placed[0].indexOf(v)!==-1||c.placed[1].indexOf(v)!==-1;
+      if(!placed) body+='<button class="chip'+(st.items[v].img?' hasimg':'')+(c.sel===v?' sel':'')+(c.shake===v?' shake':'')+'" data-act="pick" data-v="'+v+'" aria-pressed="'+(c.sel===v)+'">'+(st.items[v].img?'<img class="thumb" src="'+st.items[v].img+'" alt="">':'')+'<span>'+esc(st.items[v].t)+'</span></button>';
+    });
+    body+='</div><div class="buckets">';
+    st.buckets.forEach(function(b,bi){
+      body+='<button class="bucket" data-act="bucket" data-b="'+bi+'"'+(c.solved?' disabled':'')+'><h3>'+esc(b)+'</h3><ul>'+
+        c.placed[bi].map(function(v){return '<li>'+esc(st.items[v].t)+'</li>';}).join('')+'</ul></button>';
+    });
+    body+='</div>';
+  }
+  else if(st.type==='sim'){
+    body+='<p class="prompt">'+esc(st.prompt)+'</p>'+
+      '<div class="sim-wrap"><canvas id="cv" width="1440" height="520" role="img" aria-label="Simulação de um raio de luz dentro do núcleo da fibra"></canvas></div>'+
+      '<div class="sim-ctl"><div class="readout"><label for="ang" style="margin:0">Ângulo de incidência: <span id="angv">'+c.theta+'</span>°</label><span class="status" id="stt"></span></div>'+
+      '<input id="ang" type="range" min="10" max="88" step="1" value="'+c.theta+'"'+(c.solved?' disabled':'')+'></div>'+
+      '<p class="legend">Núcleo n₁ = 1,48 e casca n₂ = 1,46 (valores típicos). O ângulo é medido em relação à perpendicular da fronteira núcleo/casca.</p>'+
+      (c.solved?'':'<button class="btn" data-act="simok">Confirmar</button>');
+  }
+
+  var fb=c.msg?'<p class="fb '+(c.msgOk?'ok':'no')+'" role="status">'+esc(c.msg)+'</p>':'<p class="fb" role="status"></p>';
+  var hintHtml='';
+  if(c.hint) hintHtml='<div class="hintbox"><b>Dica.</b> '+esc(st.hint)+'</div>';
+  var why='';
+  if(c.solved) why='<div class="why"><b>Resposta certa.</b> '+esc(st.why)+'</div>'+(st.adm?'<div class="why adm"><b>Na administração de redes.</b> '+esc(st.adm)+'</div>':'');
+
+  var last=(S.s===ph.steps.length-1);
+  var bar='<div class="bar"><div>'+
+    (c.solved?'<span class="award">+'+c.award.pts+' XP'+(c.award.combo?' · combo +'+c.award.combo:'')+'</span>':
+      '<button class="btn ghost" data-act="hint"'+(c.hint?' disabled':'')+'>Dica (-30 XP)</button>')+
+    '</div><div>'+(c.solved?'<button class="btn" data-act="next">'+(last?'Pegar a chave':'Próximo desafio')+'</button>':'')+'</div></div>';
+
+  app.innerHTML='<section class="card">'+head+body+fb+hintHtml+why+bar+'</section>';
+  if(st.type==='sim') drawSim(c.theta);
+}
+function renderDone(){
+  var ph=PHASES[S.p];
+  var lis=S.phaseMedal?'<ul class="medals"><li>Medalha: '+esc(ph.medal)+'</li></ul><p class="muted">Você concluiu a fase sem perder sinal.</p>':
+    '<p class="muted">Sinal perdido nesta fase: '+S.phaseLost+'. Termine uma fase sem erros para ganhar a medalha "'+esc(ph.medal)+'".</p>';
+  app.innerHTML='<section class="card"><div class="eyebrow">Fase '+(S.p+1)+' concluída · '+esc(ph.title)+'</div>'+
+    '<h2 class="h-l">Chave '+(S.p+1)+' de '+PHASES.length+'</h2>'+
+    '<div style="margin:20px 0"><span class="digit" aria-label="Dígito '+DIGITS[S.p]+'">'+DIGITS[S.p]+'</span></div>'+
+    '<p>XP ganho nesta fase: <b>'+fmt(S.phaseXp)+'</b>. Total: <b>'+fmt(S.xp)+'</b>.</p>'+lis+
+    '<div class="row" style="margin-top:20px"><button class="btn" data-act="advance">'+(S.p===PHASES.length-1?'Abrir a porta':'Próxima fase')+'</button></div></section>';
+}
+function renderFail(){
+  app.innerHTML='<section class="card"><div class="eyebrow">Fase '+(S.p+1)+' · '+esc(PHASES[S.p].title)+'</div>'+
+    '<h2 class="h-l">Sinal perdido</h2>'+
+    '<p style="margin-top:16px;font-size:18px">Sua energia acabou. O XP desta fase volta ao que era e a fase recomeça. Use a revisão dos slides e as dicas.</p>'+
+    '<p class="muted">'+esc(PHASES[S.p].review)+'</p>'+
+    '<div class="row" style="margin-top:20px"><button class="btn" data-act="retry">Tentar de novo</button></div></section>';
+}
+function computeMedals(){
+  var m=S.medals.slice();
+  if(S.hintsTotal===0) m.push('Sem dicas');
+  if(elapsedMin()<=20) m.push('Veloz');
+  if(S.lostTotal===0) m.push('Impecável');
+  return m;
+}
+function buildReport(medals){
+  var code=hash6(S.name.trim().toLowerCase()+'|'+S.xp+'|'+S.lostTotal);
+  return 'OPERAÇÃO NÚCLEO · Introdução a redes de fibra óptica\n'+
+    'Aluno: '+S.name.trim()+'\n'+
+    'Pontos: '+S.xp+'\n'+
+    'Patente: '+rankFor(S.xp)+'\n'+
+    'Medalhas: '+medals.length+(medals.length?' ('+medals.join(', ')+')':'')+'\n'+
+    'Vidas perdidas: '+S.lostTotal+'\n'+
+    'Tempo: '+elapsedMin()+' min\n'+
+    'Código: '+code;
+}
+function renderFinal(){
+  if(!S.final){ S.final={medals:computeMedals()}; S.final.report=buildReport(S.final.medals); clearSave(); }
+  var f=S.final;
+  app.innerHTML='<section class="card"><div class="eyebrow">Porta aberta</div>'+
+    '<div class="code" aria-label="Código da porta">'+DIGITS.join('')+'</div>'+
+    '<h2 class="h-l" style="margin-top:6px">Você saiu da sala</h2>'+
+    '<p style="margin-top:14px;font-size:18px">Patente final: <b>'+esc(rankFor(S.xp))+'</b> com <b>'+fmt(S.xp)+' XP</b> em '+elapsedMin()+' min.</p>'+
+    (f.medals.length?'<ul class="medals">'+f.medals.map(function(m){return '<li>'+esc(m)+'</li>';}).join('')+'</ul>':'<p class="muted">Nenhuma medalha desta vez. Tente de novo para buscar mais.</p>')+
+    '<p style="margin-top:18px"><b>Entregue este relatório ao professor.</b> Copie o texto e envie como ele pediu.</p>'+
+    '<textarea id="rp" class="report" readonly>'+esc(f.report)+'</textarea>'+
+    '<div class="row" style="margin-top:12px"><button class="btn" data-act="copy">Copiar relatório</button><button class="btn ghost" data-act="again">Jogar de novo</button></div>'+
+    '<p class="fb" id="cpm" role="status"></p></section>';
+}
+function render(){
+  renderHud();
+  if(view==='intro') renderIntro();
+  else if(view==='brief') renderBrief();
+  else if(view==='step') renderStep();
+  else if(view==='done') renderDone();
+  else if(view==='fail') renderFail();
+  else if(view==='final') renderFinal();
+  if(view!=='intro') window.scrollTo(0,0);
+}
+
+/* ---------- regras ---------- */
+function wrong(msg){
+  var c=S.cur;
+  S.lives--; S.lostTotal++; S.phaseLost++; S.streak=0; c.wrongs++;
+  c.msg=msg||'Não foi dessa vez.'; c.msgOk=false;
+  flashHud();
+  if(S.lives<=0){ view='fail'; }
+}
+function solve(base){
+  var c=S.cur, pts=Math.max(40,base-30*c.wrongs-(c.hint?30:0)), combo=0;
+  if(c.wrongs===0&&!c.hint){ S.streak++; if(S.streak>=2) combo=10*Math.min(S.streak-1,5); } else { S.streak=0; }
+  S.xp+=pts+combo; S.phaseXp+=pts+combo;
+  c.solved=true; c.award={pts:pts,combo:combo}; c.msg='Certo!'; c.msgOk=true;
+}
+function finishPhase(){
+  var ph=PHASES[S.p];
+  S.keys[S.p]=DIGITS[S.p];
+  S.phaseMedal=(S.phaseLost===0);
+  if(S.phaseMedal) S.medals.push(ph.medal);
+  view='done';
+  S.p++; persist(); S.p--;
+}
+function startPhase(){
+  S.s=0; S.lives=3; S.phaseLost=0; S.phaseStartXp=S.xp; S.phaseXp=0; S.cur=null; S.phaseMedal=false; view='brief';
+}
+
+/* ---------- simulador ---------- */
+var N1=1.48, N2=1.46, CRIT=Math.asin(N2/N1)*180/Math.PI;
+function drawSim(theta){
+  var cv=document.getElementById('cv'); if(!cv) return;
+  var ctx=cv.getContext('2d'), W=720, H=260;
+  var css=getComputedStyle(document.documentElement);
+  function col(n){ return css.getPropertyValue(n).trim(); }
+  ctx.setTransform(2,0,0,2,0,0); ctx.clearRect(0,0,W,H);
+  ctx.fillStyle=col('--coat'); ctx.fillRect(0,0,W,H);
+  ctx.fillStyle=col('--clad'); ctx.fillRect(0,56,W,148);
+  ctx.fillStyle=col('--corefill'); ctx.fillRect(0,100,W,60);
+  ctx.strokeStyle=col('--ink'); ctx.lineWidth=1.5; ctx.globalAlpha=.5;
+  [[100],[160]].forEach(function(l){ ctx.beginPath(); ctx.moveTo(0,l[0]); ctx.lineTo(W,l[0]); ctx.stroke(); });
+  ctx.globalAlpha=.75; ctx.fillStyle=col('--muted'); ctx.font='500 15px "IBM Plex Mono", monospace';
+  ctx.fillText('REVESTIMENTO',W-140,28); ctx.fillText('CASCA',W-140,80); ctx.fillText('NÚCLEO',W-140,190);
+  ctx.globalAlpha=1;
+  var th=theta*Math.PI/180, tn=Math.tan(th), trapped=theta>=CRIT;
+  var sig=col('--signal');
+  ctx.lineJoin='round'; ctx.lineCap='round';
+  function path(pts,w,a,glow){
+    ctx.save(); ctx.globalAlpha=a; ctx.strokeStyle=sig; ctx.lineWidth=w;
+    if(glow){ ctx.shadowColor=sig; ctx.shadowBlur=10; }
+    ctx.beginPath(); ctx.moveTo(pts[0][0],pts[0][1]); for(var i=1;i<pts.length;i++) ctx.lineTo(pts[i][0],pts[i][1]); ctx.stroke(); ctx.restore();
+  }
+  if(trapped){
+    var x=0,y=150,dir=-1,pts=[[x,y]];
+    while(x<W){
+      var ty=dir<0?100:160, nx=x+Math.abs(ty-y)*tn;
+      if(nx>=W){ var fr=(W-x)/(nx-x); pts.push([W,y+(ty-y)*fr]); break; }
+      pts.push([nx,ty]); x=nx; y=ty; dir=-dir;
+    }
+    path(pts,3,1,true);
+  } else {
+    var xh=50*tn;
+    path([[0,150],[xh,100]],3,1,true);
+    var s2=Math.min(1,(N1/N2)*Math.sin(th)), t2=Math.asin(s2), dx=Math.sin(t2), dy=-Math.cos(t2);
+    var k=Math.min(100/(-dy),(W-xh)/Math.max(dx,0.0001));
+    path([[xh,100],[xh+dx*k,100+dy*k]],2.5,.9,true);
+    var xb=xh+60*tn; if(xb<W) path([[xh,100],[xb,160]],1.5,.3,false);
+    ctx.save(); ctx.setLineDash([4,4]); ctx.strokeStyle=col('--ink'); ctx.globalAlpha=.6; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(xh,70); ctx.lineTo(xh,130); ctx.stroke(); ctx.restore();
+  }
+}
+function simStatus(theta){
+  var el=document.getElementById('stt'); if(!el) return;
+  var t=theta>=CRIT;
+  el.textContent=t?'Reflexão total: a luz fica presa':'Reflexão parcial: parte da luz escapa';
+  el.className='status '+(t?'t':'p');
+}
+
+/* ---------- eventos ---------- */
+app.addEventListener('input',function(e){
+  if(e.target.id==='ang'&&S&&S.cur){
+    S.cur.theta=Number(e.target.value);
+    document.getElementById('angv').textContent=S.cur.theta;
+    drawSim(S.cur.theta); simStatus(S.cur.theta);
+  }
+});
+app.addEventListener('click',function(e){
+  var b=e.target.closest('[data-act]'); if(!b||b.disabled) return;
+  var act=b.getAttribute('data-act');
+  if(act==='start'){
+    var nm=document.getElementById('nm').value.trim();
+    if(nm.length<2){ document.getElementById('nmerr').textContent='Digite seu nome para começar.'; document.getElementById('nm').focus(); return; }
+    clearSave(); S=newState(nm); startPhase(); render(); return;
+  }
+  if(act==='resume'){
+    var sv=loadSave(); if(!sv) return;
+    S=newState(sv.name); S.p=sv.p; S.xp=sv.xp; S.lostTotal=sv.lostTotal||0; S.hintsTotal=sv.hintsTotal||0; S.restarts=sv.restarts||0;
+    S.keys=sv.keys||[]; S.medals=sv.medals||[]; S.elapsed=sv.elapsed||0; S.t0=Date.now();
+    startPhase(); render(); return;
+  }
+  if(act==='verify'){ verifyReport(); return; }
+  if(!S) return;
+  var c=S.cur, st=(view==='step')?PHASES[S.p].steps[S.s]:null;
+
+  if(act==='enter'){ view='step'; S.cur=null; render(); return; }
+  if(act==='retry'){ (PHASES[S.p].brief||[]).concat(PHASES[S.p].steps.map(function(t){return t.fig||{};})).forEach(function(m){ if(m.id) delete S.watched[m.id]; }); S.xp=S.phaseStartXp; S.restarts++; var keepLost=S.lostTotal; startPhase(); S.lostTotal=keepLost; view='step'; render(); return; }
+  if(act==='advance'){
+    S.p++;
+    if(S.p>=PHASES.length){ S.p=PHASES.length-1; view='final'; render(); return; }
+    startPhase(); render(); return;
+  }
+  if(act==='copy'){
+    var m=document.getElementById('cpm'), ta=document.getElementById('rp');
+    function manual(){ ta.focus(); ta.select(); m.className='fb'; m.textContent='Texto selecionado. Use Ctrl+C (ou toque e segure) para copiar.'; }
+    try{
+      navigator.clipboard.writeText(S.final.report).then(function(){ m.className='fb ok'; m.textContent='Relatório copiado.'; },manual);
+    }catch(err){ manual(); }
+    return;
+  }
+  if(act==='again'){ S=null; view='intro'; render(); return; }
+
+  if(view!=='step'||!c) return;
+  if(act==='hint'){ if(!c.hint){ c.hint=true; S.hintsTotal++; S.streak=0; } render(); return; }
+  if(act==='next'){
+    S.s++; S.cur=null;
+    if(S.s>=PHASES[S.p].steps.length) finishPhase();
+    render(); return;
+  }
+  if(c.solved) return;
+
+  if(act==='opt'){
+    var o=c.opts[Number(b.getAttribute('data-i'))];
+    if(o.ok){ solve(BASE.mcq); } else { o.bad=true; wrong('Resposta errada. Tente outra opção.'); }
+    render(); return;
+  }
+  if(act==='seq'){ c.seq.push(Number(b.getAttribute('data-v'))); c.right=null; c.msg=''; render(); return; }
+  if(act==='unseq'){ c.seq.splice(Number(b.getAttribute('data-i')),1); c.right=null; c.msg=''; render(); return; }
+  if(act==='check'){
+    var right=c.seq.map(function(v,i){return v===i;}), n=right.filter(Boolean).length;
+    if(n===st.items.length){ solve(BASE.order); }
+    else { c.right=right; wrong(n+' de '+st.items.length+' etapas estão no lugar certo. As corretas ficaram em verde.'); }
+    render(); return;
+  }
+  if(act==='pick'){ var v=Number(b.getAttribute('data-v')); c.sel=(c.sel===v)?null:v; c.msg=''; render(); return; }
+  if(act==='bucket'){
+    if(c.sel===null){ c.msg='Primeiro toque em um equipamento.'; c.msgOk=false; render(); return; }
+    var bi=Number(b.getAttribute('data-b')), item=st.items[c.sel];
+    if(item.b===bi){
+      c.placed[bi].push(c.sel); c.sel=null; c.msg='';
+      if(c.placed[0].length+c.placed[1].length===st.items.length) solve(BASE.sort);
+    } else {
+      c.shake=c.sel; c.sel=null; wrong('"'+item.t+'" não pertence a essa categoria.');
+    }
+    render(); return;
+  }
+  if(act==='simok'){
+    var trapped=c.theta>=CRIT;
+    if((st.goal==='trap')===trapped){ solve(BASE.sim); }
+    else { wrong(st.goal==='trap'?'A luz ainda está escapando. Aumente o ângulo.':'A luz ainda está presa. Diminua o ângulo.'); }
+    render(); return;
+  }
+});
+function verifyReport(){
+  var t=document.getElementById('vr').value, out=document.getElementById('vv');
+  function g(re){ var m=t.match(re); return m?m[1].trim():null; }
+  var nome=g(/Aluno:\s*(.+)/), xp=g(/Pontos:\s*(\d+)/), lost=g(/Vidas perdidas:\s*(\d+)/), code=g(/C[óo]digo:\s*([A-Za-z0-9]+)/);
+  if(!nome||xp===null||lost===null||!code){ out.style.color='var(--bad)'; out.textContent='Não encontrei todos os campos. Cole o relatório completo.'; return; }
+  var ok=hash6(nome.toLowerCase()+'|'+xp+'|'+lost)===code.toUpperCase();
+  out.style.color=ok?'var(--ok)':'var(--bad)';
+  out.textContent=ok?'Código confere: '+nome+', '+xp+' XP.':'Código não confere. Os dados podem ter sido alterados.';
+}
+function giveBonus(v){
+  if(!S||(view!=='brief'&&view!=='step')) return;
+  var id=v.getAttribute('data-bonus'); if(!id||S.watched[id]) return;
+  if(!v.duration||v.currentTime/v.duration<0.9) return;
+  S.watched[id]=true; S.xp+=50; S.phaseXp+=50;
+  var el=document.getElementById('wb-'+id); if(el) el.textContent='+50 XP ganhos';
+  renderHud();
+}
+app.addEventListener('timeupdate',function(e){ if(e.target.tagName==='VIDEO') giveBonus(e.target); },true);
+app.addEventListener('ended',function(e){ if(e.target.tagName==='VIDEO'){ if(e.target.duration) giveBonus(e.target); } },true);
+document.addEventListener('keydown',function(e){
+  if(e.key==='Enter'&&e.target&&e.target.id==='nm'){ var b=app.querySelector('[data-act="start"]'); if(b) b.click(); }
+});
+/* mostra o estado do simulador ao abrir a tela */
+var _render=render;
+render=function(){ _render(); if(view==='step'&&S&&S.cur&&S.cur.theta!==undefined) simStatus(S.cur.theta); };
+
+render();
+})();
+</script>
+</body>
+</html>
